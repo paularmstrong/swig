@@ -1,0 +1,13 @@
+{
+  "name": "node-t",
+  "version": "0.2",
+  "description": "A fast django-like templating engine for node.js",
+  "keywords": ["template", "html", "django", "sandbox"],
+  "repository": "git://github.com/skid/node-t.git",
+  "author": "Dusko Jordanovski <jordanovskid@gmail.com>",
+  "dependencies": {},
+  "main": "index",
+  "engines": { 
+    "node": ">= 0.4.1" 
+  }
+}
