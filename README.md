@@ -46,7 +46,7 @@ Both of them will give you a template object on which you call the render method
 
 ## Template syntax
 
-You should be familiar with the [1]"Django template syntax". Here I'll just sum up the diferences:
+You should be familiar with the [Django template syntax][1]. Here I'll just sum up the diferences:
 
 - There are no filters implemented yet
 - Tags like {% for %} and {% if %} are closed with a simple {% end %} tag
@@ -105,7 +105,7 @@ Supports the following expressions. No else tag yet.
 
 #### slot
 
-Slots are parts of a page that where you want highly customized content that depends heavily on dynamic data. They work in pair with widget functions that you can write yourself.
+Use slots where you want highly customized content that depends heavily on dynamic data. They work in pair with widget functions that you can write yourself.
 
 Template code
     
