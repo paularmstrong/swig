@@ -47,15 +47,15 @@ exports['slot'] = function( indent ) {
   
   return ['(function(){'
   , ' if( ' + check( slot, '__context.slots' ) + ' ){'
-  , '   var __widget, __slot = ' + escape( slot, '__context.slots' ) + ';'
+  , '   var __widget, __slot = ' + escape( slot, '__context.slots' ) + '.content || [];'
   , '   for( var __i=0, __j = (+__slot.length) || 0; __i < __j; ++__i ){'
   , '     __widget = __slot[__i];'
   , '     if( __widget === undefined || __widget === null || __widget === false )'
   , '       continue;'
   , '     if( typeof __widget === "string" )'
   , '       __output.push(__widget)'
-  , '     else if( __widget.tagname && __context.widgets && typeof __context.widgets[__widget.tagname] === "function" )'
-  , '       __output.push( __context.widgets[__widget.tagname].call( __widget, __context,  __parents ) );'
+  , '     else if( __widget.tagname && __widgets && typeof __widgets[__widget.tagname] === "function" )'
+  , '       __output.push( __widgets[__widget.tagname].call( __widget, __context,  __parents ) );'
   , '   }'
   , ' }'
   , '})();'].join("\n" + indent);

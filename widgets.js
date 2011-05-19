@@ -57,3 +57,21 @@ exports.list = exports.image = function( context ){
   output.push(">", this.content, "</div>");
   return output.join("");
 }
+
+/**
+ * This helper renders a slot independently from a template.
+ */
+exports.renderSlot = function(slotContent, context){
+  var widget, slot = slotContent || [], output = [];
+  for( var i=0, j=slot.length; i<j; ++i){
+    widget = slot[i];
+    if( widget === undefined || widget === null || widget === false )
+      continue;
+    if( typeof widget == 'string' )
+      output.push(widget)
+    else if(widget.tagname && typeof exports[widget.tagname] === "function")
+      output.push(exports[widget.tagname].call(widget, context));
+  }
+
+  return output.join("");
+}

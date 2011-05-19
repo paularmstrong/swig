@@ -4,6 +4,7 @@ var path    = require("path");
 var crypto  = require("crypto");
 var tags    = require("./tags");
 var parser  = require("./parser");
+var widgets = require("./widgets");
 
 var CACHE   = {};
 var DEBUG   = false;
@@ -37,12 +38,11 @@ function createTemplate( data, id ){
   // We don't need this in production
   var code = parser.compile.call( template );
 
-  if( DEBUG ) {
+  if( DEBUG )
     template.code = code;
-  }
   
   // The compiled render function - this is all we need
-  template.render = new Function("__context", "__parents",
+  var render = new Function("__context", "__parents", "__widgets",
    [  '__parents = __parents ? __parents.slice() : [];'
       // Prevents circular includes (which will crash node without warning)
     , 'for(var i=0, j=__parents.length; i<j; ++i){'
@@ -57,42 +57,41 @@ function createTemplate( data, id ){
     , code
     , 'return __output.join("");'].join("\n")
   );
+  
+  template.render = function(context, parents){
+    return render.call(this, context, parents, widgets);
+  }
 
   return template;
 }
 
-/**
+/*
  * Returns a template object from the given filepath.
  * The filepath needs to be relative to the template directory.
  */
 function fromFile( filepath ){
   
-  if( filepath[0] == '/' ){
+  if( filepath[0] == '/' )
     filepath = filepath.substr(1);
-  }
-  if( filepath in CACHE && !DEBUG ){
+
+  if( filepath in CACHE && !DEBUG )
     return CACHE[filepath];
-  }
 
   var data = fs.readFileSync( ROOT + "/" + filepath, 'utf8' );
   // TODO: see what error readFileSync returns and warn about it
-  if( data ) {
+  if( data ) 
     return CACHE[filepath] = createTemplate(data, filepath);
-  }
 }
 
-/**
+/*
  * Returns a template object from the given string.
  */
 function fromString( string ){
-  var hash = crypto.createHash('md5')
+  var hash = crypto.createHash('md5').update(string).digest('hex');
   
-  hash.update(string);
-  hash = hash.digest('hex');
-  
-  if( hash in CACHE && !DEBUG ) {
+  if( hash in CACHE && !DEBUG )
     return CACHE[hash];
-  }
+
   return CACHE[hash] = createTemplate(string, hash);
 }
 

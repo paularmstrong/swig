@@ -11,7 +11,7 @@ var TEMPLATE = exports.TEMPLATE = 0;
 var LOGIC_TOKEN = 1;
 var VAR_TOKEN   = 2;
 
-exports.parse = function( data, tags ){
+exports.parse = function(data, tags){
   var rawtokens = data.trim().replace( /(^\n+)|(\n+$)/, "" ).split( /(\{%.*?%\}|\{\{.*?\}\}|\{#.*?#\})/ );
   var stack = [ [] ], index = 0, token, parts, names, matches, tagname;
 
@@ -76,6 +76,7 @@ exports.parse = function( data, tags ){
   return stack[index];
 }
 
+
 exports.compile = function compile( indent ){
   var code = [''], tokens = [], indent = indent || '';
   // Precompile - extract blocks and create hierarchy based on 'extends' tags
@@ -117,36 +118,39 @@ exports.compile = function compile( indent ){
   
   // If this is not a template then just iterate through its tokens    
   this.tokens.forEach(function(token, index) {
-    if( typeof token === 'string' ) {
-      code.push( '__output.push("' + token.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/"/g, '\\"') + '");' );
-    }
-    if( typeof token === 'object' && token.type === VAR_TOKEN ) {
-      code.push( 
+    if( typeof token === 'string' )
+      return code.push( '__output.push("' + token.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/"/g, '\\"') + '");' );
+
+    if( typeof token !== 'object')
+      return; // Tokens can be either strings or objects
+      
+    if( token.type === VAR_TOKEN )
+      return code.push( 
           'if( ' + check(token.name) + ' ){'
         , '   __output.push(' + escape( token.name ) + ');'
         , '} else if( ' + check( token.name, '__context' ) + ' ){'
         , '   __output.push(' + escape( token.name, '__context' ) + ');'
         , '}'
       );
+    
+    if( token.type !== LOGIC_TOKEN )
+      return; // Tokens can be either VAR_TOKEN or LOGIC_TOKEN
+
+    if( token.name === 'extends' ) {
+      if( this.type !== TEMPLATE )
+        throw new Error("Extends tag must be the first tag in the template.");
     }
-    if( typeof token === 'object' && token.type === LOGIC_TOKEN ){
-      
-      if( token.name === 'extends' ) {
-        if( this.type !== TEMPLATE ) {
-          throw new Error("Extends tag must be the first tag in the template.");
-        }
-      }
-      else if( token.name === 'block' ) {
-        if( this.type !== TEMPLATE ){
-          throw new Error("You can not nest block tags into other tags.");
-        }
-        // Blocks are already compiled in the precompile part
-        code.push( this.blocks[ token.args[0] ] );
-      }      
-      else {
-        code.push( token.compile( indent + '  ' ) );
-      }
+    
+    else if( token.name === 'block' ) {
+      if( this.type !== TEMPLATE )
+        throw new Error("You can not nest block tags into other tags.");
+
+      code.push( this.blocks[ token.args[0] ] ); // Blocks are already compiled in the precompile part
     }
+    
+    else
+      code.push( token.compile( indent + '  ' ) );
+ 
   }, this);
   
   return code.join("\n" + indent);

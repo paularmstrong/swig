@@ -86,7 +86,7 @@ exports.check = function( variable, context ){
     props.unshift( context );
   
   props.forEach(function(prop){
-    chain += (chain ? "." + prop : prop);
+    chain += (chain ? (isNaN(prop) ? "." + prop : "[" + prop + "]") : prop);
     output.push( "typeof " + chain + " !== 'undefined'" )
   });
   return "(" + output.join(" && ") + ")";
@@ -106,12 +106,16 @@ exports.escape = function( variable, context ){
   
   if( isLiteral( variable ) )
     variable = "(" + variable + ")";
-
-  else if( typeof context === 'string' && context.length ){
+    
+  else if( typeof context === 'string' && context.length )
     variable = context + '.' + variable;
-  }
+  
+  var chain = "", props = variable.split(".");
+  props.forEach(function(prop){
+    chain += (chain ? (isNaN(prop) ? "." + prop : "[" + prop + "]") : prop);
+  });
 
-  return variable.replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+  return chain.replace(/\n/g, '\\n').replace(/\r/g, '\\r');
 }
 
 /**
