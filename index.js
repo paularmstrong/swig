@@ -95,5 +95,29 @@ function fromString( string ){
   return CACHE[hash] = createTemplate(string, hash);
 }
 
-exports.fromFile = fromFile;
-exports.fromString = fromString;
+
+var nodet  = require('node-t');
+
+module.exports = {
+	fromFile: fromFile,
+	fromString: fromString,
+    compile: function (source, options, callback) {
+    	self = this;
+        if (typeof source == 'string') {
+            return function(options) {
+                options.locals = options.locals || {};
+                options.partials = options.partials || {};
+                if (options.body) // for express.js > v1.0
+                    options.locals.body = options.body;
+                var tmpl = fromString(source);
+                return tmpl.render(options.locals);
+            };
+        } else {
+            return source;
+        }
+    },
+    render: function (template, options) {
+        template = this.compile(template, options);
+        return template(options);
+    }
+};
