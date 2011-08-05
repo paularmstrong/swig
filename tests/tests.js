@@ -1,6 +1,6 @@
-var template = require("node-t");
+var template = require('../index');
 
-template.init(".", false);
+template.init(__dirname, false);
 
 var print = require('util').puts;
 var tplF, tplS, array;
