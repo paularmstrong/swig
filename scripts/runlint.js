@@ -4,7 +4,7 @@ var util = require('util'),
     child_process = require('child_process'),
     configFile = __dirname + '/config-lint',
     ignore = '',
-    root, i;
+    config, root, i;
 
 process.argv.forEach(function (val, index, array) {
     if (index < 2) {

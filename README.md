@@ -23,7 +23,7 @@ Node-T is a templating engine inspired by the django syntax. It has a few extens
 
     var template  = require('node-t');
     var tmpl = template.fromFile("/path/to/template.html");
-    console.log( tmpl.render({names: ["Duke", "Django", "Louis"]}) );
+    console.log(tmpl.render({names: ["Duke", "Django", "Louis"]}));
 
 ### How it works
 
@@ -139,13 +139,13 @@ Node.js code
     }
     
     context.widgets = {
-      analytics: function(context){
+      analytics: function (context) {
         // this inside widget functions is bound to the widget object
         return "<script>..." + this.uaCode + "...</script>";
       },
-      navigation: function(context){
+      navigation: function (context) {
         var i, html = "";
-        for( i=0; i<this.links; i++ )
+        for (i=0; i<this.links; i++)
           html += "<a href='" + links[i] + "'>" + links[i] + "</a>";
         return html;
       }
