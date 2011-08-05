@@ -95,10 +95,8 @@ function fromString( string ){
   return CACHE[hash] = createTemplate(string, hash);
 }
 
-
-var nodet  = require('node-t');
-
 module.exports = {
+    init: exports.init,
 	fromFile: fromFile,
 	fromString: fromString,
     compile: function (source, options, callback) {
