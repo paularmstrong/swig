@@ -12,5 +12,8 @@
     "main": "index",
     "engines": {
         "node": ">= 0.4.1"
+    },
+    "scripts": {
+        "test": "make test"
     }
 }
