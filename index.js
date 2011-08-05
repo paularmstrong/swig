@@ -1,10 +1,13 @@
+require.paths.unshift(__dirname + '/lib');
+
 var fs = require("fs"),
     util = require("util"),
     path = require("path"),
     crypto = require("crypto"),
-    tags = require("./tags"),
-    parser = require("./parser"),
-    widgets = require("./widgets"),
+
+    tags = require("tags"),
+    parser = require("parser"),
+    widgets = require("widgets"),
 
     CACHE = {},
     DEBUG = false,
