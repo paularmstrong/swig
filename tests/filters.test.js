@@ -48,6 +48,30 @@ exports.length = function (test) {
     test.done();
 };
 
+exports.url_encode = function (test) {
+    var input = "param=1&anotherParam=2";
+    test.strictEqual("param%3D1%26anotherParam%3D2", eval(filters.wrap('input', ['url_encode'])));
+    test.done();
+};
+
+exports.url_decode = function (test) {
+    var input = "param%3D1%26anotherParam%3D2";
+    test.strictEqual("param=1&anotherParam=2", eval(filters.wrap('input', ['url_decode'])));
+    test.done();
+};
+
+exports.json_encode = function (test) {
+    var input = { foo: 'bar', baz: [1, 2, 3] };
+    test.strictEqual('{"foo":"bar","baz":[1,2,3]}', eval(filters.wrap('input', ['json_encode'])));
+    test.done();
+};
+
+exports.striptags = function (test) {
+    var input = '<h1>foo</h1> <div class="blah">hi</div>';
+    test.strictEqual('foo hi', eval(filters.wrap('input', ['striptags'])));
+    test.done();
+};
+
 exports.multiple = function (test) {
     var input = ['aWEsoMe', 'sAuCe'];
     test.strictEqual('Awesome Sauce', eval(filters.wrap('input', ['join(\' \')', 'title'])));
