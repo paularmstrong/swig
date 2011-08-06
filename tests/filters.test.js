@@ -26,7 +26,7 @@ exports.capitalize = function (test) {
 };
 
 exports.title = function (test) {
-    var input = 'This Is Title Case';
+    var input = 'this is title case';
     test.strictEqual('This Is Title Case', eval(filters.wrap('input', ['title'])));
     test.done();
 };
