@@ -1,5 +1,6 @@
 all:
-	@echo ''
+	@cp scripts/githooks/* .git/hooks/
+	@chmod -R +x .git/hooks/
 
 test:
 	@node tests/tests.js

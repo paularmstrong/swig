@@ -1,0 +1,56 @@
+#!/bin/sh
+
+function failCommit() {
+    echo "\033[31m----------------------------------------\033[0m"
+    echo "FATAL ERROR: $1"
+    echo "\033[31m----------------------------------------\033[0m"
+    exit 1
+}
+
+function testFail() {
+    echo "\033[33m----------------------------------------\033[0m"
+    echo "$1"
+    echo "\033[33m----------------------------------------\033[0m"
+
+}
+
+if git-rev-parse --verify HEAD >/dev/null 2>&1 ; then
+    against=HEAD
+else
+    # Initial commit: diff against an empty tree object
+    against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+fi
+
+# Remove all of the trailing whitespace in this commit
+for FILE in `exec git diff-index --check --cached $against -- | sed '/^[+-]/d' | sed -E 's/:[0-9]+:.*//' | uniq` ; do
+    sed -i '' -E 's/[[:space:]]*$//' "$FILE"
+    git add $FILE
+done
+
+echo 'Running JSLint...'
+result=$(make lint)
+if ! grep -q "^0 errors" <<< $result; then
+    num=$(grep "[0-9] error" <<< "$result")
+    testFail "JSLint: $num"
+    echo "$result"
+    echo ''
+    lintFailed=1
+fi
+
+if [[ $lint_errors -gt 0 ]]; then
+    failCommit "Lint Errors"
+fi
+
+echo 'Running Tests...'
+result=$(make test)
+if grep -q FAILURES <<< $result; then
+    num=$(grep "FAILURES" <<< "$result")
+    testFail "Test $num"
+    echo "$result"
+    echo ''
+    testsFailed=1
+fi
+
+if [[ $testsFailed || $lintFailed ]]; then
+    failCommit "Unable To Commit"
+fi
