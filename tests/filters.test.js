@@ -1,5 +1,4 @@
-var testCase = require('nodeunit').testCase,
-    filters = require('../lib/filters');
+var filters = require('../lib/filters');
 
 exports.lower = function (test) {
     var input = 'BaR';
