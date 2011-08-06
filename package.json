@@ -7,13 +7,15 @@
     "author": "Dusko Jordanovski <jordanovskid@gmail.com>",
     "dependencies": {},
     "devDependencies": {
-        "nodelint": "0.4.0"
+        "nodelint": "0.4.0",
+        "nodeunit": "0.5.3"
     },
     "main": "index",
     "engines": {
         "node": ">= 0.4.1"
     },
     "scripts": {
+        "lint": "make lint",
         "test": "make test"
     }
 }
