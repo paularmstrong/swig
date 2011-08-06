@@ -48,3 +48,8 @@ exports.length = function (test) {
     test.done();
 };
 
+exports.multiple = function (test) {
+    var input = ['aWEsoMe', 'sAuCe'];
+    test.strictEqual('Awesome Sauce', eval(filters.wrap('input', ['join(\' \')', 'title'])));
+    test.done();
+};
