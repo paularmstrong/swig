@@ -76,3 +76,38 @@ exports.multiple = function (test) {
     test.strictEqual('Awesome Sauce', eval(filters.wrap('input', ['join(\' \')', 'title'])));
     test.done();
 };
+
+exports.date = function (test) {
+    var input = 'Sat Aug 06 2011 09:05:02 GMT-0700 (PDT)';
+
+    test.strictEqual('06', eval(filters.wrap('input', ['date("d")'])), 'format: d http://www.php.net/date');
+    // test.strictEqual('Sat', eval(filters.wrap('input', ['date("D")'])), 'format: D http://www.php.net/date');
+    test.strictEqual('6', eval(filters.wrap('input', ['date("j")'])), 'format: j http://www.php.net/date');
+    // test.strictEqual('Saturday', eval(filters.wrap('input', ['date("l")'])), 'format: l http://www.php.net/date');
+    test.strictEqual('6', eval(filters.wrap('input', ['date("N")'])), 'format: N http://www.php.net/date');
+    test.strictEqual('th', eval(filters.wrap('input', ['date("S")'])), 'format: S http://www.php.net/date');
+    test.strictEqual('5', eval(filters.wrap('input', ['date("w")'])), 'format: w http://www.php.net/date');
+    // test.strictEqual('August', eval(filters.wrap('input', ['date("F")'])), 'format: F http://www.php.net/date');
+    test.strictEqual('08', eval(filters.wrap('input', ['date("m")'])), 'format: m http://www.php.net/date');
+    // test.strictEqual('Aug', eval(filters.wrap('input', ['date("M")'])), 'format: M http://www.php.net/date');
+    test.strictEqual('8', eval(filters.wrap('input', ['date("n")'])), 'format: n http://www.php.net/date');
+
+    test.strictEqual('2011', eval(filters.wrap('input', ['date("Y")'])), 'format: Y http://www.php.net/date');
+    test.strictEqual('11', eval(filters.wrap('input', ['date("y")'])), 'format: y http://www.php.net/date');
+    test.strictEqual('2011', eval(filters.wrap('input', ['date("Y")'])), 'format: Y http://www.php.net/date');
+    test.strictEqual('am', eval(filters.wrap('input', ['date("a")'])), 'format: a http://www.php.net/date');
+    test.strictEqual('AM', eval(filters.wrap('input', ['date("A")'])), 'format: A http://www.php.net/date');
+    test.strictEqual('9', eval(filters.wrap('input', ['date("g")'])), 'format: g http://www.php.net/date');
+    test.strictEqual('9', eval(filters.wrap('input', ['date("G")'])), 'format: G http://www.php.net/date');
+    test.strictEqual('09', eval(filters.wrap('input', ['date("h")'])), 'format: h http://www.php.net/date');
+    test.strictEqual('09', eval(filters.wrap('input', ['date("H")'])), 'format: H http://www.php.net/date');
+    test.strictEqual('05', eval(filters.wrap('input', ['date("i")'])), 'format: i http://www.php.net/date');
+    test.strictEqual('02', eval(filters.wrap('input', ['date("s")'])), 'format: s http://www.php.net/date');
+
+    test.strictEqual('+0700', eval(filters.wrap('input', ['date("O")'])), 'format: O http://www.php.net/date');
+    test.strictEqual('25200', eval(filters.wrap('input', ['date("Z")'])), 'format: Z http://www.php.net/date');
+    test.strictEqual('Sat Aug 06 2011 09:05:02 GMT-0700 (PDT)', eval(filters.wrap('input', ['date("r")'])), 'format: r http://www.php.net/date');
+    test.strictEqual('1312646702', eval(filters.wrap('input', ['date("U")'])), 'format: U http://www.php.net/date');
+
+    test.done();
+};
