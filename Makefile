@@ -4,7 +4,7 @@ all:
 	@chmod -R +x .git/hooks/
 
 test:
-	@node tests/tests.js
+	@node tests/speed.js
 	@node scripts/runtests.js
 
 lint:

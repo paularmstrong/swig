@@ -1,6 +1,9 @@
 var template = require('../index'),
     tplF, tplS, array, output, d, i;
 
+console.log();
+console.log('Starting speed tests...');
+
 template.init(__dirname, false);
 
 tplS = template.fromString(
@@ -16,25 +19,31 @@ tplS = template.fromString(
     + "{% end %}"
 );
 
+template.init(__dirname + '/templates');
+
 array = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], { af: "s", baz: "d", d: "f" }, "zeus"];
 tplF = template.fromFile("include_base.html");
 template.fromFile("included_2.html");
 template.fromFile("included.html");
 
-console.log("Testing includes");
+i = 1000;
+console.time('Render 1000 Includes Templates');
 d = new Date();
-for (i = 0; i < 1000; i += 1) {
-    output = tplF.render({ array: array, foo: "baz", "included": "included.html" });
+while (i--) {
+    tplF.render({ array: array, foo: "baz", "included": "included.html" });
 }
-console.log("====\n~" + 1000000 / (new Date() - d) + " renders per sec.");
+console.timeEnd('Render 1000 Includes Templates');
+console.log("    ~ " + Math.round(1000000 / (new Date() - d)) + " renders per sec.");
 
 template.fromFile("extends_base.html");
 template.fromFile("extends_1.html");
 tplF = template.fromFile("extends_2.html");
 
-console.log("\nTesting extends");
+i = 1000;
+console.time('Render 1000 Extends Templates');
 d = new Date();
-for (i = 0; i < 1000; i += 1) {
-    tplF.render({});
+while (i--) {
+    tplF.render({ array: array, foo: "baz", "included": "included.html" });
 }
-console.log("====\n~" + 1000000 / (new Date() - d) + " renders per sec.");
+console.timeEnd('Render 1000 Extends Templates');
+console.log("    ~ " + Math.round(1000000 / (new Date() - d)) + " renders per sec.");
