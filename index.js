@@ -8,6 +8,7 @@ var fs = require("fs"),
     tags = require("tags"),
     parser = require("parser"),
     widgets = require("widgets"),
+    filters = require('filters'),
 
     CACHE = {},
     DEBUG = false,
@@ -50,7 +51,7 @@ createTemplate = function (data, id) {
     }
 
     // The compiled render function - this is all we need
-    render = new Function("__context", "__parents", "__widgets",
+    render = new Function("__context", "__parents", "__filters", "__widgets",
         [  '__parents = __parents ? __parents.slice() : [];'
         // Prevents circular includes (which will crash node without warning)
         , 'for (var i=0, j=__parents.length; i<j; ++i) {'
@@ -67,7 +68,7 @@ createTemplate = function (data, id) {
     );
 
     template.render = function (context, parents) {
-        return render.call(this, context, parents, widgets);
+        return render.call(this, context, parents, filters, widgets);
     };
 
     return template;
