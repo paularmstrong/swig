@@ -5,7 +5,7 @@ A fast django-like templating engine for node.js.
 Node-T is a templating engine inspired by the django syntax. It has a few extensions and the templates are compiled to native javascript functions which make them really fast. For now it's synchronous, but once a template is read and compiled, it is cached in memory.
 
 ### Example template code
-    
+
     <html>
     <body>
       <h1>Example</h1>
@@ -62,6 +62,70 @@ Used to print a variable to the template. If the variable is not in the context 
 
     <p>First Name: {{users.0.first_name}}</p>
 
+#### Variable Filters
+
+Used to modify variables. Filters are added directly after variable names, separated by the pipe (|) character. You can chain multiple filters together, applying one after the other in succession.
+
+    {{ foo|reverse|join(' ')|title }}
+
+##### default(default_value)
+
+If the variable is `undefined`, `null`, or `false`, a default return value can be specified.
+
+    {{ foo|default('foo is not defined') }}
+
+##### lower
+
+Return the variable in all lowercase letters.
+
+##### upper
+
+Return the variable in all uppercase letters
+
+##### capitalize
+
+Capitalize the first character in the string.
+
+##### title
+
+Change the output to title case–the first letter of every word will uppercase, while all the rest will be lowercase.
+
+##### join
+
+If the value is an Array, you can join each value with a delimiter and return it as a string.
+
+    {{ authors|join(', ') }}
+
+##### reverse
+
+If the value is an Array, this filter will reverse all items in the array.
+
+##### length
+
+Return the `length` property of the value.
+
+##### url_encode
+
+Encode a URI component.
+
+##### url_decode
+
+Decode a URI component.
+
+##### json_encode
+
+Return a JSON string of the variable.
+
+##### striptags
+
+Strip all HTML/XML tags.
+
+##### date
+
+Convert a valid date into a format as specified. Mostly conforms to (php.net's date formatting)[http://php.net/date].
+
+    {{ post.created|date('F jS, Y') }}
+
 ### Comment tags
 
 Comment tags are simply ignored. Comments can't span multitple lines.
@@ -77,7 +141,7 @@ Check django's template inheritance system for more info. Unlike django, the blo
 #### include
 
 Includes a template in it's place. The template is rendered within the current context. Does not requre closing with {% end %}.
-  
+
     {% include template_path %}
     {% include "path/to/template.js" %}
 
@@ -88,7 +152,7 @@ You can iterate arrays and objects. Access the current iteration index through '
     {% for x in y %}
       <p>{% forloop.index %}</p>
     {% end %}
-    
+
 #### if
 
 Supports the following expressions. No else tag yet.
@@ -108,7 +172,7 @@ Supports the following expressions. No else tag yet.
 Use slots where you want highly customized content that depends heavily on dynamic data. They work in pair with widget functions that you can write yourself.
 
 Template code
-    
+
     <div>
       {% slot main %}
     </div>
@@ -121,14 +185,14 @@ Node.js code
     context.slots = {
       main: [
         "<h1>This is a paragraph as a normal string.</h1>", // String
-        
+
         { tagname: 'analytics',   // Widget object
           uaCode: 'UA-XXXXX-X' },
       ],
-      
+
       sidebar: [
         "<h3>Navigation</h3>",    // String
-        
+
         { tagname: 'navigation',  // Widget object
           links: [
             '/home',
@@ -137,7 +201,7 @@ Node.js code
           ]}
       ]
     }
-    
+
     context.widgets = {
       analytics: function (context) {
         // this inside widget functions is bound to the widget object
@@ -150,7 +214,7 @@ Node.js code
         return html;
       }
     }
-    
+
     template.render(context)
 
 Result
