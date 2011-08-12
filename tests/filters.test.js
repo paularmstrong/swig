@@ -1,5 +1,17 @@
 var filters = require('../lib/filters');
 
+exports.default = function (test) {
+    var defOut = 'blah';
+    test.strictEqual('foo', filters.default('foo', defOut), 'string not overridden by default');
+    test.strictEqual(0, filters.default(0, defOut), 'zero not overridden by default');
+
+    test.strictEqual(defOut, filters.default('', defOut), 'empty string overridden by default');
+    test.strictEqual(defOut, filters.default(undefined, defOut), 'default overrides undefined');
+    test.strictEqual(defOut, filters.default(null, defOut), 'default overrides null');
+    test.strictEqual(defOut, filters.default(false, defOut), 'default overrides false');
+    test.done();
+};
+
 exports.lower = function (test) {
     var input = 'BaR';
     test.strictEqual('bar', filters.lower(input));
