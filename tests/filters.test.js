@@ -51,6 +51,13 @@ exports.join = function (test) {
     test.done();
 };
 
+exports.reverse = function (test) {
+    test.deepEqual([3, 2, 1], filters.reverse([1, 2, 3]), 'reverse array');
+    test.strictEqual('asdf', filters.reverse('asdf'), 'reverse string does nothing');
+    test.deepEqual({ 'foo': 'bar' }, filters.reverse({ 'foo': 'bar' }), 'reverse object does nothing');
+    test.done();
+};
+
 exports.length = function (test) {
     var input = [1, 2, 3];
     test.strictEqual(3, filters.length(input));
