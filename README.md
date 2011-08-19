@@ -1,235 +1,59 @@
 # Node-T
 
-A fast django-like templating engine for node.js.
+A fast, Django-like template engine for node.js.
 
-Node-T is a templating engine inspired by the django syntax. It has a few extensions and the templates are compiled to native javascript functions which make them really fast. For now it's synchronous, but once a template is read and compiled, it is cached in memory.
+Node-T is a template engine inspired by the Django syntax. It has a few extensions and the templates are compiled to native javascript functions which make them really fast. For now it's synchronous, but once a template is read and compiled, it is cached in memory.
 
-### Example template code
+## Basic Example
 
-    <html>
-    <body>
-      <h1>Example</h1>
-      {% for name in names %}
-        <p>
-          {{forloop.counter}}
-          {# This is a comment #}
-          {{name}}{% if name == "Django" %} Reinhardt{% end %}
-        </p>
-      {% end %}
-    </body>
-    </html>
+### Template code
 
-### Example node code
+    <h1>Example</h1>
+    {% for name in names %}
+      <p>
+        {{ forloop.counter }}
+        {# This is a comment #}
+        {{ name }}{% if name == "Django" %} Reinhardt{% end %}
+      </p>
+    {% end %}
+
+### node.js code
 
     var template  = require('node-t');
     var tmpl = template.fromFile("/path/to/template.html");
     console.log(tmpl.render({names: ["Duke", "Django", "Louis"]}));
 
-### How it works
+### Output
+
+    <h1>Example</h1>
+      <p>
+        1
+        Duke
+      </p>
+      <p>
+        2
+        Django Reinhardt
+      </p>
+      <p>
+        3
+        Louis
+      </p>
+    {% end %}
+
+## How it works
 
 Node-T reads template files and translates them into javascript functions using the Function constructor. When we later render a template we call the evaled function passing a context object as an argument. This makes the rendering very fast. The template tags are defined as strings of Javascript code - which is a bit ugly, but there are helpers that will make writing tags easier for you.
 
 The slots system will allow you to define your own HTML snippets that will be rendered with a special context.
 
-## The API
-
-You have 2 methods for creating a template object:
-
-    var template = require('node-slots');
-    template.fromFile("path/to/template/file.html");
-    template.fromString("Template string here");
-
-Both of them will give you a template object on which you call the render method passing it a map of context values.
-
-    var tmpl = template.fromFile("path/to/template/file.html");
-    var renderdHtml = tmpl.render({});
-
 ## Template syntax
 
-You should be familiar with the [Django template syntax][1]. Here I'll just sum up the diferences:
-
-- There are no filters implemented yet
-- Tags like {% for %} and {% if %} are closed with a simple {% end %} tag
-- Not all tags are implemented
-- Some extra tags are implemented
-- Syntax for some tags is a bit different.
-
-Here's a list of currently implemented tags:
-
-### Variable tags
-
-Used to print a variable to the template. If the variable is not in the context we don't get an error, rather an empty string. You can use dot notation to access object proerties or array memebers.
-
-    <p>First Name: {{users.0.first_name}}</p>
-
-#### Variable Filters
-
-Used to modify variables. Filters are added directly after variable names, separated by the pipe (|) character. You can chain multiple filters together, applying one after the other in succession.
-
-    {{ foo|reverse|join(' ')|title }}
-
-##### default(default_value)
-
-If the variable is `undefined`, `null`, or `false`, a default return value can be specified.
-
-    {{ foo|default('foo is not defined') }}
-
-##### lower
-
-Return the variable in all lowercase letters.
-
-##### upper
-
-Return the variable in all uppercase letters
-
-##### capitalize
-
-Capitalize the first character in the string.
-
-##### title
-
-Change the output to title case–the first letter of every word will uppercase, while all the rest will be lowercase.
-
-##### join
-
-If the value is an Array, you can join each value with a delimiter and return it as a string.
-
-    {{ authors|join(', ') }}
-
-##### reverse
-
-If the value is an Array, this filter will reverse all items in the array.
-
-##### length
-
-Return the `length` property of the value.
-
-##### url_encode
-
-Encode a URI component.
-
-##### url_decode
-
-Decode a URI component.
-
-##### json_encode
-
-Return a JSON string of the variable.
-
-##### striptags
-
-Strip all HTML/XML tags.
-
-##### date
-
-Convert a valid date into a format as specified. Mostly conforms to (php.net's date formatting)[http://php.net/date].
-
-    {{ post.created|date('F jS, Y') }}
-
-### Comment tags
-
-Comment tags are simply ignored. Comments can't span multitple lines.
-
-    {# This is a comment #}
-
-### Logic tags
-
-#### extends / block
-
-Check django's template inheritance system for more info. Unlike django, the block tags are terminated with {% end %}, not with {% endblock %}
-
-#### include
-
-Includes a template in it's place. The template is rendered within the current context. Does not requre closing with {% end %}.
-
-    {% include template_path %}
-    {% include "path/to/template.js" %}
-
-#### for
-
-You can iterate arrays and objects. Access the current iteration index through 'forloop.index' which is available inside the loop.
-
-    {% for x in y %}
-      <p>{% forloop.index %}</p>
-    {% end %}
-
-#### if
-
-Supports the following expressions. No else tag yet.
-
-    {% if x %}{% end %}
-    {% if !x %}{% end %}
-    {% if x operator y %}
-      Operators: ==, !=, <, <=, >, >=, ===, !==, in
-      The 'in' operator checks for presence in arrays too.
-    {% end %}
-    {% if x == 'five' %}
-      The operands can be also be string or number literals
-    {% end %}
-
-#### slot
-
-Use slots where you want highly customized content that depends heavily on dynamic data. They work in pair with widget functions that you can write yourself.
-
-Template code
-
-    <div>
-      {% slot main %}
-    </div>
-    <div>
-      {% slot sidebar %}
-    </div>
-
-Node.js code
-
-    context.slots = {
-      main: [
-        "<h1>This is a paragraph as a normal string.</h1>", // String
-
-        { tagname: 'analytics',   // Widget object
-          uaCode: 'UA-XXXXX-X' },
-      ],
-
-      sidebar: [
-        "<h3>Navigation</h3>",    // String
-
-        { tagname: 'navigation',  // Widget object
-          links: [
-            '/home',
-            '/about',
-            '/kittens'
-          ]}
-      ]
-    }
-
-    context.widgets = {
-      analytics: function (context) {
-        // this inside widget functions is bound to the widget object
-        return "<script>..." + this.uaCode + "...</script>";
-      },
-      navigation: function (context) {
-        var i, html = "";
-        for (i=0; i<this.links; i++)
-          html += "<a href='" + links[i] + "'>" + links[i] + "</a>";
-        return html;
-      }
-    }
-
-    template.render(context)
-
-Result
-
-    <div>
-      <h1>This is a paragraph as a normal string.</h1>
-      <script>...UA-XXXXX-X...</script>
-    </div>
-    <div>
-      <h3>Navigation</h3>
-      <a href='/home'>/home</a>
-      <a href='/about'>/about</a>
-      <a href='/kittens'>/kittens</a>
-    </div>
-
+While Node-T is inspired by the [Django template syntax][1], there are a few differences:
+
+- Filters have a different syntaxt.
+- Tags like {% for %} and {% if %} are closed with a simple {% end %} tag.
+- Some tags are missing or have different syntax.
+- Some extra tags are available.
 
 ## License
 
