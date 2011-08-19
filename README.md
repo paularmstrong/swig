@@ -4,6 +4,12 @@ A fast, Django-like template engine for node.js.
 
 Node-T is a template engine inspired by the Django syntax. It has a few extensions and the templates are compiled to native javascript functions which make them really fast. For now it's synchronous, but once a template is read and compiled, it is cached in memory.
 
+## Features
+
+* Object-Oriented template inheritance: inherit from multiple parent templates.
+* Apply variable filters and transformations in your templates.
+* [Express][2] compatible!
+
 ## Basic Example
 
 ### Template code
@@ -68,3 +74,4 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [1]: http://djangoproject.com/
+[2]: http://expressjs.com/
