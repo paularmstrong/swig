@@ -5,6 +5,9 @@
     "keywords": ["template", "html", "django", "sandbox"],
     "repository": "git://github.com/skid/node-t.git",
     "author": "Dusko Jordanovski <jordanovskid@gmail.com>",
+    "contributors": [
+        "Paul Armstrong <paul@paularmstrongdesigns.com>"
+    ],
     "dependencies": {},
     "devDependencies": {
         "nodelint": "0.4.0",
