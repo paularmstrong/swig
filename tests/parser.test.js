@@ -73,33 +73,33 @@ exports.Comments = testCase({
 exports.Variable = testCase({
     'basic variable': function (test) {
         var output = parser.parse('{{ foobar }}');
-        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [] }], output, 'with spaces');
+        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [], escape: false }], output, 'with spaces');
 
         output = parser.parse('{{foobar}}');
-        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [] }], output, 'without spaces');
+        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [], escape: false }], output, 'without spaces');
 
         test.done();
     },
 
     'dot-notation variable': function (test) {
         var output = parser.parse('{{ foo.bar }}');
-        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foo.bar', filters: [] }], output);
+        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foo.bar', filters: [], escape: false }], output);
         test.done();
     },
 
     'variable with filter': function (test) {
         var output = parser.parse('{{ foobar|awesome }}');
-        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [{ name: 'awesome', args: [] }] }], output, 'filter by name');
+        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, filters: [{ name: 'awesome', args: [] }] }], output, 'filter by name');
 
         output = parser.parse('{{ foobar|awesome("param", 2) }}');
-        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [{ name: 'awesome', args: ['param', 2] }] }], output, 'filter with params');
+        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, filters: [{ name: 'awesome', args: ['param', 2] }] }], output, 'filter with params');
 
         test.done();
     },
 
     'multiple filters': function (test) {
         var output = parser.parse('{{ foobar|baz(1)|rad|awesome("param", 2) }}');
-        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [
+        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, filters: [
             { name: 'baz', args: [1] },
             { name: 'rad', args: [] },
             { name: 'awesome', args: ['param', 2] }
@@ -111,8 +111,8 @@ exports.Variable = testCase({
     'filters do not carry over': function (test) {
         var output = parser.parse('{{ foo|baz }}{{ bar }}');
         test.deepEqual([
-            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'baz', args: [] }] },
-            { type: parser.TOKEN_TYPES.VAR, name: 'bar', filters: [] }
+            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'baz', args: [] }], escape: false },
+            { type: parser.TOKEN_TYPES.VAR, name: 'bar', filters: [], escape: false }
         ], output);
         test.done();
     }

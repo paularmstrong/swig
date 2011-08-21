@@ -4,7 +4,9 @@ var template = require('../index'),
 console.log();
 console.log('Starting speed tests...');
 
-template.init(__dirname, false);
+template.init({
+    root: __dirname + '/templates'
+});
 
 tplS = template.fromString(
     "{% for v in array %}"
@@ -18,8 +20,6 @@ tplS = template.fromString(
     +   "{% end %}"
     + "{% end %}"
 );
-
-template.init(__dirname + '/templates');
 
 array = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], { af: "s", baz: "d", d: "f" }, "zeus"];
 tplF = template.fromFile("include_base.html");
