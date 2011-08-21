@@ -45,6 +45,30 @@ Supports the following expressions. No else tag yet.
       The operands can be also be string or number literals
     {% end %}
 
+## autoescape
+
+The `autoescape` tag accepts one of two controls: `on` or `off` (default is `on` if not provided). These either turn variable auto-escaping on or off for the contents of the filter, regardless of the global setting.
+
+For the following contexts, assume:
+
+    some_html_output = '<p>Hello "you" & \'them\'</p>';
+
+So the following:
+
+    {% autoescape off %}
+        {{ some_html_output }}
+    {% end %}
+
+    {% autoescape on %}
+        {{ some_html_output }}
+    {% end %}
+
+Will output:
+
+    <p>Hello "you" & 'them'</p>
+
+    &lt;p&gt;Hello &quot;you&quot; &amp; &#39;them&#39; &lt;/p&gt;
+
 ## slot
 
 Use slots where you want highly customized content that depends heavily on dynamic data. They work in pair with widget functions that you can write yourself.

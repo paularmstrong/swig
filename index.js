@@ -9,17 +9,23 @@ var fs = require("fs"),
     parser = require("parser"),
     widgets = require("widgets"),
     filters = require('filters'),
+    helpers = require('helpers'),
+
+    _ = require('underscore'),
+
+    config = {
+        autoescape: true,
+        root: '/',
+        debug: false
+    },
 
     CACHE = {},
-    DEBUG = false,
-    ROOT = "/",
 
     fromString, fromFile, createTemplate;
 
 // Call this before using the templates
-exports.init = function (root, debug) {
-    DEBUG = debug;
-    ROOT = root;
+exports.init = function (options) {
+    config = _.extend(config, options);
 };
 
 createTemplate = function (data, id) {
@@ -40,18 +46,18 @@ createTemplate = function (data, id) {
         render;
 
     // The template token tree before compiled into javascript
-    template.tokens = parser.parse.call(template, data, tags);
+    template.tokens = parser.parse.call(template, data, tags, config.autoescape);
 
     // The raw template code - can be inserted into other templates
     // We don't need this in production
     code = parser.compile.call(template);
 
-    if (DEBUG) {
+    if (config.debug) {
         template.code = code;
     }
 
     // The compiled render function - this is all we need
-    render = new Function("__context", "__parents", "__filters", "__widgets",
+    render = new Function("__context", "__parents", "__filters", "__widgets", '__escape',
         [  '__parents = __parents ? __parents.slice() : [];'
         // Prevents circular includes (which will crash node without warning)
         , 'for (var i=0, j=__parents.length; i<j; ++i) {'
@@ -68,7 +74,7 @@ createTemplate = function (data, id) {
     );
 
     template.render = function (context, parents) {
-        return render.call(this, context, parents, filters, widgets);
+        return render.call(this, context, parents, filters, widgets, helpers.escaper);
     };
 
     return template;
@@ -84,11 +90,11 @@ fromFile = function (filepath) {
         filepath = filepath.substr(1);
     }
 
-    if (filepath in CACHE && !DEBUG) {
+    if (filepath in CACHE && !config.debug) {
         return CACHE[filepath];
     }
 
-    var data = fs.readFileSync(ROOT + "/" + filepath, 'utf8');
+    var data = fs.readFileSync(config.root + "/" + filepath, 'utf8');
     // TODO: see what error readFileSync returns and warn about it
     if (data) {
         CACHE[filepath] = createTemplate(data, filepath);
@@ -102,7 +108,7 @@ fromFile = function (filepath) {
 fromString = function (string) {
     var hash = crypto.createHash('md5').update(string).digest('hex');
 
-    if (!(hash in CACHE && !DEBUG)) {
+    if (!(hash in CACHE && !config.debug)) {
         CACHE[hash] = createTemplate(string, hash);
     }
 

@@ -15,7 +15,7 @@ Register Node-T as the template renderer.
 
 Set up your views directory.
 
-    nodet.init('/path/to/views/directory/');
+    nodet.init({ root: '/path/to/views/directory/' });
     app.set('views', '/path/to/views/directory/');
 
 **Important!** Don't allow express to automatically pipe your template into a `layout.html` file. Setting this to false allows you to properly use `{% extends %}` and `{% block %}` tags!
