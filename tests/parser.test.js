@@ -115,6 +115,14 @@ exports.Variable = testCase({
             { type: parser.TOKEN_TYPES.VAR, name: 'bar', filters: [], escape: false }
         ], output);
         test.done();
+    },
+
+    'filters with all kinds of characters in params': function (test) {
+        var output = parser.parse('{{ foo|blah("01a,;?./¨œ∑´®†][{}]") }}');
+        test.deepEqual([
+            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'blah', args: ["01a,;?./¨œ∑´®†][{}]"] }], escape: false }
+        ], output);
+        test.done();
     }
 });
 
