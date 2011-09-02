@@ -132,3 +132,23 @@ exports.date = function (test) {
 
     test.done();
 };
+
+exports.first = function (test) {
+    var input = [1, 2, 3, 4];
+    test.strictEqual(1, filters.first(input));
+    test.strictEqual('2', filters.first('213'));
+    test.done();
+};
+
+exports.last = function (test) {
+    var input = [1, 2, 3, 4];
+    test.strictEqual(4, filters.last(input));
+    test.strictEqual('3', filters.last('123'));
+    test.done();
+};
+
+exports.uniq = function (test) {
+    var input = [2, 1, 2, 3, 4, 4];
+    test.deepEqual([2, 1, 3, 4], filters.uniq(input));
+    test.done();
+};

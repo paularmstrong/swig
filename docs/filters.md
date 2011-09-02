@@ -61,3 +61,15 @@ Strip all HTML/XML tags.
 Convert a valid date into a format as specified. Mostly conforms to (php.net's date formatting)[http://php.net/date].
 
     {{ post.created|date('F jS, Y') }}
+
+## first
+
+Returns the first element of an array. Uses [underscore.js first](http://documentcloud.github.com/underscore/#first)
+
+## last
+
+Returns the last element of an array. Uses [underscore.js last](http://documentcloud.github.com/underscore/#last)
+
+## uniq
+
+Produces a duplicate-free version of the array. Uses [underscore.js uniq](http://documentcloud.github.com/underscore/#uniq)
