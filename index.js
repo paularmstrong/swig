@@ -11,10 +11,7 @@ var fs = require('fs'),
     _ = require('underscore'),
 
     config,
-
-    CACHE = {},
-
-    fromString, fromFile, createTemplate;
+    CACHE = {};
 
 // Call this before using the templates
 exports.init = function (options) {
@@ -28,10 +25,10 @@ exports.init = function (options) {
     config.tags = _.extend(tags, options.tags);
 };
 
-createTemplate = function (data, id) {
+function createTemplate(data, id) {
     var template = {
             // Allows us to include templates from the compiled code
-            fromFile: fromFile,
+            fromFile: exports.fromFile,
             // These are the blocks inside the template
             blocks: {},
             // Distinguish from other tokens
@@ -78,13 +75,13 @@ createTemplate = function (data, id) {
     };
 
     return template;
-};
+}
 
 /*
 * Returns a template object from the given filepath.
 * The filepath needs to be relative to the template directory.
 */
-fromFile = function (filepath) {
+exports.fromFile = function (filepath) {
 
     if (filepath[0] === '/') {
         filepath = filepath.substr(1);
@@ -102,10 +99,7 @@ fromFile = function (filepath) {
     }
 };
 
-/*
-* Returns a template object from the given string.
-*/
-fromString = function (string) {
+exports.fromString = function (string) {
     var hash = crypto.createHash('md5').update(string).digest('hex');
 
     if (!(hash in CACHE && !config.debug)) {
@@ -115,31 +109,27 @@ fromString = function (string) {
     return CACHE[hash];
 };
 
-module.exports = {
-    init: exports.init,
-    fromFile: fromFile,
-    fromString: fromString,
-    compile: function (source, options, callback) {
-        var self = this;
-        if (typeof source === 'string') {
-            return function (options) {
-                var tmpl = fromString(source);
+exports.compile = function (source, options, callback) {
+    var self = this;
+    if (typeof source === 'string') {
+        return function (options) {
+            var tmpl = exports.fromString(source);
 
-                options.locals = options.locals || {};
-                options.partials = options.partials || {};
+            options.locals = options.locals || {};
+            options.partials = options.partials || {};
 
-                if (options.body) { // for express.js > v1.0
-                    options.locals.body = options.body;
-                }
+            if (options.body) { // for express.js > v1.0
+                options.locals.body = options.body;
+            }
 
-                return tmpl.render(options.locals);
-            };
-        } else {
-            return source;
-        }
-    },
-    render: function (template, options) {
-        template = this.compile(template, options);
-        return template(options);
+            return tmpl.render(options.locals);
+        };
+    } else {
+        return source;
     }
+};
+
+exports.render = function (template, options) {
+    template = this.compile(template, options);
+    return template(options);
 };
