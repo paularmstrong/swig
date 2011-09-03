@@ -1,7 +1,7 @@
 {
     "name": "swig",
     "version": "0.1.3",
-    "description": "A fast django-like templating engine for node.js. Forked from node-t",
+    "description": "A fast django-like templating engine for node.js. Forked from Swig",
     "keywords": ["template", "html", "django", "sandbox"],
     "repository": "git://github.com/paularmstrong/swig.git",
     "author": "Paul Armstrong <paul@paularmstrongdesigns.com>",

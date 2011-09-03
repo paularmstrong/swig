@@ -1,8 +1,8 @@
-# Node-T
+# Swig
 
 A fast, Django-like template engine for node.js.
 
-Node-T is a template engine inspired by the Django syntax. It has a few extensions and the templates are compiled to native javascript functions which make them really fast. For now it's synchronous, but once a template is read and compiled, it is cached in memory.
+Swig is a template engine inspired by the Django syntax. It has a few extensions and the templates are compiled to native javascript functions which make them really fast. For now it's synchronous, but once a template is read and compiled, it is cached in memory.
 
 ## Features
 
@@ -25,7 +25,7 @@ Node-T is a template engine inspired by the Django syntax. It has a few extensio
 
 ### node.js code
 
-    var template  = require('node-t');
+    var template  = require('Swig');
     var tmpl = template.fromFile("/path/to/template.html");
     console.log(tmpl.render({names: ["Duke", "Django", "Louis"]}));
 
@@ -48,13 +48,13 @@ Node-T is a template engine inspired by the Django syntax. It has a few extensio
 
 ## How it works
 
-Node-T reads template files and translates them into javascript functions using the Function constructor. When we later render a template we call the evaled function passing a context object as an argument. This makes the rendering very fast. The template tags are defined as strings of Javascript code - which is a bit ugly, but there are helpers that will make writing tags easier for you.
+Swig reads template files and translates them into javascript functions using the Function constructor. When we later render a template we call the evaled function passing a context object as an argument. This makes the rendering very fast. The template tags are defined as strings of Javascript code - which is a bit ugly, but there are helpers that will make writing tags easier for you.
 
 The slots system will allow you to define your own HTML snippets that will be rendered with a special context.
 
 ## Template syntax
 
-While Node-T is inspired by the [Django template syntax][1], there are a few differences:
+While Swig is inspired by the [Django template syntax][1], there are a few differences:
 
 - Filters have a different syntaxt.
 - Tags like {% for %} and {% if %} are closed with a simple {% end %} tag.
