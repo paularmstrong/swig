@@ -1,12 +1,12 @@
 require.paths.unshift(__dirname + '/lib');
 
-var fs = require("fs"),
-    util = require("util"),
-    path = require("path"),
-    crypto = require("crypto"),
+var fs = require('fs'),
+    util = require('util'),
+    path = require('path'),
+    crypto = require('crypto'),
 
-    tags = require("tags"),
-    parser = require("parser"),
+    tags = require('tags'),
+    parser = require('parser'),
     filters = require('filters'),
     helpers = require('helpers'),
 
@@ -59,7 +59,7 @@ createTemplate = function (data, id) {
     }
 
     // The compiled render function - this is all we need
-    render = new Function("__context", "__parents", "__filters", '__escape',
+    render = new Function('__context', '__parents', '__filters', '__escape',
         [  '__parents = __parents ? __parents.slice() : [];'
         // Prevents circular includes (which will crash node without warning)
         , 'for (var i=0, j=__parents.length; i<j; ++i) {'
@@ -72,7 +72,7 @@ createTemplate = function (data, id) {
         , 'var __output = [];'
         , 'var __this = this;'
         , code
-        , 'return __output.join("");'].join("\n")
+        , 'return __output.join("");'].join('\n')
     );
 
     template.render = function (context, parents) {
@@ -96,7 +96,7 @@ fromFile = function (filepath) {
         return CACHE[filepath];
     }
 
-    var data = fs.readFileSync(config.root + "/" + filepath, 'utf8');
+    var data = fs.readFileSync(config.root + '/' + filepath, 'utf8');
     // TODO: see what error readFileSync returns and warn about it
     if (data) {
         CACHE[filepath] = createTemplate(data, filepath);
