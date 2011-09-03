@@ -50,8 +50,6 @@ Swig is a template engine inspired by the Django syntax. It has a few extensions
 
 Swig reads template files and translates them into javascript functions using the Function constructor. When we later render a template we call the evaled function passing a context object as an argument. This makes the rendering very fast. The template tags are defined as strings of Javascript code - which is a bit ugly, but there are helpers that will make writing tags easier for you.
 
-The slots system will allow you to define your own HTML snippets that will be rendered with a special context.
-
 ## Template syntax
 
 While Swig is inspired by the [Django template syntax][1], there are a few differences:
