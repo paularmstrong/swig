@@ -28,6 +28,7 @@ exports.init = function (options) {
     }, options);
 
     config.filters = _.extend(filters, options.filters);
+    config.tags = _.extend(tags, options.tags);
 };
 
 createTemplate = function (data, id) {
@@ -48,7 +49,7 @@ createTemplate = function (data, id) {
         render;
 
     // The template token tree before compiled into javascript
-    template.tokens = parser.parse.call(template, data, tags, config.autoescape);
+    template.tokens = parser.parse.call(template, data, config.tags, config.autoescape);
 
     // The raw template code - can be inserted into other templates
     // We don't need this in production
