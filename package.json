@@ -20,7 +20,7 @@
         "node": ">= 0.4.1"
     },
     "scripts": {
-        "lint": "make lint",
-        "test": "make test"
+        "prepublish": "npm prune",
+        "test": "make lint && make test"
     }
 }
