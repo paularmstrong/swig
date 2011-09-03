@@ -1,5 +1,4 @@
 var fs = require('fs'),
-    util = require('util'),
     path = require('path'),
     crypto = require('crypto'),
 
@@ -17,8 +16,8 @@ var fs = require('fs'),
 exports.init = function (options) {
     config = _.extend({
         autoescape: true,
-        root: '/',
-        debug: false
+        encoding: 'utf8',
+        root: '/'
     }, options);
 
     config.filters = _.extend(filters, options.filters);
@@ -33,8 +32,6 @@ function createTemplate(data, id) {
             blocks: {},
             // Distinguish from other tokens
             type: parser.TEMPLATE,
-            // Allows us to print debug info from the compiled code
-            util: util,
             // The template ID (path relative to tempalte dir)
             id: id
         },
@@ -48,10 +45,6 @@ function createTemplate(data, id) {
     // The raw template code - can be inserted into other templates
     // We don't need this in production
     code = parser.compile.call(template);
-
-    if (config.debug) {
-        template.code = code;
-    }
 
     // The compiled render function - this is all we need
     render = new Function('__context', '__parents', '__filters', '__escape',
@@ -82,16 +75,15 @@ function createTemplate(data, id) {
 * The filepath needs to be relative to the template directory.
 */
 exports.fromFile = function (filepath) {
-
     if (filepath[0] === '/') {
         filepath = filepath.substr(1);
     }
 
-    if (filepath in CACHE && !config.debug) {
+    if (CACHE.hasOwnProperty(filepath)) {
         return CACHE[filepath];
     }
 
-    var data = fs.readFileSync(config.root + '/' + filepath, 'utf8');
+    var data = fs.readFileSync(config.root + '/' + filepath, config.encoding);
     // TODO: see what error readFileSync returns and warn about it
     if (data) {
         CACHE[filepath] = createTemplate(data, filepath);
@@ -102,7 +94,7 @@ exports.fromFile = function (filepath) {
 exports.fromString = function (string) {
     var hash = crypto.createHash('md5').update(string).digest('hex');
 
-    if (!(hash in CACHE && !config.debug)) {
+    if (!CACHE.hasOwnProperty(hash)) {
         CACHE[hash] = createTemplate(string, hash);
     }
 
