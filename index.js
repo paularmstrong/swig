@@ -13,11 +13,7 @@ var fs = require("fs"),
 
     _ = require('underscore'),
 
-    config = {
-        autoescape: true,
-        root: '/',
-        debug: false
-    },
+    config,
 
     CACHE = {},
 
@@ -25,7 +21,13 @@ var fs = require("fs"),
 
 // Call this before using the templates
 exports.init = function (options) {
-    config = _.extend(config, options);
+    config = _.extend({
+        autoescape: true,
+        root: '/',
+        debug: false
+    }, options);
+
+    config.filters = _.extend(filters, options.filters);
 };
 
 createTemplate = function (data, id) {
@@ -74,7 +76,7 @@ createTemplate = function (data, id) {
     );
 
     template.render = function (context, parents) {
-        return render.call(this, context, parents, filters, widgets, helpers.escaper);
+        return render.call(this, context, parents, config.filters, widgets, helpers.escaper);
     };
 
     return template;
