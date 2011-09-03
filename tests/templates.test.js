@@ -1,7 +1,11 @@
 var swig = require('../index');
 
 exports.Filters = function (test) {
-    swig.init({});
+    swig.init({ filters: {
+        foo: function (input) {
+            return 'bar';
+        }
+    }});
 
     var tmpl8 = swig.fromString('{{ asdf|lower }}');
     test.strictEqual(tmpl8.render({ asdf: 'BLAH' }), 'blah');
