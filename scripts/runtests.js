@@ -1,5 +1,3 @@
-require.paths.unshift(__dirname + '/../node_modules/');
-
 var util = require('util'),
     child_process = require('child_process'),
     nodeunit = require('nodeunit'),
