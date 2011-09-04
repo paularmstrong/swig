@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}{% end %} - Example</title>
+
+
+</head>
+<body>
+
+    <header>
+        <h1>{% block title %}{% end %}</h1>
+        {% block header %}{% end %}
+        <nav>
+            <ul>
+                <li><a href="/">Home Page</a></li>
+                <li><a href="/people">People</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section role="main">
+        {% block body %}{% end %}
+    </section>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>{{ title }}</title>
+
+
+</head>
+<body>
+
+    <h1>{{ title }}</h1>
+
+    <ul>
+        {% for person in people %}
+        <li>{{ person.name }} age {{ person.age }}</li>
+        {% end %}
+    </ul>
+
+</body>
+</html>
