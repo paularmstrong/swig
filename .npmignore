@@ -1,4 +1,6 @@
 .DS_Store
+docs/*
 Makefile
 scripts/*
 tests/*
+tests/templates/*
