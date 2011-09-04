@@ -38,6 +38,9 @@ exports.Variables = testCase({
         tmpl8 = swig.fromString('{{ a[0].b[1] }}');
         test.strictEqual(tmpl8.render({ a: [{ b: ['no', 'yes'] }] }), 'yes', 'mixed notation');
 
+        tmpl8 = swig.fromString('{{ a["b"].b[1] }}');
+        test.strictEqual(tmpl8.render({ a: { b: { b: ['no', 'yes'] }} }), 'yes', 'mixed notation');
+
         test.done();
     }
 });
