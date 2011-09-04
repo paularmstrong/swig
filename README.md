@@ -10,6 +10,10 @@ Swig is a template engine inspired by the Django syntax. It has a few extensions
 * Apply variable filters and transformations in your templates.
 * [Express][2] compatible!
 
+## Installation
+
+    npm install swig
+
 ## Basic Example
 
 ### Template code
