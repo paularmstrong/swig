@@ -122,6 +122,6 @@ exports.compile = function (source, options, callback) {
 };
 
 exports.render = function (template, options) {
-    template = this.compile(template, options);
+    template = exports.compile(template, options);
     return template(options);
 };
