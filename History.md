@@ -1,3 +1,8 @@
+## [0.1.7](https://github.com/paularmstrong/swig/tree/0.1.7) / 2011-09-05
+
+* Fixed date filter to zero-pad correctly during september when using 'm' format
+* Added this History document
+
 ## [0.1.6](https://github.com/paularmstrong/swig/tree/0.1.6) / 2011-09-04
 
 * Critical fix for template inheritance blocks messing up.
