@@ -97,7 +97,7 @@ exports.multiple = function (test) {
 };
 
 exports.date = function (test) {
-    var input = 'Sat Aug 06 2011 09:05:02 GMT-0700 (PDT)';
+    var input = 'Sat Aug 06 2011 09:05:02';
 
     test.strictEqual('06', filters.date(input, "d"), 'format: d http://www.php.net/date');
     test.strictEqual('Sat', filters.date(input, "D"), 'format: D http://www.php.net/date');
@@ -125,6 +125,7 @@ exports.date = function (test) {
 
     test.strictEqual('+0700', filters.date(input, "O"), 'format: O http://www.php.net/date');
     test.strictEqual('25200', filters.date(input, "Z"), 'format: Z http://www.php.net/date');
+    // This test will fail in any other timezone. It's a bit hard to fake that out.
     test.strictEqual('Sat Aug 06 2011 09:05:02 GMT-0700 (PDT)', filters.date(input, "r"), 'format: r http://www.php.net/date');
     test.strictEqual('1312646702', filters.date(input, "U"), 'format: U http://www.php.net/date');
 
