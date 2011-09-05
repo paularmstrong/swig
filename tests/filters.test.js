@@ -97,23 +97,29 @@ exports.multiple = function (test) {
 };
 
 exports.date = function (test) {
-    var input = 'Sat Aug 06 2011 09:05:02';
+    var input = 'Tue Sep 06 2011 09:05:02';
 
+    // Day
     test.strictEqual('06', filters.date(input, "d"), 'format: d http://www.php.net/date');
-    test.strictEqual('Sat', filters.date(input, "D"), 'format: D http://www.php.net/date');
+    test.strictEqual('Tue', filters.date(input, "D"), 'format: D http://www.php.net/date');
     test.strictEqual('6', filters.date(input, "j"), 'format: j http://www.php.net/date');
-    test.strictEqual('Saturday', filters.date(input, "l"), 'format: l http://www.php.net/date');
-    test.strictEqual('6', filters.date(input, "N"), 'format: N http://www.php.net/date');
+    test.strictEqual('Tuesday', filters.date(input, "l"), 'format: l http://www.php.net/date');
+    test.strictEqual('2', filters.date(input, "N"), 'format: N http://www.php.net/date');
     test.strictEqual('th', filters.date(input, "S"), 'format: S http://www.php.net/date');
-    test.strictEqual('5', filters.date(input, "w"), 'format: w http://www.php.net/date');
-    test.strictEqual('August', filters.date(input, "F"), 'format: F http://www.php.net/date');
-    test.strictEqual('08', filters.date(input, "m"), 'format: m http://www.php.net/date');
-    test.strictEqual('Aug', filters.date(input, "M"), 'format: M http://www.php.net/date');
-    test.strictEqual('8', filters.date(input, "n"), 'format: n http://www.php.net/date');
+    test.strictEqual('1', filters.date(input, "w"), 'format: w http://www.php.net/date');
 
+    // Month
+    test.strictEqual('September', filters.date(input, "F"), 'format: F http://www.php.net/date');
+    test.strictEqual('09', filters.date(input, "m"), 'format: m http://www.php.net/date');
+    test.strictEqual('Sep', filters.date(input, "M"), 'format: M http://www.php.net/date');
+    test.strictEqual('9', filters.date(input, "n"), 'format: n http://www.php.net/date');
+
+    // Year
     test.strictEqual('2011', filters.date(input, "Y"), 'format: Y http://www.php.net/date');
     test.strictEqual('11', filters.date(input, "y"), 'format: y http://www.php.net/date');
     test.strictEqual('2011', filters.date(input, "Y"), 'format: Y http://www.php.net/date');
+
+    // Time
     test.strictEqual('am', filters.date(input, "a"), 'format: a http://www.php.net/date');
     test.strictEqual('AM', filters.date(input, "A"), 'format: A http://www.php.net/date');
     test.strictEqual('9', filters.date(input, "g"), 'format: g http://www.php.net/date');
@@ -123,13 +129,16 @@ exports.date = function (test) {
     test.strictEqual('05', filters.date(input, "i"), 'format: i http://www.php.net/date');
     test.strictEqual('02', filters.date(input, "s"), 'format: s http://www.php.net/date');
 
+    test.strictEqual('06-09-2011', filters.date(input, "d-m-Y"));
+
     // These tests will fail in any other timezone. It's a bit hard to fake that out without directly implementing the methods inline.
+    // Timezone
     test.strictEqual('+0700', filters.date(input, "O"), 'format: O http://www.php.net/date');
     test.strictEqual('25200', filters.date(input, "Z"), 'format: Z http://www.php.net/date');
-    test.strictEqual('Sat Aug 06 2011 09:05:02 GMT-0700 (PDT)', filters.date(input, "r"), 'format: r http://www.php.net/date');
-    test.strictEqual('1312646702', filters.date(input, "U"), 'format: U http://www.php.net/date');
 
-    test.strictEqual('06-08-2011', filters.date(input, "d-m-Y"));
+    // Full Date/Time
+    test.strictEqual('Tue Sep 06 2011 09:05:02 GMT-0700 (PDT)', filters.date(input, "r"), 'format: r http://www.php.net/date');
+    test.strictEqual('1315325102', filters.date(input, "U"), 'format: U http://www.php.net/date');
 
     test.done();
 };
