@@ -4,6 +4,12 @@ Used to modify variables. Filters are added directly after variable names, separ
 
     {{ foo|reverse|join(' ')|title }}
 
+## add(value)
+
+Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated, as in the example below.
+
+    {{ value|add('2') }}
+
 ## default(default_value)
 
 If the variable is `undefined`, `null`, or `false`, a default return value can be specified.

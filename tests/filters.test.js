@@ -1,5 +1,16 @@
 var filters = require('../lib/filters');
 
+exports.add = function (test) {
+    test.strictEqual(2, filters.add(0, 2));
+    test.strictEqual(3, filters.add('1', 2));
+    test.deepEqual([1, 2, 3, 4], filters.add([1, 2], [3, 4]));
+    test.strictEqual('foo2', filters.add('foo', 2));
+    test.strictEqual('foobar', filters.add('foo', 'bar'));
+    test.deepEqual({ foo: 1, bar: 2 }, filters.add({ foo: 1 }, { bar: 2 }));
+    test.strictEqual('foo1,2', filters.add('foo', [1, 2]));
+    test.done();
+};
+
 exports.default = function (test) {
     var defOut = 'blah';
     test.strictEqual('foo', filters.default('foo', defOut), 'string not overridden by default');
