@@ -22,6 +22,12 @@ exports.Tags = testCase({
         test.done();
     },
 
+    'basic tag with named end': function (test) {
+        var output = parser.parse('{% foo %}{% endfoo %}', { foo: { ends: true } });
+        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, name: 'foo', args: [], compile: { ends: true }, tokens: [] }], output, 'end matches start tag');
+        test.done();
+    },
+
     'basic tag with ends': function (test) {
         var output = parser.parse('{% blah %}{% end %}', { blah: { ends: true } });
         test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, name: 'blah', args: [], compile: { ends: true }, tokens: [] }], output);
