@@ -11,6 +11,11 @@ exports.add = function (test) {
     test.done();
 };
 
+exports.addslashes = function (test) {
+    test.strictEqual("\\\"Top O\\' the\\\\ mornin\\\"", filters.addslashes("\"Top O' the\\ mornin\""));
+    test.done();
+};
+
 exports.default = function (test) {
     var defOut = 'blah';
     test.strictEqual('foo', filters.default('foo', defOut), 'string not overridden by default');

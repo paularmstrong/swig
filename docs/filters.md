@@ -10,6 +10,14 @@ Adds the value to the variable. Strings that can be converted to integers will b
 
     {{ value|add('2') }}
 
+## addslashes
+
+Returns a string with backslashes in front of characters that need to be quoted for database queries, etc.
+
+* single quote `'`
+* double quote `"`
+* backslash `\`
+
 ## default(default_value)
 
 If the variable is `undefined`, `null`, or `false`, a default return value can be specified.
