@@ -18,27 +18,25 @@ Returns a string with backslashes in front of characters that need to be quoted 
 * double quote `"`
 * backslash `\`
 
+## capitalize
+
+Capitalize the first character in the string.
+
+## date
+
+Convert a valid date into a format as specified. Mostly conforms to (php.net's date formatting)[http://php.net/date].
+
+    {{ post.created|date('F jS, Y') }}
+
 ## default(default_value)
 
 If the variable is `undefined`, `null`, or `false`, a default return value can be specified.
 
     {{ foo|default('foo is not defined') }}
 
-## lower
+## first
 
-Return the variable in all lowercase letters.
-
-## upper
-
-Return the variable in all uppercase letters
-
-## capitalize
-
-Capitalize the first character in the string.
-
-## title
-
-Change the output to title case–the first letter of every word will uppercase, while all the rest will be lowercase.
+Returns the first element of an array. Uses [underscore.js first](http://documentcloud.github.com/underscore/#first)
 
 ## join
 
@@ -46,13 +44,41 @@ If the value is an Array, you can join each value with a delimiter and return it
 
     {{ authors|join(', ') }}
 
-## reverse
+## json_encode
 
-If the value is an Array, this filter will reverse all items in the array.
+Return a JSON string of the variable.
+
+## last
+
+Returns the last element of an array. Uses [underscore.js last](http://documentcloud.github.com/underscore/#last)
 
 ## length
 
 Return the `length` property of the value.
+
+## lower
+
+Return the variable in all lowercase letters.
+
+## reverse
+
+If the value is an Array, this filter will reverse all items in the array.
+
+## striptags
+
+Strip all HTML/XML tags.
+
+## title
+
+Change the output to title case–the first letter of every word will uppercase, while all the rest will be lowercase.
+
+## uniq
+
+Produces a duplicate-free version of the array. Uses [underscore.js uniq](http://documentcloud.github.com/underscore/#uniq)
+
+## upper
+
+Return the variable in all uppercase letters
 
 ## url_encode
 
@@ -61,29 +87,3 @@ Encode a URI component.
 ## url_decode
 
 Decode a URI component.
-
-## json_encode
-
-Return a JSON string of the variable.
-
-## striptags
-
-Strip all HTML/XML tags.
-
-## date
-
-Convert a valid date into a format as specified. Mostly conforms to (php.net's date formatting)[http://php.net/date].
-
-    {{ post.created|date('F jS, Y') }}
-
-## first
-
-Returns the first element of an array. Uses [underscore.js first](http://documentcloud.github.com/underscore/#first)
-
-## last
-
-Returns the last element of an array. Uses [underscore.js last](http://documentcloud.github.com/underscore/#last)
-
-## uniq
-
-Produces a duplicate-free version of the array. Uses [underscore.js uniq](http://documentcloud.github.com/underscore/#uniq)

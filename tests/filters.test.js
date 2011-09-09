@@ -16,99 +16,11 @@ exports.addslashes = function (test) {
     test.done();
 };
 
-exports.default = function (test) {
-    var defOut = 'blah';
-    test.strictEqual('foo', filters.default('foo', defOut), 'string not overridden by default');
-    test.strictEqual(0, filters.default(0, defOut), 'zero not overridden by default');
-
-    test.strictEqual(defOut, filters.default('', defOut), 'empty string overridden by default');
-    test.strictEqual(defOut, filters.default(undefined, defOut), 'default overrides undefined');
-    test.strictEqual(defOut, filters.default(null, defOut), 'default overrides null');
-    test.strictEqual(defOut, filters.default(false, defOut), 'default overrides false');
-    test.done();
-};
-
-exports.lower = function (test) {
-    var input = 'BaR';
-    test.strictEqual('bar', filters.lower(input));
-    input = 345;
-    test.strictEqual('345', filters.lower(input));
-    test.done();
-};
-
-exports.upper = function (test) {
-    var input = 'bar';
-    test.strictEqual('BAR', filters.upper(input));
-    input = 345;
-    test.strictEqual('345', filters.upper(input));
-    test.done();
-};
-
 exports.capitalize = function (test) {
     var input = 'awesome sauce.';
     test.strictEqual('Awesome sauce.', filters.capitalize(input));
     input = 345;
     test.strictEqual('345', filters.capitalize(input));
-    test.done();
-};
-
-exports.title = function (test) {
-    var input = 'this is title case';
-    test.strictEqual('This Is Title Case', filters.title(input));
-    test.done();
-};
-
-exports.join = function (test) {
-    var input = [1, 2, 3];
-    test.strictEqual('1+2+3', filters.join(input, '+'));
-    test.strictEqual('1 * 2 * 3', filters.join(input, ' * '));
-    input = 'asdf';
-    test.strictEqual('asdf', filters.join(input, '-'), 'Non-array input is not joined.');
-    test.done();
-};
-
-exports.reverse = function (test) {
-    test.deepEqual([3, 2, 1], filters.reverse([1, 2, 3]), 'reverse array');
-    test.strictEqual('asdf', filters.reverse('asdf'), 'reverse string does nothing');
-    test.deepEqual({ 'foo': 'bar' }, filters.reverse({ 'foo': 'bar' }), 'reverse object does nothing');
-    test.done();
-};
-
-exports.length = function (test) {
-    var input = [1, 2, 3];
-    test.strictEqual(3, filters.length(input));
-    input = 'foobar';
-    test.strictEqual(6, filters.length(input));
-    test.done();
-};
-
-exports.url_encode = function (test) {
-    var input = "param=1&anotherParam=2";
-    test.strictEqual("param%3D1%26anotherParam%3D2", filters.url_encode(input));
-    test.done();
-};
-
-exports.url_decode = function (test) {
-    var input = "param%3D1%26anotherParam%3D2";
-    test.strictEqual("param=1&anotherParam=2", filters.url_decode(input));
-    test.done();
-};
-
-exports.json_encode = function (test) {
-    var input = { foo: 'bar', baz: [1, 2, 3] };
-    test.strictEqual('{"foo":"bar","baz":[1,2,3]}', filters.json_encode(input));
-    test.done();
-};
-
-exports.striptags = function (test) {
-    var input = '<h1>foo</h1> <div class="blah">hi</div>';
-    test.strictEqual('foo hi', filters.striptags(input));
-    test.done();
-};
-
-exports.multiple = function (test) {
-    var input = ['aWEsoMe', 'sAuCe'];
-    test.strictEqual('Awesome Sauce', filters.title(filters.join(input, ' ')));
     test.done();
 };
 
@@ -159,10 +71,45 @@ exports.date = function (test) {
     test.done();
 };
 
+exports.default = function (test) {
+    var defOut = 'blah';
+    test.strictEqual('foo', filters.default('foo', defOut), 'string not overridden by default');
+    test.strictEqual(0, filters.default(0, defOut), 'zero not overridden by default');
+
+    test.strictEqual(defOut, filters.default('', defOut), 'empty string overridden by default');
+    test.strictEqual(defOut, filters.default(undefined, defOut), 'default overrides undefined');
+    test.strictEqual(defOut, filters.default(null, defOut), 'default overrides null');
+    test.strictEqual(defOut, filters.default(false, defOut), 'default overrides false');
+    test.done();
+};
+
 exports.first = function (test) {
     var input = [1, 2, 3, 4];
     test.strictEqual(1, filters.first(input));
     test.strictEqual('2', filters.first('213'));
+    test.done();
+};
+
+exports.join = function (test) {
+    var input = [1, 2, 3];
+    test.strictEqual('1+2+3', filters.join(input, '+'));
+    test.strictEqual('1 * 2 * 3', filters.join(input, ' * '));
+    input = 'asdf';
+    test.strictEqual('asdf', filters.join(input, '-'), 'Non-array input is not joined.');
+    test.done();
+};
+
+exports.json_encode = function (test) {
+    var input = { foo: 'bar', baz: [1, 2, 3] };
+    test.strictEqual('{"foo":"bar","baz":[1,2,3]}', filters.json_encode(input));
+    test.done();
+};
+
+exports.length = function (test) {
+    var input = [1, 2, 3];
+    test.strictEqual(3, filters.length(input));
+    input = 'foobar';
+    test.strictEqual(6, filters.length(input));
     test.done();
 };
 
@@ -173,8 +120,54 @@ exports.last = function (test) {
     test.done();
 };
 
+exports.lower = function (test) {
+    var input = 'BaR';
+    test.strictEqual('bar', filters.lower(input));
+    input = 345;
+    test.strictEqual('345', filters.lower(input));
+    test.done();
+};
+
+exports.reverse = function (test) {
+    test.deepEqual([3, 2, 1], filters.reverse([1, 2, 3]), 'reverse array');
+    test.strictEqual('asdf', filters.reverse('asdf'), 'reverse string does nothing');
+    test.deepEqual({ 'foo': 'bar' }, filters.reverse({ 'foo': 'bar' }), 'reverse object does nothing');
+    test.done();
+};
+
+exports.striptags = function (test) {
+    var input = '<h1>foo</h1> <div class="blah">hi</div>';
+    test.strictEqual('foo hi', filters.striptags(input));
+    test.done();
+};
+
+exports.title = function (test) {
+    var input = 'this is title case';
+    test.strictEqual('This Is Title Case', filters.title(input));
+    test.done();
+};
+
 exports.uniq = function (test) {
     var input = [2, 1, 2, 3, 4, 4];
     test.deepEqual([2, 1, 3, 4], filters.uniq(input));
+    test.done();
+};
+exports.upper = function (test) {
+    var input = 'bar';
+    test.strictEqual('BAR', filters.upper(input));
+    input = 345;
+    test.strictEqual('345', filters.upper(input));
+    test.done();
+};
+
+exports.url_encode = function (test) {
+    var input = "param=1&anotherParam=2";
+    test.strictEqual("param%3D1%26anotherParam%3D2", filters.url_encode(input));
+    test.done();
+};
+
+exports.url_decode = function (test) {
+    var input = "param%3D1%26anotherParam%3D2";
+    test.strictEqual("param=1&anotherParam=2", filters.url_decode(input));
     test.done();
 };
