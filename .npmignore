@@ -1,7 +1,8 @@
 .DS_Store
-docs/*
-examples/*
+*.html
+*.test.js
+docs/**
+examples/**
 Makefile
-scripts/*
-tests/*
-tests/templates/*
+scripts/**
+tests/**
