@@ -8,14 +8,71 @@ Unlike other, more basic template languages, Swig is able to render a single tem
 
 ### layout.html
 
-<script src="https://gist.github.com/1208919.js?file=layout.html"></script>
+    <!doctype html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>{% block title %}My Site{% endblock %}</title>
+
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+
+        <header>
+            <h1>{% block title %}{% endblock %}</h1>
+        </header>
+
+        <section>
+        {% block content %}{% endblock %}
+
+            <section>
+                {% block sidebar %}
+                <h2>Sidebar</h2>
+
+                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+                {% endblock %}
+            </section>
+        </section>
+
+    </body>
+    </html>
 
 ### child.html
 
-<script src="https://gist.github.com/1208919.js?file=child.html"></script>
+    {% extends 'layout.html' %}
+
+    {% block title %}My Page{% endblock %}
+
+    {% block content %}
+    <p>This is just an awesome page.</p>
+    {% endblock %}
 
 ### Output
 
 Notice that `child.html` only implements the title and content block. So, any blocks in the parent that are not implemented by the child will use the default content from the parent layout.
 
-<script src="https://gist.github.com/1208919.js?file=output.html"></script>
+    <!doctype html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>My Page</title>
+
+    </head>
+    <body>
+
+        <header>
+            <h1>My Page</h1>
+        </header>
+
+        <section>
+        <p>This is just an awesome page.</p>
+
+            <section>
+                <h2>Sidebar</h2>
+
+                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+            </section>
+        </section>
+
+    </body>
+    </html>
