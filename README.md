@@ -14,6 +14,10 @@ Swig is a template engine inspired by the Django syntax. It has a few extensions
 
     npm install swig
 
+## Documentation
+
+All documentation can be viewed online. [Documentation Table of Contents](https://github.com/paularmstrong/swig/blob/master/docs/index.md)
+
 ## Basic Example
 
 ### Template code
