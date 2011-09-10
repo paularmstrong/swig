@@ -2,13 +2,13 @@
 
 Used to modify variables. Filters are added directly after variable names, separated by the pipe (|) character. You can chain multiple filters together, applying one after the other in succession.
 
-    {{ foo|reverse|join(' ')|title }}
-
 ## add(value)
 
 Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated, as in the example below.
 
-    {{ value|add('2') }}
+### Arguments
+
+1. **value** (_mixed_) The value to add to the variable before printing it to the page. Accepts any `array`, `object`, `number`, and `string`.
 
 ## addslashes
 
@@ -22,27 +22,33 @@ Returns a string with backslashes in front of characters that need to be quoted 
 
 Capitalize the first character in the string.
 
-## date
+## date(format)
 
 Convert a valid date into a format as specified. Mostly conforms to (php.net's date formatting)[http://php.net/date].
 
-    {{ post.created|date('F jS, Y') }}
+### Arguments
 
-## default(default_value)
+1. **format** (_string_) The format to convert the date to.
+
+## default(value)
 
 If the variable is `undefined`, `null`, or `false`, a default return value can be specified.
 
-    {{ foo|default('foo is not defined') }}
+### Arguments
+
+1. **value** (_mixed_) Fallback value if the variable is falsy.
 
 ## first
 
 Returns the first element of an array. Uses [underscore.js first](http://documentcloud.github.com/underscore/#first)
 
-## join
+## join(glue)
 
 If the value is an Array, you can join each value with a delimiter and return it as a string.
 
-    {{ authors|join(', ') }}
+### Arguments
+
+1. **glue** (_string_) Concatenation string to join each item in the array with.
 
 ## json_encode
 
@@ -64,13 +70,11 @@ Return the variable in all lowercase letters.
 
 Uses built-in JavaScript replace method. Provide a regular-expression or a string and a replacement string.
 
-    {{ foo|replace('b', 'c') }}
-
 ### Arguments
 
-1. search: string converted to a regular expression. Example: `'\s'` will become `/\s/`, while `'s'` will become `/s/`
-2. replace: a string to replace the matched parts from _search_
-3. flags: _optional_ Regular expression flags. [[reference]](https://developer.mozilla.org/en/JavaScript/Guide/Regular_Expressions#Advanced_Searching_With_Flags)
+1. **search** (_string_) string converted to a regular expression. Example: `'\s'` will become `/\s/`, while `'s'` will become `/s/`
+2. **replace** (_string_) a string to replace the matched parts from _search_
+3. **flags** (_string_) _optional_ Regular expression flags. [[reference]](https://developer.mozilla.org/en/JavaScript/Guide/Regular_Expressions#Advanced_Searching_With_Flags)
 
 ## reverse
 
