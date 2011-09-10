@@ -14,11 +14,11 @@ Comment tags are simply ignored. Comments can't span multitple lines.
 
 ## extends / block
 
-Check django's template inheritance system for more info. Unlike django, the block tags are terminated with {% end %}, not with {% endblock %}
+Check django's template inheritance system for more info.
 
 ## include
 
-Includes a template in it's place. The template is rendered within the current context. Does not requre closing with {% end %}.
+Includes a template in it's place. The template is rendered within the current context. Does not use and {% endinclude %}.
 
     {% include template_path %}
     {% include "path/to/template.js" %}
@@ -29,21 +29,21 @@ You can iterate arrays and objects. Access the current iteration index through '
 
     {% for x in y %}
       <p>{% forloop.index %}</p>
-    {% end %}
+    {% endfor %}
 
 ## if
 
 Supports the following expressions. No else tag yet.
 
-    {% if x %}{% end %}
-    {% if !x %}{% end %}
+    {% if x %}{% endif %}
+    {% if !x %}{% endif %}
     {% if x operator y %}
       Operators: ==, !=, <, <=, >, >=, ===, !==, in
       The 'in' operator checks for presence in arrays too.
-    {% end %}
+    {% endif %}
     {% if x == 'five' %}
       The operands can be also be string or number literals
-    {% end %}
+    {% endif %}
 
 ## autoescape
 
@@ -57,11 +57,11 @@ So the following:
 
     {% autoescape off %}
         {{ some_html_output }}
-    {% end %}
+    {% endautoescape %}
 
     {% autoescape on %}
         {{ some_html_output }}
-    {% end %}
+    {% endautoescape %}
 
 Will output:
 

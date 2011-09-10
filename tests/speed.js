@@ -15,10 +15,10 @@ tplS = template.fromString(
     +       "\n{{forloop.index}} {{k}}: "
     +       "{% if forloop.index in 'msafas' %}"
     +         "<p>Hello World {{k}}{{foo}}{{k}}{{foo}}{{k}}{{foo}}</p>"
-    +       "{% end %}"
-    +     "{% end %}"
-    +   "{% end %}"
-    + "{% end %}"
+    +       "{% endif %}"
+    +     "{% endfor %}"
+    +   "{% endif %}"
+    + "{% endfor %}"
 );
 
 array = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], { af: "s", baz: "d", d: "f" }, "zeus"];

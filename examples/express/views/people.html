@@ -1,11 +1,11 @@
 {% extends 'layout.html' %}
 
-{% block title %}People{% end %}
+{% block title %}People{% endblock %}
 
 {% block body %}
 <ul>
     {% for person in people %}
     <li><a href="/people/{{ forloop.index }}">{{ person.name }}</a> age {{ person.age }}</li>
-    {% end %}
+    {% endfor %}
 </ul>
-{% end %}
+{% endblock %}

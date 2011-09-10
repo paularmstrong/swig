@@ -23,9 +23,9 @@ Swig is a template engine inspired by the Django syntax. It has a few extensions
       <p>
         {{ forloop.counter }}
         {# This is a comment #}
-        {{ name }}{% if name == "Django" %} Reinhardt{% end %}
+        {{ name }}{% if name == "Django" %} Reinhardt{% endif %}
       </p>
-    {% end %}
+    {% endfor %}
 
 ### node.js code
 
@@ -48,7 +48,6 @@ Swig is a template engine inspired by the Django syntax. It has a few extensions
         3
         Louis
       </p>
-    {% end %}
 
 ## How it works
 
@@ -59,7 +58,6 @@ Swig reads template files and translates them into javascript functions using th
 While Swig is inspired by the [Django template syntax][1], there are a few differences:
 
 - Filters have a different syntaxt.
-- Tags like {% for %} and {% if %} are closed with a simple {% end %} tag.
 - Some tags are missing or have different syntax.
 - Some extra tags are available.
 

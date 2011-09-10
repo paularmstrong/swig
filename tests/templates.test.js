@@ -49,7 +49,7 @@ exports.Tags = testCase({
     Tags: function (test) {
         swig.init({});
 
-        var tmpl8 = swig.fromString('{% if foo %}hi!{% end %}{% if bar %}nope{% end %}');
+        var tmpl8 = swig.fromString('{% if foo %}hi!{% endif %}{% if bar %}nope{% endif %}');
         test.strictEqual(tmpl8.render({ foo: 1, bar: false }), 'hi!');
         test.done();
     },
@@ -66,7 +66,7 @@ exports.Tags = testCase({
 
         swig.init({ tags: tags });
 
-        tmpl8 = swig.fromString('{% foo %}{% end %}');
+        tmpl8 = swig.fromString('{% foo %}{% endfoo %}');
         test.strictEqual(tmpl8.render({}), 'hi!');
         test.done();
     },

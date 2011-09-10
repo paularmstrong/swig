@@ -22,14 +22,8 @@ exports.Tags = testCase({
         test.done();
     },
 
-    'basic tag with named end': function (test) {
-        var output = parser.parse('{% foo %}{% endfoo %}', { foo: { ends: true } });
-        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, name: 'foo', args: [], compile: { ends: true }, tokens: [] }], output, 'end matches start tag');
-        test.done();
-    },
-
     'basic tag with ends': function (test) {
-        var output = parser.parse('{% blah %}{% end %}', { blah: { ends: true } });
+        var output = parser.parse('{% blah %}{% endblah %}', { blah: { ends: true } });
         test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, name: 'blah', args: [], compile: { ends: true }, tokens: [] }], output);
         test.done();
     },
@@ -43,13 +37,20 @@ exports.Tags = testCase({
 
     'throws if not end but end found': function (test) {
         test.throws(function () {
-            parser.parse('{% blah %}{% end %}', { blah: {}});
+            parser.parse('{% blah %}{% endblah %}', { blah: {}});
+        }, Error);
+        test.done();
+    },
+
+    'throws on unbalanced end tag': function (test) {
+        test.throws(function () {
+            parser.parse('{% blah %}{% endfoo %}', { blah: { ends: true }, foo: { ends: true }});
         }, Error);
         test.done();
     },
 
     'tag with contents': function (test) {
-        var output = parser.parse('{% blah %}hello{% end %}', { blah: { ends: true } });
+        var output = parser.parse('{% blah %}hello{% endblah %}', { blah: { ends: true } });
         test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, name: 'blah', args: [], compile: { ends: true }, tokens: ['hello'] }], output);
         test.done();
     }
