@@ -60,6 +60,18 @@ Return the `length` property of the value.
 
 Return the variable in all lowercase letters.
 
+## replace(search, replace[, flags])
+
+Uses built-in JavaScript replace method. Provide a regular-expression or a string and a replacement string.
+
+    {{ foo|replace('b', 'c') }}
+
+### Arguments
+
+1. search: string converted to a regular expression. Example: `'\s'` will become `/\s/`, while `'s'` will become `/s/`
+2. replace: a string to replace the matched parts from _search_
+3. flags: _optional_ Regular expression flags. [[reference]](https://developer.mozilla.org/en/JavaScript/Guide/Regular_Expressions#Advanced_Searching_With_Flags)
+
 ## reverse
 
 If the value is an Array, this filter will reverse all items in the array.

@@ -128,6 +128,14 @@ exports.lower = function (test) {
     test.done();
 };
 
+exports.replace = function (test) {
+    test.strictEqual('fb', filters.replace('fooboo', 'o', '', 'g'));
+    test.strictEqual('fao', filters.replace('foo', 'o', 'a'));
+
+    test.strictEqual('-1aZ', filters.replace('$*&1aZ', '\\W+', '-'));
+    test.done();
+};
+
 exports.reverse = function (test) {
     test.deepEqual([3, 2, 1], filters.reverse([1, 2, 3]), 'reverse array');
     test.strictEqual('asdf', filters.reverse('asdf'), 'reverse string does nothing');

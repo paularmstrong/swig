@@ -123,6 +123,14 @@ exports.Variable = testCase({
             { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'blah', args: ["01a,;?./¨œ∑´®†][{}]"] }], escape: false }
         ], output);
         test.done();
+    },
+
+    'escapements carry over in filter args': function (test) {
+        var output = parser.parse('{{ foo|blah("\\s") }}');
+        test.deepEqual([
+            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'blah', args: ["\\s"] }], escape: false }
+        ], output);
+        test.done();
     }
 });
 
