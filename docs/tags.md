@@ -12,9 +12,23 @@ Comment tags are simply ignored. Comments can't span multitple lines.
 
 # Logic tags
 
-## extends / block
+## extends
 
-Check django's template inheritance system for more info.
+Makes the current template extend a parent template. This tag must be the first item in your template.
+
+See [Template inheritance](inheritance.md) for more information.
+
+## block
+
+Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.
+
+See [Template inheritance](inheritance.md) for more information.
+
+## parent
+
+Inject the content from the current `block` in the parent template into the child template.
+
+See [Template inheritance](inheritance.md) for more information.
 
 ## include
 
