@@ -30,6 +30,162 @@ Convert a valid date into a format as specified. Mostly conforms to (php.net's d
 
 1. **format** (_string_) The format to convert the date to.
 
+<table style="width: 100%">
+    <caption>Date formatting character information from <a href="http://php.net/date">php.net/date</a>.</caption>
+    <thead>
+        <tr>
+            <th>Format Character</th>
+            <th>Description</th>
+            <th>Example Output</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="col" colspan="3" style="text-align: left;">Day</th>
+        </tr>
+        <tr>
+            <th scope="row">d</th>
+            <td>Day of the month, 2 digits with leading zeros</td>
+            <td><samp>01</samp> - <samp>31</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">D</th>
+            <td>A textual representation of a day, three letters</td>
+            <td><samp>Mon</samp> - <samp>Sun</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">j</th>
+            <td>Day of the month without leading zeros</td>
+            <td><samp>1</samp> - <samp>31</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">l</th>
+            <td>A full textual representation of the day of the week</td>
+            <td><samp>Monday</samp> - <samp>Sunday</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">N</th>
+            <td>ISO-8601 numeric representation of the day of the week</td>
+            <td><samp>1</samp> - <samp>7</samp> (Monday - Sunday)</td>
+        </tr>
+        <tr>
+            <th scope="row">S</th>
+            <td>English ordinal suffix for the day of the month, 2 characters</td>
+            <td><samp>st</samp>, <samp>nd</samp>, <samp>rd</samp>, or <samp>th</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">w</th>
+            <td>Numeric representation of the day of the week</td>
+            <td><samp>0</samp> - <samp>6</samp> (Sunday - Saturday)</td>
+        </tr>
+        <tr>
+            <th scope="col" colspan="3" style="text-align: left;">Month</th>
+        </tr>
+        <tr>
+            <th scope="row">F</th>
+            <td>A full textual representation of a month, such as January or March</td>
+            <td><samp>January</samp> - <samp>December</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">m</th>
+            <td>Numeric representation of a month, with leading zeros</td>
+            <td><samp>12</samp> - <samp>01</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">M</th>
+            <td>A short textual representation of a month, three letters</td>
+            <td><samp>Jan</samp> - <samp>Dec</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">n</th>
+            <td>Numeric representation of a month, without leading zeros</td>
+            <td><samp>1</samp> - <samp>12</samp></td>
+        </tr>
+        <tr>
+            <th scope="col" colspan="3" style="text-align: left;">Year</th>
+        </tr>
+        <tr>
+            <th scope="row">Y</th>
+            <td>A full numeric representation of a year, 4 digits</td>
+            <td><samp>1999</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">y</th>
+            <td>A two digit representation of a year</td>
+            <td><samp>99</samp></td>
+        </tr>
+        <tr>
+            <th scope="col" colspan="3" style="text-align: left;">Time</th>
+        </tr>
+        <tr>
+            <th scope="row">a</th>
+            <td>Lowercase Ante meridiem and Post meridiem</td>
+            <td><samp>am</samp> or <samp>pm</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">A</th>
+            <td>Uppercase Ante meridiem and Post meridiem</td>
+            <td><samp>AM</samp> or <samp>PM</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">g</th>
+            <td>12-hour format of an hour without leading zeros</td>
+            <td><samp>1</samp> - <samp>12</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">G</th>
+            <td>24-hour format of an hour without leading zeros</td>
+            <td><samp>0</samp> - <samp>23</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">h</th>
+            <td>12-hour format of an hour with leading zeros</td>
+            <td><samp>01</samp> - <samp>12</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">H</th>
+            <td>24-hour format of an hour with leading zeros</td>
+            <td><samp>00</samp> - <samp>23</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">i</th>
+            <td>Minutes with leading zeros</td>
+            <td><samp>00</samp> - <samp>59</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">s</th>
+            <td>Seconds, with leading zeros</td>
+            <td><samp>00</samp> - <samp>59</samp></td>
+        </tr>
+        <tr>
+            <th scope="col" colspan="3" style="text-align: left;">Timezone</th>
+        </tr>
+        <tr>
+            <th scope="row">O</th>
+            <td>Difference to Greenwich time (GMT) in hours</td>
+            <td><samp>+0200</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">Z</th>
+            <td>Timezone offset in seconds. The offset for timezones west of UTC is always negative, and for those east of UTC is always positive.</td>
+            <td><samp>-43200</samp> - <samp>50400</samp></td>
+        </tr>
+        <tr>
+            <th scope="col" colspan="3" style="text-align: left;">Full Date &amp; Time</th>
+        </tr>
+        <tr>
+            <th scope="row">r</th>
+            <td><a href="http://www.faqs.org/rfcs/rfc2822">RFC 2822</a> formatted date</td>
+            <td><samp>Sat, 10 Sep 2011 14:34:30 -0700</samp></td>
+        </tr>
+        <tr>
+            <th scope="row">U</th>
+            <td>Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)</td>
+            <td><samp>1315690513</samp></td>
+        </tr>
+    </tbody>
+</table>
+
 ## default(value)
 
 If the variable is `undefined`, `null`, or `false`, a default return value can be specified.
