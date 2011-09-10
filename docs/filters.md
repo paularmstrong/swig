@@ -41,7 +41,7 @@ Convert a valid date into a format as specified. Mostly conforms to (php.net's d
     </thead>
     <tbody>
         <tr>
-            <th scope="col" colspan="3" style="text-align: left;">Day</th>
+            <th scope="col" colspan="3">Day</th>
         </tr>
         <tr>
             <th scope="row">d</th>
@@ -79,7 +79,7 @@ Convert a valid date into a format as specified. Mostly conforms to (php.net's d
             <td><samp>0</samp> - <samp>6</samp> (Sunday - Saturday)</td>
         </tr>
         <tr>
-            <th scope="col" colspan="3" style="text-align: left;">Month</th>
+            <th scope="col" colspan="3">Month</th>
         </tr>
         <tr>
             <th scope="row">F</th>
@@ -102,7 +102,7 @@ Convert a valid date into a format as specified. Mostly conforms to (php.net's d
             <td><samp>1</samp> - <samp>12</samp></td>
         </tr>
         <tr>
-            <th scope="col" colspan="3" style="text-align: left;">Year</th>
+            <th scope="col" colspan="3">Year</th>
         </tr>
         <tr>
             <th scope="row">Y</th>
@@ -115,7 +115,7 @@ Convert a valid date into a format as specified. Mostly conforms to (php.net's d
             <td><samp>99</samp></td>
         </tr>
         <tr>
-            <th scope="col" colspan="3" style="text-align: left;">Time</th>
+            <th scope="col" colspan="3">Time</th>
         </tr>
         <tr>
             <th scope="row">a</th>
@@ -158,7 +158,7 @@ Convert a valid date into a format as specified. Mostly conforms to (php.net's d
             <td><samp>00</samp> - <samp>59</samp></td>
         </tr>
         <tr>
-            <th scope="col" colspan="3" style="text-align: left;">Timezone</th>
+            <th scope="col" colspan="3">Timezone</th>
         </tr>
         <tr>
             <th scope="row">O</th>
@@ -171,7 +171,7 @@ Convert a valid date into a format as specified. Mostly conforms to (php.net's d
             <td><samp>-43200</samp> - <samp>50400</samp></td>
         </tr>
         <tr>
-            <th scope="col" colspan="3" style="text-align: left;">Full Date &amp; Time</th>
+            <th scope="col" colspan="3">Full Date &amp; Time</th>
         </tr>
         <tr>
             <th scope="row">r</th>
