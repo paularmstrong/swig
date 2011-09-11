@@ -8,7 +8,7 @@ app.register('.html', swig);
 app.set('view engine', 'html');
 
 // Set the view directory
-swig.init({ root: __dirname + '/views' });
+swig.init({ root: __dirname + '/views', allowErrors: true });
 app.set('views', __dirname + '/views');
 
 // Make sure you aren't using Express's built-in layout extending

@@ -1,6 +1,55 @@
 var testCase = require('nodeunit').testCase,
     swig = require('../index');
 
+exports.Errors = testCase({
+    'allow - parse error': function (test) {
+        swig.init({ allowErrors: true });
+
+        test.throws(function () {
+            swig.fromString('{% for foo in blah %}{% endif %}');
+        }, Error);
+        test.done();
+    },
+
+    'allow - compile error': function (test) {
+        swig.init({
+            allowErrors: true,
+            tags: { foo: function (indent) {
+                return 'blargh;';
+            }}
+        });
+
+        var tmpl8 = swig.fromString('{% foo %}');
+        test.throws(function () {
+            tmpl8.render({});
+        }, Error);
+        test.done();
+    },
+
+    'disallow - parse error': function (test) {
+        swig.init({});
+
+        test.doesNotThrow(function () {
+            swig.fromString('{% for foo in bar %}{% endif %}');
+        }, Error);
+        test.done();
+    },
+
+    'disallow - compile error': function (test) {
+        swig.init({
+            tags: { foobar: function (indent) {
+                return 'blargh;';
+            }}
+        });
+
+        var tmpl8 = swig.fromString('{% foobar %}');
+        test.doesNotThrow(function () {
+            tmpl8.render({});
+        }, Error);
+        test.done();
+    }
+});
+
 exports.Variables = testCase({
     Filters: function (test) {
         swig.init({ filters: {

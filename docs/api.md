@@ -13,7 +13,8 @@ Swig can be configured using the following:
         encoding: 'utf8',   // Encoding for template files.
         root: '/views',     // The root directory to search for templates.
         filters: {},        // Optional custom filters.
-        tags: {}            // Optional custom tags.
+        tags: {},           // Optional custom tags.
+        allowErrors: false  // If true, allows errors to be thrown when parsing and rendering.
     });
 
 Both of them will give you a template object on which you call the render method passing it a map of context values.

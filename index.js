@@ -15,14 +15,21 @@ var fs = require('fs'),
 // Call this before using the templates
 exports.init = function (options) {
     config = _.extend({
+        allowErrors: false,
         autoescape: true,
         encoding: 'utf8',
-        root: '/'
+        root: '/',
     }, options);
 
     config.filters = _.extend(filters, options.filters);
     config.tags = _.extend(tags, options.tags);
 };
+
+function TemplateError(error) {
+    return { render: function () {
+        return '<pre>' + error.stack + '</pre>';
+    }};
+}
 
 function createTemplate(data, id) {
     var template = {
@@ -40,10 +47,17 @@ function createTemplate(data, id) {
         render;
 
     // The template token tree before compiled into javascript
-    template.tokens = parser.parse.call(template, data, config.tags, config.autoescape);
+    if (config.allowErrors) {
+        template.tokens = parser.parse.call(template, data, config.tags, config.autoescape);
+    } else {
+        try {
+            template.tokens = parser.parse.call(template, data, config.tags, config.autoescape);
+        } catch (e) {
+            return new TemplateError(e);
+        }
+    }
 
-    // The raw template code - can be inserted into other templates
-    // We don't need this in production
+    // The raw template code
     code = parser.compile.call(template);
 
     // The compiled render function - this is all we need
@@ -66,7 +80,15 @@ function createTemplate(data, id) {
     );
 
     template.render = function (context, parents) {
-        return render.call(this, context, parents, config.filters, helpers.escaper);
+        if (config.allowErrors) {
+            return render.call(this, context, parents, config.filters, helpers.escaper);
+        } else {
+            try {
+                return render.call(this, context, parents, config.filters, helpers.escaper);
+            } catch (e) {
+                return new TemplateError(e);
+            }
+        }
     };
 
     return template;
@@ -86,6 +108,7 @@ exports.fromFile = function (filepath) {
     }
 
     var data = fs.readFileSync(config.root + '/' + filepath, config.encoding);
+
     // TODO: see what error readFileSync returns and warn about it
     if (data) {
         CACHE[filepath] = createTemplate(data, filepath);
