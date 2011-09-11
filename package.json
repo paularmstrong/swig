@@ -1,6 +1,6 @@
 {
     "name": "swig",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "description": "A fast django-like templating engine for node.js. Forked from Swig",
     "keywords": ["template", "html", "django", "sandbox"],
     "repository": "git://github.com/paularmstrong/swig.git",
