@@ -1,3 +1,8 @@
+## [0.1.9](https://github.com/paularmstrong/swig/tree/0.1.9) / 2011-09-11
+
+* **Added** `allowErrors` flag will allow errors to be thrown and bubbled up. Default to catch errors.
+* **Changed** Internal speed improvements.
+
 ## [0.1.8](https://github.com/paularmstrong/swig/tree/0.1.8) / 2011-09-10
 
 * **Added** `add`, `addslashes`, and `replace` filters.
