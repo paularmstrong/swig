@@ -50,17 +50,19 @@ function createTemplate(data, id) {
     render = new Function('__context', '__parents', '__filters', '__escape',
         [  '__parents = __parents ? __parents.slice() : [];'
         // Prevents circular includes (which will crash node without warning)
-        , 'for (var i=0, j=__parents.length; i<j; ++i) {'
-        , '   if (__parents[i] === this.id) {'
-        , '     return "Circular import of template " + this.id + " in " + __parents[__parents.length-1];'
+        , 'var j = __parents.length,'
+        , '    __output = [],'
+        , '    __this = this;'
+        // Note: this loop averages much faster than indexOf across all cases
+        , 'while (j--) {'
+        , '   if (__parents[j] === this.id) {'
+        , '         return "Circular import of template " + this.id + " in " + __parents[__parents.length-1];'
         , '   }'
         , '}'
         // Add this template as a parent to all includes in its scope
         , '__parents.push(this.id);'
-        , 'var __output = [];'
-        , 'var __this = this;'
         , code
-        , 'return __output.join("");'].join('\n')
+        , 'return __output.join("");'].join('')
     );
 
     template.render = function (context, parents) {

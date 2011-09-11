@@ -57,7 +57,7 @@ exports.Tags = testCase({
     'Custom Tags': function (test) {
         var tags = {
                 foo: function (indent) {
-                    return '__output.push("hi!")';
+                    return '__output.push("hi!");';
                 }
             },
             tmpl8;
