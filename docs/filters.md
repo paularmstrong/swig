@@ -26,7 +26,7 @@ Capitalize the first character in the string.
 
 ### date(format)
 
-Convert a valid date into a format as specified. Mostly conforms to (php.net's date formatting)[http://php.net/date].
+Convert a valid date into a format as specified. Mostly conforms to [php.net's date formatting](http://php.net/date).
 
 #### Arguments
 
