@@ -1,3 +1,8 @@
+## [0.2.0](https://github.com/paularmstrong/swig/tree/0.2.0) / 2011-09-11
+
+* **Fixed** `if` statements allow filters applied to operands.
+* **Fixed** `for` loops allow filters applied to the object that will be iterated over.
+
 ## [0.1.9](https://github.com/paularmstrong/swig/tree/0.1.9) / 2011-09-11
 
 * **Added** `allowErrors` flag will allow errors to be thrown and bubbled up. Default to catch errors.
