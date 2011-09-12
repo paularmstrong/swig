@@ -42,7 +42,13 @@ Includes a template in it's place. The template is rendered within the current c
 You can iterate arrays and objects. Access the current iteration index through 'forloop.index' which is available inside the loop.
 
     {% for x in y %}
-      <p>{% forloop.index %}</p>
+        <p>{% forloop.index %}</p>
+    {% endfor %}
+
+You can also apply filters to the object that you are iterating over.
+
+    {% for x in y|reverse %}
+        The array `y` will first be reversed before looping over it.
     {% endfor %}
 
 ## if
@@ -52,11 +58,14 @@ Supports the following expressions. No else tag yet.
     {% if x %}{% endif %}
     {% if !x %}{% endif %}
     {% if x operator y %}
-      Operators: ==, !=, <, <=, >, >=, ===, !==, in
-      The 'in' operator checks for presence in arrays too.
+        Operators: ==, !=, <, <=, >, >=, ===, !==, in
+        The 'in' operator checks for presence in arrays too.
     {% endif %}
     {% if x == 'five' %}
-      The operands can be also be string or number literals
+        The operands can be also be string or number literals
+    {% endif %}
+    {% if x|length === 3 %}
+        You can use filters on any operand in the statement.
     {% endif %}
 
 ## autoescape
