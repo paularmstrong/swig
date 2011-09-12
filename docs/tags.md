@@ -1,43 +1,33 @@
-# Variable tags
+# Tags
 
-Used to print a variable to the template. If the variable is not in the context we don't get an error, rather an empty string. You can use dot notation to access object proerties or array memebers.
+## Built-in Tags
 
-    <p>First Name: {{users.0.first_name}}</p>
-
-# Comment tags
-
-Comment tags are simply ignored. Comments can't span multitple lines.
-
-    {# This is a comment #}
-
-# Logic tags
-
-## extends
+### extends
 
 Makes the current template extend a parent template. This tag must be the first item in your template.
 
 See [Template inheritance](inheritance.md) for more information.
 
-## block
+### block
 
 Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.
 
 See [Template inheritance](inheritance.md) for more information.
 
-## parent
+### parent
 
 Inject the content from the current `block` in the parent template into the child template.
 
 See [Template inheritance](inheritance.md) for more information.
 
-## include
+### include
 
 Includes a template in it's place. The template is rendered within the current context. Does not use and {% endinclude %}.
 
     {% include template_path %}
     {% include "path/to/template.js" %}
 
-## for
+### for
 
 You can iterate arrays and objects. Access the current iteration index through 'forloop.index' which is available inside the loop.
 
@@ -51,7 +41,7 @@ You can also apply filters to the object that you are iterating over.
         The array `y` will first be reversed before looping over it.
     {% endfor %}
 
-## if
+### if
 
 Supports the following expressions. No else tag yet.
 
@@ -68,7 +58,7 @@ Supports the following expressions. No else tag yet.
         You can use filters on any operand in the statement.
     {% endif %}
 
-## autoescape
+### autoescape
 
 The `autoescape` tag accepts one of two controls: `on` or `off` (default is `on` if not provided). These either turn variable auto-escaping on or off for the contents of the filter, regardless of the global setting.
 
@@ -91,3 +81,24 @@ Will output:
     <p>Hello "you" & 'them'</p>
 
     &lt;p&gt;Hello &quot;you&quot; &amp; &#39;them&#39; &lt;/p&gt;
+
+
+## Writing Custom Tags
+
+Swig makes it easy to write custom tags specific for your project.
+
+First, make sure to include your node.js file that declares your tags in the swig init:
+
+    swig.init({ tags: require('./mytags.js') });
+
+Each tag will be executed with its scope bound to the tag token object. A token for a tag will look like this:
+
+    // Assume your template has {% mytag foo bar %}{% endmytag %}
+    var token = {
+        type: LOGIC_TOKEN,      // Used internally by the parser. It will always be the same, no matter what tag.
+        name: 'mytag',
+        args: ['foo', 'bar'],
+        compile: tag_function
+    };
+
+Now you can write a tag called `mytag` that returns a bit of JavaScript logic to have run while rendering your template. For more information on how to write a tag, view the [tags.js source file](../lib/tags.js).

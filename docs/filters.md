@@ -2,15 +2,17 @@
 
 Used to modify variables. Filters are added directly after variable names, separated by the pipe (|) character. You can chain multiple filters together, applying one after the other in succession.
 
-## add(value)
+## Built-In Filters
+
+### add(value)
 
 Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated, as in the example below.
 
-### Arguments
+#### Arguments
 
 1. <var>**value**</var> (_mixed_) The value to add to the variable before printing it to the page. Accepts any `array`, `object`, `number`, and `string`.
 
-## addslashes
+### addslashes
 
 Returns a string with backslashes in front of characters that need to be quoted for database queries, etc.
 
@@ -18,15 +20,15 @@ Returns a string with backslashes in front of characters that need to be quoted 
 * double quote `"`
 * backslash `\`
 
-## capitalize
+### capitalize
 
 Capitalize the first character in the string.
 
-## date(format)
+### date(format)
 
 Convert a valid date into a format as specified. Mostly conforms to (php.net's date formatting)[http://php.net/date].
 
-### Arguments
+#### Arguments
 
 1. <var>**format**</var> (_string_) The format to convert the date to.
 
@@ -186,76 +188,92 @@ Convert a valid date into a format as specified. Mostly conforms to (php.net's d
     </tbody>
 </table>
 
-## default(value)
+### default(value)
 
 If the variable is `undefined`, `null`, or `false`, a default return value can be specified.
 
-### Arguments
+#### Arguments
 
 1. <var>**value**</var> (_mixed_) Fallback value if the variable is falsy.
 
-## first
+### first
 
 Returns the first element of an array. Uses [underscore.js first](http://documentcloud.github.com/underscore/#first)
 
-## join(glue)
+### join(glue)
 
 If the value is an Array, you can join each value with a delimiter and return it as a string.
 
-### Arguments
+#### Arguments
 
 1. <var>**glue**</var> (_string_) Concatenation string to join each item in the array with.
 
-## json_encode
+### json_encode
 
 Return a JSON string of the variable.
 
-## last
+### last
 
 Returns the last element of an array. Uses [underscore.js last](http://documentcloud.github.com/underscore/#last)
 
-## length
+### length
 
 Return the `length` property of the value.
 
-## lower
+### lower
 
 Return the variable in all lowercase letters.
 
-## replace(search, replace[, flags])
+### replace(search, replace[, flags])
 
 Uses built-in JavaScript replace method. Provide a regular-expression or a string and a replacement string.
 
-### Arguments
+#### Arguments
 
 1. <var>**search**</var> (_string_) string converted to a regular expression. Example: `'\s'` will become `/\s/`, while `'s'` will become `/s/`
 2. <var>**replace**</var> (_string_) a string to replace the matched parts from <var>search</var>
 3. <var>**flags**</var> (_string_) _optional_ Regular expression flags. [[reference]](https://developer.mozilla.org/en/JavaScript/Guide/Regular_Expressions#Advanced_Searching_With_Flags)
 
-## reverse
+### reverse
 
 If the value is an Array, this filter will reverse all items in the array.
 
-## striptags
+### striptags
 
 Strip all HTML/XML tags.
 
-## title
+### title
 
 Change the output to title case–the first letter of every word will uppercase, while all the rest will be lowercase.
 
-## uniq
+### uniq
 
 Produces a duplicate-free version of the array. Uses [underscore.js uniq](http://documentcloud.github.com/underscore/#uniq)
 
-## upper
+### upper
 
 Return the variable in all uppercase letters
 
-## url_encode
+### url_encode
 
 Encode a URI component.
 
-## url_decode
+### url_decode
 
 Decode a URI component.
+
+## Writing Custom Filters
+
+Custom filters are very easy to write for your own project that uses Swig.
+
+Create a file called `myfilters.js` and include it in the Swig init function:
+
+    swig.init({ filters: require('myfilters') });
+
+In your `myfilters.js` file, each filter method is just a simple javascript method. For example, here's a filter to make a variable all lowercase:
+
+    exports.lower = function (input) {
+        return input.toString().toLowerCase();
+    };
+
+For more examples, view the [filters.js source file](../lib/filters.js)
