@@ -1,3 +1,7 @@
+## [0.2.1](https://github.com/paularmstrong/swig/tree/0.2.1) / 2011-09-13
+
+* **Added** Support for `else` within `if` blocks.
+
 ## [0.2.0](https://github.com/paularmstrong/swig/tree/0.2.0) / 2011-09-11
 
 * **Fixed** `if` statements allow filters applied to operands.
