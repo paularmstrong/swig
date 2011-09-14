@@ -43,7 +43,7 @@ You can also apply filters to the object that you are iterating over.
 
 ### if
 
-Supports the following expressions. No else tag yet.
+Supports the following expressions.
 
     {% if x %}{% endif %}
     {% if !x %}{% endif %}
@@ -56,6 +56,14 @@ Supports the following expressions. No else tag yet.
     {% endif %}
     {% if x|length === 3 %}
         You can use filters on any operand in the statement.
+    {% endif %}
+
+Also supports using the `{% else %}` tag within an if-block. Using `{% else %}` anywhere outside an immediate parent if-block will throw an exception.
+
+    {% if foo %}
+        Some content.
+    {% else %}
+        Fallback content.
     {% endif %}
 
 ### autoescape
