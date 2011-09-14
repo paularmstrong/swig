@@ -16,7 +16,7 @@ Swig is a template engine inspired by the Django syntax. It has a few extensions
 
 ## Documentation
 
-All documentation can be viewed online. [Documentation Table of Contents](https://github.com/paularmstrong/swig/blob/master/docs/index.md)
+All documentation can be viewed online. [Documentation Table of Contents](https://github.com/paularmstrong/swig/blob/master/docs)
 
 ## Basic Example
 
