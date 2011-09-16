@@ -45,6 +45,15 @@ exports.if = testCase({
             swig.fromString('{% for i in foo %}hi!{% else %}nope{% endfor %}');
         }, Error, 'Cannot call else tag outside of "if" context.');
         test.done();
+    },
+
+    'else if': function (test) {
+        var tmpl8 = swig.fromString('{% if foo|length > 2 %}foo{% else if foo|length < 2 %}bar{% endif %}');
+        test.strictEqual(tmpl8.render({ foo: [1, 2, 3] }), 'foo');
+        test.strictEqual(tmpl8.render({ foo: [1, 2] }), '');
+        test.strictEqual(tmpl8.render({ foo: [1] }), 'bar');
+
+        test.done();
     }
 });
 
