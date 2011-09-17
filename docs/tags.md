@@ -29,11 +29,20 @@ Includes a template in it's place. The template is rendered within the current c
 
 ### for
 
-You can iterate arrays and objects. Access the current iteration index through 'forloop.index' which is available inside the loop.
+You can iterate arrays and objects.
+
+For loops have 4 special context variables accessible inside of the loop:
 
     {% for x in y %}
-        <p>{% forloop.index %}</p>
+        {% if forloop.first %}<ul>{% endif %}
+        <li>{% forloop.index %} - {% forloop.key %}: {{ x }}</li>
+        {% if forloop.last %}</ul>{% endif %}
     {% endfor %}
+
+* `forloop.index`: the zero-indexed spot in the iteration.
+* `forloop.key`: if the iterator is an object, this will be the key of the current item, otherwise it will be the same as the `forloop.index`.
+* `forloop.first`: `true` if the current object is the first in the object or array.
+* `forloop.last`: `true` if the current object is the last in the object or array.
 
 You can also apply filters to the object that you are iterating over.
 

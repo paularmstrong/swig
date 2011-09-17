@@ -72,25 +72,47 @@ exports.if = testCase({
 });
 
 exports.for = testCase({
-    basic: function (test) {
+    setUp: function (callback) {
         swig.init({});
+        callback();
+    },
 
+    basic: function (test) {
         var tmpl8 = swig.fromString('{% for foo in bar %}{{ foo }}, {% endfor %}');
-        test.strictEqual(tmpl8.render({ bar: ['foo', 'bar', 'baz'] }), 'foo, bar, baz, ');
+        test.strictEqual(tmpl8.render({ bar: ['foo', 'bar', 'baz'] }), 'foo, bar, baz, ', 'array loop');
+        test.strictEqual(tmpl8.render({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), 'foo, bar, baz, ', 'object loop');
+        test.done();
+    },
+
+    variables: function (test) {
+        var tmpl8 = swig.fromString('{% for foo in bar %}[{{ forloop.index }}, {{ forloop.key }}]{% endfor %}');
+        test.strictEqual(tmpl8.render({ bar: ['foo', 'bar', 'baz'] }), '[0, 0][1, 1][2, 2]', 'array loop');
+        test.strictEqual(tmpl8.render({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '[0, baz][1, pow][2, foo]', 'object loop');
         test.done();
     },
 
     index: function (test) {
-        swig.init({});
-
         var tmpl8 = swig.fromString('{% for foo in bar %}{{ forloop.index }}{% endfor %}');
-        test.strictEqual(tmpl8.render({ bar: ['foo', 'bar', 'baz'] }), '012');
+        test.strictEqual(tmpl8.render({ bar: ['foo', 'bar', 'baz'] }), '012', 'index in object');
+        test.strictEqual(tmpl8.render({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '012', 'index in object');
+        test.done();
+    },
+
+    first: function (test) {
+        var tmpl8 = swig.fromString('{% for foo in bar %}{% if forloop.first %}{{ foo }}{% endif %}{% endfor %}');
+        test.strictEqual(tmpl8.render({ bar: ['foo', 'bar', 'baz'] }), 'foo', 'first in array');
+        test.strictEqual(tmpl8.render({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), 'foo', 'first in object');
+        test.done();
+    },
+
+    last: function (test) {
+        var tmpl8 = swig.fromString('{% for foo in bar %}{% if forloop.last %}{{ foo }}{% endif %}{% endfor %}');
+        test.strictEqual(tmpl8.render({ bar: ['foo', 'bar', 'baz'] }), 'baz', 'last in array');
+        test.strictEqual(tmpl8.render({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), 'baz', 'last in object');
         test.done();
     },
 
     'loop object allows filters': function (test) {
-        swig.init({});
-
         var tmpl8 = swig.fromString('{% for foo in bar|reverse %}{{ foo }}{% endfor %}');
         test.strictEqual(tmpl8.render({ bar: ['baz', 'bar', 'foo'] }), 'foobarbaz');
         test.done();
