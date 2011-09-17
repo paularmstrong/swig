@@ -29,8 +29,6 @@ Includes a template in it's place. The template is rendered within the current c
 
 ### for
 
-You can iterate arrays and objects.
-
 For loops have 4 special context variables accessible inside of the loop:
 
     {% for x in y %}
@@ -39,7 +37,7 @@ For loops have 4 special context variables accessible inside of the loop:
         {% if forloop.last %}</ul>{% endif %}
     {% endfor %}
 
-* `forloop.index`: the zero-indexed spot in the iteration.
+* `forloop.index`: the zero-indexed spot in the iterator.
 * `forloop.key`: if the iterator is an object, this will be the key of the current item, otherwise it will be the same as the `forloop.index`.
 * `forloop.first`: `true` if the current object is the first in the object or array.
 * `forloop.last`: `true` if the current object is the last in the object or array.
@@ -48,6 +46,18 @@ You can also apply filters to the object that you are iterating over.
 
     {% for x in y|reverse %}
         The array `y` will first be reversed before looping over it.
+    {% endfor %}
+
+#### empty
+
+For loops have a special tag available to them called `{% empty %}`.
+
+If the loop object is empty or `length === 0`, the content following the `empty` tag will be rendered.
+
+    {% for person in people %}
+        {{ person }}
+    {% empty %}
+        There are no people yet!
     {% endfor %}
 
 ### if
@@ -66,6 +76,8 @@ Supports the following expressions.
     {% if x|length === 3 %}
         You can use filters on any operand in the statement.
     {% endif %}
+
+#### else and else if
 
 Also supports using the `{% else %}` and `{% else if ... %}` tags within an if-block. Using `{% else [if ...] %}` anywhere outside an immediate parent if-block will throw an exception.
 

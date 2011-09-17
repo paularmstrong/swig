@@ -112,6 +112,20 @@ exports.for = testCase({
         test.done();
     },
 
+    empty: function (test) {
+        var tmpl8 = swig.fromString('{% for foo in bar %}blah{% empty %}hooray!{% endfor %}');
+        test.strictEqual(tmpl8.render({ bar: [] }), 'hooray!', 'empty in array');
+        test.strictEqual(tmpl8.render({ bar: {}}), 'hooray!', 'empty in object');
+
+        test.strictEqual(tmpl8.render({ bar: [1] }), 'blah', 'not empty in array');
+        test.strictEqual(tmpl8.render({ bar: { foo: 'foo' }}), 'blah', 'not empty in object');
+
+        test.throws(function () {
+            swig.fromString('{% if foo %}hi!{% empty %}nope{% endif %}');
+        }, Error, 'Cannot call "empty" tag outside of "for" context.');
+        test.done();
+    },
+
     'loop object allows filters': function (test) {
         var tmpl8 = swig.fromString('{% for foo in bar|reverse %}{{ foo }}{% endfor %}');
         test.strictEqual(tmpl8.render({ bar: ['baz', 'bar', 'foo'] }), 'foobarbaz');
