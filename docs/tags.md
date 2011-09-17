@@ -113,6 +113,14 @@ Will output:
 
     &lt;p&gt;Hello &quot;you&quot; &amp; &#39;them&#39; &lt;/p&gt;
 
+### set
+
+It is also possible to set variables in templates.
+
+    {% set foo = [0, 1, 2, 3, 4, 5] %}
+    {% for num in foo %}
+        <li>{{ num }}</li>
+    {% endfor %}
 
 ## Writing Custom Tags
 

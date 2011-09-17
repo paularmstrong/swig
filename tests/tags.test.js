@@ -136,3 +136,34 @@ exports.for = testCase({
         test.done();
     }
 });
+
+exports.set = testCase({
+    setUp: function (callback) {
+        swig.init({});
+        callback();
+    },
+
+    basic: function (test) {
+        var tmpl8 = swig.fromString('{% set foo = "bar" %} {{ foo }}');
+        test.strictEqual(tmpl8.render({}), ' bar');
+        test.done();
+    },
+
+    'from var': function (test) {
+        var tmpl8 = swig.fromString('{% set foo = bar|lower %} {{ foo }}');
+        test.strictEqual(tmpl8.render({ bar: 'BAR' }), ' bar');
+        test.done();
+    },
+
+    'array': function (test) {
+        var tmpl8 = swig.fromString('{% set foo = ["hi", "bye"] %} {{ foo[0] }}');
+        test.strictEqual(tmpl8.render({}), ' hi');
+        test.done();
+    },
+
+    'object': function (test) {
+        var tmpl8 = swig.fromString('{% set foo = { bar: "bar" } %} {{ foo.bar }}');
+        test.strictEqual(tmpl8.render({}), ' bar');
+        test.done();
+    }
+});
