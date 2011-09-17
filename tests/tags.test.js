@@ -19,9 +19,12 @@ exports['custom tags'] =  function (test) {
 };
 
 exports.if = testCase({
-    basic: function (test) {
+    setUp: function (callback) {
         swig.init({});
+        callback();
+    },
 
+    basic: function (test) {
         var tmpl8 = swig.fromString('{% if foo %}hi!{% endif %}{% if bar %}nope{% endif %}');
         test.strictEqual(tmpl8.render({ foo: 1, bar: false }), 'hi!');
         test.done();
@@ -52,6 +55,17 @@ exports.if = testCase({
         test.strictEqual(tmpl8.render({ foo: [1, 2, 3] }), 'foo');
         test.strictEqual(tmpl8.render({ foo: [1, 2] }), '');
         test.strictEqual(tmpl8.render({ foo: [1] }), 'bar');
+
+        test.done();
+    },
+
+    'multiple else if and else': function (test) {
+        var tmpl8 = swig.fromString('{% if foo %}foo{% else if bar === "bar" %}bar{% else if 3 in baz %}baz{% else %}bop{% endif %}');
+        test.strictEqual(tmpl8.render({ foo: true }), 'foo');
+        test.strictEqual(tmpl8.render({ bar: "bar" }), 'bar');
+        test.strictEqual(tmpl8.render({ baz: [3] }), 'baz');
+        test.strictEqual(tmpl8.render({ baz: [2] }), 'bop');
+        test.strictEqual(tmpl8.render({ bar: false }), 'bop');
 
         test.done();
     }
