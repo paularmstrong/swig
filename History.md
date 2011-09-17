@@ -1,3 +1,11 @@
+## [0.2.3](https://github.com/paularmstrong/swig/tree/0.2.3) / 2011-09-16
+
+* **Fixed** Critical fix for negations in `if` blocks.
+* **Added** Support for `forloop.first` in `for` blocks.
+* **Added** Support for `forloop.last` in `for` blocks.
+* **Added** Support for `forloop.key` in `for` blocks.
+* **Added** Support for `{% empty %}` in `for` blocks.
+
 ## [0.2.2](https://github.com/paularmstrong/swig/tree/0.2.2) / 2011-09-16
 
 * **Added** Support for `else if ...` within `if` blocks.

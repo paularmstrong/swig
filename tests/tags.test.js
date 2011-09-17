@@ -27,6 +27,10 @@ exports.if = testCase({
     basic: function (test) {
         var tmpl8 = swig.fromString('{% if foo %}hi!{% endif %}{% if bar %}nope{% endif %}');
         test.strictEqual(tmpl8.render({ foo: 1, bar: false }), 'hi!');
+
+        tmpl8 = swig.fromString('{% if !foo %}hi!{% endif %}{% if !bar %}nope{% endif %}');
+        test.strictEqual(tmpl8.render({ foo: 1, bar: false }), 'nope');
+
         test.done();
     },
 
