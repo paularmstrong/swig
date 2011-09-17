@@ -58,10 +58,12 @@ Supports the following expressions.
         You can use filters on any operand in the statement.
     {% endif %}
 
-Also supports using the `{% else %}` tag within an if-block. Using `{% else %}` anywhere outside an immediate parent if-block will throw an exception.
+Also supports using the `{% else %}` and `{% else if ... %}` tags within an if-block. Using `{% else [if ...] %}` anywhere outside an immediate parent if-block will throw an exception.
 
     {% if foo %}
         Some content.
+    {% else if "foo" in bar %}
+        Content if the array `bar` has "foo" in it.
     {% else %}
         Fallback content.
     {% endif %}
