@@ -1,3 +1,7 @@
+## [0.3.0](https://github.com/paularmstrong/swig/tree/0.3.0) / 2011-09-17
+
+* **Added** Support for `{% set ... %}` tag.
+
 ## [0.2.3](https://github.com/paularmstrong/swig/tree/0.2.3) / 2011-09-16
 
 * **Fixed** Critical fix for negations in `if` blocks.
