@@ -131,15 +131,7 @@ exports.compile = function (source, options, callback) {
     if (typeof source === 'string') {
         return function (options) {
             var tmpl = exports.fromString(source);
-
-            options.locals = options.locals || {};
-            options.partials = options.partials || {};
-
-            if (options.body) { // for express.js > v1.0
-                options.locals.body = options.body;
-            }
-
-            return tmpl.render(options.locals);
+            return tmpl.render(options);
         };
     } else {
         return source;
