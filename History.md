@@ -71,10 +71,14 @@
 
 [Documentation](https://github.com/paularmstrong/swig/tree/0.1.5/docs)
 
-## [0.1.3](https://github.com/paularmstrong/swig/tree/0.1.3) / 2011-09-01 / [Documentation](https://github.com/paularmstrong/swig/tree/0.1.3/docs)
+## [0.1.3](https://github.com/paularmstrong/swig/tree/0.1.3) / 2011-09-01
 
 * **Fixed** filter parser to work correctly with single-quoted params in filters.
 
-## [0.1.2](https://github.com/paularmstrong/swig/tree/0.1.2) / 2011-09-01 / [Documentation](https://github.com/paularmstrong/swig/tree/0.1.2/docs)
+[Documentation](https://github.com/paularmstrong/swig/tree/0.1.3/docs)
+
+## [0.1.2](https://github.com/paularmstrong/swig/tree/0.1.2) / 2011-09-01
 
 * Initial **swig** publish after forking from [node-t](https://github.com/skid/node-t)
+
+[Documentation](https://github.com/paularmstrong/swig/tree/0.1.2/docs)
