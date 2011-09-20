@@ -106,10 +106,9 @@ exports.json_encode = function (test) {
 };
 
 exports.length = function (test) {
-    var input = [1, 2, 3];
-    test.strictEqual(3, filters.length(input));
-    input = 'foobar';
-    test.strictEqual(6, filters.length(input));
+    test.strictEqual(3, filters.length([1, 2, 3]));
+    test.strictEqual(6, filters.length('foobar'));
+    test.strictEqual(2, filters.length({ 'h': 1, 'b': 2 }));
     test.done();
 };
 
