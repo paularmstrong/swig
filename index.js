@@ -1,6 +1,5 @@
 var fs = require('fs'),
     path = require('path'),
-    crypto = require('crypto'),
 
     tags = require('./lib/tags'),
     parser = require('./lib/parser'),
@@ -117,13 +116,11 @@ exports.fromFile = function (filepath) {
 };
 
 exports.fromString = function (string) {
-    var hash = crypto.createHash('md5').update(string).digest('hex');
-
-    if (!CACHE.hasOwnProperty(hash)) {
-        CACHE[hash] = createTemplate(string, hash);
+    if (!CACHE.hasOwnProperty(string)) {
+        CACHE[string] = createTemplate(string, string);
     }
 
-    return CACHE[hash];
+    return CACHE[string];
 };
 
 exports.compile = function (source, options, callback) {
