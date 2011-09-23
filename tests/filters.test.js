@@ -84,9 +84,9 @@ exports.default = function (test) {
 };
 
 exports.first = function (test) {
-    var input = [1, 2, 3, 4];
-    test.strictEqual(1, filters.first(input));
+    test.strictEqual(1, filters.first([1, 2, 3, 4]));
     test.strictEqual('2', filters.first('213'));
+    test.strictEqual('', filters.first({ foo: 'blah', bar: 'nope' }));
     test.done();
 };
 
@@ -94,8 +94,8 @@ exports.join = function (test) {
     var input = [1, 2, 3];
     test.strictEqual('1+2+3', filters.join(input, '+'));
     test.strictEqual('1 * 2 * 3', filters.join(input, ' * '));
-    input = 'asdf';
-    test.strictEqual('asdf', filters.join(input, '-'), 'Non-array input is not joined.');
+    test.deepEqual({ foo: 1, bar: 2, baz: 3 }, filters.join({ foo: 1, bar: 2, baz: 3 }, ','));
+    test.strictEqual('asdf', filters.join('asdf', '-'), 'Non-array input is not joined.');
     test.done();
 };
 
@@ -106,10 +106,9 @@ exports.json_encode = function (test) {
 };
 
 exports.length = function (test) {
-    var input = [1, 2, 3];
-    test.strictEqual(3, filters.length(input));
-    input = 'foobar';
-    test.strictEqual(6, filters.length(input));
+    test.strictEqual(3, filters.length([1, 2, 3]));
+    test.strictEqual(6, filters.length('foobar'));
+    test.strictEqual(2, filters.length({ 'h': 1, 'b': 2 }));
     test.done();
 };
 
@@ -117,21 +116,21 @@ exports.last = function (test) {
     var input = [1, 2, 3, 4];
     test.strictEqual(4, filters.last(input));
     test.strictEqual('3', filters.last('123'));
+    test.strictEqual('', filters.last({ foo: 'blah', bar: 'nope' }));
     test.done();
 };
 
 exports.lower = function (test) {
-    var input = 'BaR';
-    test.strictEqual('bar', filters.lower(input));
-    input = 345;
-    test.strictEqual('345', filters.lower(input));
+    test.strictEqual('bar', filters.lower('BaR'));
+    test.strictEqual('345', filters.lower(345));
+    test.deepEqual(['foo', 'bar'], filters.lower(['FOO', 'BAR']));
+    test.deepEqual({ foo: 'bar' }, filters.lower({ foo: 'BAR' }));
     test.done();
 };
 
 exports.replace = function (test) {
     test.strictEqual('fb', filters.replace('fooboo', 'o', '', 'g'));
     test.strictEqual('fao', filters.replace('foo', 'o', 'a'));
-
     test.strictEqual('-1aZ', filters.replace('$*&1aZ', '\\W+', '-'));
     test.done();
 };
@@ -146,12 +145,16 @@ exports.reverse = function (test) {
 exports.striptags = function (test) {
     var input = '<h1>foo</h1> <div class="blah">hi</div>';
     test.strictEqual('foo hi', filters.striptags(input));
+    test.deepEqual(['foo', 'hi'], filters.striptags(['<h1>foo</h1>', '<div class="blah">hi</div>']));
+    test.deepEqual({ foo: 'foo', bar: 'hi' }, filters.striptags({ foo: '<h1>foo</h1>', bar: '<div class="blah">hi</div>' }));
     test.done();
 };
 
 exports.title = function (test) {
     var input = 'this is title case';
     test.strictEqual('This Is Title Case', filters.title(input));
+    test.deepEqual(['Foo Bar', 'Blahbitty Blah'], filters.title(['foo bar', 'blaHbiTTy bLAH']));
+    test.deepEqual({ foo: 'Foo Bar', bar: 'Blahbitty Blah' }, filters.title({ foo: 'foo bar', bar: 'blaHbiTTy bLAH' }));
     test.done();
 };
 
@@ -161,10 +164,10 @@ exports.uniq = function (test) {
     test.done();
 };
 exports.upper = function (test) {
-    var input = 'bar';
-    test.strictEqual('BAR', filters.upper(input));
-    input = 345;
-    test.strictEqual('345', filters.upper(input));
+    test.strictEqual('BAR', filters.upper('bar'));
+    test.strictEqual('345', filters.upper(345));
+    test.deepEqual(['FOO', 'BAR'], filters.upper(['foo', 'bar']));
+    test.deepEqual({ foo: 'BAR' }, filters.upper({ foo: 'bar' }));
     test.done();
 };
 

@@ -1,5 +1,5 @@
 var template = require('../index'),
-    tplF, tplS, array, output, d, i;
+    tplF, tplS, array, output, d, i, tplString;
 
 console.log();
 console.log('Starting speed tests...');
@@ -8,18 +8,23 @@ template.init({
     root: __dirname + '/templates'
 });
 
-tplS = template.fromString(
-    "{% for v in array %}"
-    +   "{% if 1 %}"
-    +     "{% for k in v %}"
-    +       "\n{{forloop.index}} {{k}}: "
-    +       "{% if forloop.index in 'msafas' %}"
-    +         "<p>Hello World {{k}}{{foo}}{{k}}{{foo}}{{k}}{{foo}}</p>"
-    +       "{% endif %}"
-    +     "{% endfor %}"
-    +   "{% endif %}"
-    + "{% endfor %}"
-);
+tplString = "{% for v in array %}"
++   "{% if 1 %}"
++     "{% for k in v %}"
++       "\n{{forloop.index}} {{k}}: "
++       "{% if forloop.index in 'msafas' %}"
++         "<p>Hello World {{k}}{{foo}}{{k}}{{foo}}{{k}}{{foo}}</p>"
++       "{% endif %}"
++     "{% endfor %}"
++   "{% endif %}"
++ "{% endfor %}";
+
+console.time('Compile Template');
+i = 1000;
+while (i--) {
+    tplS = template.fromString(tplString);
+}
+console.timeEnd('Compile Template');
 
 array = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], { af: "s", baz: "d", d: "f" }, "zeus"];
 tplF = template.fromFile("include_base.html");

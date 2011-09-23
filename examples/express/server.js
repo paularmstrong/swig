@@ -25,11 +25,11 @@ people = [
 ];
 
 app.get('/people', function (req, res) {
-    res.render('people', { locals: { people: people }});
+    res.render('people', { people: people });
 });
 
 app.get('/people/:id', function (req, res) {
-    res.render('person', { locals: { person: people[req.params.id] }});
+    res.render('person', { person: people[req.params.id] });
 });
 
 app.listen(1337);
