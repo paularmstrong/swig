@@ -167,3 +167,22 @@ exports.set = testCase({
         test.done();
     }
 });
+
+exports.macro = testCase({
+    setUp: function (callback) {
+        swig.init({});
+        callback();
+    },
+
+    basic: function (test) {
+        var tmpl8 = swig.fromString('{% macro foo %}hi!{% endmacro %}oh, {{ foo }}');
+        test.strictEqual(tmpl8.render({}), 'oh, hi!');
+        test.done();
+    },
+
+    args: function (test) {
+        var tmpl8 = swig.fromString('{% macro foo(input) %}{{ input }}{% endmacro %}oh, {{ foo("yep") }}');
+        test.strictEqual(tmpl8.render({}), 'oh, yep');
+        test.done();
+    }
+});

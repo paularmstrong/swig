@@ -80,33 +80,33 @@ exports.Comments = testCase({
 exports.Variable = testCase({
     'basic variable': function (test) {
         var output = parser.parse('{{ foobar }}');
-        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [], escape: false }], output, 'with spaces');
+        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [], escape: false, args: null }], output, 'with spaces');
 
         output = parser.parse('{{foobar}}');
-        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [], escape: false }], output, 'without spaces');
+        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [], escape: false, args: null }], output, 'without spaces');
 
         test.done();
     },
 
     'dot-notation variable': function (test) {
         var output = parser.parse('{{ foo.bar }}');
-        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foo.bar', filters: [], escape: false }], output);
+        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foo.bar', filters: [], escape: false, args: null }], output);
         test.done();
     },
 
     'variable with filter': function (test) {
         var output = parser.parse('{{ foobar|awesome }}');
-        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, filters: [{ name: 'awesome', args: [] }] }], output, 'filter by name');
+        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, args: null, filters: [{ name: 'awesome', args: [] }] }], output, 'filter by name');
 
         output = parser.parse('{{ foobar|awesome("param", 2) }}');
-        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, filters: [{ name: 'awesome', args: ['param', 2] }] }], output, 'filter with params');
+        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, args: null, filters: [{ name: 'awesome', args: ['param', 2] }] }], output, 'filter with params');
 
         test.done();
     },
 
     'multiple filters': function (test) {
         var output = parser.parse('{{ foobar|baz(1)|rad|awesome("param", 2) }}');
-        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, filters: [
+        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, args: null, filters: [
             { name: 'baz', args: [1] },
             { name: 'rad', args: [] },
             { name: 'awesome', args: ['param', 2] }
@@ -118,8 +118,8 @@ exports.Variable = testCase({
     'filters do not carry over': function (test) {
         var output = parser.parse('{{ foo|baz }}{{ bar }}');
         test.deepEqual([
-            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'baz', args: [] }], escape: false },
-            { type: parser.TOKEN_TYPES.VAR, name: 'bar', filters: [], escape: false }
+            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'baz', args: [] }], escape: false, args: null },
+            { type: parser.TOKEN_TYPES.VAR, name: 'bar', filters: [], escape: false, args: null }
         ], output);
         test.done();
     },
@@ -127,7 +127,7 @@ exports.Variable = testCase({
     'filters with all kinds of characters in params': function (test) {
         var output = parser.parse("{{ foo|blah('01a,;?./¨œ∑´®†][{}]') }}");
         test.deepEqual([
-            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'blah', args: ["01a,;?./¨œ∑´®†][{}]"] }], escape: false }
+            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'blah', args: ["01a,;?./¨œ∑´®†][{}]"] }], escape: false, args: null }
         ], output);
         test.done();
     },
@@ -135,7 +135,7 @@ exports.Variable = testCase({
     'escapements carry over in filter args': function (test) {
         var output = parser.parse('{{ foo|blah("\\s") }}');
         test.deepEqual([
-            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'blah', args: ["\\s"] }], escape: false }
+            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'blah', args: ["\\s"] }], escape: false, args: null }
         ], output);
         test.done();
     }
