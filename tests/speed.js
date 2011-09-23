@@ -19,12 +19,14 @@ tplString = "{% for v in array %}"
 +   "{% endif %}"
 + "{% endfor %}";
 
-console.time('Compile Template');
 i = 1000;
+console.time('Compile one template 1000 times');
+d = new Date();
 while (i--) {
     tplS = template.fromString(tplString);
 }
-console.timeEnd('Compile Template');
+console.timeEnd('Compile one template 1000 times');
+console.log("    ~ " + Math.round(1000000 / (new Date() - d)) + " renders per sec.");
 
 array = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], { af: "s", baz: "d", d: "f" }, "zeus"];
 tplF = template.fromFile("include_base.html");
