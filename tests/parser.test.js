@@ -99,7 +99,7 @@ exports.Variable = testCase({
         test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, args: null, filters: [{ name: 'awesome', args: [] }] }], output, 'filter by name');
 
         output = parser.parse('{{ foobar|awesome("param", 2) }}');
-        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, args: null, filters: [{ name: 'awesome', args: ['param', 2] }] }], output, 'filter with params');
+        test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, args: null, filters: [{ name: 'awesome', args: ['"param"', '2'] }] }], output, 'filter with params');
 
         test.done();
     },
@@ -109,7 +109,7 @@ exports.Variable = testCase({
         test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, args: null, filters: [
             { name: 'baz', args: [1] },
             { name: 'rad', args: [] },
-            { name: 'awesome', args: ['param', 2] }
+            { name: 'awesome', args: ['"param"', '2'] }
         ] }], output);
 
         test.done();
@@ -127,7 +127,7 @@ exports.Variable = testCase({
     'filters with all kinds of characters in params': function (test) {
         var output = parser.parse("{{ foo|blah('01a,;?./¨œ∑´®†][{}]') }}");
         test.deepEqual([
-            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'blah', args: ["01a,;?./¨œ∑´®†][{}]"] }], escape: false, args: null }
+            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'blah', args: ['\'01a,;?./¨œ∑´®†][{}]\''] }], escape: false, args: null }
         ], output);
         test.done();
     },
@@ -135,7 +135,7 @@ exports.Variable = testCase({
     'escapements carry over in filter args': function (test) {
         var output = parser.parse('{{ foo|blah("\\s") }}');
         test.deepEqual([
-            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'blah', args: ["\\s"] }], escape: false, args: null }
+            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'blah', args: ['"\\s"'] }], escape: false, args: null }
         ], output);
         test.done();
     }

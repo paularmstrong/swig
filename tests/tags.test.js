@@ -188,12 +188,15 @@ exports.macro = testCase({
 
     complex: function (test) {
         var tmpl8 = swig.fromString([
-            '{% macro foo bar baz bop %}',
-            '<input type="{{ bar }}" name="{{ baz }}" id="{{ baz }} value="{{ bop }}">',
+            '{% macro input type name id label value %}',
+            '<label for="{{ name }}">{{ label }}</label>',
+            '<input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}">',
             '{% endmacro %}',
-            '{{ foo("text", "person", person.id, person.name) }}'
+            '{{ input("text", "person", person.id, "Your Name") }}'
         ].join(''));
-        test.strictEqual(tmpl8.render({ person: { id: 'asdf', name: 'Paul' }}), '<input type="text" name="person" id="asdf" value="Paul">');
+        test.strictEqual(tmpl8.render({
+            person: { id: 'asdf', name: 'Paul' }
+        }), '<label for="person">Your Name</label><input type="text" name="person" id="asdf" value="">');
         test.done();
     }
 });
