@@ -151,3 +151,7 @@ Your output may look like this:
         <label for="lname">Last Name</label>
         <input type="text" name="lname" id="lname" value="" class="error">
     </div>
+
+## Custom Tags
+
+Swig has support for you to write your own custom tags. For more information, see the [Custom Tags Documentation](custom-tags.md).
