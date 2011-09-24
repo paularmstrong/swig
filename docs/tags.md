@@ -121,23 +121,3 @@ It is also possible to set variables in templates.
     {% for num in foo %}
         <li>{{ num }}</li>
     {% endfor %}
-
-## Writing Custom Tags
-
-Swig makes it easy to write custom tags specific for your project.
-
-First, make sure to include your node.js file that declares your tags in the swig init:
-
-    swig.init({ tags: require('./mytags.js') });
-
-Each tag will be executed with its scope bound to the tag token object. A token for a tag will look like this:
-
-    // Assume your template has {% mytag foo bar %}{% endmytag %}
-    var token = {
-        type: LOGIC_TOKEN,      // Used internally by the parser. It will always be the same, no matter what tag.
-        name: 'mytag',
-        args: ['foo', 'bar'],
-        compile: tag_function
-    };
-
-Now you can write a tag called `mytag` that returns a bit of JavaScript logic to have run while rendering your template. For more information on how to write a tag, view the [tags.js source file](../lib/tags.js).
