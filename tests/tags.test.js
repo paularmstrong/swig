@@ -175,14 +175,25 @@ exports.macro = testCase({
     },
 
     basic: function (test) {
-        var tmpl8 = swig.fromString('{% macro foo %}hi!{% endmacro %}oh, {% foo %}');
+        var tmpl8 = swig.fromString('{% macro foo %}hi!{% endmacro %}oh, {{ foo }}');
         test.strictEqual(tmpl8.render({}), 'oh, hi!');
         test.done();
     },
 
     args: function (test) {
-        var tmpl8 = swig.fromString('{% macro foo input %}{{ input }}{% endmacro %}oh, {% foo "yep" %}');
+        var tmpl8 = swig.fromString('{% macro foo input %}{{ input }}{% endmacro %}oh, {{ foo("yep") }}');
         test.strictEqual(tmpl8.render({}), 'oh, yep');
+        test.done();
+    },
+
+    complex: function (test) {
+        var tmpl8 = swig.fromString([
+            '{% macro foo bar baz bop %}',
+            '<input type="{{ bar }}" name="{{ baz }}" id="{{ baz }} value="{{ bop }}">',
+            '{% endmacro %}',
+            '{{ foo("text", "person", person.id, person.name) }}'
+        ].join(''));
+        test.strictEqual(tmpl8.render({ person: { id: 'asdf', name: 'Paul' }}), '<input type="text" name="person" id="asdf" value="Paul">');
         test.done();
     }
 });
