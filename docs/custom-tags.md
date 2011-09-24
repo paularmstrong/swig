@@ -6,16 +6,6 @@ First, make sure to include your node.js file that declares your tags in the swi
 
     swig.init({ tags: require('mytags') });
 
-Each tag will be executed with its scope bound to the tag token object. A token for a tag will look like this:
-
-    // Assume your template has {% mytag foo bar %}{% endmytag %}
-    var token = {
-        type: LOGIC_TOKEN,      // Used internally by the parser. It will always be the same, no matter what tag.
-        name: 'mytag',
-        args: ['foo', 'bar'],
-        compile: tag_function
-    };
-
 ## Requirements
 
 First, include the Swig parser and helpers.
@@ -30,7 +20,7 @@ Define your tag and whether or not it requires an "end" tag:
     };
     exports.mytag.ends = true;
 
-## Something Really Simple
+## A Really Simple Tag
 
 To parse a swig variable with or without filters into a variable token, eg. `bar` or `foo|lowercase`
 
@@ -40,7 +30,7 @@ To parse a swig variable with or without filters into a variable token, eg. `bar
     };
     exports.mytag.ends = true;
 
-Use a parsed variable token with `helpers.setVar()` to bind a variable in your current scope into the templates scope:
+Use a parsed variable token with `helpers.setVar()` to bind a variable in your current scope into the templates scope. The `setVar` method cleans up variable output, applies filters and escaping for clean output:
 
     exports.mytag = function (indent) {
         var myArg = parser.parseVariable(this.args[0]),
@@ -50,7 +40,7 @@ Use a parsed variable token with `helpers.setVar()` to bind a variable in your c
     };
     exports.mytag.ends = true;
 
-To parse the inner content of a tag for outputting:
+To parse the inner content of a tag for outputting, use `parser.compile.call(this, indent)`:
 
     exports.mytag = function (indent) {
         var myArg = parser.parseVariable(this.args[0]),
@@ -64,7 +54,6 @@ To parse the inner content of a tag for outputting:
         output.push('<p>');
         output.push(parser.compile.call(this, indent + '    '));
         output.push('</p>');
-
 
         return output.join('\n' + indent);
     };
@@ -83,4 +72,4 @@ Output:
 
 ## Write Your Own
 
-To best understand how to write your own tag, reference `swig/lib/tags.js` to see how the internal tags are written. These will give you a pretty clear indication of how to write your own.
+To best understand how to write your own tag, reference [`swig/lib/tags.js`](../lib/tags.js) to see how the internal tags are written. These will give you a pretty clear indication of how to write your own.
