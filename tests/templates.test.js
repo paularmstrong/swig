@@ -63,6 +63,9 @@ exports.Variables = testCase({
 
         tmpl8 = swig.fromString('{{ date|date("F jS, Y") }}');
         test.strictEqual(tmpl8.render({ date: new Date(2011, 8, 24) }), 'September 24th, 2011');
+
+        tmpl8 = swig.fromString('{{ date|date(\'F jS, Y\') }}');
+        test.strictEqual(tmpl8.render({ date: new Date(2011, 8, 24) }), 'September 24th, 2011');
         test.done();
     },
 
