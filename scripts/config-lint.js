@@ -22,7 +22,7 @@ var options = {
     maxerr: 300,
     maxlen: 600,
     newcap: true,
-    node: true, // jslint.com has an option for node, but the node module is not up to date yet
+    node: true,
     nomen: true,
     on: false,
     passfail: false,
