@@ -1,3 +1,12 @@
+## [0.4.0](https://github.com/paularmstrong/swig/tree/0.4.0) / 2011-09-24
+
+* **Added** Macro support [docs](docs/tags.md)
+* **Changed** Removed requirement to manually specify `locals` for express support.
+* **Changed** Increased cache lookup speed by removing crypto dependency.
+* **Fixed** `length` filter returns length of objects (number of keys).
+* **Fixed** Filters return empty string unless they can apply to the given object.
+* **Fixed** Filters will attempt to apply to all values in an object or array.
+
 ## [0.3.0](https://github.com/paularmstrong/swig/tree/0.3.0) / 2011-09-17
 
 * **Added** Support for `{% set ... %}` tag.
