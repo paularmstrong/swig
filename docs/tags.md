@@ -121,3 +121,33 @@ It is also possible to set variables in templates.
     {% for num in foo %}
         <li>{{ num }}</li>
     {% endfor %}
+
+### macro
+
+Macros are custom, reusable methods for content-generation that are defined in templates.
+
+
+#### Example
+
+One of the most common use-case for macros is form inputs. To start, define your `input` macro somewhere in your template scope (the top of a template, or an included template is a good spot):
+
+    {% macro input type name id label value error %}
+        <label for="{{ name }}">{{ label }}</label>
+        <input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}"{% if error %} class="error"{% endif %}>
+    {% endmacro %}
+
+Somewhere later in your template, invoke the macro using a variable:
+
+    <div>{{ input("text", "fname", "fname", "First Name", fname.value, fname.errors) }}</div>
+    <div>{{ input("text", "lname", "lname", "Last Name", lname.value, lname.errors) }}</div>
+
+Your output may look like this:
+
+    <div>
+        <label for="fname">First Name</label>
+        <input type="text" name="fname" id="fname" value="Paul">
+    </div>
+    <div>
+        <label for="lname">Last Name</label>
+        <input type="text" name="lname" id="lname" value="" class="error">
+    </div>
