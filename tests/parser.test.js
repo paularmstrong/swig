@@ -11,20 +11,26 @@ exports.Tags = testCase({
 
     'basic tag': function (test) {
         var output = parser.parse('{% blah %}', { blah: {} });
-        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, name: 'blah', args: [], compile: {}, parent: [] }], output);
+        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, line: 1, name: 'blah', args: [], compile: {}, parent: [] }], output);
 
         output = parser.parse('{% blah "foobar" %}', { blah: {} });
-        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, name: 'blah', args: ['"foobar"'], compile: {}, parent: [] }], output, 'args appended');
+        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, line: 1, name: 'blah', args: ['"foobar"'], compile: {}, parent: [] }], output, 'args appended');
 
         output = parser.parse('{% blah "foobar" barfoo %}', { blah: {} });
-        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, name: 'blah', args: ['"foobar"', 'barfoo'], compile: {}, parent: [] }], output, 'multiple args appended');
+        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, line: 1, name: 'blah', args: ['"foobar"', 'barfoo'], compile: {}, parent: [] }], output, 'multiple args appended');
 
         test.done();
     },
 
     'basic tag with ends': function (test) {
         var output = parser.parse('{% blah %}{% endblah %}', { blah: { ends: true } });
-        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, name: 'blah', args: [], compile: { ends: true }, tokens: [], parent: [] }], output);
+        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, line: 1, name: 'blah', args: [], compile: { ends: true }, tokens: [], parent: [] }], output);
+        test.done();
+    },
+
+    'line number included in token': function (test) {
+        var output = parser.parse('hi!\n\n\n{% blah %}{% endblah %}', { blah: { ends: true } });
+        test.deepEqual({ type: parser.TOKEN_TYPES.LOGIC, line: 4, name: 'blah', args: [], compile: { ends: true }, tokens: [], parent: [] }, output[1]);
         test.done();
     },
 
@@ -51,7 +57,7 @@ exports.Tags = testCase({
 
     'tag with contents': function (test) {
         var output = parser.parse('{% blah %}hello{% endblah %}', { blah: { ends: true } });
-        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, name: 'blah', args: [], compile: { ends: true }, tokens: ['hello'], parent: [] }], output);
+        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, line: 1, name: 'blah', args: [], compile: { ends: true }, tokens: ['hello'], parent: [] }], output);
         test.done();
     }
 });
