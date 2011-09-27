@@ -6,9 +6,13 @@ Swig is a template engine inspired by the Django syntax. It has a few extensions
 
 ## Features
 
-* Object-Oriented template inheritance: inherit from multiple parent templates.
-* Apply variable filters and transformations in your templates.
-* [Express][2] compatible!
+* Incredibly [fast](http://paularmstrong.github.com/node-templates/)!
+* [Express](http://expressjs.com/) compatible.
+* Object-Oriented template inheritance.
+* Apply filters and transformations to output in your templates.
+* Automatically escapes all output.
+* Lots of iteration and conditionals supported.
+* Extendable and customizable.
 
 ## Installation
 
@@ -59,7 +63,7 @@ Swig reads template files and translates them into javascript functions using th
 
 ## Template syntax
 
-While Swig is inspired by the [Django template syntax][1], there are a few differences:
+While Swig is inspired by the [Django template syntax](http://djangoproject.com/), there are a few differences:
 
 - Filters have a different syntaxt.
 - Some tags are missing or have different syntax.
@@ -74,6 +78,3 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-[1]: http://djangoproject.com/
-[2]: http://expressjs.com/
