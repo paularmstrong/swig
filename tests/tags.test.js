@@ -1,4 +1,5 @@
 var testCase = require('nodeunit').testCase,
+    util = require('util'),
     swig = require('../index');
 
 exports['custom tags'] =  function (test) {
@@ -17,6 +18,25 @@ exports['custom tags'] =  function (test) {
     test.strictEqual(tmpl8.render({}), 'hi!');
     test.done();
 };
+
+exports.include = testCase({
+    setUp: function (callback) {
+        swig.init({ root: __dirname + '/templates' });
+        callback();
+    },
+
+    basic: function (test) {
+        var tmpl8 = swig.fromString('{% include "included_2.html" %}');
+        test.strictEqual(tmpl8.render({ array: ['foo'] }), '1');
+        test.done();
+    },
+
+    variable: function (test) {
+        var tmpl8 = swig.fromString('{% include inc %}');
+        test.strictEqual(tmpl8.render({ inc: 'included_2.html', array: ['foo'] }), '1');
+        test.done();
+    }
+});
 
 exports.if = testCase({
     setUp: function (callback) {
