@@ -1,8 +1,6 @@
 # Swig
 
-A fast, Django-like template engine for node.js.
-
-Swig is a template engine inspired by the Django syntax. It has a few extensions and the templates are compiled to native javascript functions which make them really fast. For now it's synchronous, but once a template is read and compiled, it is cached in memory.
+[Swig](http://paularmstrong.github.com/swig/) is a fast, Django-like template engine for node.js.
 
 ## Features
 
