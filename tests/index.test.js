@@ -14,7 +14,6 @@ exports.fromFile = testCase({
 
         var tpl = swig.fromFile('included_2.html');
         test.strictEqual('2', tpl.render({ array: [1, 1] }), 'from file is a-ok');
-
         test.done();
     },
 
@@ -37,6 +36,16 @@ exports.fromFile = testCase({
             swig.fromFile('barfoo.html');
         }, 'throws when allowErrors is true');
 
+        test.done();
+    },
+
+    'absolute path': function (test) {
+        swig.init({
+            root: __dirname + '/foobar',
+            allowErrors: true
+        });
+        var tpl = swig.fromFile('/' + __dirname + '/templates/included_2.html');
+        test.strictEqual('2', tpl.render({ array: [1, 1] }), 'file from absolute path is a-ok');
         test.done();
     }
 });

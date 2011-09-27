@@ -93,10 +93,6 @@ function createTemplate(data, id) {
     return template;
 }
 
-/*
-* Returns a template object from the given filepath.
-* The filepath needs to be relative to the template directory.
-*/
 exports.fromFile = function (filepath) {
     if (filepath[0] === '/') {
         filepath = filepath.substr(1);
@@ -107,7 +103,8 @@ exports.fromFile = function (filepath) {
     }
 
     var get = function () {
-        var data = fs.readFileSync(config.root + '/' + filepath, config.encoding);
+        var file = ((/^\//).test(filepath)) ? filepath : config.root + '/' + filepath,
+            data = fs.readFileSync(file, config.encoding);
         CACHE[filepath] = createTemplate(data, filepath);
     };
 
