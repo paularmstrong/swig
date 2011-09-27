@@ -4,7 +4,7 @@
 
 ## Features
 
-* Incredibly [fast](http://paularmstrong.github.com/node-templates/)!
+* Incredibly [fast][1]!
 * [Express](http://expressjs.com/) compatible.
 * Object-Oriented template inheritance.
 * Apply filters and transformations to output in your templates.
@@ -53,15 +53,16 @@ All documentation can be viewed online. [Documentation Table of Contents](https:
 
 ## How it works
 
-Swig reads template files and translates them into javascript functions using the Function constructor. When we later render a template we call the evaled function passing a context object as an argument. This makes the rendering very fast. The template tags are defined as strings of Javascript code - which is a bit ugly, but there are helpers that will make writing tags easier for you.
+Swig reads template files and translates them into cached javascript functions. When we later render a template we call the evaluated function, passing a context object as an argument. This makes the rendering [_very fast_][1].
 
 ## Template syntax
 
-While Swig is inspired by the [Django template syntax](http://djangoproject.com/), there are a few differences:
-
-- Filters have a different syntaxt.
-- Some tags are missing or have different syntax.
-- Some extra tags are available.
+* `{%` opens the start of a logic tag
+* `%}` closes a logic tag
+* `{{` opens variable
+* `}}` closes the variable
+* `{#` opens a comment block
+* `#}` closes a comment block
 
 ## License
 
@@ -72,3 +73,5 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+[1]: http://paularmstrong.github.com/node-templates/
