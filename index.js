@@ -64,7 +64,7 @@ function createTemplate(data, id) {
         '__parents = __parents ? __parents.slice() : [];',
         // Prevents circular includes (which will crash node without warning)
         'var j = __parents.length,',
-        '    __output = [],',
+        '    __output = "",',
         '    __this = this;',
         // Note: this loop averages much faster than indexOf across all cases
         'while (j--) {',
@@ -75,7 +75,7 @@ function createTemplate(data, id) {
         // Add this template as a parent to all includes in its scope
         '__parents.push(this.id);',
         code,
-        'return __output.join("");',
+        'return __output;',
     ].join(''));
 
     template.render = function (context, parents) {

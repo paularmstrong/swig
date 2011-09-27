@@ -48,14 +48,14 @@ To parse the inner content of a tag for outputting, use `parser.compile.call(thi
 
         output.push(helpers.setVar('__myArg', myArg));
 
-        output.push('<h1>');
-        output.push('__output.push(__myArg)');
-        output.push('</h1>');
-        output.push('<p>');
+        output.push('__output += "<h1>";');
+        output.push('__output += __myArg;');
+        output.push('__output += "</h1>";');
+        output.push('__output += "<p>";');
         output.push(parser.compile.call(this, indent + '    '));
-        output.push('</p>');
+        output.push('__output += "</p>";');
 
-        return output.join('\n' + indent);
+        return output.join('');
     };
     exports.mytag.ends = true;
 
