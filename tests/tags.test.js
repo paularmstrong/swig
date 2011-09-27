@@ -19,6 +19,25 @@ exports['custom tags'] =  function (test) {
     test.done();
 };
 
+exports.extends = testCase({
+    setUp: function (callback) {
+        swig.init({ root: __dirname + '/templates' });
+        callback();
+    },
+
+    basic: function (test) {
+        var tmpl8 = swig.fromFile('extends_1.html');
+        test.strictEqual('This is from the "extends_base.html" template.\n\n\n  This is the "extends_1.html" content in block \'one\'\n\n\n  This is the default content in block \'two\'\n', tmpl8.render());
+        test.done();
+    },
+
+    circular: function (test) {
+        var tmpl8 = swig.fromFile('extends_circular1.html');
+        test.ok((/^<pre>Error: Circular extends found on line 3 of \"extends_circular1\.html\"\!/).test(tmpl8.render()), 'throws an error');
+        test.done();
+    }
+});
+
 exports.include = testCase({
     setUp: function (callback) {
         swig.init({ root: __dirname + '/templates' });
