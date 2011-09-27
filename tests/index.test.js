@@ -6,7 +6,19 @@ exports.fromFile = testCase({
         callback();
     },
 
-    'file not exist': function (test) {
+    basic: function (test) {
+        swig.init({
+            root: __dirname + '/templates',
+            allowErrors: true
+        });
+
+        var tpl = swig.fromFile('included_2.html');
+        test.strictEqual('2', tpl.render({ array: [1, 1] }), 'from file is a-ok');
+
+        test.done();
+    },
+
+    'allowErrors = false': function (test) {
         swig.init({
             root: __dirname + '/templates',
             allowErrors: false
@@ -14,11 +26,15 @@ exports.fromFile = testCase({
         var tpl = swig.fromFile('foobar.html');
         test.ok((/<pre>Error\: EBADF, Bad file descriptor/).test(tpl.render()), 'pushes a render function with the error');
         tpl = swig.fromFile('includes_notfound.html');
-        test.ok((/<pre>Error\: EBADF, Bad file descriptor/).test(tpl.render()), 'pushes a render function with the error');
+        test.ok((/<pre>Error\: EBADF, Bad file descriptor/).test(tpl.render()), 'renders the error when includes a file that is not found');
 
+        test.done();
+    },
+
+    'allowErrors = true': function (test) {
         swig.init({ allowErrors: true });
         test.throws(function () {
-            tpl = swig.fromFile('barfoo.html');
+            swig.fromFile('barfoo.html');
         }, 'throws when allowErrors is true');
 
         test.done();
