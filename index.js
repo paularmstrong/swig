@@ -106,13 +106,21 @@ exports.fromFile = function (filepath) {
         return CACHE[filepath];
     }
 
-    var data = fs.readFileSync(config.root + '/' + filepath, config.encoding);
-
-    // TODO: see what error readFileSync returns and warn about it
-    if (data) {
+    var get = function () {
+        var data = fs.readFileSync(config.root + '/' + filepath, config.encoding);
         CACHE[filepath] = createTemplate(data, filepath);
-        return CACHE[filepath];
+    };
+
+    if (config.allowErrors) {
+        get();
+    } else {
+        try {
+            get();
+        } catch (error) {
+            CACHE[filepath] = new TemplateError(error);
+        }
     }
+    return CACHE[filepath];
 };
 
 exports.fromString = function (string) {
