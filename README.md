@@ -24,36 +24,32 @@ All documentation can be viewed online. [Documentation Table of Contents](https:
 
 ### Template code
 
-    <h1>Example</h1>
-    {% for name in names %}
-      <p>
-        {{ forloop.counter }}
-        {# This is a comment #}
-        {{ name }}{% if name == "Django" %} Reinhardt{% endif %}
-      </p>
+    <h1>{{ pagename|title }}</h1>
+    <ul>
+    {% for author in authors %}
+        <li{% if forloop.index <= 0 %} class="first"{% endif %}>{{ author }}</li>
+    {% empty %}
+        <li>There are no authors.</li>
     {% endfor %}
+    </ul>
 
 ### node.js code
 
     var template  = require('Swig');
-    var tmpl = template.fromFile("/path/to/template.html");
-    console.log(tmpl.render({names: ["Duke", "Django", "Louis"]}));
+    var tmpl = template.fromFile('/path/to/template.html');
+    tmpl.render({
+        pagename: 'awesome people',
+        authors: ['Paul', 'Jim', 'Jane']
+    });
 
 ### Output
 
-    <h1>Example</h1>
-      <p>
-        1
-        Duke
-      </p>
-      <p>
-        2
-        Django Reinhardt
-      </p>
-      <p>
-        3
-        Louis
-      </p>
+    <h1>Awesome People</h1>
+    <ul>
+        <li class="first">Paul</li>
+        <li>Jim</li>
+        <li>Jane</li>
+    </ul>
 
 ## How it works
 
