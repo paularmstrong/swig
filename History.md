@@ -1,3 +1,14 @@
+## [0.5.0](https://github.com/paularmstrong/swig/tree/0.5.0) / 2011-09-27
+
+* **Added** More error messaging in some edge cases.
+* **Added** Better error messaging including context and line numbers.
+* **Changed** Improved compile and render speeds.
+* **Changed** `include` tags accept context variables instead of just strings.
+* **Changed** Templates can be compiled and rendered from an absolute path outside of the template root.
+* **Fixed** Will not double escape output.
+
+[Documentation](https://github.com/paularmstrong/swig/tree/0.5.0/docs)
+
 ## [0.4.0](https://github.com/paularmstrong/swig/tree/0.4.0) / 2011-09-24
 
 * **Added** Macro support [docs](docs/tags.md)
@@ -6,6 +17,8 @@
 * **Fixed** `length` filter returns length of objects (number of keys).
 * **Fixed** Filters return empty string unless they can apply to the given object.
 * **Fixed** Filters will attempt to apply to all values in an object or array.
+
+[Documentation](https://github.com/paularmstrong/swig/tree/0.4.0/docs)
 
 ## [0.3.0](https://github.com/paularmstrong/swig/tree/0.3.0) / 2011-09-17
 
