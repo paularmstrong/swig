@@ -6,9 +6,9 @@ var fs = require('fs'),
     filters = require('./lib/filters'),
     helpers = require('./lib/helpers'),
 
-    _ = require('underscore'),
+    _ = require('underscore');
 
-    config,
+var config,
     CACHE = {};
 
 // Call this before using the templates
