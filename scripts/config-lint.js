@@ -6,7 +6,7 @@ module.exports = {
 var options = {
     adsafe: false,
     bitwise: true,
-    browser: false,
+    browser: true,
     cap: false,
     confusion: false,
     continue: true,

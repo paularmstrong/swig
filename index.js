@@ -102,6 +102,10 @@ exports.fromFile = function (filepath) {
         return CACHE[filepath];
     }
 
+    if (typeof window !== 'undefined') {
+        throw new TemplateError({ stack: 'You must pre-compile all templates in-browser. Use `swig.fromString(template);`.' });
+    }
+
     var get = function () {
         var file = ((/^\//).test(filepath)) ? filepath : config.root + '/' + filepath,
             data = fs.readFileSync(file, config.encoding);
@@ -120,12 +124,13 @@ exports.fromFile = function (filepath) {
     return CACHE[filepath];
 };
 
-exports.fromString = function (string) {
-    if (!CACHE.hasOwnProperty(string)) {
-        CACHE[string] = createTemplate(string, string);
+exports.fromString = function (string, name) {
+    var key = name || string;
+    if (!CACHE.hasOwnProperty(key)) {
+        CACHE[key] = createTemplate(string, key);
     }
 
-    return CACHE[string];
+    return CACHE[key];
 };
 
 exports.compile = function (source, options, callback) {
