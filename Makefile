@@ -9,6 +9,7 @@ all:
 browser:
 	@rm -rf dist/browser
 	@mkdir -p dist/browser
+	@cat dist/header.js >> $(BROWSER_FILE)
 	@echo "swig = (function () {" >> $(BROWSER_FILE)
 	@echo "var swig = {}," >> $(BROWSER_FILE)
 	@echo "    dateformat = {}," >> $(BROWSER_FILE)
