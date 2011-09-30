@@ -1,6 +1,6 @@
 module.exports = {
     root: __dirname + '/../',
-    pathIgnore: ['*node_modules*', '*browser/underscore*', '*browser/dist/*']
+    pathIgnore: ['*node_modules*', '*browser/underscore*', '*dist/browser/*']
 };
 
 var options = {

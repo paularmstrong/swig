@@ -1,5 +1,5 @@
-BROWSER_FILE = "browser/dist/swig.js"
-TEMP_FILE = "browser/.swig.js"
+BROWSER_FILE = "dist/browser/swig.js"
+TEMP_FILE = "dist/.swig.js"
 
 all:
 	@npm install -d
@@ -7,8 +7,8 @@ all:
 	@chmod -R +x .git/hooks/
 
 browser:
-	@rm -rf browser/dist
-	@mkdir -p browser/dist
+	@rm -rf dist/browser
+	@mkdir -p dist/browser
 	@echo "swig = (function () {" >> $(BROWSER_FILE)
 	@echo "var swig = {}," >> $(BROWSER_FILE)
 	@echo "    dateformat = {}," >> $(BROWSER_FILE)
@@ -48,7 +48,7 @@ browser:
 	@sed "/require/d" <$(TEMP_FILE) > $(BROWSER_FILE)
 	@rm $(TEMP_FILE)
 
-	@node_modules/uglify-js/bin/uglifyjs $(BROWSER_FILE) > browser/dist/swig.min.js
+	@node_modules/uglify-js/bin/uglifyjs $(BROWSER_FILE) > dist/browser/swig.min.js
 
 test:
 	@node tests/speed.js
