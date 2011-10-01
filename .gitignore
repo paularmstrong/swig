@@ -2,3 +2,4 @@
 npm-debug.log
 node_modules/*
 dist/browser/*
+dist/test/swig.pack.js

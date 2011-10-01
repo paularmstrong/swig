@@ -62,3 +62,5 @@ rm -rf dist/browser
 mkdir -p dist/browser
 package
 package "pack"
+
+cp dist/browser/swig.pack.js dist/test/swig.pack.js
