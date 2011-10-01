@@ -22,18 +22,55 @@ exports['custom tags'] =  function (test) {
 exports.extends = testCase({
     setUp: function (callback) {
         swig.init({ root: __dirname + '/templates' });
+        this.extends_base = [
+            'This is from the "extends_base.html" template.',
+            '',
+            '{% block one %}',
+            '  This is the default content in block \'one\'',
+            '{% endblock %}',
+            '',
+            '{% block two %}',
+            '  This is the default content in block \'two\'',
+            '{% endblock %}'
+        ].join('\n');
+        this.extends1 = [
+            '{% extends "extends_base.html" %}',
+            'This is content from "extends_1.html", you should not see it',
+            '',
+            '{% block one %}',
+            '  This is the "extends_1.html" content in block \'one\'',
+            '{% endblock %}'
+        ].join('\n');
+        this.circular1 = "{% extends 'extends_circular2.html' %}{% block content %}Foobar{% endblock %}";
+        this.circular2 = "{% extends 'extends_circular1.html' %}{% block content %}Barfoo{% endblock %}";
         callback();
     },
 
     basic: function (test) {
-        var tmpl8 = swig.fromFile('extends_1.html');
+        var tmpl8;
+        if (typeof window !== 'undefined') {
+            swig.fromString(this.extends_base, 'extends_base.html');
+            tmpl8 = swig.fromString(this.extends1, 'extends1.html');
+        } else {
+            tmpl8 = swig.fromFile('extends_1.html');
+        }
         test.strictEqual('This is from the "extends_base.html" template.\n\n\n  This is the "extends_1.html" content in block \'one\'\n\n\n  This is the default content in block \'two\'\n', tmpl8.render());
         test.done();
     },
 
     circular: function (test) {
-        var tmpl8 = swig.fromFile('extends_circular1.html');
-        test.ok((/^<pre>Error: Circular extends found on line 3 of \"extends_circular1\.html\"\!/).test(tmpl8.render()), 'throws an error');
+        var tmpl8;
+        if (typeof window !== 'undefined') {
+            swig.init({ allowErrors: true });
+            test.throws(function () {
+                swig.fromString(this.circular1, 'extends_circular1.html');
+                tmpl8 = swig.fromString(this.circular2, 'extends_circular2.html');
+                tmpl8.render();
+            });
+        } else {
+            tmpl8 = swig.fromFile('extends_circular1.html');
+            test.ok((/^<pre>Error: Circular extends found on line 3 of \"extends_circular1\.html\"\!/).test(tmpl8.render()), 'throws an error');
+        }
         test.done();
     }
 });
@@ -45,12 +82,18 @@ exports.include = testCase({
     },
 
     basic: function (test) {
+        if (typeof window !== 'undefined') {
+            swig.fromString('{{array.length}}', 'included_2.html');
+        }
         var tmpl8 = swig.fromString('{% include "included_2.html" %}');
         test.strictEqual(tmpl8.render({ array: ['foo'] }), '1');
         test.done();
     },
 
     variable: function (test) {
+        if (typeof window !== 'undefined') {
+            swig.fromString('{{array.length}}', 'included_2.html');
+        }
         var tmpl8 = swig.fromString('{% include inc %}');
         test.strictEqual(tmpl8.render({ inc: 'included_2.html', array: ['foo'] }), '1');
         test.done();

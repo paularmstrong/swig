@@ -7,8 +7,9 @@
     <link rel="stylesheet" href="nodeunit.css" type="text/css" media="all" />
     <script src="nodeunit.min.js"></script>
     <script src="swig.pack.js"></script>
-    <script src="basic.js"></script>
-    <script src="filters.js"></script>
+    <script src="filters.test.js"></script>
+    <script src="tags.test.js"></script>
+    <script src="templates.test.js"></script>
 </head>
 <body>
 
@@ -16,8 +17,9 @@
     <script>
     swig.init({});
     nodeunit.run({
-        Basic: basic,
-        Filters: filters
+        Filters: filters,
+        Tags: tags,
+        Templates: templates
     });
     </script>
 

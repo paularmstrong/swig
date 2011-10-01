@@ -11,7 +11,7 @@ function package() {
         MIN_FILE="dist/browser/swig.min.js"
     fi
 
-    cat dist/header.js >> $BROWSER_FILE
+    cat dist/header.js > $BROWSER_FILE
     echo "swig = (function () {" >> $BROWSER_FILE
     echo "var swig = {}," >> $BROWSER_FILE
     echo "dateformat = {}," >> $BROWSER_FILE
@@ -64,3 +64,25 @@ package
 package "pack"
 
 cp dist/browser/swig.pack.js dist/test/swig.pack.js
+
+function packageTest() {
+    TEST_FILE="$1.test.js"
+    TEMP_FILE="dist/.$TEST_FILE"
+
+    echo "$1 = (function (exports) {" > dist/test/$TEST_FILE
+    cat tests/$TEST_FILE >> dist/test/$TEST_FILE
+    echo "return exports;" >> dist/test/$TEST_FILE
+    echo "})({});" >> dist/test/$TEST_FILE
+
+    cp dist/test/$TEST_FILE $TEMP_FILE
+    sed "/require/d" <$TEMP_FILE > dist/test/$TEST_FILE
+    cp dist/test/$TEST_FILE $TEMP_FILE
+    sed "s/testCase/nodeunit.testCase/" <$TEMP_FILE > dist/test/$TEST_FILE
+    cp dist/test/$TEST_FILE $TEMP_FILE
+    sed "s/__dirname/\'\'/" <$TEMP_FILE > dist/test/$TEST_FILE
+    rm $TEMP_FILE
+}
+
+packageTest "filters"
+packageTest "tags"
+packageTest "templates"
