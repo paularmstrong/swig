@@ -196,6 +196,10 @@ If the variable is `undefined`, `null`, or `false`, a default return value can b
 
 1. <var>**value**</var> (_mixed_) Fallback value if the variable is falsy.
 
+### escape
+
+Force escape the output of the variable. Optionally use `e` as a shortcut filter name.
+
 ### first
 
 Returns the first element of an array. Uses [underscore.js first](http://documentcloud.github.com/underscore/#first)
@@ -223,6 +227,10 @@ Return the `length` property of the value.
 ### lower
 
 Return the variable in all lowercase letters.
+
+### raw
+
+Do not escape the output of the variable.
 
 ### replace(search, replace[, flags])
 

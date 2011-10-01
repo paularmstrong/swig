@@ -91,6 +91,24 @@ exports.default = function (test) {
     test.done();
 };
 
+exports.e = function (test) {
+    swig.init({ autoEscape: false });
+    testFilter(test, 'e', { v: '<&>' }, '&lt;&amp;&gt;', 'Unescaped output');
+    testFilter(test, 'first|e', { v: ['<&>'] }, '&lt;&amp;&gt;', 'Unescaped in chain');
+    testFilter(test, 'upper|e|lower', { v: '<&>fOo' }, '&lt;&amp;&gt;foo', 'Unescaped in middle of chain');
+    swig.init({});
+    test.done();
+};
+
+exports.escape = function (test) {
+    swig.init({ autoEscape: false });
+    testFilter(test, 'escape', { v: '<&>' }, '&lt;&amp;&gt;', 'Unescaped output');
+    testFilter(test, 'first|escape', { v: ['<&>'] }, '&lt;&amp;&gt;', 'Unescaped in chain');
+    testFilter(test, 'upper|escape|lower', { v: '<&>fOo' }, '&lt;&amp;&gt;foo', 'Unescaped in middle of chain');
+    swig.init({});
+    test.done();
+};
+
 exports.first = function (test) {
     testFilter(test, 'first', { v: [1, 2, 3, 4] }, '1', 'first from array');
     testFilter(test, 'first', { v: '213' }, '2', 'first in string');
@@ -131,6 +149,13 @@ exports.lower = function (test) {
     testFilter(test, 'lower', { v: '345' }, '345', 'number');
     testFilter(test, 'lower', { v: ['FOO', 'bAr'] }, 'foo,bar', 'array');
     testFilter(test, 'lower|join("")', { v: { foo: 'BAR' } }, 'bar', 'object');
+    test.done();
+};
+
+exports.raw = function (test) {
+    testFilter(test, 'raw', { v: '<&>' }, '<&>', 'Unescaped output');
+    testFilter(test, 'first|raw', { v: ['<&>'] }, '<&>', 'Unescaped in chain');
+    testFilter(test, 'upper|raw|lower', { v: '<&>fOo' }, '<&>foo', 'Unescaped in middle of chain');
     test.done();
 };
 
