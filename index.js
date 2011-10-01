@@ -60,7 +60,7 @@ function createTemplate(data, id) {
     code = parser.compile.call(template);
 
     // The compiled render function - this is all we need
-    render = new Function('__context', '__parents', '__filters', '__escape', [
+    render = new Function('__context', '__parents', '__filters', '__escape', '_', [
         '__parents = __parents ? __parents.slice() : [];',
         // Prevents circular includes (which will crash node without warning)
         'var j = __parents.length,',
@@ -80,10 +80,10 @@ function createTemplate(data, id) {
 
     template.render = function (context, parents) {
         if (config.allowErrors) {
-            return render.call(this, context, parents, config.filters, helpers.escaper);
+            return render.call(this, context, parents, config.filters, helpers.escaper, _);
         } else {
             try {
-                return render.call(this, context, parents, config.filters, helpers.escaper);
+                return render.call(this, context, parents, config.filters, helpers.escaper, _);
             } catch (e) {
                 return new TemplateError(e);
             }
