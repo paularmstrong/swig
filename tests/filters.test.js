@@ -1,184 +1,189 @@
-var filters = require('../lib/filters');
+var swig = require('../index');
+
+swig.init({});
+
+function testFilter(test, filter, input, output, message) {
+    var tpl = swig.fromString('{{ v|' + filter + ' }}');
+    test.strictEqual(tpl.render(input), output, message);
+}
 
 exports.add = function (test) {
-    test.strictEqual(2, filters.add(0, 2));
-    test.strictEqual(3, filters.add('1', 2));
-    test.deepEqual([1, 2, 3, 4], filters.add([1, 2], [3, 4]));
-    test.strictEqual('foo2', filters.add('foo', 2));
-    test.strictEqual('foobar', filters.add('foo', 'bar'));
-    test.deepEqual({ foo: 1, bar: 2 }, filters.add({ foo: 1 }, { bar: 2 }));
-    test.strictEqual('foo1,2', filters.add('foo', [1, 2]));
+    testFilter(test, 'add(2)', { v: 1 }, '3', 'add numbers');
+    testFilter(test, 'add([3, 4])', { v: [1, 2] }, '1,2,3,4', 'arrays add from literal');
+    testFilter(test, 'add(b)', { v: [1, 2], b: [3, 4] }, '1,2,3,4', 'arrays add from var');
+    testFilter(test, 'add(2)', { v: 'foo' }, 'foo2', 'string var turns addend into a string');
+    testFilter(test, 'add("bar")', { v: 'foo' }, 'foobar', 'strings concatenated');
+    testFilter(test, 'add({ bar: 2, baz: 3 })|join(",")', { v: { foo: 1 }}, '1,2,3', 'add objects from object literal');
+    // testFilter(test, 'add(b)|join(",")', { v: { foo: 1 }, b: { bar: 2 }}, '1,2', 'add objects from var');
+    testFilter(test, 'add(b)', { v: 'foo', b: [1, 2] }, 'foo1,2', 'add array to string');
     test.done();
 };
 
-exports.addslashes = function (test) {
-    test.strictEqual("\\\"Top O\\' the\\\\ mornin\\\"", filters.addslashes("\"Top O' the\\ mornin\""));
-    test.done();
-};
+// exports.addslashes = function (test) {
+//     testFilter(test, 'addslashes', { v: "\"Top O' the\\ mornin\"" }, "\\\"Top O\\' the\\\\ mornin\\\"", 'add slashes to string');
+//     testFilter(test, 'addslashes', { v: ["\"Top", "O'", "the\\", "mornin\""] }, "\\\"Top,O\\',the\\\\,mornin\\\"", 'add slashes to array');
+//     test.done();
+// };
 
 exports.capitalize = function (test) {
-    var input = 'awesome sauce.';
-    test.strictEqual('Awesome sauce.', filters.capitalize(input));
-    input = 345;
-    test.strictEqual('345', filters.capitalize(input));
+    testFilter(test, 'capitalize', { v: 'awesome sAuce.' }, 'Awesome sauce.');
+    testFilter(test, 'capitalize', { v: 345 }, '345');
+    testFilter(test, 'capitalize', { v: ['foo', 'bar'] }, 'Foo,Bar');
     test.done();
 };
 
 exports.date = function (test) {
-    var input = 'Tue Sep 06 2011 09:05:02';
+    var date = new Date(2011, 8, 6, 9, 5, 2),
+        tpl = swig.fromString('{{ d|date("d") }}');
 
+    function testFormat(format, expected) {
+        testFilter(test, 'date("' + format + '")', { v: date }, expected, 'format: "' + format + '" - http://php.net/date');
+    }
     // Day
-    test.strictEqual('06', filters.date(input, "d"), 'format: d http://www.php.net/date');
-    test.strictEqual('Tue', filters.date(input, "D"), 'format: D http://www.php.net/date');
-    test.strictEqual('6', filters.date(input, "j"), 'format: j http://www.php.net/date');
-    test.strictEqual('Tuesday', filters.date(input, "l"), 'format: l http://www.php.net/date');
-    test.strictEqual('2', filters.date(input, "N"), 'format: N http://www.php.net/date');
-    test.strictEqual('th', filters.date(input, "S"), 'format: S http://www.php.net/date');
-    test.strictEqual('1', filters.date(input, "w"), 'format: w http://www.php.net/date');
+    testFormat('d', '06');
+    testFormat('D', 'Tue');
+    testFormat('j', '6');
+    testFormat('l', 'Tuesday');
+    testFormat('N', '2');
+    testFormat('S', 'th');
+    testFormat('w', '1');
 
     // Month
-    test.strictEqual('September', filters.date(input, "F"), 'format: F http://www.php.net/date');
-    test.strictEqual('09', filters.date(input, "m"), 'format: m http://www.php.net/date');
-    test.strictEqual('Sep', filters.date(input, "M"), 'format: M http://www.php.net/date');
-    test.strictEqual('9', filters.date(input, "n"), 'format: n http://www.php.net/date');
+    testFormat('F', 'September');
+    testFormat('m', '09');
+    testFormat('M', 'Sep');
+    testFormat('n', '9');
 
     // Year
-    test.strictEqual('2011', filters.date(input, "Y"), 'format: Y http://www.php.net/date');
-    test.strictEqual('11', filters.date(input, "y"), 'format: y http://www.php.net/date');
-    test.strictEqual('2011', filters.date(input, "Y"), 'format: Y http://www.php.net/date');
+    testFormat('Y', '2011');
+    testFormat('y', '11');
 
     // Time
-    test.strictEqual('am', filters.date(input, "a"), 'format: a http://www.php.net/date');
-    test.strictEqual('AM', filters.date(input, "A"), 'format: A http://www.php.net/date');
-    test.strictEqual('9', filters.date(input, "g"), 'format: g http://www.php.net/date');
-    test.strictEqual('9', filters.date(input, "G"), 'format: G http://www.php.net/date');
-    test.strictEqual('09', filters.date(input, "h"), 'format: h http://www.php.net/date');
-    test.strictEqual('09', filters.date(input, "H"), 'format: H http://www.php.net/date');
-    test.strictEqual('05', filters.date(input, "i"), 'format: i http://www.php.net/date');
-    test.strictEqual('02', filters.date(input, "s"), 'format: s http://www.php.net/date');
-
-    test.strictEqual('06-09-2011', filters.date(input, "d-m-Y"));
+    testFormat('a', 'am');
+    testFormat('A', 'AM');
+    testFormat('g', '9');
+    testFormat('G', '9');
+    testFormat('h', '09');
+    testFormat('H', '09');
+    testFormat('i', '05');
+    testFormat('s', '02');
+    testFormat('d-m-Y', '06-09-2011');
 
     // These tests will fail in any other timezone. It's a bit hard to fake that out without directly implementing the methods inline.
     // Timezone
-    test.strictEqual('+0700', filters.date(input, "O"), 'format: O http://www.php.net/date');
-    test.strictEqual('25200', filters.date(input, "Z"), 'format: Z http://www.php.net/date');
+    testFormat('O', '+0700');
+    testFormat('Z', '25200');
 
     // Full Date/Time
-    test.strictEqual('Tue Sep 06 2011 09:05:02 GMT-0700 (PDT)', filters.date(input, "r"), 'format: r http://www.php.net/date');
-    test.strictEqual('1315325102', filters.date(input, "U"), 'format: U http://www.php.net/date');
+    testFormat('r', 'Tue Sep 06 2011 09:05:02 GMT-0700 (PDT)');
+    testFormat('U', '1315325102');
 
     test.done();
 };
 
 exports.default = function (test) {
-    var defOut = 'blah';
-    test.strictEqual('foo', filters.default('foo', defOut), 'string not overridden by default');
-    test.strictEqual(0, filters.default(0, defOut), 'zero not overridden by default');
-
-    test.strictEqual(defOut, filters.default('', defOut), 'empty string overridden by default');
-    test.strictEqual(defOut, filters.default(undefined, defOut), 'default overrides undefined');
-    test.strictEqual(defOut, filters.default(null, defOut), 'default overrides null');
-    test.strictEqual(defOut, filters.default(false, defOut), 'default overrides false');
+    testFilter(test, 'default("blah")', { v: 'foo' }, 'foo', 'string not overridden by default');
+    testFilter(test, 'default("blah")', { v: 0 }, '0', 'zero not overridden by default');
+    testFilter(test, 'default("blah")', { v: '' }, 'blah', 'empty string overridden by default');
+    // testFilter(test, 'default("blah")', {}, 'blah', 'default overrides undefined');
+    testFilter(test, 'default("blah")', { v: null }, 'blah', 'default overrides null');
+    testFilter(test, 'default("blah")', { v: false }, 'blah', 'default overrides false');
     test.done();
 };
 
 exports.first = function (test) {
-    test.strictEqual(1, filters.first([1, 2, 3, 4]));
-    test.strictEqual('2', filters.first('213'));
-    test.strictEqual('', filters.first({ foo: 'blah', bar: 'nope' }));
+    testFilter(test, 'first', { v: [1, 2, 3, 4] }, '1', 'first from array');
+    testFilter(test, 'first', { v: '213' }, '2', 'first in string');
+    testFilter(test, 'first', { v: { foo: 'blah', bar: 'nope' }}, '', 'empty string from object');
     test.done();
 };
 
 exports.join = function (test) {
-    var input = [1, 2, 3];
-    test.strictEqual('1+2+3', filters.join(input, '+'));
-    test.strictEqual('1 * 2 * 3', filters.join(input, ' * '));
-    test.deepEqual({ foo: 1, bar: 2, baz: 3 }, filters.join({ foo: 1, bar: 2, baz: 3 }, ','));
-    test.strictEqual('asdf', filters.join('asdf', '-'), 'Non-array input is not joined.');
+    testFilter(test, 'join("+")', { v: [1, 2, 3] }, '1+2+3', 'join with "+"');
+    testFilter(test, 'join(" * ")', { v: [1, 2, 3] }, '1 * 2 * 3', 'join with " * "');
+    testFilter(test, 'join(", ")', { v: { foo: 1, bar: 2, baz: 3 }}, '1, 2, 3', 'object values are joined');
+    testFilter(test, 'join("-")', { v: 'asdf' }, 'asdf', 'Non-array input is not joined.');
     test.done();
 };
 
 exports.json_encode = function (test) {
-    var input = { foo: 'bar', baz: [1, 2, 3] };
-    test.strictEqual('{"foo":"bar","baz":[1,2,3]}', filters.json_encode(input));
+    testFilter(test, 'json_encode', { v: { foo: 'bar', baz: [1, 2, 3] }}, '{&quot;foo&quot;:&quot;bar&quot;,&quot;baz&quot;:[1,2,3]}');
     test.done();
 };
 
 exports.length = function (test) {
-    test.strictEqual(3, filters.length([1, 2, 3]));
-    test.strictEqual(6, filters.length('foobar'));
-    test.strictEqual(2, filters.length({ 'h': 1, 'b': 2 }));
+    testFilter(test, 'length', { v: [1, 2, 3] }, '3', 'array');
+    testFilter(test, 'length', { v: 'foobar' }, '6', 'string');
+    testFilter(test, 'length', { v: { 'h': 1, 'b': 2 }}, '2', 'object');
     test.done();
 };
 
 exports.last = function (test) {
     var input = [1, 2, 3, 4];
-    test.strictEqual(4, filters.last(input));
-    test.strictEqual('3', filters.last('123'));
-    test.strictEqual('', filters.last({ foo: 'blah', bar: 'nope' }));
+    testFilter(test, 'last', { v: [1, 2, 3, 4] }, '4', 'array');
+    testFilter(test, 'last', { v: '123' }, '3', 'string');
+    testFilter(test, 'last', { v: { foo: 'blah', bar: 'nope' }}, '', 'object');
     test.done();
 };
 
 exports.lower = function (test) {
-    test.strictEqual('bar', filters.lower('BaR'));
-    test.strictEqual('345', filters.lower(345));
-    test.deepEqual(['foo', 'bar'], filters.lower(['FOO', 'BAR']));
-    test.deepEqual({ foo: 'bar' }, filters.lower({ foo: 'BAR' }));
+    testFilter(test, 'lower', { v: 'BaR' }, 'bar', 'string');
+    testFilter(test, 'lower', { v: '345' }, '345', 'number');
+    testFilter(test, 'lower', { v: ['FOO', 'bAr'] }, 'foo,bar', 'array');
+    testFilter(test, 'lower|join("")', { v: { foo: 'BAR' } }, 'bar', 'object');
     test.done();
 };
 
 exports.replace = function (test) {
-    test.strictEqual('fb', filters.replace('fooboo', 'o', '', 'g'));
-    test.strictEqual('fao', filters.replace('foo', 'o', 'a'));
-    test.strictEqual('-1aZ', filters.replace('$*&1aZ', '\\W+', '-'));
+    testFilter(test, 'replace("o", "", "g")', { v: 'fooboo' }, 'fb');
+    testFilter(test, 'replace("o", "a")', { v: 'foo' }, 'fao');
+    testFilter(test, 'replace("\\W+", "-")', { v: '$*&1aZ' }, '-1aZ');
     test.done();
 };
 
 exports.reverse = function (test) {
-    test.deepEqual([3, 2, 1], filters.reverse([1, 2, 3]), 'reverse array');
-    test.strictEqual('asdf', filters.reverse('asdf'), 'reverse string does nothing');
-    test.deepEqual({ 'foo': 'bar' }, filters.reverse({ 'foo': 'bar' }), 'reverse object does nothing');
+    testFilter(test, 'reverse', { v: [1, 2, 3] }, '3,2,1', 'reverse array');
+    testFilter(test, 'reverse', { v: 'asdf' }, 'asdf', 'reverse string does nothing');
+    testFilter(test, 'reverse|join("")', { v: { foo: 'bar', baz: 'bop' }}, 'barbop', 'reverse object does nothing');
     test.done();
 };
 
 exports.striptags = function (test) {
     var input = '<h1>foo</h1> <div class="blah">hi</div>';
-    test.strictEqual('foo hi', filters.striptags(input));
-    test.deepEqual(['foo', 'hi'], filters.striptags(['<h1>foo</h1>', '<div class="blah">hi</div>']));
-    test.deepEqual({ foo: 'foo', bar: 'hi' }, filters.striptags({ foo: '<h1>foo</h1>', bar: '<div class="blah">hi</div>' }));
+    testFilter(test, 'striptags', { v: '<h1>foo</h1> <div class="blah">hi</div>' }, 'foo hi', 'string');
+    testFilter(test, 'striptags|join(",")', { v: ['<h1>foo</h1>', '<div class="blah">hi</div>'] }, 'foo,hi', 'array');
+    testFilter(test, 'striptags|join(",")', { v: { foo: '<h1>foo</h1>', bar: '<div class="blah">hi</div>' }}, 'foo,hi', 'object');
     test.done();
 };
 
 exports.title = function (test) {
     var input = 'this is title case';
-    test.strictEqual('This Is Title Case', filters.title(input));
-    test.deepEqual(['Foo Bar', 'Blahbitty Blah'], filters.title(['foo bar', 'blaHbiTTy bLAH']));
-    test.deepEqual({ foo: 'Foo Bar', bar: 'Blahbitty Blah' }, filters.title({ foo: 'foo bar', bar: 'blaHbiTTy bLAH' }));
+    testFilter(test, 'title', { v: 'this is title case' }, 'This Is Title Case', 'string');
+    testFilter(test, 'title|join(",")', { v: ['foo bar', 'blaHbiTTy bLAH'] }, 'Foo Bar,Blahbitty Blah');
+    testFilter(test, 'title|join(",")', { v: { foo: 'foo bar', bar: 'blaHbiTTy bLAH' } }, 'Foo Bar,Blahbitty Blah');
     test.done();
 };
 
 exports.uniq = function (test) {
-    var input = [2, 1, 2, 3, 4, 4];
-    test.deepEqual([2, 1, 3, 4], filters.uniq(input));
+    testFilter(test, 'uniq', { v: [2, 1, 2, 3, 4, 4] }, '2,1,3,4');
     test.done();
 };
+
 exports.upper = function (test) {
-    test.strictEqual('BAR', filters.upper('bar'));
-    test.strictEqual('345', filters.upper(345));
-    test.deepEqual(['FOO', 'BAR'], filters.upper(['foo', 'bar']));
-    test.deepEqual({ foo: 'BAR' }, filters.upper({ foo: 'bar' }));
+    testFilter(test, 'upper', { v: 'bar' }, 'BAR', 'string');
+    testFilter(test, 'upper', { v: 345 }, '345', 'number');
+    testFilter(test, 'upper', { v: ['foo', 'bAr'] }, 'FOO,BAR', 'array');
+    testFilter(test, 'upper|join("")', { v: { foo: 'bar' } }, 'BAR', 'object');
     test.done();
 };
 
 exports.url_encode = function (test) {
-    var input = "param=1&anotherParam=2";
-    test.strictEqual("param%3D1%26anotherParam%3D2", filters.url_encode(input));
+    testFilter(test, 'url_encode', { v: "param=1&anotherParam=2" }, "param%3D1%26anotherParam%3D2");
     test.done();
 };
 
 exports.url_decode = function (test) {
     var input = "param%3D1%26anotherParam%3D2";
-    test.strictEqual("param=1&anotherParam=2", filters.url_decode(input));
+    testFilter(test, 'url_decode', { v: "param%3D1%26anotherParam%3D2" }, "param=1&amp;anotherParam=2");
     test.done();
 };
