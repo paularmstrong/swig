@@ -19,11 +19,11 @@ exports.add = function (test) {
     test.done();
 };
 
-// exports.addslashes = function (test) {
-//     testFilter(test, 'addslashes', { v: "\"Top O' the\\ mornin\"" }, "\\\"Top O\\' the\\\\ mornin\\\"", 'add slashes to string');
-//     testFilter(test, 'addslashes', { v: ["\"Top", "O'", "the\\", "mornin\""] }, "\\\"Top,O\\',the\\\\,mornin\\\"", 'add slashes to array');
-//     test.done();
-// };
+exports.addslashes = function (test) {
+    testFilter(test, 'addslashes', { v: "\"Top O' the\\ mornin\"" }, "\\&quot;Top O\\&#39; the\\\\ mornin\\&quot;", 'add slashes to string');
+    testFilter(test, 'addslashes', { v: ["\"Top", "O'", "the\\", "mornin\""] }, "\\\"Top,O\\',the\\\\,mornin\\\"", 'add slashes to array');
+    test.done();
+};
 
 exports.capitalize = function (test) {
     testFilter(test, 'capitalize', { v: 'awesome sAuce.' }, 'Awesome sauce.');
