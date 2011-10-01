@@ -85,7 +85,7 @@ exports.default = function (test) {
     testFilter(test, 'default("blah")', { v: 'foo' }, 'foo', 'string not overridden by default');
     testFilter(test, 'default("blah")', { v: 0 }, '0', 'zero not overridden by default');
     testFilter(test, 'default("blah")', { v: '' }, 'blah', 'empty string overridden by default');
-    // testFilter(test, 'default("blah")', {}, 'blah', 'default overrides undefined');
+    testFilter(test, 'default("blah")', {}, 'blah', 'default overrides undefined');
     testFilter(test, 'default("blah")', { v: null }, 'blah', 'default overrides null');
     testFilter(test, 'default("blah")', { v: false }, 'blah', 'default overrides false');
     test.done();
