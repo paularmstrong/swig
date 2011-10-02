@@ -196,7 +196,7 @@ If the variable is `undefined`, `null`, or `false`, a default return value can b
 
 1. <var>**value**</var> (_mixed_) Fallback value if the variable is falsy.
 
-### escape
+### escape / e
 
 Force escape the output of the variable. Optionally use `e` as a shortcut filter name.
 
