@@ -2,6 +2,10 @@
 
 Used to modify variables. Filters are added directly after variable names, separated by the pipe (|) character. You can chain multiple filters together, applying one after the other in succession.
 
+## Example
+
+    {{ name|title }} was born on {{ birthday|date('F jS, Y') }} and has {{ bikes|length|default("zero") }} bikes.
+
 ## Built-In Filters
 
 ### add(value)
