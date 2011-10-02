@@ -196,9 +196,13 @@ If the variable is `undefined`, `null`, or `false`, a default return value can b
 
 1. <var>**value**</var> (_mixed_) Fallback value if the variable is falsy.
 
-### escape / e
+### escape([type]) / e([type])
 
 Force escape the output of the variable. Optionally use `e` as a shortcut filter name.
+
+#### Arguments
+
+1. <var>**type**</var> (_string_) _optional_ passing "js" as the type will force JavaScript-safe escaping.
 
 ### first
 
