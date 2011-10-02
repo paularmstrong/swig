@@ -96,6 +96,11 @@ exports.e = function (test) {
     testFilter(test, 'e', { v: '<&>' }, '&lt;&amp;&gt;', 'Unescaped output');
     testFilter(test, 'first|e', { v: ['<&>'] }, '&lt;&amp;&gt;', 'Unescaped in chain');
     testFilter(test, 'upper|e|lower', { v: '<&>fOo' }, '&lt;&amp;&gt;foo', 'Unescaped in middle of chain');
+    testFilter(test, 'e("js")', { v: '"double quotes" and \'single quotes\'' }, '\\u0022double quotes\\u0022 and \\u0027single quotes\\u0027');
+    testFilter(test, 'e("js")', { v: '<script>and this</script>' }, '\\u003Cscript\\u003Eand this\\u003C/script\\u003E');
+    testFilter(test, 'e("js")', { v: '\\ : backslashes, too' }, '\\u005C : backslashes, too');
+    testFilter(test, 'e("js")', { v: 'and lots of whitespace: \r\n\t\v\f\b' }, 'and lots of whitespace: \\u000D\\u000A\\u0009\\u000B\\u000C\\u0008');
+    testFilter(test, 'e("js")', { v: 'and "special" chars = -1;' }, 'and \\u0022special\\u0022 chars \\u003D \\u002D1\\u003B');
     swig.init({});
     test.done();
 };
@@ -105,6 +110,11 @@ exports.escape = function (test) {
     testFilter(test, 'escape', { v: '<&>' }, '&lt;&amp;&gt;', 'Unescaped output');
     testFilter(test, 'first|escape', { v: ['<&>'] }, '&lt;&amp;&gt;', 'Unescaped in chain');
     testFilter(test, 'upper|escape|lower', { v: '<&>fOo' }, '&lt;&amp;&gt;foo', 'Unescaped in middle of chain');
+    testFilter(test, 'escape("js")', { v: '"double quotes" and \'single quotes\'' }, '\\u0022double quotes\\u0022 and \\u0027single quotes\\u0027');
+    testFilter(test, 'escape("js")', { v: '<script>and this</script>' }, '\\u003Cscript\\u003Eand this\\u003C/script\\u003E');
+    testFilter(test, 'escape("js")', { v: '\\ : backslashes, too' }, '\\u005C : backslashes, too');
+    testFilter(test, 'escape("js")', { v: 'and lots of whitespace: \r\n\t\v\f\b' }, 'and lots of whitespace: \\u000D\\u000A\\u0009\\u000B\\u000C\\u0008');
+    testFilter(test, 'escape("js")', { v: 'and "special" chars = -1;' }, 'and \\u0022special\\u0022 chars \\u003D \\u002D1\\u003B');
     swig.init({});
     test.done();
 };
