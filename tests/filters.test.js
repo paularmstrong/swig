@@ -19,11 +19,11 @@ exports.add = function (test) {
     test.done();
 };
 
-// exports.addslashes = function (test) {
-//     testFilter(test, 'addslashes', { v: "\"Top O' the\\ mornin\"" }, "\\\"Top O\\' the\\\\ mornin\\\"", 'add slashes to string');
-//     testFilter(test, 'addslashes', { v: ["\"Top", "O'", "the\\", "mornin\""] }, "\\\"Top,O\\',the\\\\,mornin\\\"", 'add slashes to array');
-//     test.done();
-// };
+exports.addslashes = function (test) {
+    testFilter(test, 'addslashes', { v: "\"Top O' the\\ mornin\"" }, "\\&quot;Top O\\&#39; the\\\\ mornin\\&quot;", 'add slashes to string');
+    testFilter(test, 'addslashes', { v: ["\"Top", "O'", "the\\", "mornin\""] }, "\\\"Top,O\\',the\\\\,mornin\\\"", 'add slashes to array');
+    test.done();
+};
 
 exports.capitalize = function (test) {
     testFilter(test, 'capitalize', { v: 'awesome sAuce.' }, 'Awesome sauce.');
@@ -85,9 +85,37 @@ exports.default = function (test) {
     testFilter(test, 'default("blah")', { v: 'foo' }, 'foo', 'string not overridden by default');
     testFilter(test, 'default("blah")', { v: 0 }, '0', 'zero not overridden by default');
     testFilter(test, 'default("blah")', { v: '' }, 'blah', 'empty string overridden by default');
-    // testFilter(test, 'default("blah")', {}, 'blah', 'default overrides undefined');
+    testFilter(test, 'default("blah")', {}, 'blah', 'default overrides undefined');
     testFilter(test, 'default("blah")', { v: null }, 'blah', 'default overrides null');
     testFilter(test, 'default("blah")', { v: false }, 'blah', 'default overrides false');
+    test.done();
+};
+
+exports.e = function (test) {
+    swig.init({ autoEscape: false });
+    testFilter(test, 'e', { v: '<&>' }, '&lt;&amp;&gt;', 'Unescaped output');
+    testFilter(test, 'first|e', { v: ['<&>'] }, '&lt;&amp;&gt;', 'Unescaped in chain');
+    testFilter(test, 'upper|e|lower', { v: '<&>fOo' }, '&lt;&amp;&gt;foo', 'Unescaped in middle of chain');
+    testFilter(test, 'e("js")', { v: '"double quotes" and \'single quotes\'' }, '\\u0022double quotes\\u0022 and \\u0027single quotes\\u0027');
+    testFilter(test, 'e("js")', { v: '<script>and this</script>' }, '\\u003Cscript\\u003Eand this\\u003C/script\\u003E');
+    testFilter(test, 'e("js")', { v: '\\ : backslashes, too' }, '\\u005C : backslashes, too');
+    testFilter(test, 'e("js")', { v: 'and lots of whitespace: \r\n\t\v\f\b' }, 'and lots of whitespace: \\u000D\\u000A\\u0009\\u000B\\u000C\\u0008');
+    testFilter(test, 'e("js")', { v: 'and "special" chars = -1;' }, 'and \\u0022special\\u0022 chars \\u003D \\u002D1\\u003B');
+    swig.init({});
+    test.done();
+};
+
+exports.escape = function (test) {
+    swig.init({ autoEscape: false });
+    testFilter(test, 'escape', { v: '<&>' }, '&lt;&amp;&gt;', 'Unescaped output');
+    testFilter(test, 'first|escape', { v: ['<&>'] }, '&lt;&amp;&gt;', 'Unescaped in chain');
+    testFilter(test, 'upper|escape|lower', { v: '<&>fOo' }, '&lt;&amp;&gt;foo', 'Unescaped in middle of chain');
+    testFilter(test, 'escape("js")', { v: '"double quotes" and \'single quotes\'' }, '\\u0022double quotes\\u0022 and \\u0027single quotes\\u0027');
+    testFilter(test, 'escape("js")', { v: '<script>and this</script>' }, '\\u003Cscript\\u003Eand this\\u003C/script\\u003E');
+    testFilter(test, 'escape("js")', { v: '\\ : backslashes, too' }, '\\u005C : backslashes, too');
+    testFilter(test, 'escape("js")', { v: 'and lots of whitespace: \r\n\t\v\f\b' }, 'and lots of whitespace: \\u000D\\u000A\\u0009\\u000B\\u000C\\u0008');
+    testFilter(test, 'escape("js")', { v: 'and "special" chars = -1;' }, 'and \\u0022special\\u0022 chars \\u003D \\u002D1\\u003B');
+    swig.init({});
     test.done();
 };
 
@@ -131,6 +159,13 @@ exports.lower = function (test) {
     testFilter(test, 'lower', { v: '345' }, '345', 'number');
     testFilter(test, 'lower', { v: ['FOO', 'bAr'] }, 'foo,bar', 'array');
     testFilter(test, 'lower|join("")', { v: { foo: 'BAR' } }, 'bar', 'object');
+    test.done();
+};
+
+exports.raw = function (test) {
+    testFilter(test, 'raw', { v: '<&>' }, '<&>', 'Unescaped output');
+    testFilter(test, 'first|raw', { v: ['<&>'] }, '<&>', 'Unescaped in chain');
+    testFilter(test, 'upper|raw|lower', { v: '<&>fOo' }, '<&>foo', 'Unescaped in middle of chain');
     test.done();
 };
 

@@ -91,7 +91,10 @@ Also supports using the `{% else %}` and `{% else if ... %}` tags within an if-b
 
 ### autoescape
 
-The `autoescape` tag accepts one of two controls: `on` or `off` (default is `on` if not provided). These either turn variable auto-escaping on or off for the contents of the filter, regardless of the global setting.
+The `autoescape` tag accepts two controls:
+
+1. `on` or `off`: (default is `on` if not provided). These either turn variable auto-escaping on or off for the contents of the filter, regardless of the global setting.
+1. escape-type: optionally include `"js"` to escape variables safe for JavaScript
 
 For the following contexts, assume:
 
@@ -107,11 +110,17 @@ So the following:
         {{ some_html_output }}
     {% endautoescape %}
 
+    {% autoescape on "js" %}
+        {{ some_html_output }}
+    {% endautoescape %}
+
 Will output:
 
     <p>Hello "you" & 'them'</p>
 
     &lt;p&gt;Hello &quot;you&quot; &amp; &#39;them&#39; &lt;/p&gt;
+
+    \u003Cp\u003EHello \u0022you\u0022 & \u0027them\u0027\u003C\u005Cp\u003E
 
 ### set
 
