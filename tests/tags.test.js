@@ -136,12 +136,44 @@ exports.if = testCase({
     },
 
     basic: function (test) {
-        var tmpl8 = swig.fromString('{% if foo %}hi!{% endif %}{% if bar %}nope{% endif %}');
-        test.strictEqual(tmpl8.render({ foo: 1, bar: false }), 'hi!');
+        var tpl = swig.fromString('{% if foo %}hi!{% endif %}{% if bar %}nope{% endif %}');
+        test.strictEqual(tpl.render({ foo: 1, bar: false }), 'hi!');
 
-        tmpl8 = swig.fromString('{% if !foo %}hi!{% endif %}{% if !bar %}nope{% endif %}');
-        test.strictEqual(tmpl8.render({ foo: 1, bar: false }), 'nope');
+        tpl = swig.fromString('{% if !foo %}hi!{% endif %}{% if !bar %}nope{% endif %}');
+        test.strictEqual(tpl.render({ foo: 1, bar: false }), 'nope', '! operator');
 
+        tpl = swig.fromString('{% if not foo %}hi!{% endif %}{% if not bar %}nope{% endif %}');
+        test.strictEqual(tpl.render({ foo: true, bar: false }), 'nope', 'not operator');
+
+        tpl = swig.fromString('{% if foo && (bar || baz) %}hi!{% endif %}');
+        test.strictEqual(tpl.render({ foo: true, bar: true }), 'hi!');
+        test.strictEqual(tpl.render({ foo: true, baz: true }), 'hi!');
+        test.strictEqual(tpl.render({ foo: false }), '');
+
+        tpl = swig.fromString('{% if foo and bar %}hi!{% endif %}');
+        test.strictEqual(tpl.render({ foo: true, bar: true }), 'hi!', 'and syntax');
+        tpl = swig.fromString('{% if foo or bar %}hi!{% endif %}');
+        test.strictEqual(tpl.render({ foo: false, bar: true }), 'hi!', 'or syntax');
+
+        tpl = swig.fromString('{% if foo in bar %}hi!{% endif %}');
+        test.strictEqual(tpl.render({ foo: 'b', bar: ['a', 'b', 'c'] }), 'hi!', 'in syntax');
+
+        test.done();
+    },
+
+    errors: function (test) {
+        test.throws(function () {
+            swig.fromString('{% if foo bar %}{% endif %}');
+        });
+        test.throws(function () {
+            swig.fromString('{% if foo !== > bar %}{% endif %}');
+        });
+        test.throws(function () {
+            swig.fromString('{% if (foo %}{% endif %}');
+        });
+        test.throws(function () {
+            swig.fromString('{% if foo > bar) %}{% endif %}');
+        });
         test.done();
     },
 
@@ -170,6 +202,9 @@ exports.if = testCase({
         test.strictEqual(tmpl8.render({ foo: [1, 2, 3] }), 'foo');
         test.strictEqual(tmpl8.render({ foo: [1, 2] }), '');
         test.strictEqual(tmpl8.render({ foo: [1] }), 'bar');
+
+        tmpl8 = swig.fromString('{% if foo %}foo{% else if bar && baz %}bar{% endif %}');
+        test.strictEqual(tmpl8.render({ bar: true, baz: true }), 'bar');
 
         test.done();
     },

@@ -62,19 +62,30 @@ If the loop object is empty or `length === 0`, the content following the `empty`
 
 ### if
 
-Supports the following expressions.
+All normal JavaScript-valid if statements are supported, including some extra helpful syntaxes:
 
     {% if x %}{% endif %}
     {% if !x %}{% endif %}
-    {% if x operator y %}
-        Operators: ==, !=, <, <=, >, >=, ===, !==, in
-        The 'in' operator checks for presence in arrays too.
+    {% if not x %}{% endif %}
+
+    {% if x and y %}{% endif %}
+    {% if x && y %}{% endif %}
+    {% if x or y %}{% endif %}
+    {% if x || y %}{% endif %}
+    {% if x || (y && z) %}{% endif %}
+
+    {% if x [operator] y %}
+        Operators: ==, !=, <, <=, >, >=, ===, !==
     {% endif %}
     {% if x == 'five' %}
         The operands can be also be string or number literals
     {% endif %}
     {% if x|length === 3 %}
         You can use filters on any operand in the statement.
+    {% endif %}
+
+    {% if x in y %}
+        If x is a value that is present in y, this will return true.
     {% endif %}
 
 #### else and else if
