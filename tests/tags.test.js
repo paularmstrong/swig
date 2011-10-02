@@ -273,7 +273,7 @@ exports.set = testCase({
 
 exports.macro = testCase({
     setUp: function (callback) {
-        swig.init({});
+        swig.init({ root: __dirname + '/templates' });
         callback();
     },
 
@@ -300,6 +300,15 @@ exports.macro = testCase({
         test.strictEqual(tmpl8.render({
             person: { id: 'asdf', name: 'Paul' }
         }), '<label for="person">Your Name</label><input type="text" name="person" id="asdf" value="">');
+        test.done();
+    },
+
+    import: function (test) {
+        var tpl = swig.fromString('{% import "macros.html" as blah %}{{ foo }}');
+        test.strictEqual(tpl.render({}), '', 'importing as context does not override base context');
+
+        tpl = swig.fromString('{% import "macros.html" as blah %}{{ blah.foo }}, {{ blah.bar("baz") }}');
+        test.strictEqual(tpl.render({}), '\nhi!\n, \n\nbye!\n\n', 'basic macros imported');
         test.done();
     }
 });
