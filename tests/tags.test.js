@@ -129,7 +129,7 @@ exports.include = testCase({
     }
 });
 
-exports.if = testCase({
+exports['if'] = testCase({
     setUp: function (callback) {
         swig.init({});
         callback();
@@ -186,7 +186,7 @@ exports.if = testCase({
         test.done();
     },
 
-    else: function (test) {
+    'else': function (test) {
         var tmpl8 = swig.fromString('{% if foo|length > 1 %}hi!{% else %}nope{% endif %}');
         test.strictEqual(tmpl8.render({ foo: [1, 2, 3] }), 'hi!');
         test.strictEqual(tmpl8.render({ foo: [1] }), 'nope');
@@ -221,7 +221,7 @@ exports.if = testCase({
     }
 });
 
-exports.for = testCase({
+exports['for'] = testCase({
     setUp: function (callback) {
         swig.init({});
         callback();
@@ -346,7 +346,7 @@ exports.macro = testCase({
         test.done();
     },
 
-    import: function (test) {
+    'import': function (test) {
         var tpl = swig.fromString('{% import "macros.html" as blah %}{{ foo }}');
         test.strictEqual(tpl.render({}), '', 'importing as context does not override base context');
 
