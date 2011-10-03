@@ -1,3 +1,15 @@
+## [0.6.0](https://github.com/paularmstrong/swig/tree/v0.6.0) / 2011-10-02
+
+* **Added** `{% import foo as bar %}` tag for importing macros.
+* **Added** Allow escaping for js in escape filter and autoescape tag.
+* **Added** `raw` filter to force variable to not be escaped.
+* **Added** `escape` and `e` filters to force variable to be escaped.
+* **Added** Allow filters to accept any JS objects, arrays, strings, and context variables.
+* **Changed** `if`, `else`, and `else if` tags support all JS-valid if-syntaxes + extra operators.
+* **Fixed** `default` filter for undefined variables. closes gh-18
+
+[Documentation](https://github.com/paularmstrong/swig/tree/v0.6.0/docs)
+
 ## [0.5.0](https://github.com/paularmstrong/swig/tree/v0.5.0) / 2011-09-27
 
 * **Added** More error messaging in some edge cases.

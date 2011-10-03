@@ -11,4 +11,6 @@
 ## Examples
 
 1. [Basic Usage](https://github.com/paularmstrong/swig/tree/master/examples/basic)
+1. [Custom Tags](https://github.com/paularmstrong/swig/tree/master/examples/custom_tags)
 1. [Express.js with Swig](https://github.com/paularmstrong/swig/tree/master/examples/express)
+1. [Macros](https://github.com/paularmstrong/swig/tree/master/examples/macros)
