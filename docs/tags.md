@@ -62,19 +62,30 @@ If the loop object is empty or `length === 0`, the content following the `empty`
 
 ### if
 
-Supports the following expressions.
+All normal JavaScript-valid if statements are supported, including some extra helpful syntaxes:
 
     {% if x %}{% endif %}
     {% if !x %}{% endif %}
-    {% if x operator y %}
-        Operators: ==, !=, <, <=, >, >=, ===, !==, in
-        The 'in' operator checks for presence in arrays too.
+    {% if not x %}{% endif %}
+
+    {% if x and y %}{% endif %}
+    {% if x && y %}{% endif %}
+    {% if x or y %}{% endif %}
+    {% if x || y %}{% endif %}
+    {% if x || (y && z) %}{% endif %}
+
+    {% if x [operator] y %}
+        Operators: ==, !=, <, <=, >, >=, ===, !==
     {% endif %}
     {% if x == 'five' %}
         The operands can be also be string or number literals
     {% endif %}
     {% if x|length === 3 %}
         You can use filters on any operand in the statement.
+    {% endif %}
+
+    {% if x in y %}
+        If x is a value that is present in y, this will return true.
     {% endif %}
 
 #### else and else if
@@ -91,7 +102,10 @@ Also supports using the `{% else %}` and `{% else if ... %}` tags within an if-b
 
 ### autoescape
 
-The `autoescape` tag accepts one of two controls: `on` or `off` (default is `on` if not provided). These either turn variable auto-escaping on or off for the contents of the filter, regardless of the global setting.
+The `autoescape` tag accepts two controls:
+
+1. `on` or `off`: (default is `on` if not provided). These either turn variable auto-escaping on or off for the contents of the filter, regardless of the global setting.
+1. escape-type: optionally include `"js"` to escape variables safe for JavaScript
 
 For the following contexts, assume:
 
@@ -107,11 +121,17 @@ So the following:
         {{ some_html_output }}
     {% endautoescape %}
 
+    {% autoescape on "js" %}
+        {{ some_html_output }}
+    {% endautoescape %}
+
 Will output:
 
     <p>Hello "you" & 'them'</p>
 
     &lt;p&gt;Hello &quot;you&quot; &amp; &#39;them&#39; &lt;/p&gt;
+
+    \u003Cp\u003EHello \u0022you\u0022 & \u0027them\u0027\u003C\u005Cp\u003E
 
 ### set
 
@@ -125,7 +145,6 @@ It is also possible to set variables in templates.
 ### macro
 
 Macros are custom, reusable methods for content-generation that are defined in templates.
-
 
 #### Example
 
@@ -151,6 +170,22 @@ Your output may look like this:
         <label for="lname">Last Name</label>
         <input type="text" name="lname" id="lname" value="" class="error">
     </div>
+
+### import
+
+The `import` tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.
+
+#### Usage
+
+Assuming the macro `input` exists in _formmacros.html_, you can run the macro by using `{{ form.input }}` as follows:
+
+    {% import 'formmacros.html' as form %}
+
+    {# this will run the input macro #}
+    {{ form.input("text", "name") }}
+
+    {# this, however, will NOT output anything because the macro is scoped to the "form" object: #}
+    {{ input("text", "name") }}
 
 ## Custom Tags
 

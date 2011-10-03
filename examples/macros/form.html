@@ -1,0 +1,8 @@
+{% macro input type name label %}
+<label for="{{ name }}">{{ label }}</label>
+<input type="{{ type }}" name="{{ name }}" id="{{ name }}">
+{% endmacro %}
+
+{% macro button type label %}
+<button type="{{ type|default("submit") }}">{{ label|default("Submit") }}</button>
+{% endmacro %}

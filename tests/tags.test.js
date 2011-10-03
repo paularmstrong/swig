@@ -19,6 +19,35 @@ exports['custom tags'] =  function (test) {
     test.done();
 };
 
+exports.autoescape = testCase({
+    setUp: function (callback) {
+        swig.init({});
+        callback();
+    },
+
+    on: function (test) {
+        var tpl = swig.fromString('{% autoescape on %}{{ foo }}{% endautoescape %}');
+        test.strictEqual(tpl.render({ foo: '<\'single\' & "double" quotes>' }), '&lt;&#39;single&#39; &amp; &quot;double&quot; quotes&gt;');
+        test.done();
+    },
+
+    off: function (test) {
+        var tpl = swig.fromString('{% autoescape off %}{{ foo }}{% endautoescape %}');
+        test.strictEqual(tpl.render({ foo: '<\'single\' & "double" quotes>' }), '<\'single\' & "double" quotes>');
+        test.done();
+    },
+
+    js: function (test) {
+        var tpl = swig.fromString('{% autoescape on "js" %}{{ foo }}{% endautoescape %}');
+        test.strictEqual(tpl.render({ foo: '"double quotes" and \'single quotes\'' }), '\\u0022double quotes\\u0022 and \\u0027single quotes\\u0027');
+        test.strictEqual(tpl.render({ foo: '<script>and this</script>' }), '\\u003Cscript\\u003Eand this\\u003C/script\\u003E');
+        test.strictEqual(tpl.render({ foo: '\\ : backslashes, too' }), '\\u005C : backslashes, too');
+        test.strictEqual(tpl.render({ foo: 'and lots of whitespace: \r\n\t\v\f\b' }), 'and lots of whitespace: \\u000D\\u000A\\u0009\\u000B\\u000C\\u0008');
+        test.strictEqual(tpl.render({ foo: 'and "special" chars = -1;' }), 'and \\u0022special\\u0022 chars \\u003D \\u002D1\\u003B');
+        test.done();
+    }
+});
+
 exports.extends = testCase({
     setUp: function (callback) {
         swig.init({ root: __dirname + '/templates' });
@@ -64,12 +93,44 @@ exports.if = testCase({
     },
 
     basic: function (test) {
-        var tmpl8 = swig.fromString('{% if foo %}hi!{% endif %}{% if bar %}nope{% endif %}');
-        test.strictEqual(tmpl8.render({ foo: 1, bar: false }), 'hi!');
+        var tpl = swig.fromString('{% if foo %}hi!{% endif %}{% if bar %}nope{% endif %}');
+        test.strictEqual(tpl.render({ foo: 1, bar: false }), 'hi!');
 
-        tmpl8 = swig.fromString('{% if !foo %}hi!{% endif %}{% if !bar %}nope{% endif %}');
-        test.strictEqual(tmpl8.render({ foo: 1, bar: false }), 'nope');
+        tpl = swig.fromString('{% if !foo %}hi!{% endif %}{% if !bar %}nope{% endif %}');
+        test.strictEqual(tpl.render({ foo: 1, bar: false }), 'nope', '! operator');
 
+        tpl = swig.fromString('{% if not foo %}hi!{% endif %}{% if not bar %}nope{% endif %}');
+        test.strictEqual(tpl.render({ foo: true, bar: false }), 'nope', 'not operator');
+
+        tpl = swig.fromString('{% if foo && (bar || baz) %}hi!{% endif %}');
+        test.strictEqual(tpl.render({ foo: true, bar: true }), 'hi!');
+        test.strictEqual(tpl.render({ foo: true, baz: true }), 'hi!');
+        test.strictEqual(tpl.render({ foo: false }), '');
+
+        tpl = swig.fromString('{% if foo and bar %}hi!{% endif %}');
+        test.strictEqual(tpl.render({ foo: true, bar: true }), 'hi!', 'and syntax');
+        tpl = swig.fromString('{% if foo or bar %}hi!{% endif %}');
+        test.strictEqual(tpl.render({ foo: false, bar: true }), 'hi!', 'or syntax');
+
+        tpl = swig.fromString('{% if foo in bar %}hi!{% endif %}');
+        test.strictEqual(tpl.render({ foo: 'b', bar: ['a', 'b', 'c'] }), 'hi!', 'in syntax');
+
+        test.done();
+    },
+
+    errors: function (test) {
+        test.throws(function () {
+            swig.fromString('{% if foo bar %}{% endif %}');
+        });
+        test.throws(function () {
+            swig.fromString('{% if foo !== > bar %}{% endif %}');
+        });
+        test.throws(function () {
+            swig.fromString('{% if (foo %}{% endif %}');
+        });
+        test.throws(function () {
+            swig.fromString('{% if foo > bar) %}{% endif %}');
+        });
         test.done();
     },
 
@@ -98,6 +159,9 @@ exports.if = testCase({
         test.strictEqual(tmpl8.render({ foo: [1, 2, 3] }), 'foo');
         test.strictEqual(tmpl8.render({ foo: [1, 2] }), '');
         test.strictEqual(tmpl8.render({ foo: [1] }), 'bar');
+
+        tmpl8 = swig.fromString('{% if foo %}foo{% else if bar && baz %}bar{% endif %}');
+        test.strictEqual(tmpl8.render({ bar: true, baz: true }), 'bar');
 
         test.done();
     },
@@ -209,7 +273,7 @@ exports.set = testCase({
 
 exports.macro = testCase({
     setUp: function (callback) {
-        swig.init({});
+        swig.init({ root: __dirname + '/templates' });
         callback();
     },
 
@@ -236,6 +300,15 @@ exports.macro = testCase({
         test.strictEqual(tmpl8.render({
             person: { id: 'asdf', name: 'Paul' }
         }), '<label for="person">Your Name</label><input type="text" name="person" id="asdf" value="">');
+        test.done();
+    },
+
+    import: function (test) {
+        var tpl = swig.fromString('{% import "macros.html" as blah %}{{ foo }}');
+        test.strictEqual(tpl.render({}), '', 'importing as context does not override base context');
+
+        tpl = swig.fromString('{% import "macros.html" as blah %}{{ blah.foo }}, {{ blah.bar("baz") }}');
+        test.strictEqual(tpl.render({}), '\nhi!\n, \n\nbye!\n\n', 'basic macros imported');
         test.done();
     }
 });

@@ -2,6 +2,10 @@
 
 Used to modify variables. Filters are added directly after variable names, separated by the pipe (|) character. You can chain multiple filters together, applying one after the other in succession.
 
+## Example
+
+    {{ name|title }} was born on {{ birthday|date('F jS, Y') }} and has {{ bikes|length|default("zero") }} bikes.
+
 ## Built-In Filters
 
 ### add(value)
@@ -196,6 +200,14 @@ If the variable is `undefined`, `null`, or `false`, a default return value can b
 
 1. <var>**value**</var> (_mixed_) Fallback value if the variable is falsy.
 
+### escape([type]) / e([type])
+
+Force escape the output of the variable. Optionally use `e` as a shortcut filter name.
+
+#### Arguments
+
+1. <var>**type**</var> (_string_) _optional_ passing "js" as the type will force JavaScript-safe escaping.
+
 ### first
 
 Returns the first element of an array. Uses [underscore.js first](http://documentcloud.github.com/underscore/#first)
@@ -223,6 +235,10 @@ Return the `length` property of the value.
 ### lower
 
 Return the variable in all lowercase letters.
+
+### raw
+
+Do not escape the output of the variable.
 
 ### replace(search, replace[, flags])
 

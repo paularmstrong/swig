@@ -1,0 +1,8 @@
+{% import 'form.html' as form %}
+
+<ul>
+    <li>{{ form.input("text", "name", "Your Name") }}</li>
+    <li>{{ form.input("text", "age", "Your Age") }}</li>
+</ul>
+
+{{ form.button() }}
