@@ -146,7 +146,6 @@ It is also possible to set variables in templates.
 
 Macros are custom, reusable methods for content-generation that are defined in templates.
 
-
 #### Example
 
 One of the most common use-case for macros is form inputs. To start, define your `input` macro somewhere in your template scope (the top of a template, or an included template is a good spot):
@@ -171,6 +170,22 @@ Your output may look like this:
         <label for="lname">Last Name</label>
         <input type="text" name="lname" id="lname" value="" class="error">
     </div>
+
+### import
+
+The `import` tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.
+
+#### Usage
+
+Assuming the macro `input` exists in _formmacros.html_, you can run the macro by using `{{ form.input }}` as follows:
+
+    {% import 'formmacros.html' as form %}
+
+    {# this will run the input macro #}
+    {{ form.input("text", "name") }}
+
+    {# this, however, will NOT output anything because the macro is scoped to the "form" object: #}
+    {{ input("text", "name") }}
 
 ## Custom Tags
 
