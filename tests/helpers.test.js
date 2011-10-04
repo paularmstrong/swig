@@ -59,9 +59,3 @@ exports.isValidBlockName = function (test) {
 
     test.done();
 };
-
-exports.escaper = function (test) {
-    test.strictEqual(helpers.escaper('hi<foo> & "bar" \'baz\''), 'hi&lt;foo&gt; &amp; &quot;bar&quot; &#39;baz&#39;', 'escape input');
-    test.strictEqual(helpers.escaper('hi&lt;foo&gt; &amp; &quot;bar&quot; &#39;baz&#39;'), 'hi&lt;foo&gt; &amp; &quot;bar&quot; &#39;baz&#39;', 'input is not double-escaped');
-    test.done();
-};
