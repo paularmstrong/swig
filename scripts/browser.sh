@@ -12,6 +12,7 @@ function package() {
     fi
 
     cat dist/header.js > $BROWSER_FILE
+    cat dist/cbsplit.js >> $BROWSER_FILE
     echo "swig = (function () {" >> $BROWSER_FILE
     echo "var swig = {}," >> $BROWSER_FILE
     echo "dateformat = {}," >> $BROWSER_FILE

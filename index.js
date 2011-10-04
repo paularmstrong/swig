@@ -17,7 +17,7 @@ exports.init = function (options) {
         allowErrors: false,
         autoescape: true,
         encoding: 'utf8',
-        root: '/',
+        root: '/'
     }, options);
 
     config.filters = _.extend(filters, options.filters);

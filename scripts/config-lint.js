@@ -1,6 +1,6 @@
 module.exports = {
     root: __dirname + '/../',
-    pathIgnore: ['*node_modules*', '*browser/underscore*', '*dist/browser/*', '*dist/test*']
+    pathIgnore: ['*node_modules*', '*browser/underscore*', '*dist/browser/*', '*dist/test*', '*dist/cbsplit.js']
 };
 
 var options = {
