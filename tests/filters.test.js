@@ -92,7 +92,7 @@ exports.default = function (test) {
 };
 
 exports.e = function (test) {
-    swig.init({ autoEscape: false });
+    swig.init({ autoescape: true });
     testFilter(test, 'e', { v: '<&>' }, '&lt;&amp;&gt;', 'Unescaped output');
     testFilter(test, 'first|e', { v: ['<&>'] }, '&lt;&amp;&gt;', 'Unescaped in chain');
     testFilter(test, 'upper|e|lower', { v: '<&>fOo' }, '&lt;&amp;&gt;foo', 'Unescaped in middle of chain');
@@ -106,7 +106,7 @@ exports.e = function (test) {
 };
 
 exports.escape = function (test) {
-    swig.init({ autoEscape: false });
+    swig.init({ autoescape: true });
     testFilter(test, 'escape', { v: '<&>' }, '&lt;&amp;&gt;', 'Unescaped output');
     testFilter(test, 'first|escape', { v: ['<&>'] }, '&lt;&amp;&gt;', 'Unescaped in chain');
     testFilter(test, 'upper|escape|lower', { v: '<&>fOo' }, '&lt;&amp;&gt;foo', 'Unescaped in middle of chain');
