@@ -37,7 +37,7 @@ exports.date = function (test) {
         tpl = swig.fromString('{{ d|date("d") }}');
 
     function testFormat(format, expected) {
-        testFilter(test, 'date("' + format + '")', { v: date }, expected, 'format: "' + format + '" - http://php.net/date');
+        testFilter(test, 'date("' + format + '")', { v: date }, expected);
     }
     // Day
     testFormat('d', '06');
@@ -81,7 +81,7 @@ exports.date = function (test) {
     test.done();
 };
 
-exports.default = function (test) {
+exports['default'] = function (test) {
     testFilter(test, 'default("blah")', { v: 'foo' }, 'foo', 'string not overridden by default');
     testFilter(test, 'default("blah")', { v: 0 }, '0', 'zero not overridden by default');
     testFilter(test, 'default("blah")', { v: '' }, 'blah', 'empty string overridden by default');
