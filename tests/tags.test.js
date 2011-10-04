@@ -48,7 +48,7 @@ exports.autoescape = testCase({
     }
 });
 
-exports.extends = testCase({
+exports['extends'] = testCase({
     setUp: function (callback) {
         swig.init({ root: __dirname + '/templates' });
         this.extends_base = [
