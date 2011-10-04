@@ -1,4 +1,4 @@
-# Writing Custom Tags
+# Custom Tags
 
 Swig makes it easy to write custom tags specific for your project.
 

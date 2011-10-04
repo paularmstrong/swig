@@ -19,6 +19,8 @@ Used to print a variable to the template. If the variable is not in the context 
 
 Variables also are able to be transformed via [filters](filters.md).
 
+By default, all variables will be escaped for safe HTML output. For more information, read about the [escape filter](filters.md#escape).
+
 ## Comments
 
 Comment tags are simply ignored. Comments can't span multitple lines.
