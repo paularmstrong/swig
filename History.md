@@ -1,3 +1,10 @@
+## [0.7.0](https://github.com/paularmstrong/swig/tree/v0.7.0) / 2011-10-05
+
+* **Added** `make browser` will build Swig for use in major browsers. [gh-3]
+* **Changed** Allow overriding `escape` filters. [gh-19]
+
+[Documentation](https://github.com/paularmstrong/swig/tree/v0.7.0/docs)
+
 ## [0.6.1](https://github.com/paularmstrong/swig/tree/v0.6.1) / 2011-10-02
 
 * **Fixed** chaining filters when the first takes a variable as an argument will not crash parsing.
