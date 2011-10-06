@@ -13,8 +13,8 @@ exports.add = function (test) {
     testFilter(test, 'add(b)', { v: [1, 2], b: [3, 4] }, '1,2,3,4', 'arrays add from var');
     testFilter(test, 'add(2)', { v: 'foo' }, 'foo2', 'string var turns addend into a string');
     testFilter(test, 'add("bar")', { v: 'foo' }, 'foobar', 'strings concatenated');
-    testFilter(test, 'add({ bar: 2, baz: 3 })|join(",")', { v: { foo: 1 }}, '1,2,3', 'add objects from object literal');
-    // testFilter(test, 'add(b)|join(",")', { v: { foo: 1 }, b: { bar: 2 }}, '1,2', 'add objects from var');
+    testFilter(test, 'add({ bar: 2, baz: 3 })|join(", ")', { v: { foo: 1 }}, '1, 2, 3', 'add objects from object literal');
+    testFilter(test, 'add(b)|join(", ")', { v: { foo: 1 }, b: { bar: 2 }}, '1, 2', 'add objects from var');
     testFilter(test, 'add(b)', { v: 'foo', b: [1, 2] }, 'foo1,2', 'add array to string');
     test.done();
 };
@@ -92,7 +92,7 @@ exports['default'] = function (test) {
 };
 
 exports.e = function (test) {
-    swig.init({ autoEscape: false });
+    swig.init({ autoescape: true });
     testFilter(test, 'e', { v: '<&>' }, '&lt;&amp;&gt;', 'Unescaped output');
     testFilter(test, 'first|e', { v: ['<&>'] }, '&lt;&amp;&gt;', 'Unescaped in chain');
     testFilter(test, 'upper|e|lower', { v: '<&>fOo' }, '&lt;&amp;&gt;foo', 'Unescaped in middle of chain');
@@ -106,7 +106,7 @@ exports.e = function (test) {
 };
 
 exports.escape = function (test) {
-    swig.init({ autoEscape: false });
+    swig.init({ autoescape: true });
     testFilter(test, 'escape', { v: '<&>' }, '&lt;&amp;&gt;', 'Unescaped output');
     testFilter(test, 'first|escape', { v: ['<&>'] }, '&lt;&amp;&gt;', 'Unescaped in chain');
     testFilter(test, 'upper|escape|lower', { v: '<&>fOo' }, '&lt;&amp;&gt;foo', 'Unescaped in middle of chain');
@@ -129,6 +129,8 @@ exports.first = function (test) {
 exports.join = function (test) {
     testFilter(test, 'join("+")', { v: [1, 2, 3] }, '1+2+3', 'join with "+"');
     testFilter(test, 'join(" * ")', { v: [1, 2, 3] }, '1 * 2 * 3', 'join with " * "');
+    testFilter(test, 'join(",")', { v: [1, 2, 3]}, '1,2,3', 'regression: join with a single comma');
+    testFilter(test, "join(',')", { v: [1, 2, 3]}, '1,2,3', 'regression: join with a single comma');
     testFilter(test, 'join(", ")', { v: { foo: 1, bar: 2, baz: 3 }}, '1, 2, 3', 'object values are joined');
     testFilter(test, 'join("-")', { v: 'asdf' }, 'asdf', 'Non-array input is not joined.');
     test.done();

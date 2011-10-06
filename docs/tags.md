@@ -2,32 +2,32 @@
 
 ## Built-in Tags
 
-### extends
+### extends <a id="extends" href="#extends">¶</a>
 
 Makes the current template extend a parent template. This tag must be the first item in your template.
 
 See [Template inheritance](inheritance.md) for more information.
 
-### block
+### block <a id="block" href="#block">¶</a>
 
 Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.
 
 See [Template inheritance](inheritance.md) for more information.
 
-### parent
+### parent <a id="parent" href="#parent">¶</a>
 
 Inject the content from the current `block` in the parent template into the child template.
 
 See [Template inheritance](inheritance.md) for more information.
 
-### include
+### include <a id="include" href="#include">¶</a>
 
 Includes a template in it's place. The template is rendered within the current context. Does not use and {% endinclude %}.
 
     {% include template_path %}
     {% include "path/to/template.js" %}
 
-### for
+### for <a id="for" href="#for">¶</a>
 
 For loops have 4 special context variables accessible inside of the loop:
 
@@ -48,7 +48,7 @@ You can also apply filters to the object that you are iterating over.
         The array `y` will first be reversed before looping over it.
     {% endfor %}
 
-#### empty
+#### empty <a id="empty" href="#empty">¶</a>
 
 For loops have a special tag available to them called `{% empty %}`.
 
@@ -60,7 +60,7 @@ If the loop object is empty or `length === 0`, the content following the `empty`
         There are no people yet!
     {% endfor %}
 
-### if
+### if <a id="if" href="#if">¶</a>
 
 All normal JavaScript-valid if statements are supported, including some extra helpful syntaxes:
 
@@ -88,7 +88,7 @@ All normal JavaScript-valid if statements are supported, including some extra he
         If x is a value that is present in y, this will return true.
     {% endif %}
 
-#### else and else if
+#### else and else if <a id="else" href="#else">¶</a>
 
 Also supports using the `{% else %}` and `{% else if ... %}` tags within an if-block. Using `{% else [if ...] %}` anywhere outside an immediate parent if-block will throw an exception.
 
@@ -100,7 +100,7 @@ Also supports using the `{% else %}` and `{% else if ... %}` tags within an if-b
         Fallback content.
     {% endif %}
 
-### autoescape
+### autoescape <a id="autoescape" href="#autoescape">¶</a>
 
 The `autoescape` tag accepts two controls:
 
@@ -133,7 +133,9 @@ Will output:
 
     \u003Cp\u003EHello \u0022you\u0022 & \u0027them\u0027\u003C\u005Cp\u003E
 
-### set
+For more information on how the autoescape tag filters variable output, see the [escape filter documentation](filters.md#escape).
+
+### set <a id="set" href="#set">¶</a>
 
 It is also possible to set variables in templates.
 
@@ -142,7 +144,7 @@ It is also possible to set variables in templates.
         <li>{{ num }}</li>
     {% endfor %}
 
-### macro
+### macro <a id="macro" href="#macro">¶</a>
 
 Macros are custom, reusable methods for content-generation that are defined in templates.
 
@@ -171,7 +173,7 @@ Your output may look like this:
         <input type="text" name="lname" id="lname" value="" class="error">
     </div>
 
-### import
+### import <a id="import" href="#import">¶</a>
 
 The `import` tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.
 
@@ -186,6 +188,8 @@ Assuming the macro `input` exists in _formmacros.html_, you can run the macro by
 
     {# this, however, will NOT output anything because the macro is scoped to the "form" object: #}
     {{ input("text", "name") }}
+
+<a id="custom-tags" href="#custom-tags"></a>
 
 ## Custom Tags
 

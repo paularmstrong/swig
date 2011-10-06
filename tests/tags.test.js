@@ -48,7 +48,7 @@ exports.autoescape = testCase({
     }
 });
 
-exports.extends = testCase({
+exports['extends'] = testCase({
     setUp: function (callback) {
         swig.init({ root: __dirname + '/templates' });
         this.extends_base = [
@@ -347,6 +347,9 @@ exports.macro = testCase({
     },
 
     'import': function (test) {
+        if (typeof window !== 'undefined') {
+            swig.fromString('{% macro foo %}\nhi!\n{% endmacro %}\n\n{% macro bar baz %}\n{% if baz %}\nbye!\n{% else %}\nfudge.\n{% endif %}\n{% endmacro %}', 'macros.html');
+        }
         var tpl = swig.fromString('{% import "macros.html" as blah %}{{ foo }}');
         test.strictEqual(tpl.render({}), '', 'importing as context does not override base context');
 

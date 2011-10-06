@@ -17,7 +17,7 @@ exports.init = function (options) {
         allowErrors: false,
         autoescape: true,
         encoding: 'utf8',
-        root: '/',
+        root: '/'
     }, options);
 
     config.filters = _.extend(filters, options.filters);
@@ -60,7 +60,7 @@ function createTemplate(data, id) {
     code = parser.compile.call(template);
 
     // The compiled render function - this is all we need
-    render = new Function('__context', '__parents', '__filters', '__escape', '_', [
+    render = new Function('__context', '__parents', '__filters', '_', [
         '__parents = __parents ? __parents.slice() : [];',
         // Prevents circular includes (which will crash node without warning)
         'var j = __parents.length,',
@@ -80,10 +80,10 @@ function createTemplate(data, id) {
 
     template.render = function (context, parents) {
         if (config.allowErrors) {
-            return render.call(this, context, parents, config.filters, helpers.escaper, _);
+            return render.call(this, context, parents, config.filters, _);
         } else {
             try {
-                return render.call(this, context, parents, config.filters, helpers.escaper, _);
+                return render.call(this, context, parents, config.filters, _);
             } catch (e) {
                 return new TemplateError(e);
             }

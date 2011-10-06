@@ -1,3 +1,9 @@
+## [0.6.1](https://github.com/paularmstrong/swig/tree/v0.6.1) / 2011-10-02
+
+* **Fixed** chaining filters when the first takes a variable as an argument will not crash parsing.
+
+[Documentation](https://github.com/paularmstrong/swig/tree/v0.6.1/docs)
+
 ## [0.6.0](https://github.com/paularmstrong/swig/tree/v0.6.0) / 2011-10-02
 
 * **Added** `{% import foo as bar %}` tag for importing macros.
