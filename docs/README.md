@@ -7,7 +7,7 @@
 1. [Tags](tags.md)
 1. [Template Inheritance](inheritance.md)
 1. [Integrating with Express](express.md)
-1. [Swig in the Browser](browser.md)
+1. [In the Browser](browser.md)
 
 ## Examples
 
