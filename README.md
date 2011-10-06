@@ -5,6 +5,7 @@
 ## Features
 
 * Incredibly [fast][1]!
+* Available for node.js **and** major web browsers!
 * [Express](http://expressjs.com/) compatible.
 * Object-Oriented template inheritance.
 * Apply filters and transformations to output in your templates.
