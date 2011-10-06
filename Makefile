@@ -3,6 +3,9 @@ all:
 	@cp scripts/githooks/* .git/hooks/
 	@chmod -R +x .git/hooks/
 
+browser:
+	@scripts/browser.sh
+
 test:
 	@node tests/speed.js
 	@node scripts/runtests.js
@@ -10,4 +13,4 @@ test:
 lint:
 	@node scripts/runlint.js
 
-.PHONY: all test lint
+.PHONY: all browser test lint

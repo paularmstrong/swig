@@ -47,5 +47,15 @@ exports.fromFile = testCase({
         var tpl = swig.fromFile('/' + __dirname + '/templates/included_2.html');
         test.strictEqual('2', tpl.render({ array: [1, 1] }), 'file from absolute path is a-ok');
         test.done();
+    },
+
+    'throws on window': function (test) {
+        swig.init({});
+        global.window = true;
+        test.throws(function () {
+            swig.fromFile('foobar');
+        });
+        delete global.window;
+        test.done();
     }
 });

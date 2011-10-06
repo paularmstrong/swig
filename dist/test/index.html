@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Swig Browser Tests</title>
+
+    <link rel="stylesheet" href="nodeunit.css" type="text/css" media="all" />
+    <script src="nodeunit.min.js"></script>
+    <script src="swig.pack.js"></script>
+    <script src="filters.test.js"></script>
+    <script src="tags.test.js"></script>
+    <script src="templates.test.js"></script>
+</head>
+<body>
+
+    <h1 id="nodeunit-header">Swig Browser Test Suite</h1>
+    <script>
+    swig.init({});
+    nodeunit.run({
+        Filters: filters,
+        Tags: tags,
+        Templates: templates
+    });
+    </script>
+
+</body>
+</html>
