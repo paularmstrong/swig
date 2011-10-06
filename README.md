@@ -19,7 +19,7 @@
 
 ## Documentation
 
-All documentation can be viewed online. [Documentation Table of Contents](https://github.com/paularmstrong/swig/blob/master/docs#readme)
+All documentation can be viewed online. [Documentation Table of Contents](https://github.com/paularmstrong/swig/tree/master/docs#readme)
 
 ## Basic Example
 
