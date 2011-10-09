@@ -34,5 +34,7 @@ When you render mypage, `mypage.render({});`, you will see
 
 ## Known Issues
 
-* Opera and Internet Explorer fail to comply with the date filter format `r` -- they have trouble getting the timezone out correctly.
-* Internet Explorer 9.0 in non-compatibility mode and versions 6-8 fail to escape output for `'js'`
+* Opera and Internet Explorer fail to comply with the date filter format `r`.
+* Internet Explorer 9.0 **in compatibility mode** and IE 6 through 8:
+    * Is unable to compute the ISO date time for date filter formate `c`.
+    * Does not handle unicode properly and so it fails to escape output for `'js'`.
