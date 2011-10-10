@@ -14,6 +14,29 @@ template.init({
     root: __dirname + '/templates'
 });
 
+tplString = '{% for foo in bar %}{{ forloop.index }} - {{ foo }}{% endfor %}';
+tplF = template.fromString(tplString);
+console.time('object loop');
+i = 10000;
+d = new Date();
+while (i) {
+    i -= 1;
+    tplF.render({bar: { foo: 'bar', bar: 'baz', baz: 'bop' }});
+}
+console.timeEnd('object loop');
+console.log("    ~ " + Math.round(1000000 / (new Date() - d)) + " renders per sec.");
+
+console.time('array loop');
+i = 10000;
+d = new Date();
+while (i) {
+    i -= 1;
+    tplF.render({ bar: [ 'bar', 'baz', 'bop' ]});
+}
+console.timeEnd('array loop');
+console.log("    ~ " + Math.round(1000000 / (new Date() - d)) + " renders per sec.");
+
+
 tplString = "{% for v in array %}" +
     "{% if 1 %}" +
     "{% for k in v %}" +
