@@ -87,6 +87,19 @@ Convert a valid date into a format as specified. Mostly conforms to [php.net's d
             <td><samp>0</samp> - <samp>6</samp> (Sunday - Saturday)</td>
         </tr>
         <tr>
+            <th scope="row"><code>z</code></th>
+            <td>The day of the year starting from 0</td>
+            <td><samp>0</samp> - <samp>365</samp> (January 1st - December 31st [only on leap year])</td>
+        </tr>
+        <tr>
+            <th scope="col" colspan="3">Week</th>
+        </tr>
+        <tr>
+            <th scope="row"><code>W</code></th>
+            <td>ISO-8601 week number of the year</td>
+            <td><samp>42</samp></td>
+        </tr>
+        <tr>
             <th scope="col" colspan="3">Month</th>
         </tr>
         <tr>
@@ -110,7 +123,22 @@ Convert a valid date into a format as specified. Mostly conforms to [php.net's d
             <td><samp>1</samp> - <samp>12</samp></td>
         </tr>
         <tr>
+            <th scope="row"><code>t</code></th>
+            <td>Number of days in the given month</td>
+            <td><samp>28</samp> - <samp>31</samp></td>
+        </tr>
+        <tr>
             <th scope="col" colspan="3">Year</th>
+        </tr>
+        <tr>
+            <th scope="row"><code>L</code></th>
+            <td>Whether or not the given year is a leap year.</td>
+            <td><samp>true</samp> or <samp>false</samp></td>
+        </tr>
+        <tr>
+            <th scope="row"><code>o</code></th>
+            <td>ISO-8601 year number. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead.</td>
+            <td><samp>1999</samp></td>
         </tr>
         <tr>
             <th scope="row"><code>Y</code></th>
@@ -134,6 +162,11 @@ Convert a valid date into a format as specified. Mostly conforms to [php.net's d
             <th scope="row"><code>A</code></th>
             <td>Uppercase Ante meridiem and Post meridiem</td>
             <td><samp>AM</samp> or <samp>PM</samp></td>
+        </tr>
+        <tr>
+            <th scope="row"><code>B</code></th>
+            <td><a href="http://en.wikipedia.org/wiki/Swatch_Internet_Time">Swatch Internet Time</a></td>
+            <td><samp>000</samp> - <samp>999</samp></td>
         </tr>
         <tr>
             <th scope="row"><code>g</code></th>
@@ -180,6 +213,11 @@ Convert a valid date into a format as specified. Mostly conforms to [php.net's d
         </tr>
         <tr>
             <th scope="col" colspan="3">Full Date &amp; Time</th>
+        </tr>
+        <tr>
+            <th scope="row"><code>c</code></th>
+            <td>ISO 8601 formatted date</td>
+            <td><samp>2011-09-06T16:05:02.000Z</samp></td>
         </tr>
         <tr>
             <th scope="row"><code>r</code></th>
