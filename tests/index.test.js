@@ -23,9 +23,9 @@ exports.fromFile = testCase({
             allowErrors: false
         });
         var tpl = swig.fromFile('foobar.html');
-        test.ok((/<pre>Error\: EBADF, Bad file descriptor/).test(tpl.render()), 'pushes a render function with the error');
+        test.ok((/<pre>Error\: ENOENT, No such file or directory/).test(tpl.render()), 'pushes a render function with the error');
         tpl = swig.fromFile('includes_notfound.html');
-        test.ok((/<pre>Error\: EBADF, Bad file descriptor/).test(tpl.render()), 'renders the error when includes a file that is not found');
+        test.ok((/<pre>Error\: ENOENT, No such file or directory/).test(tpl.render()), 'renders the error when includes a file that is not found');
 
         test.done();
     },
