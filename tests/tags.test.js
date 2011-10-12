@@ -356,5 +356,15 @@ exports.macro = testCase({
         tpl = swig.fromString('{% import "macros.html" as blah %}{{ blah.foo }}, {{ blah.bar("baz") }}');
         test.strictEqual(tpl.render({}), '\nhi!\n, \n\nbye!\n\n', 'basic macros imported');
         test.done();
+    },
+
+    'import in parent template': function (test) {
+        swig.fromString('{% macro foo input %}hey, {{ input }}{% endmacro %}', 'blarbar.html');
+        swig.fromString('{% import "blarbar.html" as mahmacros %} foobar {% block content %}{% endblock %}', 'parent.html');
+
+        var tpl = swig.fromString('{% extends "parent.html" %} {% block content %}{{ mahmacros.foo("bar") }}{% endblock %}');
+
+        test.strictEqual(tpl.render({}), ' foobar hey, bar');
+        test.done();
     }
 });
