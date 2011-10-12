@@ -47,20 +47,32 @@ exports.date = function (test) {
     testFormat('N', '2');
     testFormat('S', 'th');
     testFormat('w', '1');
+    testFormat('z', '248');
+    testFilter(test, 'date("z")', { v: new Date(2011, 0, 1) }, '0');
+    testFilter(test, 'date("z")', { v: new Date(2011, 11, 31) }, '364');
+
+    // Week
+    testFormat('W', '36');
 
     // Month
     testFormat('F', 'September');
     testFormat('m', '09');
     testFormat('M', 'Sep');
     testFormat('n', '9');
+    testFormat('t', '30');
 
     // Year
+    testFormat('L', 'false');
+    testFilter(test, 'date("L")', { v: new Date(2008, 1, 29) }, 'true');
+    testFormat('o', '2011');
+    testFilter(test, 'date("o")', { v: new Date(2011, 0, 1) }, '2010');
     testFormat('Y', '2011');
     testFormat('y', '11');
 
     // Time
     testFormat('a', 'am');
     testFormat('A', 'AM');
+    testFormat('B', '712');
     testFormat('g', '9');
     testFormat('G', '9');
     testFormat('h', '09');
@@ -75,6 +87,7 @@ exports.date = function (test) {
     testFormat('Z', '25200');
 
     // Full Date/Time
+    testFormat('c', '2011-09-06T16:05:02.000Z');
     testFormat('r', 'Tue Sep 06 2011 09:05:02 GMT-0700 (PDT)');
     testFormat('U', '1315325102');
 

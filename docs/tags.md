@@ -177,6 +177,8 @@ Your output may look like this:
 
 The `import` tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.
 
+Note that `import` is context-sensitive. If you import a macro in a `for` loop, the imported macro will only be available within that loop. It's best to import macros from your parent template, if possible, otherwise import at the beginning of the block you'll be using it.
+
 #### Usage
 
 Assuming the macro `input` exists in _formmacros.html_, you can run the macro by using `{{ form.input }}` as follows:
