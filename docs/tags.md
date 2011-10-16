@@ -191,6 +191,18 @@ Assuming the macro `input` exists in _formmacros.html_, you can run the macro by
     {# this, however, will NOT output anything because the macro is scoped to the "form" object: #}
     {{ input("text", "name") }}
 
+### filter <a name="filter" href="#filter">¶</a>
+
+The `filter` tag allows you to apply a [filter](filters.md) to all final content within the specified `filter` tag.
+
+#### Example
+
+    {% filter uppercase %}oh hi, {{ name }}{% endfilter %}
+    {% filter replace "." "!" "g" %}Hi. My name is Paul.{% endfilter %}
+
+    OH HI, PAUL
+    Hi! My name is Paul!
+
 <a id="custom-tags" href="#custom-tags"></a>
 
 ## Custom Tags
