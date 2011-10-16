@@ -1,4 +1,5 @@
-# Swig in Your Browser
+Swig in Your Browser <a name="browser" href="#browser">#</a>
+====================
 
 To compile Swig for rendering in the browser, clone the Swig repository and run the following in your command-line:
 
@@ -13,7 +14,7 @@ Swig relies heavily on [underscore.js](http://documentcloud.github.com/underscor
 
 You should only need one of these. If you already include _underscore.js_ in your website, choose _swig.js_ for development and _swig.min.js_ for production. If you have not included _underscore.js_ and you don't intend to, choose _swig.pack.js_ for development and _swig.pack.min.js_ for production.
 
-## The API
+## The API <a name="api" href="#api">#</a>
 
 Swig's API in the browser is the same as [its API for node.js](getting-started.md), with the only difference being that you cannot use the `swig.fromFile` method, since browsers do not have a filesystem.
 
@@ -32,7 +33,7 @@ When you render mypage, `mypage.render({});`, you will see
 
     <p>Oh hey there!</p>
 
-## Known Issues
+## Known Issues <a name="issues" href="#issues">#</a>
 
 * Opera and Internet Explorer fail to comply with the date filter format `r`.
 * Internet Explorer 9.0 **in compatibility mode** and IE 6 through 8:

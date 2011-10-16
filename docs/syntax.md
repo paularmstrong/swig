@@ -1,4 +1,5 @@
-# Template Syntax
+Template Syntax <a name="syntax" href="#syntax">#</a>
+===============
 
 Swig uses the same template syntax as Django Templates
 
@@ -11,7 +12,8 @@ Swig uses the same template syntax as Django Templates
 * `{%` opens the start of a logic tag
 * `%}` closes a logic tag
 
-## Variables
+Variables <a name="variables" href="#variables">#</a>
+---------
 
 Used to print a variable to the template. If the variable is not in the context we don't get an error, rather an empty string. You can use dot notation to access object proerties or array memebers.
 
@@ -21,13 +23,15 @@ Variables also are able to be transformed via [filters](filters.md).
 
 By default, all variables will be escaped for safe HTML output. For more information, read about the [escape filter](filters.md#escape).
 
-## Comments
+Comments <a name="comments" href="#domments">#</a>
+--------
 
 Comment tags are simply ignored. Comments can't span multitple lines.
 
     {# This is a comment #}
 
-## Logic
+Logic <a name="logic" href="#logic">#</a>
+-----
 
 Logic tags are operational blocks that have internal logic on how the template should proceed. Read more about [tags](tags.md).
 

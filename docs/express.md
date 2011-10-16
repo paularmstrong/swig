@@ -1,4 +1,5 @@
-# Using Swig in Express for View Rendering
+Using Swig in Express for View Rendering <a name="express" href="#express">#</a>
+========================================
 
 Swig is compatible with [Express][1]! It's very easy to set up your Express-based node project to use Swig as its template renderer. Here's how:
 

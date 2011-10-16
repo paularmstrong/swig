@@ -1,4 +1,5 @@
-# Custom Tags
+Custom Tags <a name="custom-tags" href="#custom-tags">#</a>
+===========
 
 Swig makes it easy to write custom tags specific for your project.
 
@@ -6,7 +7,8 @@ First, make sure to include your node.js file that declares your tags in the swi
 
     swig.init({ tags: require('mytags') });
 
-## Requirements
+Requirements <a name="requirements" href="#requirements">#</a>
+------------
 
 First, include the Swig parser and helpers.
 
@@ -20,7 +22,8 @@ Define your tag and whether or not it requires an "end" tag:
     };
     exports.mytag.ends = true;
 
-## A Really Simple Tag
+A Really Simple Tag <a name="example" href="#example">#</a>
+-------------------
 
 To parse a swig variable with or without filters into a variable token, eg. `bar` or `foo|lowercase`
 
@@ -70,6 +73,7 @@ Output:
     <h1>Scrumdiddlyumptious</h1>
     <p>Tacos</p>
 
-## Write Your Own
+Write Your Own <a name="write-your-own" href="#write-your-own">#</a>
+--------------
 
 To best understand how to write your own tag, reference [`swig/lib/tags.js`](../lib/tags.js) to see how the internal tags are written. These will give you a pretty clear indication of how to write your own.

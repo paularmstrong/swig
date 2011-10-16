@@ -1,15 +1,19 @@
-# Swig Documentation
+Swig Documentation
+==================
 
-## Table of Contents
+Table of Contents
+-----------------
 
-1. [Getting Started](getting-started.md)
-1. [Filters](filters.md)
-1. [Tags](tags.md)
-1. [Template Inheritance](inheritance.md)
-1. [Integrating with Express](express.md)
-1. [In the Browser](browser.md)
+1. [Getting Started](docs/getting-started.md#getting-started)
+1. [Syntax](docs/syntax.md#syntax)
+1. [Filters](docs/filters.md#filters)
+1. [Tags](docs/tags.md#tags)
+1. [Template Inheritance](docs/inheritance.md#inheritance)
+1. [Integrating with Express](docs/express.md#express)
+1. [In the Browser](docs/browser.md#browser)
 
-## Examples
+Examples
+--------
 
 1. [Basic Usage](../examples/basic)
 1. [Custom Tags](../examples/custom_tags)

@@ -1,8 +1,10 @@
-# Swig
+Swig
+====
 
 [Swig](http://paularmstrong.github.com/swig/) is a fast, Django-like template engine for node.js.
 
-## Features
+Features
+--------
 
 * Incredibly [fast][1]!
 * Available for node.js **and** major web browsers!
@@ -13,15 +15,18 @@
 * Lots of iteration and conditionals supported.
 * Extendable and customizable.
 
-## Installation
+Installation
+------------
 
     npm install swig
 
-## Documentation
+Documentation
+-------------
 
-All documentation can be viewed online. [Documentation Table of Contents](https://github.com/paularmstrong/swig/tree/master/docs)
+All documentation can be viewed online. [Documentation Table of Contents](https://github.com/paularmstrong/swig/tree/master/docs#readme)
 
-## Basic Example
+Basic Example
+-------------
 
 ### Template code
 
@@ -36,7 +41,7 @@ All documentation can be viewed online. [Documentation Table of Contents](https:
 
 ### node.js code
 
-    var template  = require('Swig');
+    var template  = require('swig');
     var tmpl = template.fromFile('/path/to/template.html');
     tmpl.render({
         pagename: 'awesome people',
@@ -52,20 +57,13 @@ All documentation can be viewed online. [Documentation Table of Contents](https:
         <li>Jane</li>
     </ul>
 
-## How it works
+How it works
+------------
 
 Swig reads template files and translates them into cached javascript functions. When we later render a template we call the evaluated function, passing a context object as an argument. This makes the rendering [_very fast_][1].
 
-## Template syntax
-
-* `{%` opens the start of a logic tag
-* `%}` closes a logic tag
-* `{{` opens variable
-* `}}` closes the variable
-* `{#` opens a comment block
-* `#}` closes a comment block
-
-## License
+License
+-------
 
 Copyright (c) 2010-2011 Paul Armstrong, Dusko Jordanovski
 
