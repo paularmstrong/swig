@@ -1,6 +1,7 @@
 .DS_Store
 *.html
 *.test.js
+dist/**
 docs/**
 examples/**
 Makefile

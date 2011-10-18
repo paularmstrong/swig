@@ -1,6 +1,8 @@
-# Getting Started
+Getting Started <a name="getting-started" href="#getting-started">#</a>
+===============
 
-## The Init
+Init Swig <a name="init" href="#init">#</a>
+---------
 
 In order to start using Swig, you must intialize it. Swig can be configured using the following:
 
@@ -47,14 +49,17 @@ The directory to search for templates. If a template passed to `swig.fromFile` i
 
 Use this to set any custom tags and/or override any of the built-in tags. For more information on writing your own tags, see the [custom tags guide](custom-tags.md).
 
-## Parsing a Template
+Parsing a Template <a name="parsing" href="#parsing">#</a>
+------------------
 
 You have 2 methods for creating a template object:
 
     swig.fromFile("path/to/template/file.html");
     swig.fromString("Template string here");
 
-## Rendering a Template
+Rendering a Template <a name="rendering" href="#rendering">#</a>
+--------------------
+
 Both of these methods will give you a template object on which you call the render method passing it a map of context values.
 
     var tpl = swig.fromFile("path/to/template/file.html");

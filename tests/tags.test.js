@@ -356,5 +356,40 @@ exports.macro = testCase({
         tpl = swig.fromString('{% import "macros.html" as blah %}{{ blah.foo }}, {{ blah.bar("baz") }}');
         test.strictEqual(tpl.render({}), '\nhi!\n, \n\nbye!\n\n', 'basic macros imported');
         test.done();
+    },
+
+    'import in parent template': function (test) {
+        swig.fromString('{% macro foo input %}hey, {{ input }}{% endmacro %}', 'blarbar.html');
+        swig.fromString('{% import "blarbar.html" as mahmacros %} foobar {% block content %}{% endblock %}', 'parent.html');
+
+        var tpl = swig.fromString('{% extends "parent.html" %} {% block content %}{{ mahmacros.foo("bar") }}{% endblock %}');
+
+        test.strictEqual(tpl.render({}), ' foobar hey, bar');
+        test.done();
+    }
+});
+
+exports.filter = testCase({
+    setUp: function (callback) {
+        swig.init({});
+        callback();
+    },
+
+    basic: function (test) {
+        var tpl = swig.fromString('{% filter capitalize %}oh HEY there{% endfilter %}');
+        test.strictEqual(tpl.render({}), 'Oh hey there');
+        test.done();
+    },
+
+    'complex content': function (test) {
+        var tpl = swig.fromString('{% filter capitalize %}oh {{ foo }} {% if here %}here{% else %}there{% endif %}{% endfilter %}');
+        test.strictEqual(tpl.render({ foo: 'HEY', here: true }), 'Oh hey here');
+        test.done();
+    },
+
+    args: function (test) {
+        var tpl = swig.fromString('{% filter replace "\\." "!" "g" %}hi. my name is paul.{% endfilter %}');
+        test.strictEqual(tpl.render({}), 'hi! my name is paul!');
+        test.done();
     }
 });

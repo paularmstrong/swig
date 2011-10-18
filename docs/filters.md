@@ -1,16 +1,17 @@
-# Variable Filters
+Variable Filters <a name="filters" href="#filters">#</a>
+================
 
 Used to modify variables. Filters are added directly after variable names, separated by the pipe (|) character. You can chain multiple filters together, applying one after the other in succession.
 
-## Example
+Example
+-------
 
     {{ name|title }} was born on {{ birthday|date('F jS, Y') }} and has {{ bikes|length|default("zero") }} bikes.
 
-<a id="built_in" href="#built_in"></a>
+Built-In Filters <a name="built-in" href="#built-in">#</a>
+----------------
 
-## Built-In Filters
-
-### add(value) <a id="default" href="#default">¶</a>
+### add(value) <a name="default" href="#default">#</a>
 
 Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated, as in the example below.
 
@@ -18,7 +19,7 @@ Adds the value to the variable. Strings that can be converted to integers will b
 
 1. <var>**value**</var> (_mixed_) The value to add to the variable before printing it to the page. Accepts any `array`, `object`, `number`, and `string`.
 
-### addslashes <a id="addslashes" href="#addslashes">¶</a>
+### addslashes <a name="addslashes" href="#addslashes">#</a>
 
 Returns a string with backslashes in front of characters that need to be quoted for database queries, etc.
 
@@ -26,11 +27,11 @@ Returns a string with backslashes in front of characters that need to be quoted 
 * double quote `"`
 * backslash `\`
 
-### capitalize <a id="capitalize" href="#capitalize">¶</a>
+### capitalize <a name="capitalize" href="#capitalize">#</a>
 
 Capitalize the first character in the string.
 
-### date(format) <a id="date" href="#date">¶</a>
+### date(format) <a name="date" href="#date">#</a>
 
 Convert a valid date into a format as specified. Mostly conforms to [php.net's date formatting](http://php.net/date).
 
@@ -87,6 +88,19 @@ Convert a valid date into a format as specified. Mostly conforms to [php.net's d
             <td><samp>0</samp> - <samp>6</samp> (Sunday - Saturday)</td>
         </tr>
         <tr>
+            <th scope="row"><code>z</code></th>
+            <td>The day of the year starting from 0</td>
+            <td><samp>0</samp> - <samp>365</samp> (January 1st - December 31st [only on leap year])</td>
+        </tr>
+        <tr>
+            <th scope="col" colspan="3">Week</th>
+        </tr>
+        <tr>
+            <th scope="row"><code>W</code></th>
+            <td>ISO-8601 week number of the year</td>
+            <td><samp>42</samp></td>
+        </tr>
+        <tr>
             <th scope="col" colspan="3">Month</th>
         </tr>
         <tr>
@@ -110,7 +124,22 @@ Convert a valid date into a format as specified. Mostly conforms to [php.net's d
             <td><samp>1</samp> - <samp>12</samp></td>
         </tr>
         <tr>
+            <th scope="row"><code>t</code></th>
+            <td>Number of days in the given month</td>
+            <td><samp>28</samp> - <samp>31</samp></td>
+        </tr>
+        <tr>
             <th scope="col" colspan="3">Year</th>
+        </tr>
+        <tr>
+            <th scope="row"><code>L</code></th>
+            <td>Whether or not the given year is a leap year.</td>
+            <td><samp>true</samp> or <samp>false</samp></td>
+        </tr>
+        <tr>
+            <th scope="row"><code>o</code></th>
+            <td>ISO-8601 year number. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead.</td>
+            <td><samp>1999</samp></td>
         </tr>
         <tr>
             <th scope="row"><code>Y</code></th>
@@ -134,6 +163,11 @@ Convert a valid date into a format as specified. Mostly conforms to [php.net's d
             <th scope="row"><code>A</code></th>
             <td>Uppercase Ante meridiem and Post meridiem</td>
             <td><samp>AM</samp> or <samp>PM</samp></td>
+        </tr>
+        <tr>
+            <th scope="row"><code>B</code></th>
+            <td><a href="http://en.wikipedia.org/wiki/Swatch_Internet_Time">Swatch Internet Time</a></td>
+            <td><samp>000</samp> - <samp>999</samp></td>
         </tr>
         <tr>
             <th scope="row"><code>g</code></th>
@@ -182,6 +216,11 @@ Convert a valid date into a format as specified. Mostly conforms to [php.net's d
             <th scope="col" colspan="3">Full Date &amp; Time</th>
         </tr>
         <tr>
+            <th scope="row"><code>c</code></th>
+            <td>ISO 8601 formatted date</td>
+            <td><samp>2011-09-06T16:05:02.000Z</samp></td>
+        </tr>
+        <tr>
             <th scope="row"><code>r</code></th>
             <td><a href="http://www.faqs.org/rfcs/rfc2822">RFC 2822</a> formatted date</td>
             <td><samp>Sat, 10 Sep 2011 14:34:30 -0700</samp></td>
@@ -194,7 +233,7 @@ Convert a valid date into a format as specified. Mostly conforms to [php.net's d
     </tbody>
 </table>
 
-### default(value) <a id="default" href="#default">¶</a>
+### default(value) <a name="default" href="#default">#</a>
 
 If the variable is `undefined`, `null`, or `false`, a default return value can be specified.
 
@@ -202,7 +241,7 @@ If the variable is `undefined`, `null`, or `false`, a default return value can b
 
 1. <var>**value**</var> (_mixed_) Fallback value if the variable is falsy.
 
-### escape([type]) / e([type]) <a id="escape" href="#escape">¶</a>
+### escape([type]) / e([type]) <a name="escape" href="#escape">#</a>
 
 Force escape the output of the variable. Optionally use `e` as a shortcut filter name. This filter will be applied by default if [autoescape](getting-started.md) is turned on.
 
@@ -294,11 +333,11 @@ Pass `js` as the type to your escape filter to toggle escaping as JavaScript.
 
 1. <var>**type**</var> (_string_) _optional_ passing "js" as the type will force JavaScript-safe escaping.
 
-### first <a id="first" href="#first">¶</a>
+### first <a name="first" href="#first">#</a>
 
 Returns the first element of an array. Uses [underscore.js first](http://documentcloud.github.com/underscore/#first)
 
-### join(glue) <a id="join" href="#join">¶</a>
+### join(glue) <a name="join" href="#join">#</a>
 
 If the value is an Array, you can join each value with a delimiter and return it as a string.
 
@@ -306,27 +345,27 @@ If the value is an Array, you can join each value with a delimiter and return it
 
 1. <var>**glue**</var> (_string_) Concatenation string to join each item in the array with.
 
-### json_encode <a id="json_encode" href="#json_encode">¶</a>
+### json_encode <a name="json_encode" href="#json_encode">#</a>
 
 Return a JSON string of the variable.
 
-### last <a id="last" href="#last">¶</a>
+### last <a name="last" href="#last">#</a>
 
 Returns the last element of an array. Uses [underscore.js last](http://documentcloud.github.com/underscore/#last)
 
-### length <a id="length" href="#length">¶</a>
+### length <a name="length" href="#length">#</a>
 
 Return the `length` property of the variable. If the variable is an object, this will return the length of the keys on the object.
 
-### lower <a id="lower" href="#lower">¶</a>
+### lower <a name="lower" href="#lower">#</a>
 
 Return the variable in all lowercase letters.
 
-### raw <a id="raw" href="#raw">¶</a>
+### raw <a name="raw" href="#raw">#</a>
 
 Do not escape the output of the variable.
 
-### replace(search, replace[, flags]) <a id="replace" href="#replace">¶</a>
+### replace(search, replace[, flags]) <a name="replace" href="#replace">#</a>
 
 Uses built-in JavaScript replace method. Provide a regular-expression or a string and a replacement string.
 
@@ -336,37 +375,36 @@ Uses built-in JavaScript replace method. Provide a regular-expression or a strin
 2. <var>**replace**</var> (_string_) a string to replace the matched parts from <var>search</var>
 3. <var>**flags**</var> (_string_) _optional_ Regular expression flags. [[reference]](https://developer.mozilla.org/en/JavaScript/Guide/Regular_Expressions#Advanced_Searching_With_Flags)
 
-### reverse <a id="reverse" href="#reverse">¶</a>
+### reverse <a name="reverse" href="#reverse">#</a>
 
 If the value is an Array, this filter will reverse all items in the array.
 
-### striptags <a id="striptags" href="#striptags">¶</a>
+### striptags <a name="striptags" href="#striptags">#</a>
 
 Strip all HTML/XML tags.
 
-### title <a id="title" href="#title">¶</a>
+### title <a name="title" href="#title">#</a>
 
 Change the output to title case–the first letter of every word will uppercase, while all the rest will be lowercase.
 
-### uniq <a id="uniq" href="#uniq">¶</a>
+### uniq <a name="uniq" href="#uniq">#</a>
 
 Produces a duplicate-free version of the array. Uses [underscore.js uniq](http://documentcloud.github.com/underscore/#uniq)
 
-### upper <a id="upper" href="#upper">¶</a>
+### upper <a name="upper" href="#upper">#</a>
 
 Return the variable in all uppercase letters
 
-### url_encode <a id="url_encode" href="#url_encode">¶</a>
+### url_encode <a name="url_encode" href="#url_encode">#</a>
 
 Encode a URI component.
 
-### url_decode <a id="url_decode" href="#url_decode">¶</a>
+### url_decode <a name="url_decode" href="#url_decode">#</a>
 
 Decode a URI component.
 
-<a id="custom_filters" href="#custom_filters"></a>
-
-## Writing Custom Filters
+Writing Custom Filters <a name="custom-filters" href="#custom-filters">#</a>
+----------------------
 
 Custom filters are very easy to write for your own project that uses Swig.
 

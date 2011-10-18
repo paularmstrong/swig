@@ -1,10 +1,12 @@
-# Template Inheritance
+Template Inheritance <a name="inheritance" href="#inheritance">#</a>
+====================
 
 Swig borrows much of its implementation from Django's templates–template inheritance with `extends` and `block`s are no exception.
 
 Unlike other, more basic template languages, Swig is able to render a single template that extends from multiple templates in a chain in a very powerful way.
 
-## Basic Example
+Basic Example <a name="example" href="#example">#</a>
+-------------
 
 ### layout.html
 

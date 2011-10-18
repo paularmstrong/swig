@@ -1,33 +1,35 @@
-# Tags
+Tags <a name="tags" href="#tags">#</a>
+====
 
-## Built-in Tags
+Built-in Tags <a name="builtin" href="#builtin">#</a>
+-------------
 
-### extends <a id="extends" href="#extends">¶</a>
+### extends <a name="extends" href="#extends">#</a>
 
 Makes the current template extend a parent template. This tag must be the first item in your template.
 
 See [Template inheritance](inheritance.md) for more information.
 
-### block <a id="block" href="#block">¶</a>
+### block <a name="block" href="#block">#</a>
 
 Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.
 
 See [Template inheritance](inheritance.md) for more information.
 
-### parent <a id="parent" href="#parent">¶</a>
+### parent <a name="parent" href="#parent">#</a>
 
 Inject the content from the current `block` in the parent template into the child template.
 
 See [Template inheritance](inheritance.md) for more information.
 
-### include <a id="include" href="#include">¶</a>
+### include <a name="include" href="#include">#</a>
 
 Includes a template in it's place. The template is rendered within the current context. Does not use and {% endinclude %}.
 
     {% include template_path %}
     {% include "path/to/template.js" %}
 
-### for <a id="for" href="#for">¶</a>
+### for <a name="for" href="#for">#</a>
 
 For loops have 4 special context variables accessible inside of the loop:
 
@@ -48,7 +50,7 @@ You can also apply filters to the object that you are iterating over.
         The array `y` will first be reversed before looping over it.
     {% endfor %}
 
-#### empty <a id="empty" href="#empty">¶</a>
+#### empty <a name="empty" href="#empty">#</a>
 
 For loops have a special tag available to them called `{% empty %}`.
 
@@ -60,7 +62,7 @@ If the loop object is empty or `length === 0`, the content following the `empty`
         There are no people yet!
     {% endfor %}
 
-### if <a id="if" href="#if">¶</a>
+### if <a name="if" href="#if">#</a>
 
 All normal JavaScript-valid if statements are supported, including some extra helpful syntaxes:
 
@@ -88,7 +90,7 @@ All normal JavaScript-valid if statements are supported, including some extra he
         If x is a value that is present in y, this will return true.
     {% endif %}
 
-#### else and else if <a id="else" href="#else">¶</a>
+#### else and else if <a name="else" href="#else">#</a>
 
 Also supports using the `{% else %}` and `{% else if ... %}` tags within an if-block. Using `{% else [if ...] %}` anywhere outside an immediate parent if-block will throw an exception.
 
@@ -100,7 +102,7 @@ Also supports using the `{% else %}` and `{% else if ... %}` tags within an if-b
         Fallback content.
     {% endif %}
 
-### autoescape <a id="autoescape" href="#autoescape">¶</a>
+### autoescape <a name="autoescape" href="#autoescape">#</a>
 
 The `autoescape` tag accepts two controls:
 
@@ -135,7 +137,7 @@ Will output:
 
 For more information on how the autoescape tag filters variable output, see the [escape filter documentation](filters.md#escape).
 
-### set <a id="set" href="#set">¶</a>
+### set <a name="set" href="#set">#</a>
 
 It is also possible to set variables in templates.
 
@@ -144,7 +146,7 @@ It is also possible to set variables in templates.
         <li>{{ num }}</li>
     {% endfor %}
 
-### macro <a id="macro" href="#macro">¶</a>
+### macro <a name="macro" href="#macro">#</a>
 
 Macros are custom, reusable methods for content-generation that are defined in templates.
 
@@ -173,9 +175,11 @@ Your output may look like this:
         <input type="text" name="lname" id="lname" value="" class="error">
     </div>
 
-### import <a id="import" href="#import">¶</a>
+### import <a name="import" href="#import">#</a>
 
 The `import` tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.
+
+Note that `import` is context-sensitive. If you import a macro in a `for` loop, the imported macro will only be available within that loop. It's best to import macros from your parent template, if possible, otherwise import at the beginning of the block you'll be using it.
 
 #### Usage
 
@@ -189,8 +193,20 @@ Assuming the macro `input` exists in _formmacros.html_, you can run the macro by
     {# this, however, will NOT output anything because the macro is scoped to the "form" object: #}
     {{ input("text", "name") }}
 
-<a id="custom-tags" href="#custom-tags"></a>
+### filter <a name="filter" href="#filter">#</a>
 
-## Custom Tags
+The `filter` tag allows you to apply a [filter](filters.md) to all final content within the specified `filter` tag.
+
+#### Example
+
+    {% filter uppercase %}oh hi, {{ name }}{% endfilter %}
+    {% filter replace "." "!" "g" %}Hi. My name is Paul.{% endfilter %}
+
+    OH HI, PAUL
+    Hi! My name is Paul!
+
+
+Custom Tags <a name="custom-tags" href="#custom-tags">#</a>
+-----------
 
 Swig has support for you to write your own custom tags. For more information, see the [Custom Tags Documentation](custom-tags.md).
