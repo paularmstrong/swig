@@ -4,7 +4,7 @@ Getting Started <a name="getting-started" href="#getting-started">#</a>
 Init Swig <a name="init" href="#init">#</a>
 ---------
 
-In order to start using Swig, you must intialize it. Swig can be configured using the following:
+In order to start using Swig, you should initialize it. Swig can be configured using the following:
 
     swig.init({
         allowErrors: false,
@@ -14,6 +14,8 @@ In order to start using Swig, you must intialize it. Swig can be configured usin
         root: '/',
         tags: {}
     });
+
+This step is _optional_, however it is recommended to at least set the `root` key when running Swig from node.js.
 
 ### Options
 

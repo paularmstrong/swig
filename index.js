@@ -8,20 +8,22 @@ var fs = require('fs'),
 
     _ = require('underscore');
 
-var config,
+var config = {
+        allowErrors: false,
+        autoescape: true,
+        encoding: 'utf8',
+        filters: filters,
+        root: '/',
+        tags: tags
+    },
+    _config = _.extend({}, config),
     CACHE = {};
 
 // Call this before using the templates
 exports.init = function (options) {
-    config = _.extend({
-        allowErrors: false,
-        autoescape: true,
-        encoding: 'utf8',
-        root: '/'
-    }, options);
-
-    config.filters = _.extend(filters, options.filters);
-    config.tags = _.extend(tags, options.tags);
+    _config = _.extend({}, config, options);
+    _config.filters = _.extend(filters, options.filters);
+    _config.tags = _.extend(tags, options.tags);
 };
 
 function TemplateError(error) {
@@ -46,11 +48,11 @@ function createTemplate(data, id) {
         render;
 
     // The template token tree before compiled into javascript
-    if (config.allowErrors) {
-        template.tokens = parser.parse.call(template, data, config.tags, config.autoescape);
+    if (_config.allowErrors) {
+        template.tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
     } else {
         try {
-            template.tokens = parser.parse.call(template, data, config.tags, config.autoescape);
+            template.tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
         } catch (e) {
             return new TemplateError(e);
         }
@@ -79,11 +81,11 @@ function createTemplate(data, id) {
     ].join(''));
 
     template.render = function (context, parents) {
-        if (config.allowErrors) {
-            return render.call(this, context, parents, config.filters, _);
+        if (_config.allowErrors) {
+            return render.call(this, context, parents, _config.filters, _);
         } else {
             try {
-                return render.call(this, context, parents, config.filters, _);
+                return render.call(this, context, parents, _config.filters, _);
             } catch (e) {
                 return new TemplateError(e);
             }
@@ -107,12 +109,12 @@ exports.fromFile = function (filepath) {
     }
 
     var get = function () {
-        var file = ((/^\//).test(filepath)) ? filepath : config.root + '/' + filepath,
+        var file = ((/^\//).test(filepath)) ? filepath : _config.root + '/' + filepath,
             data = fs.readFileSync(file, config.encoding);
         CACHE[filepath] = createTemplate(data, filepath);
     };
 
-    if (config.allowErrors) {
+    if (_config.allowErrors) {
         get();
     } else {
         try {

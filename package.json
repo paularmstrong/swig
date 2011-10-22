@@ -3,18 +3,21 @@
     "version": "0.7.0",
     "description": "A fast django-like templating engine for node.js.",
     "keywords": ["template", "html", "django", "sandbox"],
-    "repository": "git://github.com/paularmstrong/swig.git",
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/paularmstrong/swig.git"
+    },
     "author": "Paul Armstrong <paul@paularmstrongdesigns.com>",
     "contributors": [
         "Dusko Jordanovski <jordanovskid@gmail.com>"
     ],
     "dependencies": {
-        "underscore": "1.1.7"
+        "underscore": ">=1.1.7"
     },
     "devDependencies": {
         "express": ">=2.4.0",
-        "nodelint": "0.5.1",
-        "nodeunit": "0.5.5",
+        "nodelint": ">=0.5.1",
+        "nodeunit": ">=0.5.5",
         "uglify-js": ">=1.1.0"
     },
     "main": "index",
@@ -24,5 +27,8 @@
     "scripts": {
         "prepublish": "npm prune",
         "test": "make lint && make test"
+    },
+    "bugs": {
+        "url": "https://github.com/paularmstrong/swig/issues"
     }
 }
