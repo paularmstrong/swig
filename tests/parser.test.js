@@ -103,10 +103,10 @@ exports.Variable = testCase({
 
     'variable with filter': function (test) {
         var output = parser.parse('{{ foobar|awesome }}');
-        test.deepEqual(output, [{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, args: null, filters: [{ name: 'awesome', args: [] }] }], 'filter by name');
+        test.deepEqual(output, [{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, args: null, filters: [{ name: 'awesome', args: '' }] }], 'filter by name');
 
         output = parser.parse('{{ foobar|awesome("param", ctxvar, 2) }}');
-        test.deepEqual(output, [{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, args: null, filters: [{ name: 'awesome', args: ['"param"', 'ctxvar', '2'] }] }], 'filter with params');
+        test.deepEqual(output, [{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, args: null, filters: [{ name: 'awesome', args: '"param", ctxvar, 2' }] }], 'filter with params');
 
         test.done();
     },
@@ -114,9 +114,9 @@ exports.Variable = testCase({
     'multiple filters': function (test) {
         var output = parser.parse('{{ foobar|baz(1)|rad|awesome("param", 2) }}');
         test.deepEqual([{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', escape: false, args: null, filters: [
-            { name: 'baz', args: [1] },
-            { name: 'rad', args: [] },
-            { name: 'awesome', args: ['"param"', '2'] }
+            { name: 'baz', args: '1' },
+            { name: 'rad', args: '' },
+            { name: 'awesome', args: '"param", 2' }
         ] }], output);
 
         test.done();
@@ -125,7 +125,7 @@ exports.Variable = testCase({
     'filters do not carry over': function (test) {
         var output = parser.parse('{{ foo|baz }}{{ bar }}');
         test.deepEqual([
-            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'baz', args: [] }], escape: false, args: null },
+            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'baz', args: '' }], escape: false, args: null },
             { type: parser.TOKEN_TYPES.VAR, name: 'bar', filters: [], escape: false, args: null }
         ], output);
         test.done();
@@ -133,25 +133,27 @@ exports.Variable = testCase({
 
     'filters with all kinds of characters in params': function (test) {
         var output = parser.parse("{{ foo|blah('01a|\"\\',;?./¨œ∑´®†][{}]') }}");
-        test.deepEqual(output[0].filters, [{ name: 'blah', args: ['01a|\"\\\',;?./¨œ∑´®†][{}]'] }]);
+        test.deepEqual(output[0].filters, [{ name: 'blah', args: "\'01a|\"\\\\\',;?./¨œ∑´®†][{}]\'" }]);
 
-        test.deepEqual(parser.parse("{{ foo|blah('01a') }}")[0].filters, [{ name: 'blah', args: ['01a'] }]);
-        test.deepEqual(parser.parse("{{ foo|blah('|') }}")[0].filters, [{ name: 'blah', args: ['|'] }]);
-        test.deepEqual(parser.parse("{{ foo|blah('\"') }}")[0].filters, [{ name: 'blah', args: ['\"'] }]);
-        test.deepEqual(parser.parse('{{ foo|blah("\'") }}')[0].filters, [{ name: 'blah', args: ['"\'"'] }]); // FIXME: WHAT?
-        test.deepEqual(parser.parse("{{ foo|blah(',') }}")[0].filters, [{ name: 'blah', args: [','] }]);
-        test.deepEqual(parser.parse("{{ foo|blah(';') }}")[0].filters, [{ name: 'blah', args: [';'] }]);
-        test.deepEqual(parser.parse("{{ foo|blah('?./¨œ∑´®†') }}")[0].filters, [{ name: 'blah', args: ['?./¨œ∑´®†'] }]);
-        test.deepEqual(parser.parse("{{ foo|blah('[]') }}")[0].filters, [{ name: 'blah', args: ['[]'] }]);
-        test.deepEqual(parser.parse("{{ foo|blah('[') }}")[0].filters, [{ name: 'blah', args: ['['] }]);
-        test.deepEqual(parser.parse("{{ foo|blah(']') }}")[0].filters, [{ name: 'blah', args: [']'] }]);
-        test.deepEqual(parser.parse("{{ foo|blah('{}') }}")[0].filters, [{ name: 'blah', args: ['{}'] }]);
-        test.deepEqual(parser.parse("{{ foo|blah('{') }}")[0].filters, [{ name: 'blah', args: ['{'] }]);
-        test.deepEqual(parser.parse("{{ foo|blah('}') }}")[0].filters, [{ name: 'blah', args: ['}'] }]);
+        test.deepEqual(parser.parse("{{ foo|blah('01a') }}")[0].filters, [{ name: 'blah', args: "'01a'" }]);
+        test.deepEqual(parser.parse("{{ foo|blah('|') }}")[0].filters, [{ name: 'blah', args: "'|'" }]);
+        test.deepEqual(parser.parse("{{ foo|blah('\"') }}")[0].filters, [{ name: 'blah', args: "'\"'" }]);
+        test.deepEqual(parser.parse('{{ foo|blah("\'") }}')[0].filters, [{ name: 'blah', args: '"\'"' }]); // FIXME: WHAT?
+        test.deepEqual(parser.parse("{{ foo|blah(',') }}")[0].filters, [{ name: 'blah', args: "','" }]);
+        test.deepEqual(parser.parse("{{ foo|blah(';') }}")[0].filters, [{ name: 'blah', args: "';'" }]);
+        test.deepEqual(parser.parse("{{ foo|blah('?./¨œ∑´®†') }}")[0].filters, [{ name: 'blah', args: "'?./¨œ∑´®†'" }]);
+        test.deepEqual(parser.parse("{{ foo|blah('[]') }}")[0].filters, [{ name: 'blah', args: "'[]'" }]);
+        test.deepEqual(parser.parse("{{ foo|blah('[') }}")[0].filters, [{ name: 'blah', args: "'['" }]);
+        test.deepEqual(parser.parse("{{ foo|blah(']') }}")[0].filters, [{ name: 'blah', args: "']'" }]);
+        test.deepEqual(parser.parse("{{ foo|blah('{}') }}")[0].filters, [{ name: 'blah', args: "'{}'" }]);
+        test.deepEqual(parser.parse("{{ foo|blah('{') }}")[0].filters, [{ name: 'blah', args: "'{'" }]);
+        test.deepEqual(parser.parse("{{ foo|blah('}') }}")[0].filters, [{ name: 'blah', args: "'}'" }]);
 
-        // FIXME: filter argument edge cases
-        // test.deepEqual(parser.parse("{{ foo|blah('a\", \"b') }}")[0].filters, [{ name: 'blah', args: ['a\", \"b'] }]);
-        // test.deepEqual(parser.parse('{{ foo|blah("a\', \'b") }}')[0].filters, [{ name: 'blah', args: ['a\',\'b'] }]);
+        // Edge cases
+        test.deepEqual(parser.parse("{{ foo|blah('a\", \"b') }}")[0].filters, [{ name: 'blah', args: "'a\", \"b'" }]);
+        test.deepEqual(parser.parse("{{ foo|blah('a\",\"b') }}")[0].filters, [{ name: 'blah', args: "'a\",\"b'" }]);
+        test.deepEqual(parser.parse('{{ foo|blah("a\', \'b") }}')[0].filters, [{ name: 'blah', args: '"a\', \'b"' }]);
+        test.deepEqual(parser.parse('{{ foo|blah("a\',\'b") }}')[0].filters, [{ name: 'blah', args: '"a\',\'b"' }]);
 
         test.done();
     },
@@ -159,7 +161,7 @@ exports.Variable = testCase({
     'escapements carry over in filter args': function (test) {
         var output = parser.parse('{{ foo|blah("\\s") }}');
         test.deepEqual([
-            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'blah', args: ['"\\s"'] }], escape: false, args: null }
+            { type: parser.TOKEN_TYPES.VAR, name: 'foo', filters: [{ name: 'blah', args: '"\\\\s"' }], escape: false, args: null }
         ], output);
         test.done();
     }

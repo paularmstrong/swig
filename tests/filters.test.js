@@ -13,8 +13,8 @@ exports.add = function (test) {
     testFilter(test, 'add(b)', { v: [1, 2], b: [3, 4] }, '1,2,3,4', 'arrays add from var');
     testFilter(test, 'add(2)', { v: 'foo' }, 'foo2', 'string var turns addend into a string');
     testFilter(test, 'add("bar")', { v: 'foo' }, 'foobar', 'strings concatenated');
-    testFilter(test, 'add({ bar: 2, baz: 3 })|join(", ")', { v: { foo: 1 }}, '1, 2, 3', 'add objects from object literal');
-    testFilter(test, 'add(b)|join(", ")', { v: { foo: 1 }, b: { bar: 2 }}, '1, 2', 'add objects from var');
+    testFilter(test, 'add({ bar: 2, baz: 3 })|join(",")', { v: { foo: 1 }}, '1,2,3', 'add objects from object literal');
+    testFilter(test, 'add(b)|join(",")', { v: { foo: 1 }, b: { bar: 2 }}, '1,2', 'add objects from var');
     testFilter(test, 'add(b)', { v: 'foo', b: [1, 2] }, 'foo1,2', 'add array to string');
     test.done();
 };
