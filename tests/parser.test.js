@@ -63,21 +63,46 @@ exports.Tags = testCase({
     },
 
     'arguments': function (test) {
-        var output = parser.parse('{% foo "hi mom" %}', { foo: {} });
-        test.deepEqual(output[0].args, ['"hi mom"']);
+        var output = parser.parse('{% foo "hi" %}', { foo: {} });
+        test.deepEqual(output[0].args, ['"hi"'], 'string');
 
-        output = parser.parse('{% foo { [ & ^ ; * , a ] } %}', { foo: {} });
-        test.deepEqual(output[0].args, ['{', '[', '&', '^', ';', '*', ',', 'a', ']', '}']);
+        output = parser.parse('{% foo "hi mom" %}', { foo: {} });
+        test.deepEqual(output[0].args, ['"hi mom"'], 'string with space');
+
+        output = parser.parse('{% foo "{" "[" & ^ ; * , a "]" "}" %}', { foo: {} });
+        test.deepEqual(output[0].args, ['"{"', '"["', '&', '^', ';', '*', ',', 'a', '"]"', '"}"'], 'random chars');
 
         output = parser.parse('{% foo "hi,mom" %}', { foo: {} });
-        test.deepEqual(output[0].args, ['"hi,mom"']);
+        test.deepEqual(output[0].args, ['"hi,mom"'], 'string with comma');
 
         output = parser.parse('{% foo "hi\", \"mom" %}', { foo: {} });
-        test.deepEqual(output[0].args, ['"hi\", \"mom"']);
+        test.deepEqual(output[0].args, ['"hi\", \"mom"'], 'double-quote string with comma');
 
         output = parser.parse("{% foo 'hi\', \'mom' %}", { foo: {} });
-        test.deepEqual(output[0].args, ['\'hi\', \'mom\'']);
+        test.deepEqual(output[0].args, ['\'hi\', \'mom\''], 'single-quote string with comma');
 
+        output = parser.parse("{% foo [] %}", { foo: {} });
+        test.deepEqual(output[0].args, ['[]'], 'empty array');
+
+        output = parser.parse("{% foo {} %}", { foo: {} });
+        test.deepEqual(output[0].args, ['{}'], 'empty object');
+
+        output = parser.parse("{% foo ['hi', 'your', 'mom'] %}", { foo: {} });
+        test.deepEqual(output[0].args, ['[\'hi\', \'your\', \'mom\']'], 'array');
+
+        output = parser.parse("{% foo { 'foo': 1, 'bar': true } %}", { foo: {} });
+        test.deepEqual(output[0].args, ['{ \'foo\': 1, \'bar\': true }'], 'object');
+
+        output = parser.parse("{% foo { 'bar': true } 'foo' [] %}", { foo: {} });
+        test.deepEqual(output[0].args, ['{ \'bar\': true }', "'foo'", '[]'], 'combo');
+
+        test.done();
+    },
+
+    'bad string arguments throws': function (test) {
+        test.throws(function () {
+            parser.parse('{% foo "blah is foo %}', { foo: {} });
+        });
         test.done();
     }
 });
