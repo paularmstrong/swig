@@ -60,6 +60,25 @@ exports.Tags = testCase({
         var output = parser.parse('{% blah %}hello{% endblah %}', { blah: { ends: true } });
         test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, line: 1, name: 'blah', args: [], compile: { ends: true }, tokens: ['hello'], parent: [] }], output);
         test.done();
+    },
+
+    'arguments': function (test) {
+        var output = parser.parse('{% foo "hi mom" %}', { foo: {} });
+        test.deepEqual(output[0].args, ['"hi mom"']);
+
+        output = parser.parse('{% foo { [ & ^ ; * , a ] } %}', { foo: {} });
+        test.deepEqual(output[0].args, ['{', '[', '&', '^', ';', '*', ',', 'a', ']', '}']);
+
+        output = parser.parse('{% foo "hi,mom" %}', { foo: {} });
+        test.deepEqual(output[0].args, ['"hi,mom"']);
+
+        output = parser.parse('{% foo "hi\", \"mom" %}', { foo: {} });
+        test.deepEqual(output[0].args, ['"hi\", \"mom"']);
+
+        output = parser.parse("{% foo 'hi\', \'mom' %}", { foo: {} });
+        test.deepEqual(output[0].args, ['\'hi\', \'mom\'']);
+
+        test.done();
     }
 });
 
