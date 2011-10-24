@@ -8,8 +8,35 @@ Example
 
     {{ name|title }} was born on {{ birthday|date('F jS, Y') }} and has {{ bikes|length|default("zero") }} bikes.
 
-Built-In Filters <a name="built-in" href="#built-in">#</a>
+Filters can also be applied to blocks of content directly with the [filter tag](tags.md#filter).
+
+    {% filter uppercase %}oh hi, paul{% endfilter %}
+
+Built-In Filters <a name="built-in" href="#built-in">#</a>\
 ----------------
+
+* [add](#add)
+* [addslashes](#addslashes)
+* [capitalize](#capitalize)
+* [date](#date)
+* [default](#default)
+* [e](#e)
+* [escape](#escape)
+* [first](#first)
+* [join](#join)
+* [json_encode](#json_encode)
+* [last](#last)
+* [length](#length)
+* [lower](#lower)
+* [raw](#raw)
+* [replace](#replace)
+* [reverse](#reverse)
+* [striptags](#striptags)
+* [title](#title)
+* [uniq](#uniq)
+* [upper](#upper)
+* [url_encode](#url_encode)
+* [url_decode](#url_decode)
 
 ### add(value) <a name="default" href="#default">#</a>
 

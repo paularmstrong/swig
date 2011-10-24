@@ -4,6 +4,19 @@ Tags <a name="tags" href="#tags">#</a>
 Built-in Tags <a name="builtin" href="#builtin">#</a>
 -------------
 
+* [extends](#extends)
+* [block](#block)
+* [parent](#parent)
+* [include](#include)
+* [for](#for)
+* [empty](#empty)
+* [if](#if)
+* [else (if)](#else)
+* [autoescape](#autoescape)
+* [macro](#macro)
+* [import](#import)
+* [filter](#filter)
+
 ### extends <a name="extends" href="#extends">#</a>
 
 Makes the current template extend a parent template. This tag must be the first item in your template.
