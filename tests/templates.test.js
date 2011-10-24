@@ -99,3 +99,12 @@ exports.Variables = testCase({
         test.done();
     }
 });
+
+exports['double-escape forward-slash'] = function (test) {
+    swig.init({});
+
+    var tpl = swig.fromString('foobar\\/');
+    test.strictEqual(tpl.render({}), 'foobar\\/');
+
+    test.done();
+};
