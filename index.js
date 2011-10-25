@@ -11,6 +11,7 @@ var fs = require('fs'),
 var config = {
         allowErrors: false,
         autoescape: true,
+        cache: true,
         encoding: 'utf8',
         filters: filters,
         root: '/',
@@ -127,13 +128,17 @@ exports.fromFile = function (filepath) {
     return CACHE[filepath];
 };
 
-function getTemplate(source, name) {
-    var key = name || source;
-    if (!CACHE.hasOwnProperty(key)) {
-        CACHE[key] = createTemplate(source, key);
+function getTemplate(source, options) {
+    var key = options.filename || source;
+    if (_config.cache || options.cache) {
+        if (!CACHE.hasOwnProperty(key)) {
+            CACHE[key] = createTemplate(source, key);
+        }
+
+        return CACHE[key];
     }
 
-    return CACHE[key];
+    return createTemplate(source, key);
 }
 
 exports.fromString = function (string, name) {
@@ -143,7 +148,7 @@ exports.fromString = function (string, name) {
 
 exports.compile = function (source, options) {
     options = options || {};
-    var tmpl = getTemplate(source, options.filename || null);
+    var tmpl = getTemplate(source, options || {});
 
     return function (source, options) {
         return tmpl.render(source, options);
