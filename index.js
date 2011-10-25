@@ -21,6 +21,7 @@ var config = {
 
 // Call this before using the templates
 exports.init = function (options) {
+    CACHE = {};
     _config = _.extend({}, config, options);
     _config.filters = _.extend(filters, options.filters);
     _config.tags = _.extend(tags, options.tags);
