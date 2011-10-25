@@ -105,7 +105,7 @@ exports.fromFile = function (filepath) {
     }
 
     if (typeof window !== 'undefined') {
-        throw new TemplateError({ stack: 'You must pre-compile all templates in-browser. Use `swig.fromString(template);`.' });
+        throw new TemplateError({ stack: 'You must pre-compile all templates in-browser. Use `swig.compile(template);`.' });
     }
 
     var get = function () {
@@ -126,28 +126,30 @@ exports.fromFile = function (filepath) {
     return CACHE[filepath];
 };
 
-exports.fromString = function (string, name) {
-    var key = name || string;
+function getTemplate(source, name) {
+    var key = name || source;
     if (!CACHE.hasOwnProperty(key)) {
-        CACHE[key] = createTemplate(string, key);
+        CACHE[key] = createTemplate(source, key);
     }
 
     return CACHE[key];
+}
+
+exports.fromString = function (string, name) {
+    console.warn('[WARNING] "swig.fromString" is deprecated. Use "swig.compile" instead.');
+    return getTemplate(string, name);
 };
 
-exports.compile = function (source, options, callback) {
-    var self = this;
-    if (typeof source === 'string') {
-        return function (options) {
-            var tmpl = exports.fromString(source);
-            return tmpl.render(options);
-        };
-    } else {
-        return source;
-    }
+exports.compile = function (source, options) {
+    options = options || {};
+    var tmpl = getTemplate(source, options.filename || null);
+
+    return function (source, options) {
+        return tmpl.render(source, options);
+    };
 };
 
-exports.render = function (template, options) {
-    template = exports.compile(template, options);
-    return template(options);
+exports.render = function (source, options) {
+    var template = exports.compile(source, options);
+    return template(options.locals || {});
 };

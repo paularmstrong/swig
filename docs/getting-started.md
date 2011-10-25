@@ -57,7 +57,7 @@ Parsing a Template <a name="parsing" href="#parsing">#</a>
 You have 2 methods for creating a template object:
 
     swig.fromFile("path/to/template/file.html");
-    swig.fromString("Template string here");
+    swig.compile("Template string here", { filename: 'templateKey' });
 
 Rendering a Template <a name="rendering" href="#rendering">#</a>
 --------------------
@@ -66,3 +66,8 @@ Both of these methods will give you a template object on which you call the rend
 
     var tpl = swig.fromFile("path/to/template/file.html");
     var renderedHtml = tpl.render({ vars: 'to be inserted in template' });
+
+OR
+
+    var tpl = swig.compile("path/to/template/file.html");
+    var renderedHtml = tpl({ vars: 'to be inserted in template' });

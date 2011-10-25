@@ -6,7 +6,7 @@ exports.Errors = testCase({
         swig.init({ allowErrors: true });
 
         test.throws(function () {
-            swig.fromString('{% for foo in blah %}{% endif %}');
+            swig.compile('{% for foo in blah %}{% endif %}');
         }, Error);
         test.done();
     },
@@ -19,9 +19,9 @@ exports.Errors = testCase({
             }}
         });
 
-        var tmpl8 = swig.fromString('{% foo %}');
+        var tmpl8 = swig.compile('{% foo %}');
         test.throws(function () {
-            tmpl8.render({});
+            tmpl8({});
         }, Error);
         test.done();
     },
@@ -30,7 +30,7 @@ exports.Errors = testCase({
         swig.init({});
 
         test.doesNotThrow(function () {
-            swig.fromString('{% for foo in bar %}{% endif %}');
+            swig.compile('{% for foo in bar %}{% endif %}');
         }, Error);
         test.done();
     },
@@ -42,9 +42,9 @@ exports.Errors = testCase({
             }}
         });
 
-        var tmpl8 = swig.fromString('{% foobar %}');
+        var tmpl8 = swig.compile('{% foobar %}');
         test.doesNotThrow(function () {
-            tmpl8.render({});
+            tmpl8({});
         }, Error);
         test.done();
     }
@@ -58,14 +58,14 @@ exports.Variables = testCase({
             }
         }});
 
-        var tmpl8 = swig.fromString('{{ asdf|lower }}');
-        test.strictEqual(tmpl8.render({ asdf: 'BLAH' }), 'blah');
+        var tmpl8 = swig.compile('{{ asdf|lower }}');
+        test.strictEqual(tmpl8({ asdf: 'BLAH' }), 'blah');
 
-        tmpl8 = swig.fromString('{{ date|date("F jS, Y") }}');
-        test.strictEqual(tmpl8.render({ date: new Date(2011, 8, 24) }), 'September 24th, 2011');
+        tmpl8 = swig.compile('{{ date|date("F jS, Y") }}');
+        test.strictEqual(tmpl8({ date: new Date(2011, 8, 24) }), 'September 24th, 2011');
 
-        tmpl8 = swig.fromString("{{ date|date('F jS, Y') }}");
-        test.strictEqual(tmpl8.render({ date: new Date(2011, 8, 24) }), 'September 24th, 2011');
+        tmpl8 = swig.compile("{{ date|date('F jS, Y') }}");
+        test.strictEqual(tmpl8({ date: new Date(2011, 8, 24) }), 'September 24th, 2011');
         test.done();
     },
 
@@ -76,25 +76,25 @@ exports.Variables = testCase({
             }
         }});
 
-        var tmpl8 = swig.fromString('{{ asdf|foo }}');
-        test.strictEqual(tmpl8.render({ asdf: 'blah' }), 'bar');
+        var tmpl8 = swig.compile('{{ asdf|foo }}');
+        test.strictEqual(tmpl8({ asdf: 'blah' }), 'bar');
         test.done();
     },
 
     'notation': function (test) {
         swig.init({});
 
-        var tmpl8 = swig.fromString('{{ a.b.c }}');
-        test.strictEqual(tmpl8.render({ a: { b: { c: 'hi' }} }), 'hi', 'dot notation');
+        var tmpl8 = swig.compile('{{ a.b.c }}');
+        test.strictEqual(tmpl8({ a: { b: { c: 'hi' }} }), 'hi', 'dot notation');
 
-        tmpl8 = swig.fromString('{{ a[0][1] }}');
-        test.strictEqual(tmpl8.render({ a: [['no', 'yes']] }), 'yes', 'array notation');
+        tmpl8 = swig.compile('{{ a[0][1] }}');
+        test.strictEqual(tmpl8({ a: [['no', 'yes']] }), 'yes', 'array notation');
 
-        tmpl8 = swig.fromString('{{ a[0].b[1] }}');
-        test.strictEqual(tmpl8.render({ a: [{ b: ['no', 'yes'] }] }), 'yes', 'mixed notation');
+        tmpl8 = swig.compile('{{ a[0].b[1] }}');
+        test.strictEqual(tmpl8({ a: [{ b: ['no', 'yes'] }] }), 'yes', 'mixed notation');
 
-        tmpl8 = swig.fromString('{{ a["b"].b[1] }}');
-        test.strictEqual(tmpl8.render({ a: { b: { b: ['no', 'yes'] }} }), 'yes', 'mixed notation');
+        tmpl8 = swig.compile('{{ a["b"].b[1] }}');
+        test.strictEqual(tmpl8({ a: { b: { b: ['no', 'yes'] }} }), 'yes', 'mixed notation');
 
         test.done();
     }
@@ -103,8 +103,8 @@ exports.Variables = testCase({
 exports['double-escape forward-slash'] = function (test) {
     swig.init({});
 
-    var tpl = swig.fromString('foobar\\/');
-    test.strictEqual(tpl.render({}), 'foobar\\/');
+    var tpl = swig.compile('foobar\\/');
+    test.strictEqual(tpl({}), 'foobar\\/');
 
     test.done();
 };

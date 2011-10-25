@@ -22,12 +22,12 @@ Instead, you must always use `swig.fromString` and pre-parse all templates.
 
 In order to use `extends`, `import`, and `include` correctly, another argument is available on `swig.fromString`: `templateKey`
 
-    swig.fromString(templateString, templateKey);
+    swig.compile(templateString, { filename: templateKey });
 
 This is the key that will be used to lookup a template. For instance:
 
-    var template = swig.fromString('<p>{% block content %}{% endblock %}</p>', 'main');
-    var mypage = swig.fromString('{% extends "main" %}{% block content %}Oh hey there!{% endblock %}');
+    var template = swig.compile('<p>{% block content %}{% endblock %}</p>', { filename: 'main' });
+    var mypage = swig.compile('{% extends "main" %}{% block content %}Oh hey there!{% endblock %}', { filename: 'mypage' });
 
 When you render mypage, `mypage.render({});`, you will see
 
