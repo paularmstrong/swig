@@ -97,37 +97,6 @@ function createTemplate(data, id) {
     return template;
 }
 
-exports.fromFile = function (filepath) {
-    if (filepath[0] === '/') {
-        filepath = filepath.substr(1);
-    }
-
-    if (CACHE.hasOwnProperty(filepath)) {
-        return CACHE[filepath];
-    }
-
-    if (typeof window !== 'undefined') {
-        throw new TemplateError({ stack: 'You must pre-compile all templates in-browser. Use `swig.compile(template);`.' });
-    }
-
-    var get = function () {
-        var file = ((/^\//).test(filepath)) ? filepath : _config.root + '/' + filepath,
-            data = fs.readFileSync(file, config.encoding);
-        CACHE[filepath] = createTemplate(data, filepath);
-    };
-
-    if (_config.allowErrors) {
-        get();
-    } else {
-        try {
-            get();
-        } catch (error) {
-            CACHE[filepath] = new TemplateError(error);
-        }
-    }
-    return CACHE[filepath];
-};
-
 function getTemplate(source, options) {
     var key = options.filename || source;
     if (_config.cache || options.cache) {
@@ -141,9 +110,42 @@ function getTemplate(source, options) {
     return createTemplate(source, key);
 }
 
+exports.fromFile = function (filepath) {
+    var tpl, get;
+
+    if (filepath[0] === '/') {
+        filepath = filepath.substr(1);
+    }
+
+    if (_config.cache && CACHE.hasOwnProperty(filepath)) {
+        return CACHE[filepath];
+    }
+
+    if (typeof window !== 'undefined') {
+        throw new TemplateError({ stack: 'You must pre-compile all templates in-browser. Use `swig.compile(template);`.' });
+    }
+
+    get = function () {
+        var file = ((/^\//).test(filepath)) ? filepath : _config.root + '/' + filepath,
+            data = fs.readFileSync(file, config.encoding);
+        tpl = getTemplate(data, { filename: filepath });
+    };
+
+    if (_config.allowErrors) {
+        get();
+    } else {
+        try {
+            get();
+        } catch (error) {
+            tpl = new TemplateError(error);
+        }
+    }
+    return tpl;
+};
+
 exports.fromString = function (string, name) {
     console.warn('[WARNING] "swig.fromString" is deprecated. Use "swig.compile" instead.');
-    return getTemplate(string, name);
+    return exports.compile(string, { filename: name });
 };
 
 exports.compile = function (source, options) {

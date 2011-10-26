@@ -80,10 +80,11 @@ exports['extends'] = testCase({
         if (typeof window !== 'undefined') {
             swig.compile(this.extends_base, { filename: 'extends_base.html' });
             tpl = swig.compile(this.extends1, { filename: 'extends1.html' });
+            test.strictEqual('This is from the "extends_base.html" template.\n\n\n  This is the "extends_1.html" content in block \'one\'\n\n\n  This is the default content in block \'two\'\n', tpl({}));
         } else {
             tpl = swig.fromFile('extends_1.html');
+            test.strictEqual('This is from the "extends_base.html" template.\n\n\n  This is the "extends_1.html" content in block \'one\'\n\n\n  This is the default content in block \'two\'\n', tpl.render({}));
         }
-        test.strictEqual('This is from the "extends_base.html" template.\n\n\n  This is the "extends_1.html" content in block \'one\'\n\n\n  This is the default content in block \'two\'\n', tpl.render({}));
         test.done();
     },
 
@@ -112,7 +113,7 @@ exports.include = testCase({
 
     basic: function (test) {
         if (typeof window !== 'undefined') {
-            swig.compile('{{array.length}}', 'included_2.html');
+            swig.compile('{{array.length}}', { filename: 'included_2.html' });
         }
         var tmpl8 = swig.compile('{% include "included_2.html" %}');
         test.strictEqual(tmpl8({ array: ['foo'] }), '1');
@@ -121,7 +122,7 @@ exports.include = testCase({
 
     variable: function (test) {
         if (typeof window !== 'undefined') {
-            swig.compile('{{array.length}}', 'included_2.html');
+            swig.compile('{{array.length}}', { filename: 'included_2.html' });
         }
         var tmpl8 = swig.compile('{% include inc %}');
         test.strictEqual(tmpl8({ inc: 'included_2.html', array: ['foo'] }), '1');
