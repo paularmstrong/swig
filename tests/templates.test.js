@@ -19,9 +19,9 @@ exports.Errors = testCase({
             }}
         });
 
-        var tmpl8 = swig.compile('{% foo %}');
+        var tpl = swig.compile('{% foo %}');
         test.throws(function () {
-            tmpl8({});
+            tpl({});
         }, Error);
         test.done();
     },
@@ -42,9 +42,9 @@ exports.Errors = testCase({
             }}
         });
 
-        var tmpl8 = swig.compile('{% foobar %}');
+        var tpl = swig.compile('{% foobar %}');
         test.doesNotThrow(function () {
-            tmpl8({});
+            tpl({});
         }, Error);
         test.done();
     }
@@ -58,14 +58,14 @@ exports.Variables = testCase({
             }
         }});
 
-        var tmpl8 = swig.compile('{{ asdf|lower }}');
-        test.strictEqual(tmpl8({ asdf: 'BLAH' }), 'blah');
+        var tpl = swig.compile('{{ asdf|lower }}');
+        test.strictEqual(tpl({ asdf: 'BLAH' }), 'blah');
 
-        tmpl8 = swig.compile('{{ date|date("F jS, Y") }}');
-        test.strictEqual(tmpl8({ date: new Date(2011, 8, 24) }), 'September 24th, 2011');
+        tpl = swig.compile('{{ date|date("F jS, Y") }}');
+        test.strictEqual(tpl({ date: new Date(2011, 8, 24) }), 'September 24th, 2011');
 
-        tmpl8 = swig.compile("{{ date|date('F jS, Y') }}");
-        test.strictEqual(tmpl8({ date: new Date(2011, 8, 24) }), 'September 24th, 2011');
+        tpl = swig.compile("{{ date|date('F jS, Y') }}");
+        test.strictEqual(tpl({ date: new Date(2011, 8, 24) }), 'September 24th, 2011');
         test.done();
     },
 
@@ -76,25 +76,25 @@ exports.Variables = testCase({
             }
         }});
 
-        var tmpl8 = swig.compile('{{ asdf|foo }}');
-        test.strictEqual(tmpl8({ asdf: 'blah' }), 'bar');
+        var tpl = swig.compile('{{ asdf|foo }}');
+        test.strictEqual(tpl({ asdf: 'blah' }), 'bar');
         test.done();
     },
 
     'notation': function (test) {
         swig.init({});
 
-        var tmpl8 = swig.compile('{{ a.b.c }}');
-        test.strictEqual(tmpl8({ a: { b: { c: 'hi' }} }), 'hi', 'dot notation');
+        var tpl = swig.compile('{{ a.b.c }}');
+        test.strictEqual(tpl({ a: { b: { c: 'hi' }} }), 'hi', 'dot notation');
 
-        tmpl8 = swig.compile('{{ a[0][1] }}');
-        test.strictEqual(tmpl8({ a: [['no', 'yes']] }), 'yes', 'array notation');
+        tpl = swig.compile('{{ a[0][1] }}');
+        test.strictEqual(tpl({ a: [['no', 'yes']] }), 'yes', 'array notation');
 
-        tmpl8 = swig.compile('{{ a[0].b[1] }}');
-        test.strictEqual(tmpl8({ a: [{ b: ['no', 'yes'] }] }), 'yes', 'mixed notation');
+        tpl = swig.compile('{{ a[0].b[1] }}');
+        test.strictEqual(tpl({ a: [{ b: ['no', 'yes'] }] }), 'yes', 'mixed notation');
 
-        tmpl8 = swig.compile('{{ a["b"].b[1] }}');
-        test.strictEqual(tmpl8({ a: { b: { b: ['no', 'yes'] }} }), 'yes', 'mixed notation');
+        tpl = swig.compile('{{ a["b"].b[1] }}');
+        test.strictEqual(tpl({ a: { b: { b: ['no', 'yes'] }} }), 'yes', 'mixed notation');
 
         test.done();
     }

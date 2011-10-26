@@ -8,14 +8,14 @@ exports['custom tags'] =  function (test) {
                 return '__output += "hi!";';
             }
         },
-        tmpl8;
+        tpl;
 
     tags.foo.ends = true;
 
     swig.init({ tags: tags });
 
-    tmpl8 = swig.compile('{% foo %}{% endfoo %}');
-    test.strictEqual(tmpl8({}), 'hi!');
+    tpl = swig.compile('{% foo %}{% endfoo %}');
+    test.strictEqual(tpl({}), 'hi!');
     test.done();
 };
 
@@ -89,17 +89,17 @@ exports['extends'] = testCase({
     },
 
     circular: function (test) {
-        var tmpl8;
+        var tpl;
         if (typeof window !== 'undefined') {
             swig.init({ allowErrors: true });
             test.throws(function () {
                 swig.compile(this.circular1, { filename: 'extends_circular1.html' });
-                tmpl8 = swig.compile(this.circular2, { filename: 'extends_circular2.html' });
-                tmpl8();
+                tpl = swig.compile(this.circular2, { filename: 'extends_circular2.html' });
+                tpl();
             });
         } else {
-            tmpl8 = swig.fromFile('extends_circular1.html');
-            test.ok((/^<pre>Error: Circular extends found on line 3 of \"extends_circular1\.html\"\!/).test(tmpl8.render({})), 'throws an error');
+            tpl = swig.fromFile('extends_circular1.html');
+            test.ok((/^<pre>Error: Circular extends found on line 3 of \"extends_circular1\.html\"\!/).test(tpl.render({})), 'throws an error');
         }
         test.done();
     }
@@ -115,8 +115,8 @@ exports.include = testCase({
         if (typeof window !== 'undefined') {
             swig.compile('{{array.length}}', { filename: 'included_2.html' });
         }
-        var tmpl8 = swig.compile('{% include "included_2.html" %}');
-        test.strictEqual(tmpl8({ array: ['foo'] }), '1');
+        var tpl = swig.compile('{% include "included_2.html" %}');
+        test.strictEqual(tpl({ array: ['foo'] }), '1');
         test.done();
     },
 
@@ -124,8 +124,8 @@ exports.include = testCase({
         if (typeof window !== 'undefined') {
             swig.compile('{{array.length}}', { filename: 'included_2.html' });
         }
-        var tmpl8 = swig.compile('{% include inc %}');
-        test.strictEqual(tmpl8({ inc: 'included_2.html', array: ['foo'] }), '1');
+        var tpl = swig.compile('{% include inc %}');
+        test.strictEqual(tpl({ inc: 'included_2.html', array: ['foo'] }), '1');
         test.done();
     }
 });
@@ -179,18 +179,18 @@ exports['if'] = testCase({
     },
 
     'var literals in tags allow filters': function (test) {
-        var tmpl8 = swig.compile('{% if foo|length > 1 %}hi!{% endif %}');
-        test.strictEqual(tmpl8({ foo: [1, 2, 3] }), 'hi!');
+        var tpl = swig.compile('{% if foo|length > 1 %}hi!{% endif %}');
+        test.strictEqual(tpl({ foo: [1, 2, 3] }), 'hi!');
 
-        tmpl8 = swig.compile('{% if foo|length === bar|length %}hi!{% endif %}{% if foo|length !== bar|length %}fail{% endif %}');
-        test.strictEqual(tmpl8({ foo: [1, 2], bar: [3, 4] }), 'hi!');
+        tpl = swig.compile('{% if foo|length === bar|length %}hi!{% endif %}{% if foo|length !== bar|length %}fail{% endif %}');
+        test.strictEqual(tpl({ foo: [1, 2], bar: [3, 4] }), 'hi!');
         test.done();
     },
 
     'else': function (test) {
-        var tmpl8 = swig.compile('{% if foo|length > 1 %}hi!{% else %}nope{% endif %}');
-        test.strictEqual(tmpl8({ foo: [1, 2, 3] }), 'hi!');
-        test.strictEqual(tmpl8({ foo: [1] }), 'nope');
+        var tpl = swig.compile('{% if foo|length > 1 %}hi!{% else %}nope{% endif %}');
+        test.strictEqual(tpl({ foo: [1, 2, 3] }), 'hi!');
+        test.strictEqual(tpl({ foo: [1] }), 'nope');
 
         test.throws(function () {
             swig.compile('{% for i in foo %}hi!{% else %}nope{% endfor %}');
@@ -199,24 +199,24 @@ exports['if'] = testCase({
     },
 
     'else if': function (test) {
-        var tmpl8 = swig.compile('{% if foo|length > 2 %}foo{% else if foo|length < 2 %}bar{% endif %}');
-        test.strictEqual(tmpl8({ foo: [1, 2, 3] }), 'foo');
-        test.strictEqual(tmpl8({ foo: [1, 2] }), '');
-        test.strictEqual(tmpl8({ foo: [1] }), 'bar');
+        var tpl = swig.compile('{% if foo|length > 2 %}foo{% else if foo|length < 2 %}bar{% endif %}');
+        test.strictEqual(tpl({ foo: [1, 2, 3] }), 'foo');
+        test.strictEqual(tpl({ foo: [1, 2] }), '');
+        test.strictEqual(tpl({ foo: [1] }), 'bar');
 
-        tmpl8 = swig.compile('{% if foo %}foo{% else if bar && baz %}bar{% endif %}');
-        test.strictEqual(tmpl8({ bar: true, baz: true }), 'bar');
+        tpl = swig.compile('{% if foo %}foo{% else if bar && baz %}bar{% endif %}');
+        test.strictEqual(tpl({ bar: true, baz: true }), 'bar');
 
         test.done();
     },
 
     'multiple else if and else': function (test) {
-        var tmpl8 = swig.compile('{% if foo %}foo{% else if bar === "bar" %}bar{% else if 3 in baz %}baz{% else %}bop{% endif %}');
-        test.strictEqual(tmpl8({ foo: true }), 'foo');
-        test.strictEqual(tmpl8({ bar: "bar" }), 'bar');
-        test.strictEqual(tmpl8({ baz: [3] }), 'baz');
-        test.strictEqual(tmpl8({ baz: [2] }), 'bop');
-        test.strictEqual(tmpl8({ bar: false }), 'bop');
+        var tpl = swig.compile('{% if foo %}foo{% else if bar === "bar" %}bar{% else if 3 in baz %}baz{% else %}bop{% endif %}');
+        test.strictEqual(tpl({ foo: true }), 'foo');
+        test.strictEqual(tpl({ bar: "bar" }), 'bar');
+        test.strictEqual(tpl({ baz: [3] }), 'baz');
+        test.strictEqual(tpl({ baz: [2] }), 'bop');
+        test.strictEqual(tpl({ bar: false }), 'bop');
 
         test.done();
     }
@@ -229,47 +229,47 @@ exports['for'] = testCase({
     },
 
     basic: function (test) {
-        var tmpl8 = swig.compile('{% for foo in bar %}{{ foo }}, {% endfor %}');
-        test.strictEqual(tmpl8({ bar: ['foo', 'bar', 'baz'] }), 'foo, bar, baz, ', 'array loop');
-        test.strictEqual(tmpl8({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), 'foo, bar, baz, ', 'object loop');
+        var tpl = swig.compile('{% for foo in bar %}{{ foo }}, {% endfor %}');
+        test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), 'foo, bar, baz, ', 'array loop');
+        test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), 'foo, bar, baz, ', 'object loop');
         test.done();
     },
 
     variables: function (test) {
-        var tmpl8 = swig.compile('{% for foo in bar %}[{{ forloop.index }}, {{ forloop.key }}]{% endfor %}');
-        test.strictEqual(tmpl8({ bar: ['foo', 'bar', 'baz'] }), '[0, 0][1, 1][2, 2]', 'array loop');
-        test.strictEqual(tmpl8({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '[0, baz][1, pow][2, foo]', 'object loop');
+        var tpl = swig.compile('{% for foo in bar %}[{{ forloop.index }}, {{ forloop.key }}]{% endfor %}');
+        test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), '[0, 0][1, 1][2, 2]', 'array loop');
+        test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '[0, baz][1, pow][2, foo]', 'object loop');
         test.done();
     },
 
     index: function (test) {
-        var tmpl8 = swig.compile('{% for foo in bar %}{{ forloop.index }}{% endfor %}');
-        test.strictEqual(tmpl8({ bar: ['foo', 'bar', 'baz'] }), '012', 'index in object');
-        test.strictEqual(tmpl8({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '012', 'index in object');
+        var tpl = swig.compile('{% for foo in bar %}{{ forloop.index }}{% endfor %}');
+        test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), '012', 'index in object');
+        test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '012', 'index in object');
         test.done();
     },
 
     first: function (test) {
-        var tmpl8 = swig.compile('{% for foo in bar %}{% if forloop.first %}{{ foo }}{% endif %}{% endfor %}');
-        test.strictEqual(tmpl8({ bar: ['foo', 'bar', 'baz'] }), 'foo', 'first in array');
-        test.strictEqual(tmpl8({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), 'foo', 'first in object');
+        var tpl = swig.compile('{% for foo in bar %}{% if forloop.first %}{{ foo }}{% endif %}{% endfor %}');
+        test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), 'foo', 'first in array');
+        test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), 'foo', 'first in object');
         test.done();
     },
 
     last: function (test) {
-        var tmpl8 = swig.compile('{% for foo in bar %}{% if forloop.last %}{{ foo }}{% endif %}{% endfor %}');
-        test.strictEqual(tmpl8({ bar: ['foo', 'bar', 'baz'] }), 'baz', 'last in array');
-        test.strictEqual(tmpl8({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), 'baz', 'last in object');
+        var tpl = swig.compile('{% for foo in bar %}{% if forloop.last %}{{ foo }}{% endif %}{% endfor %}');
+        test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), 'baz', 'last in array');
+        test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), 'baz', 'last in object');
         test.done();
     },
 
     empty: function (test) {
-        var tmpl8 = swig.compile('{% for foo in bar %}blah{% empty %}hooray!{% endfor %}');
-        test.strictEqual(tmpl8({ bar: [] }), 'hooray!', 'empty in array');
-        test.strictEqual(tmpl8({ bar: {}}), 'hooray!', 'empty in object');
+        var tpl = swig.compile('{% for foo in bar %}blah{% empty %}hooray!{% endfor %}');
+        test.strictEqual(tpl({ bar: [] }), 'hooray!', 'empty in array');
+        test.strictEqual(tpl({ bar: {}}), 'hooray!', 'empty in object');
 
-        test.strictEqual(tmpl8({ bar: [1] }), 'blah', 'not empty in array');
-        test.strictEqual(tmpl8({ bar: { foo: 'foo' }}), 'blah', 'not empty in object');
+        test.strictEqual(tpl({ bar: [1] }), 'blah', 'not empty in array');
+        test.strictEqual(tpl({ bar: { foo: 'foo' }}), 'blah', 'not empty in object');
 
         test.throws(function () {
             swig.compile('{% if foo %}hi!{% empty %}nope{% endif %}');
@@ -278,8 +278,8 @@ exports['for'] = testCase({
     },
 
     'loop object allows filters': function (test) {
-        var tmpl8 = swig.compile('{% for foo in bar|reverse %}{{ foo }}{% endfor %}');
-        test.strictEqual(tmpl8({ bar: ['baz', 'bar', 'foo'] }), 'foobarbaz');
+        var tpl = swig.compile('{% for foo in bar|reverse %}{{ foo }}{% endfor %}');
+        test.strictEqual(tpl({ bar: ['baz', 'bar', 'foo'] }), 'foobarbaz');
         test.done();
     }
 });
@@ -291,26 +291,26 @@ exports.set = testCase({
     },
 
     basic: function (test) {
-        var tmpl8 = swig.compile('{% set foo = "bar" %} {{ foo }}');
-        test.strictEqual(tmpl8({}), ' bar');
+        var tpl = swig.compile('{% set foo = "bar" %} {{ foo }}');
+        test.strictEqual(tpl({}), ' bar');
         test.done();
     },
 
     'from var': function (test) {
-        var tmpl8 = swig.compile('{% set foo = bar|lower %} {{ foo }}');
-        test.strictEqual(tmpl8({ bar: 'BAR' }), ' bar');
+        var tpl = swig.compile('{% set foo = bar|lower %} {{ foo }}');
+        test.strictEqual(tpl({ bar: 'BAR' }), ' bar');
         test.done();
     },
 
     'array': function (test) {
-        var tmpl8 = swig.compile('{% set foo = ["hi", "bye"] %} {{ foo[0] }}');
-        test.strictEqual(tmpl8({}), ' hi');
+        var tpl = swig.compile('{% set foo = ["hi", "bye"] %} {{ foo[0] }}');
+        test.strictEqual(tpl({}), ' hi');
         test.done();
     },
 
     'object': function (test) {
-        var tmpl8 = swig.compile('{% set foo = { bar: "bar" } %} {{ foo.bar }}');
-        test.strictEqual(tmpl8({}), ' bar');
+        var tpl = swig.compile('{% set foo = { bar: "bar" } %} {{ foo.bar }}');
+        test.strictEqual(tpl({}), ' bar');
         test.done();
     }
 });
@@ -322,26 +322,26 @@ exports.macro = testCase({
     },
 
     basic: function (test) {
-        var tmpl8 = swig.compile('{% macro foo %}hi!{% endmacro %}oh, {{ foo }}');
-        test.strictEqual(tmpl8({}), 'oh, hi!');
+        var tpl = swig.compile('{% macro foo %}hi!{% endmacro %}oh, {{ foo }}');
+        test.strictEqual(tpl({}), 'oh, hi!');
         test.done();
     },
 
     args: function (test) {
-        var tmpl8 = swig.compile('{% macro foo input %}{{ input }}{% endmacro %}oh, {{ foo("yep") }}');
-        test.strictEqual(tmpl8({}), 'oh, yep');
+        var tpl = swig.compile('{% macro foo input %}{{ input }}{% endmacro %}oh, {{ foo("yep") }}');
+        test.strictEqual(tpl({}), 'oh, yep');
         test.done();
     },
 
     complex: function (test) {
-        var tmpl8 = swig.compile([
+        var tpl = swig.compile([
             '{% macro input type name id label value %}',
             '<label for="{{ name }}">{{ label }}</label>',
             '<input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}">',
             '{% endmacro %}',
             '{{ input("text", "person", person.id, "Your Name") }}'
         ].join(''));
-        test.strictEqual(tmpl8({
+        test.strictEqual(tpl({
             person: { id: 'asdf', name: 'Paul' }
         }), '<label for="person">Your Name</label><input type="text" name="person" id="asdf" value="">');
         test.done();
