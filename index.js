@@ -6,9 +6,9 @@ var fs = require('fs'),
     filters = require('./lib/filters'),
     helpers = require('./lib/helpers'),
 
-    _ = require('underscore');
+    _ = require('underscore'),
 
-var config = {
+    config = {
         allowErrors: false,
         autoescape: true,
         cache: true,
