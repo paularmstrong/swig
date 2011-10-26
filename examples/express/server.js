@@ -12,7 +12,8 @@ swig.init({ root: __dirname + '/views', allowErrors: true });
 app.set('views', __dirname + '/views');
 
 // Make sure you aren't using Express's built-in layout extending
-app.set('view options', { layout: false });
+// app.set('view options', { layout: false });
+app.set('view cache', true);
 
 app.get('/', function (req, res) {
     res.render('index', {});

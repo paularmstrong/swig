@@ -15,7 +15,7 @@
         "underscore": ">=1.1.7"
     },
     "devDependencies": {
-        "express": ">=2.4.0",
+        "express": ">=2.5.0",
         "nodelint": ">=0.5.1",
         "nodeunit": ">=0.5.5",
         "uglify-js": ">=1.1.0"

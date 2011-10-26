@@ -37,7 +37,7 @@ function TemplateError(error) {
 function createTemplate(data, id) {
     var template = {
             // Allows us to include templates from the compiled code
-            fromFile: exports.fromFile,
+            compileFile: exports.compileFile,
             // These are the blocks inside the template
             blocks: {},
             // Distinguish from other tokens
@@ -110,7 +110,7 @@ function getTemplate(source, options) {
     return createTemplate(source, key);
 }
 
-exports.fromFile = function (filepath) {
+exports.compileFile = function (filepath) {
     var tpl, get;
 
     if (filepath[0] === '/') {

@@ -82,7 +82,7 @@ exports['extends'] = testCase({
             tpl = swig.compile(this.extends1, { filename: 'extends1.html' });
             test.strictEqual('This is from the "extends_base.html" template.\n\n\n  This is the "extends_1.html" content in block \'one\'\n\n\n  This is the default content in block \'two\'\n', tpl({}));
         } else {
-            tpl = swig.fromFile('extends_1.html');
+            tpl = swig.compileFile('extends_1.html');
             test.strictEqual('This is from the "extends_base.html" template.\n\n\n  This is the "extends_1.html" content in block \'one\'\n\n\n  This is the default content in block \'two\'\n', tpl.render({}));
         }
         test.done();
@@ -98,7 +98,7 @@ exports['extends'] = testCase({
                 tpl();
             });
         } else {
-            tpl = swig.fromFile('extends_circular1.html');
+            tpl = swig.compileFile('extends_circular1.html');
             test.ok((/^<pre>Error: Circular extends found on line 3 of \"extends_circular1\.html\"\!/).test(tpl.render({})), 'throws an error');
         }
         test.done();

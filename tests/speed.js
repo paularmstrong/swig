@@ -59,9 +59,9 @@ console.timeEnd('Compile one template 1000 times');
 console.log("    ~ " + Math.round(1000000 / (new Date() - d)) + " renders per sec.");
 
 array = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], { af: "s", baz: "d", d: "f" }, "zeus"];
-tplF = swig.fromFile("include_base.html");
-swig.fromFile("included_2.html");
-swig.fromFile("included.html");
+tplF = swig.compileFile("include_base.html");
+swig.compileFile("included_2.html");
+swig.compileFile("included.html");
 
 i = 1000;
 console.time('Render 1000 Includes Templates');
@@ -73,9 +73,9 @@ while (i) {
 console.timeEnd('Render 1000 Includes Templates');
 console.log("    ~ " + Math.round(1000000 / (new Date() - d)) + " renders per sec.");
 
-swig.fromFile("extends_base.html");
-swig.fromFile("extends_1.html");
-tplF = swig.fromFile("extends_2.html");
+swig.compileFile("extends_base.html");
+swig.compileFile("extends_1.html");
+tplF = swig.compileFile("extends_2.html");
 
 i = 1000;
 console.time('Render 1000 Extends Templates');
