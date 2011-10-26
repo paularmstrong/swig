@@ -143,11 +143,6 @@ exports.compileFile = function (filepath) {
     return tpl;
 };
 
-exports.fromString = function (string, name) {
-    console.warn('[WARNING] "swig.fromString" is deprecated. Use "swig.compile" instead.');
-    return exports.compile(string, { filename: name });
-};
-
 exports.compile = function (source, options) {
     options = options || {};
     var tmpl = getTemplate(source, options || {});
@@ -155,9 +150,4 @@ exports.compile = function (source, options) {
     return function (source, options) {
         return tmpl.render(source, options);
     };
-};
-
-exports.render = function (source, options) {
-    var template = exports.compile(source, options);
-    return template(options.locals || {});
 };
