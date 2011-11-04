@@ -1,4 +1,4 @@
-[0.8.0](https://github.com/paularmstrong/swig/tree/v0.8.0) / 2011-10-05
+[0.8.0](https://github.com/paularmstrong/swig/tree/v0.8.0) / 2011-11-04
 -----------------------------------------------------------------------
 
 * **Added** date filter formats `z`, `W`, `t`, `L`, `o`, `B`, and `c`.
