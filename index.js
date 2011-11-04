@@ -6,11 +6,12 @@ var fs = require('fs'),
     filters = require('./lib/filters'),
     helpers = require('./lib/helpers'),
 
-    _ = require('underscore');
+    _ = require('underscore'),
 
-var config = {
+    config = {
         allowErrors: false,
         autoescape: true,
+        cache: true,
         encoding: 'utf8',
         filters: filters,
         root: '/',
@@ -21,6 +22,7 @@ var config = {
 
 // Call this before using the templates
 exports.init = function (options) {
+    CACHE = {};
     _config = _.extend({}, config, options);
     _config.filters = _.extend(filters, options.filters);
     _config.tags = _.extend(tags, options.tags);
@@ -35,7 +37,7 @@ function TemplateError(error) {
 function createTemplate(data, id) {
     var template = {
             // Allows us to include templates from the compiled code
-            fromFile: exports.fromFile,
+            compileFile: exports.compileFile,
             // These are the blocks inside the template
             blocks: {},
             // Distinguish from other tokens
@@ -95,23 +97,38 @@ function createTemplate(data, id) {
     return template;
 }
 
-exports.fromFile = function (filepath) {
+function getTemplate(source, options) {
+    var key = options.filename || source;
+    if (_config.cache || options.cache) {
+        if (!CACHE.hasOwnProperty(key)) {
+            CACHE[key] = createTemplate(source, key);
+        }
+
+        return CACHE[key];
+    }
+
+    return createTemplate(source, key);
+}
+
+exports.compileFile = function (filepath) {
+    var tpl, get;
+
     if (filepath[0] === '/') {
         filepath = filepath.substr(1);
     }
 
-    if (CACHE.hasOwnProperty(filepath)) {
+    if (_config.cache && CACHE.hasOwnProperty(filepath)) {
         return CACHE[filepath];
     }
 
     if (typeof window !== 'undefined') {
-        throw new TemplateError({ stack: 'You must pre-compile all templates in-browser. Use `swig.fromString(template);`.' });
+        throw new TemplateError({ stack: 'You must pre-compile all templates in-browser. Use `swig.compile(template);`.' });
     }
 
-    var get = function () {
+    get = function () {
         var file = ((/^\//).test(filepath)) ? filepath : _config.root + '/' + filepath,
             data = fs.readFileSync(file, config.encoding);
-        CACHE[filepath] = createTemplate(data, filepath);
+        tpl = getTemplate(data, { filename: filepath });
     };
 
     if (_config.allowErrors) {
@@ -120,34 +137,17 @@ exports.fromFile = function (filepath) {
         try {
             get();
         } catch (error) {
-            CACHE[filepath] = new TemplateError(error);
+            tpl = new TemplateError(error);
         }
     }
-    return CACHE[filepath];
+    return tpl;
 };
 
-exports.fromString = function (string, name) {
-    var key = name || string;
-    if (!CACHE.hasOwnProperty(key)) {
-        CACHE[key] = createTemplate(string, key);
-    }
+exports.compile = function (source, options) {
+    options = options || {};
+    var tmpl = getTemplate(source, options || {});
 
-    return CACHE[key];
-};
-
-exports.compile = function (source, options, callback) {
-    var self = this;
-    if (typeof source === 'string') {
-        return function (options) {
-            var tmpl = exports.fromString(source);
-            return tmpl.render(options);
-        };
-    } else {
-        return source;
-    }
-};
-
-exports.render = function (template, options) {
-    template = exports.compile(template, options);
-    return template(options);
+    return function (source, options) {
+        return tmpl.render(source, options);
+    };
 };

@@ -42,7 +42,7 @@ Basic Example
 ### node.js code
 
     var template  = require('swig');
-    var tmpl = template.fromFile('/path/to/template.html');
+    var tmpl = template.compileFile('/path/to/template.html');
     tmpl.render({
         pagename: 'awesome people',
         authors: ['Paul', 'Jim', 'Jane']

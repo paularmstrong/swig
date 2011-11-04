@@ -16,18 +16,18 @@ You should only need one of these. If you already include _underscore.js_ in you
 
 ## The API <a name="api" href="#api">#</a>
 
-Swig's API in the browser is the same as [its API for node.js](getting-started.md), with the only difference being that you cannot use the `swig.fromFile` method, since browsers do not have a filesystem.
+Swig's API in the browser is the same as [its API for node.js](getting-started.md), with the only difference being that you cannot use the `swig.compileFile` method, since browsers do not have a filesystem.
 
 Instead, you must always use `swig.fromString` and pre-parse all templates.
 
 In order to use `extends`, `import`, and `include` correctly, another argument is available on `swig.fromString`: `templateKey`
 
-    swig.fromString(templateString, templateKey);
+    swig.compile(templateString, { filename: templateKey });
 
 This is the key that will be used to lookup a template. For instance:
 
-    var template = swig.fromString('<p>{% block content %}{% endblock %}</p>', 'main');
-    var mypage = swig.fromString('{% extends "main" %}{% block content %}Oh hey there!{% endblock %}');
+    var template = swig.compile('<p>{% block content %}{% endblock %}</p>', { filename: 'main' });
+    var mypage = swig.compile('{% extends "main" %}{% block content %}Oh hey there!{% endblock %}', { filename: 'mypage' });
 
 When you render mypage, `mypage.render({});`, you will see
 

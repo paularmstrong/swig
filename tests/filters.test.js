@@ -3,8 +3,8 @@ var swig = require('../index');
 swig.init({});
 
 function testFilter(test, filter, input, output, message) {
-    var tpl = swig.fromString('{{ v|' + filter + ' }}');
-    test.strictEqual(tpl.render(input), output, message);
+    var tpl = swig.compile('{{ v|' + filter + ' }}');
+    test.strictEqual(tpl(input), output, message);
 }
 
 exports.add = function (test) {
@@ -34,7 +34,7 @@ exports.capitalize = function (test) {
 
 exports.date = function (test) {
     var date = new Date(2011, 8, 6, 9, 5, 2),
-        tpl = swig.fromString('{{ d|date("d") }}');
+        tpl = swig.compile('{{ d|date("d") }}');
 
     function testFormat(format, expected) {
         testFilter(test, 'date("' + format + '")', { v: date }, expected);

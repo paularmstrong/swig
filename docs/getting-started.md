@@ -45,7 +45,7 @@ Use this to set any custom filters and/or override any of the built-in filters. 
 
 #### root _optional_
 
-The directory to search for templates. If a template passed to `swig.fromFile` is an absolute path (starts with `/`), Swig will not look in the template root.
+The directory to search for templates. If a template passed to `swig.compileFile` is an absolute path (starts with `/`), Swig will not look in the template root.
 
 #### tags _optional_
 
@@ -56,13 +56,18 @@ Parsing a Template <a name="parsing" href="#parsing">#</a>
 
 You have 2 methods for creating a template object:
 
-    swig.fromFile("path/to/template/file.html");
-    swig.fromString("Template string here");
+    swig.compileFile("path/to/template/file.html");
+    swig.compile("Template string here", { filename: 'templateKey' });
 
 Rendering a Template <a name="rendering" href="#rendering">#</a>
 --------------------
 
 Both of these methods will give you a template object on which you call the render method passing it a map of context values.
 
-    var tpl = swig.fromFile("path/to/template/file.html");
+    var tpl = swig.compileFile("path/to/template/file.html");
     var renderedHtml = tpl.render({ vars: 'to be inserted in template' });
+
+OR
+
+    var tpl = swig.compile("path/to/template/file.html");
+    var renderedHtml = tpl({ vars: 'to be inserted in template' });

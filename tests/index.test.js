@@ -1,7 +1,7 @@
 var swig = require('../index'),
     testCase = require('nodeunit').testCase;
 
-exports.fromFile = testCase({
+exports.compileFile = testCase({
     setUp: function (callback) {
         callback();
     },
@@ -12,7 +12,7 @@ exports.fromFile = testCase({
             allowErrors: true
         });
 
-        var tpl = swig.fromFile('included_2.html');
+        var tpl = swig.compileFile('included_2.html');
         test.strictEqual('2', tpl.render({ array: [1, 1] }), 'from file is a-ok');
         test.done();
     },
@@ -22,9 +22,9 @@ exports.fromFile = testCase({
             root: __dirname + '/templates',
             allowErrors: false
         });
-        var tpl = swig.fromFile('foobar.html');
+        var tpl = swig.compileFile('foobar.html');
         test.ok((/<pre>Error\: ENOENT, No such file or directory/).test(tpl.render()), 'pushes a render function with the error');
-        tpl = swig.fromFile('includes_notfound.html');
+        tpl = swig.compileFile('includes_notfound.html');
         test.ok((/<pre>Error\: ENOENT, No such file or directory/).test(tpl.render()), 'renders the error when includes a file that is not found');
 
         test.done();
@@ -33,7 +33,7 @@ exports.fromFile = testCase({
     'allowErrors = true': function (test) {
         swig.init({ allowErrors: true });
         test.throws(function () {
-            swig.fromFile('barfoo.html');
+            swig.compileFile('barfoo.html');
         }, 'throws when allowErrors is true');
 
         test.done();
@@ -44,7 +44,7 @@ exports.fromFile = testCase({
             root: __dirname + '/foobar',
             allowErrors: true
         });
-        var tpl = swig.fromFile('/' + __dirname + '/templates/included_2.html');
+        var tpl = swig.compileFile('/' + __dirname + '/templates/included_2.html');
         test.strictEqual('2', tpl.render({ array: [1, 1] }), 'file from absolute path is a-ok');
         test.done();
     },
@@ -53,7 +53,7 @@ exports.fromFile = testCase({
         swig.init({});
         global.window = true;
         test.throws(function () {
-            swig.fromFile('foobar');
+            swig.compileFile('foobar');
         });
         delete global.window;
         test.done();

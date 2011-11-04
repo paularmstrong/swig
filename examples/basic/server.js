@@ -6,7 +6,7 @@ swig.init({
 });
 
 http.createServer(function (req, res) {
-    var tmpl = swig.fromFile('page.html'),
+    var tmpl = swig.compileFile('page.html'),
         renderedHtml = tmpl.render({
             people: [
                 { name: 'Paul', age: 28 },
