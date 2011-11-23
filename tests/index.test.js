@@ -23,9 +23,9 @@ exports.compileFile = testCase({
             allowErrors: false
         });
         var tpl = swig.compileFile('foobar.html');
-        test.ok((/<pre>Error\: ENOENT, No such file or directory/).test(tpl.render()), 'pushes a render function with the error');
+        test.ok((/<pre>Error\: ENOENT, no such file or directory/i).test(tpl.render()), 'pushes a render function with the error');
         tpl = swig.compileFile('includes_notfound.html');
-        test.ok((/<pre>Error\: ENOENT, No such file or directory/).test(tpl.render()), 'renders the error when includes a file that is not found');
+        test.ok((/<pre>Error\: ENOENT, no such file or directory/i).test(tpl.render()), 'renders the error when includes a file that is not found');
 
         test.done();
     },
