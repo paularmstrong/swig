@@ -37,7 +37,7 @@
 
             function fixExec() {
                 var i = 1;
-                for (; i < arguments.length - 2; i += 1) {
+                for (i; i < arguments.length - 2; i += 1) {
                     if (arguments[i] === undefined) {
                         match[i] = undefined;
                     }
