@@ -9,6 +9,7 @@ function testFilter(test, filter, input, output, message) {
 
 exports.add = function (test) {
     testFilter(test, 'add(2)', { v: 1 }, '3', 'add numbers');
+    testFilter(test, 'add(2)', { v: '1' }, '12', 'string number is not real number');
     testFilter(test, 'add([3, 4])', { v: [1, 2] }, '1,2,3,4', 'arrays add from literal');
     testFilter(test, 'add(b)', { v: [1, 2], b: [3, 4] }, '1,2,3,4', 'arrays add from var');
     testFilter(test, 'add(2)', { v: 'foo' }, 'foo2', 'string var turns addend into a string');
