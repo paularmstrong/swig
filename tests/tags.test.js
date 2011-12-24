@@ -394,3 +394,16 @@ exports.filter = testCase({
         test.done();
     }
 });
+
+exports.raw = testCase({
+    setUp: function (callback) {
+        swig.init({});
+        callback();
+    },
+
+    basic: function (test) {
+        var tpl = swig.compile('{% raw %}{{ foo }}{% if foo %}{{ foo }}{% endif %}{% endraw %}');
+        test.strictEqual(tpl({ foo: 'foo' }), 'foofoo');
+        test.done();
+    }
+});
