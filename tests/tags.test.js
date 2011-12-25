@@ -402,8 +402,16 @@ exports.raw = testCase({
     },
 
     basic: function (test) {
-        var tpl = swig.compile('{% raw %}{{ foo }}{% if foo %}{{ foo }}{% endif %}{% endraw %}');
-        test.strictEqual(tpl({ foo: 'foo' }), 'foofoo');
+        var input = '{{ foo }} {% set bar = "foo" %}{% if foo %}blah: {{ foo }} {% block foobar %}{{ foo }}{% endblock %}{% endif %}',
+            tpl = swig.compile('{% raw %}' + input + '{% endraw %}');
+        test.strictEqual(tpl({ foo: 'foo' }), input);
         test.done();
-    }
+    },
+
+    'new lines': function (test) {
+        var input = '\n{{ foo }}\n',
+            tpl = swig.compile('{% raw %}' + input + '{% endraw %}');
+        test.strictEqual(tpl({}), input);
+        test.done();
+    },
 });
