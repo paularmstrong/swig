@@ -403,7 +403,7 @@ exports.raw = testCase({
 
     basic: function (test) {
         var input = '{{ foo }} {% set bar = "foo" %}{% if foo %}blah: {{ foo }} {% block foobar %}{{ foo }}{% endblock %}{% endif %}',
-            tpl = swig.compile('{% raw %}' + input + '{% endraw %}');
+            tpl = swig.compile('{%raw%}' + input + '{% endraw %}');
         test.strictEqual(tpl({ foo: 'foo' }), input);
         test.done();
     },
@@ -414,4 +414,12 @@ exports.raw = testCase({
         test.strictEqual(tpl({}), input);
         test.done();
     },
+
+    'non-conforming': function (test) {
+        var input = '{{ foo bar %} {% {#',
+            tpl = swig.compile('{% raw %}' + input + '{% endraw %}');
+
+        test.strictEqual(tpl({}), input);
+        test.done();
+    }
 });
