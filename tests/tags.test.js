@@ -397,7 +397,7 @@ exports.filter = testCase({
 
 exports.raw = testCase({
     setUp: function (callback) {
-        swig.init({});
+        swig.init({ allowErrors: true });
         callback();
     },
 
@@ -420,6 +420,13 @@ exports.raw = testCase({
             tpl = swig.compile('{% raw %}' + input + '{% endraw %}');
 
         test.strictEqual(tpl({}), input);
+        test.done();
+    },
+
+    'errors when no endraw tag found': function (test) {
+        test.throws(function () {
+            swig.compile('{% raw %}{{ foobar }}');
+        }, Error);
         test.done();
     }
 });
