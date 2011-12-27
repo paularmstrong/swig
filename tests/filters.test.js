@@ -79,6 +79,7 @@ exports.date = function (test) {
     testFormat('g', '9');
     testFormat('G', '9');
     testFormat('h', '09');
+    testFilter(test, 'date("h")', { v: new Date(2011, 0, 1, 10) }, '10');
     testFormat('H', '09');
     testFormat('i', '05');
     testFormat('s', '02');
