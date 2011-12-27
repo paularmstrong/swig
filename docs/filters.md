@@ -250,7 +250,7 @@ Convert a valid date into a format as specified. Mostly conforms to [php.net's d
         <tr>
             <th scope="row"><code>r</code></th>
             <td><a href="http://www.faqs.org/rfcs/rfc2822">RFC 2822</a> formatted date</td>
-            <td><samp>Sat, 10 Sep 2011 14:34:30 -0700</samp></td>
+            <td><samp>Tue, 06 Sep 2011 16:05:02 GMT</samp></td>
         </tr>
         <tr>
             <th scope="row"><code>U</code></th>

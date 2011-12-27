@@ -37,6 +37,8 @@ exports.date = function (test) {
     var date = new Date(2011, 8, 6, 9, 5, 2),
         tpl = swig.compile('{{ d|date("d") }}');
 
+    date.setUTCHours(16);
+
     function testFormat(format, expected) {
         testFilter(test, 'date("' + format + '")', { v: date }, expected);
     }
@@ -89,7 +91,7 @@ exports.date = function (test) {
 
     // Full Date/Time
     testFormat('c', '2011-09-06T16:05:02.000Z');
-    testFormat('r', 'Tue Sep 06 2011 09:05:02 GMT-0700 (PDT)');
+    testFormat('r', 'Tue, 06 Sep 2011 16:05:02 GMT');
     testFormat('U', '1315325102');
 
     test.done();
