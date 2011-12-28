@@ -1,6 +1,7 @@
-var swig = require('../index');
+var swig = require('../index'),
+    DateZ = require('../lib/dateformat').DateZ;
 
-swig.init({});
+swig.init({ allowErrors: true });
 
 function testFilter(test, filter, input, output, message) {
     var tpl = swig.compile('{{ v|' + filter + ' }}');
@@ -34,13 +35,13 @@ exports.capitalize = function (test) {
 };
 
 exports.date = function (test) {
-    var date = new Date(2011, 8, 6, 9, 5, 2),
-        tpl = swig.compile('{{ d|date("d") }}');
+    var date = new DateZ(2011, 8, 6, 9, 5, 2),
+        tpl = swig.compile('{{ d|date("d", 700, "PDT") }}');
 
-    date.setUTCHours(16);
+    date.setTimezoneOffset(700, 'PDT');
 
     function testFormat(format, expected) {
-        testFilter(test, 'date("' + format + '")', { v: date }, expected);
+        testFilter(test, 'date("' + format + '", 700, "PDT")', { v: date }, expected);
     }
     // Day
     testFormat('d', '06');
@@ -51,8 +52,8 @@ exports.date = function (test) {
     testFormat('S', 'th');
     testFormat('w', '1');
     testFormat('z', '248');
-    testFilter(test, 'date("z")', { v: new Date(2011, 0, 1) }, '0');
-    testFilter(test, 'date("z")', { v: new Date(2011, 11, 31) }, '364');
+    testFilter(test, 'date("z", 700, "PDT")', { v: new Date(2011, 0, 1) }, '0');
+    testFilter(test, 'date("z", 700, "PDT")', { v: new Date(2011, 11, 31) }, '364');
 
     // Week
     testFormat('W', '36');
@@ -66,9 +67,9 @@ exports.date = function (test) {
 
     // Year
     testFormat('L', 'false');
-    testFilter(test, 'date("L")', { v: new Date(2008, 1, 29) }, 'true');
+    testFilter(test, 'date("L", 700, "PDT")', { v: new Date(2008, 1, 29) }, 'true');
     testFormat('o', '2011');
-    testFilter(test, 'date("o")', { v: new Date(2011, 0, 1) }, '2010');
+    testFilter(test, 'date("o", 700, "PDT")', { v: new Date(2011, 0, 1) }, '2010');
     testFormat('Y', '2011');
     testFormat('y', '11');
 
@@ -79,7 +80,7 @@ exports.date = function (test) {
     testFormat('g', '9');
     testFormat('G', '9');
     testFormat('h', '09');
-    testFilter(test, 'date("h")', { v: new Date(2011, 0, 1, 10) }, '10');
+    testFilter(test, 'date("h", 700, "PDT")', { v: new Date(2011, 0, 1, 10) }, '10');
     testFormat('H', '09');
     testFormat('i', '05');
     testFormat('s', '02');
