@@ -1,3 +1,17 @@
+[0.9.0](https://github.com/paularmstrong/swig/tree/v0.9.0) / 2011-12-30
+-----------------------------------------------------------------------
+
+* **Added** DateZ license to browser header, use link to underscore license.
+* **Added** Timezone support in `date` filter [gh-27].
+* **Added** New `raw` tag.
+* **Changed** Swig is no longer node 0.4 compatible.
+* **Fixed** Filter `date('f')` for 10am times.
+* **Fixed** Filter `date('r')` returns in UTC date format. This is more correct tospec RFC2822, per [php.net/date](http://php.net/date).
+* **Fixed** Filter `add` when adding numbers/numbers+strings together.
+* **Fixed** Tests for error messages that changed in node >0.6.0.
+
+[Documentation](https://github.com/paularmstrong/swig/tree/v0.9.0/docs)
+
 [0.8.0](https://github.com/paularmstrong/swig/tree/v0.8.0) / 2011-11-04
 -----------------------------------------------------------------------
 
