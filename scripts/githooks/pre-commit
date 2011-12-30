@@ -32,7 +32,7 @@ done
 
 echo 'Running JSLint...'
 result=$(make lint)
-if ! egrep "[^\d]0 errors" <<< $result; then
+if ! egrep "^0 errors" <<< $result; then
     num=$(grep "[0-9]+ error" <<< "$result")
     testFail "JSLint: $num"
     echo "$result"
