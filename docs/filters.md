@@ -64,10 +64,14 @@ Convert a valid date into a format as specified. Mostly conforms to [php.net's d
 
 #### Arguments
 
-1. <var>**format**</var> (_string_) The format to convert the date to.
+1. <var>**format**</var> (_string_) The format to convert the date to. See the [date formatting table](#dateformatting).
+1. <var>**tzOffset**</var> (_number_) The timezone offset in minutes from GMT to display the date in.
+    * For example, if your server is running in PDT, but you want to display your dates in CDT, set this to 360.
+    * This can also be set globally via config variable `tzOffset` on [swig.init](getting-started.md#init).
+
 
 <table style="width: 100%">
-    <caption>Date formatting character information from <a href="http://php.net/date">php.net/date</a>.</caption>
+    <caption><a name="dateformatting"></a>Date formatting character information from <a href="http://php.net/date">php.net/date</a>.</caption>
     <thead>
         <tr>
             <th>Format Character</th>

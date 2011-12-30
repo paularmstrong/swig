@@ -12,7 +12,8 @@ In order to start using Swig, you should initialize it. Swig can be configured u
         encoding: 'utf8',
         filters: {},
         root: '/',
-        tags: {}
+        tags: {},
+        tzOffset: 0
     });
 
 This step is _optional_, however it is recommended to at least set the `root` key when running Swig from node.js.
@@ -50,6 +51,10 @@ The directory to search for templates. If a template passed to `swig.compileFile
 #### tags _optional_
 
 Use this to set any custom tags and/or override any of the built-in tags. For more information on writing your own tags, see the [custom tags guide](custom-tags.md).
+
+#### tzOffset _optional_
+
+Sets a default timezone offset, in minutes from GMT. Setting this will make the [date filter](filters.md#date) automatically convert dates parsed through the date filter to the appropriate timezone offset.
 
 Parsing a Template <a name="parsing" href="#parsing">#</a>
 ------------------

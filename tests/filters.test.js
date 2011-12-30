@@ -115,6 +115,29 @@ exports.date = function (test) {
     test.done();
 };
 
+exports['date with global offset'] = function (test) {
+    swig.init({
+        allowErrors: true,
+        tzOffset: 360
+    });
+
+    var tpl = swig.compile('{{ d|date("H:i:s") }}'),
+        date = new Date(2011, 8, 6, 9, 20, 10),
+        tzOffset = 480,
+        offset = date.getTimezoneOffset();
+
+    // make the date in PDT timezone
+    if (offset !== tzOffset) {
+        date = new Date(date.getTime() - ((offset * 60000) - (tzOffset * 60000)));
+    }
+
+    // date should return as same time in CDT, relative to PDT
+    test.strictEqual('11:20:10', swig.compile('{{ d|date("H:i:s") }}')({ d: date }), 'uses config value 360');
+    test.strictEqual('12:20:10', swig.compile('{{ d|date("H:i:s", 300) }}')({ d: date }), 'uses override 300');
+    test.strictEqual('20:40:10', swig.compile('{{ d|date("H:i:s", -200) }}')({ d: date }), 'uses override -200');
+    test.done();
+};
+
 exports['default'] = function (test) {
     testFilter(test, 'default("blah")', { v: 'foo' }, 'foo', 'string not overridden by default');
     testFilter(test, 'default("blah")', { v: 0 }, '0', 'zero not overridden by default');
