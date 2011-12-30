@@ -5,6 +5,7 @@ var fs = require('fs'),
     parser = require('./lib/parser'),
     filters = require('./lib/filters'),
     helpers = require('./lib/helpers'),
+    dateformat = require('./lib/dateformat'),
 
     _ = require('underscore'),
 
@@ -15,7 +16,8 @@ var fs = require('fs'),
         encoding: 'utf8',
         filters: filters,
         root: '/',
-        tags: tags
+        tags: tags,
+        tzOffset: 0
     },
     _config = _.extend({}, config),
     CACHE = {};
@@ -26,6 +28,8 @@ exports.init = function (options) {
     _config = _.extend({}, config, options);
     _config.filters = _.extend(filters, options.filters);
     _config.tags = _.extend(tags, options.tags);
+
+    dateformat.defaultTZOffset = _config.tzOffset;
 };
 
 function TemplateError(error) {
