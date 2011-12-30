@@ -22,7 +22,7 @@
     },
     "main": "index",
     "engines": {
-        "node": ">= 0.4.1 <0.7.0"
+        "node": "~0.6"
     },
     "scripts": {
         "prepublish": "npm prune",
