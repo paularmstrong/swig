@@ -34,14 +34,23 @@ exports.capitalize = function (test) {
     test.done();
 };
 
-exports.date = function (test) {
-    var date = new DateZ(2011, 8, 6, 9, 5, 2),
-        tpl = swig.compile('{{ d|date("d", 700, "PDT") }}');
+function makeDate(pstOffset, y, m, d, h, i, s) {
+    var date = new Date(y, m || 0, d || 0, h || 0, i || 0, s || 0),
+        offset = date.getTimezoneOffset();
 
-    date.setTimezoneOffset(700, 'PDT');
+    if (offset !== pstOffset) { // timezone offset in PST for september
+        date = new Date(date.getTime() - ((offset * 60000) - (pstOffset * 60000)));
+    }
+
+    return date;
+}
+
+exports.date = function (test) {
+    var date = makeDate(420, 2011, 8, 6, 9, 5, 2),
+        tpl = swig.compile('{{ d|date("d", 420) }}');
 
     function testFormat(format, expected) {
-        testFilter(test, 'date("' + format + '", 700, "PDT")', { v: date }, expected);
+        testFilter(test, 'date("' + format + '", 420)', { v: date }, expected, format);
     }
     // Day
     testFormat('d', '06');
@@ -52,8 +61,8 @@ exports.date = function (test) {
     testFormat('S', 'th');
     testFormat('w', '1');
     testFormat('z', '248');
-    testFilter(test, 'date("z", 700, "PDT")', { v: new Date(2011, 0, 1) }, '0');
-    testFilter(test, 'date("z", 700, "PDT")', { v: new Date(2011, 11, 31) }, '364');
+    testFilter(test, 'date("z", 480)', { v: makeDate(480, 2011, 0, 1) }, '0', 'z');
+    testFilter(test, 'date("z", 480)', { v: makeDate(480, 2011, 11, 31) }, '364', 'z');
 
     // Week
     testFormat('W', '36');
@@ -67,9 +76,9 @@ exports.date = function (test) {
 
     // Year
     testFormat('L', 'false');
-    testFilter(test, 'date("L", 700, "PDT")', { v: new Date(2008, 1, 29) }, 'true');
+    testFilter(test, 'date("L", 480)', { v: makeDate(480, 2008, 1, 29) }, 'true', 'L');
     testFormat('o', '2011');
-    testFilter(test, 'date("o", 700, "PDT")', { v: new Date(2011, 0, 1) }, '2010');
+    testFilter(test, 'date("o", 480)', { v: makeDate(480, 2011, 0, 1) }, '2010', 'o');
     testFormat('Y', '2011');
     testFormat('y', '11');
 
@@ -80,16 +89,17 @@ exports.date = function (test) {
     testFormat('g', '9');
     testFormat('G', '9');
     testFormat('h', '09');
-    testFilter(test, 'date("h", 700, "PDT")', { v: new Date(2011, 0, 1, 10) }, '10');
+    testFilter(test, 'date("h", 480)', { v: makeDate(480, 2011, 0, 1, 10) }, '10', 'h');
     testFormat('H', '09');
     testFormat('i', '05');
     testFormat('s', '02');
     testFormat('d-m-Y', '06-09-2011');
 
-    // These tests will fail in any other timezone. It's a bit hard to fake that out without directly implementing the methods inline.
     // Timezone
     testFormat('O', '+0700');
     testFormat('Z', '25200');
+    testFilter(test, 'date("O", 360)', { v: date }, '+0600', 'O offset');
+    testFilter(test, 'date("G", 320)', { v: date }, '10', 'G offset');
 
     // Full Date/Time
     testFormat('c', '2011-09-06T16:05:02.000Z');
