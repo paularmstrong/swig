@@ -1,3 +1,10 @@
+[0.9.1](https://github.com/paularmstrong/swig/tree/v0.9.1) / 2012-01-18
+-----------------------------------------------------------------------
+
+* **Fixed** Allow multi-line tags and comments. [gh-30]
+
+[Documentation](https://github.com/paularmstrong/swig/tree/v0.9.1/docs)
+
 [0.9.0](https://github.com/paularmstrong/swig/tree/v0.9.0) / 2011-12-30
 -----------------------------------------------------------------------
 
