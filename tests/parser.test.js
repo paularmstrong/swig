@@ -29,6 +29,12 @@ exports.Tags = testCase({
         test.done();
     },
 
+    'multi-line tag': function (test) {
+        var output = parser.parse('{% blah \n arg1 %}{% endblah\n %}', { blah: { ends: true } });
+        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, line: 1, name: 'blah', args: ['arg1'], compile: { ends: true }, tokens: [], parent: [] }], output);
+        test.done();
+    },
+
     'line number included in token': function (test) {
         var output = parser.parse('hi!\n\n\n{% blah %}{% endblah %}', { blah: { ends: true } });
         test.deepEqual({ type: parser.TOKEN_TYPES.LOGIC, line: 4, name: 'blah', args: [], compile: { ends: true }, tokens: [], parent: [] }, output[1]);
@@ -123,6 +129,18 @@ exports.Comments = testCase({
 
     'comments are ignored': function (test) {
         var output = parser.parse('{# foobar #}');
+        test.deepEqual([], output);
+        test.done();
+    },
+
+    'comments with tags inside': function (test) {
+        var output = parser.parse('{# foo {% blah %} #}');
+        test.deepEqual([], output);
+        test.done();
+    },
+
+    'multi-line tags': function (test) {
+        var output = parser.parse('{# this is a multiline\n comment #}');
         test.deepEqual([], output);
         test.done();
     }
