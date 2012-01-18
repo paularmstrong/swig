@@ -430,3 +430,15 @@ exports.raw = testCase({
         test.done();
     }
 });
+
+exports.comment = testCase({
+    setUp: function (callback) {
+        swig.init({});
+        callback();
+    },
+    basic: function (test) {
+        var tpl = swig.compile('begin-{% comment %}there is {{ nothing }} here{% endcomment %}-end');
+        test.strictEqual(tpl({ nothing: 'should not appear' }), 'begin--end');
+        test.done();
+    },
+});

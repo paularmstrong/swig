@@ -17,6 +17,7 @@ Built-in Tags <a name="builtin" href="#builtin">#</a>
 * [macro](#macro)
 * [import](#import)
 * [filter](#filter)
+* [comment](#comment)
 
 ### extends <a name="extends" href="#extends">#</a>
 
@@ -225,6 +226,16 @@ The `filter` tag allows you to apply a [filter](filters.md) to all final content
     OH HI, PAUL
     Hi! My name is Paul!
 
+### comment <a name="comment" href="#comment">#</a>
+
+The `comment` tag allows you to make multi-line comments in your templates.  It is to /* */ as {# #}
+
+#### Example
+
+    {% comment %}
+    This is equivalent to javascript's /* */ comment.
+    None of this is returned in the rendered template
+    {% endcomment %}
 
 Custom Tags <a name="custom-tags" href="#custom-tags">#</a>
 -----------
