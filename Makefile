@@ -10,6 +10,9 @@ test:
 	@node tests/speed.js
 	@node scripts/runtests.js
 
+testf:
+	@node_modules/nodeunit/bin/nodeunit ${file}
+
 lint:
 	@node scripts/runlint.js
 

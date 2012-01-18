@@ -395,12 +395,46 @@ exports.filter = testCase({
     }
 });
 
-exports.comment = testCase({
+exports.raw = testCase({
     setUp: function (callback) {
-        swig.init({});
+        swig.init({ allowErrors: true });
         callback();
     },
 
+    basic: function (test) {
+        var input = '{{ foo }} {% set bar = "foo" %}{% if foo %}blah: {{ foo }} {% block foobar %}{{ foo }}{% endblock %}{% endif %}',
+            tpl = swig.compile('{%raw%}' + input + '{% endraw %}');
+        test.strictEqual(tpl({ foo: 'foo' }), input);
+        test.done();
+    },
+
+    'new lines': function (test) {
+        var input = '\n{{ foo }}\n',
+            tpl = swig.compile('{% raw %}' + input + '{% endraw %}');
+        test.strictEqual(tpl({}), input);
+        test.done();
+    },
+
+    'non-conforming': function (test) {
+        var input = '{{ foo bar %} {% {#',
+            tpl = swig.compile('{% raw %}' + input + '{% endraw %}');
+
+        test.strictEqual(tpl({}), input);
+        test.done();
+    },
+
+    'errors when no endraw tag found': function (test) {
+        test.throws(function () {
+            swig.compile('{% raw %}{{ foobar }}');
+        }, Error);
+        test.done();
+    }
+});
+
+exports.comment = testCase({
+    setUp: function (callback) {
+        swig.init({});
+    },
     basic: function (test) {
         var tpl = swig.compile('begin-{% comment %}there is {{ nothing }} here{% endcomment %}-end');
         test.strictEqual(tpl({ nothing: 'should not appear' }), 'begin--end');

@@ -1,6 +1,7 @@
-var swig = require('../index');
+var swig = require('../index'),
+    DateZ = require('../lib/dateformat').DateZ;
 
-swig.init({});
+swig.init({ allowErrors: true });
 
 function testFilter(test, filter, input, output, message) {
     var tpl = swig.compile('{{ v|' + filter + ' }}');
@@ -9,6 +10,7 @@ function testFilter(test, filter, input, output, message) {
 
 exports.add = function (test) {
     testFilter(test, 'add(2)', { v: 1 }, '3', 'add numbers');
+    testFilter(test, 'add(2)', { v: '1' }, '12', 'string number is not real number');
     testFilter(test, 'add([3, 4])', { v: [1, 2] }, '1,2,3,4', 'arrays add from literal');
     testFilter(test, 'add(b)', { v: [1, 2], b: [3, 4] }, '1,2,3,4', 'arrays add from var');
     testFilter(test, 'add(2)', { v: 'foo' }, 'foo2', 'string var turns addend into a string');
@@ -32,12 +34,26 @@ exports.capitalize = function (test) {
     test.done();
 };
 
+// Create dates for a particular timezone offset.
+// For example, specifying 480 (offset in minutes) for tzOffset creates a date
+// in your local timezone that is the same date as the specified y,m,d,h,i,s in PST.
+function makeDate(tzOffset, y, m, d, h, i, s) {
+    var date = new Date(y, m || 0, d || 0, h || 0, i || 0, s || 0),
+        offset = date.getTimezoneOffset();
+
+    if (offset !== tzOffset) { // timezone offset in PST for september
+        date = new Date(date.getTime() - ((offset * 60000) - (tzOffset * 60000)));
+    }
+
+    return date;
+}
+
 exports.date = function (test) {
-    var date = new Date(2011, 8, 6, 9, 5, 2),
-        tpl = swig.compile('{{ d|date("d") }}');
+    var date = makeDate(420, 2011, 8, 6, 9, 5, 2),
+        tpl = swig.compile('{{ d|date("d", 420) }}');
 
     function testFormat(format, expected) {
-        testFilter(test, 'date("' + format + '")', { v: date }, expected);
+        testFilter(test, 'date("' + format + '", 420)', { v: date }, expected, format);
     }
     // Day
     testFormat('d', '06');
@@ -48,11 +64,14 @@ exports.date = function (test) {
     testFormat('S', 'th');
     testFormat('w', '1');
     testFormat('z', '248');
-    testFilter(test, 'date("z")', { v: new Date(2011, 0, 1) }, '0');
-    testFilter(test, 'date("z")', { v: new Date(2011, 11, 31) }, '364');
+    testFilter(test, 'date("z", 480)', { v: makeDate(480, 2011, 0, 1) }, '0', 'z');
+    testFilter(test, 'date("z", 480)', { v: makeDate(480, 2011, 11, 31) }, '364', 'z');
 
     // Week
-    testFormat('W', '36');
+    if (date.getTimezoneOffset() > -400) {
+        // guaranteed to fail with the current test date in any timezone offset east of -400
+        testFormat('W', '36');
+    }
 
     // Month
     testFormat('F', 'September');
@@ -63,9 +82,9 @@ exports.date = function (test) {
 
     // Year
     testFormat('L', 'false');
-    testFilter(test, 'date("L")', { v: new Date(2008, 1, 29) }, 'true');
+    testFilter(test, 'date("L", 480)', { v: makeDate(480, 2008, 1, 29) }, 'true', 'L');
     testFormat('o', '2011');
-    testFilter(test, 'date("o")', { v: new Date(2011, 0, 1) }, '2010');
+    testFilter(test, 'date("o", 480)', { v: makeDate(480, 2011, 0, 1) }, '2010', 'o');
     testFormat('Y', '2011');
     testFormat('y', '11');
 
@@ -76,21 +95,46 @@ exports.date = function (test) {
     testFormat('g', '9');
     testFormat('G', '9');
     testFormat('h', '09');
+    testFilter(test, 'date("h", 480)', { v: makeDate(480, 2011, 0, 1, 10) }, '10', 'h');
     testFormat('H', '09');
     testFormat('i', '05');
     testFormat('s', '02');
     testFormat('d-m-Y', '06-09-2011');
 
-    // These tests will fail in any other timezone. It's a bit hard to fake that out without directly implementing the methods inline.
     // Timezone
     testFormat('O', '+0700');
     testFormat('Z', '25200');
+    testFilter(test, 'date("O", 360)', { v: date }, '+0600', 'O offset');
+    testFilter(test, 'date("G", 320)', { v: date }, '10', 'G offset');
 
     // Full Date/Time
     testFormat('c', '2011-09-06T16:05:02.000Z');
-    testFormat('r', 'Tue Sep 06 2011 09:05:02 GMT-0700 (PDT)');
+    testFormat('r', 'Tue, 06 Sep 2011 16:05:02 GMT');
     testFormat('U', '1315325102');
 
+    test.done();
+};
+
+exports['date with global offset'] = function (test) {
+    swig.init({
+        allowErrors: true,
+        tzOffset: 360
+    });
+
+    var tpl = swig.compile('{{ d|date("H:i:s") }}'),
+        date = new Date(2011, 8, 6, 9, 20, 10),
+        tzOffset = 480,
+        offset = date.getTimezoneOffset();
+
+    // make the date in PDT timezone
+    if (offset !== tzOffset) {
+        date = new Date(date.getTime() - ((offset * 60000) - (tzOffset * 60000)));
+    }
+
+    // date should return as same time in CDT, relative to PDT
+    test.strictEqual('11:20:10', swig.compile('{{ d|date("H:i:s") }}')({ d: date }), 'uses config value 360');
+    test.strictEqual('12:20:10', swig.compile('{{ d|date("H:i:s", 300) }}')({ d: date }), 'uses override 300');
+    test.strictEqual('20:40:10', swig.compile('{{ d|date("H:i:s", -200) }}')({ d: date }), 'uses override -200');
     test.done();
 };
 

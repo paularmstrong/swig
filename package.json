@@ -1,6 +1,6 @@
 {
     "name": "swig",
-    "version": "0.8.0",
+    "version": "0.9.0",
     "description": "A fast django-like templating engine for node.js and browsers.",
     "keywords": ["template", "templating", "html", "django", "express", "block"],
     "repository": {
@@ -22,7 +22,7 @@
     },
     "main": "index",
     "engines": {
-        "node": ">= 0.4.1 <0.7.0"
+        "node": "~0.6"
     },
     "scripts": {
         "prepublish": "npm prune",

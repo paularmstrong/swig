@@ -1,4 +1,4 @@
-Swig
+Swig [![Build Status](https://secure.travis-ci.org/paularmstrong/swig.png)](http://travis-ci.org/paularmstrong/swig)
 ====
 
 [Swig](http://paularmstrong.github.com/swig/) is a fast, Django-like template engine for node.js.

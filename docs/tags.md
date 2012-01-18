@@ -8,6 +8,7 @@ Built-in Tags <a name="builtin" href="#builtin">#</a>
 * [block](#block)
 * [parent](#parent)
 * [include](#include)
+* [raw](#raw)
 * [for](#for)
 * [empty](#empty)
 * [if](#if)
@@ -41,6 +42,12 @@ Includes a template in it's place. The template is rendered within the current c
 
     {% include template_path %}
     {% include "path/to/template.js" %}
+
+### raw <a name="raw" href="#raw">#</a>
+
+Wrap any section in `{% raw %}...{% endraw %}` to stop the token parser from modifying any of the internal content. Also useful for putting swig templates into JavaScript for swig in the browser. Attempting to do the following without this tag will cause a parsing error and your template will not be displayed.
+
+    You can output any content, including swig tag modifiers like {% raw %}<code>{{</code> and <code>{%</code>{% endraw %} without having them parsed and errors thrown.
 
 ### for <a name="for" href="#for">#</a>
 
