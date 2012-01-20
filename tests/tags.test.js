@@ -245,7 +245,6 @@ exports['for'] = testCase({
     context: function (test) {
         var inner = swig.compile('{{ f }}', { filename: "inner" });
         var tpl = swig.compile('{{ f }}{% for f in bar %}{{ f }}{% include "inner" %}{{ f }}{% endfor %}{{ f }}');
-        console.log("TEST: ", tpl({ f: 'z', bar: ['a'] }));
         test.strictEqual(tpl({ f: 'z', bar: ['a'] }), 'zaaaz');
         test.done();
     },
