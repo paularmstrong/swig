@@ -242,6 +242,13 @@ exports['for'] = testCase({
         test.done();
     },
 
+    context: function (test) {
+        var inner = swig.compile('{{ f }}', { filename: "inner" });
+        var tpl = swig.compile('{{ f }}{% for f in bar %}{{ f }}{% include "inner" %}{{ f }}{% endfor %}{{ f }}');
+        test.strictEqual(tpl({ f: 'z', bar: ['a'] }), 'zaaaz');
+        test.done();
+    },
+
     index: function (test) {
         var tpl = swig.compile('{% for foo in bar %}{{ forloop.index }}{% endfor %}');
         test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), '012', 'index in object');
