@@ -243,9 +243,10 @@ exports['for'] = testCase({
     },
 
     context: function (test) {
-        var inner = swig.compile('{{ f }}', { filename: "inner" });
-        var tpl = swig.compile('{{ f }}{% for f in bar %}{{ f }}{% include "inner" %}{{ f }}{% endfor %}{{ f }}');
-        test.strictEqual(tpl({ f: 'z', bar: ['a'] }), 'zaaaz');
+        var inner = swig.compile('{{ f }}', { filename: "inner" }),
+            tpl = swig.compile('{{ f }}{% for f in bar %}{{ f }}{% include "inner" %}{{ f }}{% endfor %}{{ f }}');
+        test.strictEqual(tpl({ f: 'z', bar: ['a'] }), 'zaaaz', 'f is reset');
+        test.strictEqual(tpl({ bar: ['a'] }), 'aaa', 'f remains undefined');
         test.done();
     },
 
