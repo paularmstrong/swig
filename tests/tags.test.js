@@ -127,6 +127,34 @@ exports.include = testCase({
         var tpl = swig.compile('{% include inc %}');
         test.strictEqual(tpl({ inc: 'included_2.html', array: ['foo'] }), '1');
         test.done();
+    },
+
+    'with context': function (test) {
+        swig.compile('{{ foo }}{{ bar }}', { filename: 'withcontext' });
+        var tpl = swig.compile('{% set foo = "1" %}{% include "withcontext" with foo %}');
+        test.strictEqual(tpl({}), '1');
+
+        tpl = swig.compile('{% set foo = "1" %}{% set bar = "2" %}{% include "withcontext" with foo bar %}');
+        test.strictEqual(tpl({}), '12');
+
+        test.throws(function () {
+            swig.compile('{% include "withcontext" with %}');
+        });
+        test.done();
+    },
+
+    only: function (test) {
+        swig.compile('{{ foo }}', { filename: 'only' });
+        var tpl = swig.compile('{% include "only" only %}');
+        test.strictEqual(tpl({ foo: 'nope' }), '');
+        test.done();
+    },
+
+    'with only': function (test) {
+        swig.compile('{{ foo }}{{ bar }}', { filename: 'withcontext' });
+        var tpl = swig.compile('{% set foo = "1" %}{% include "withcontext" with foo only %}');
+        test.strictEqual(tpl({}), '1');
+        test.done();
     }
 });
 
