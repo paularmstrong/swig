@@ -1,3 +1,10 @@
+[0.9.2](https://github.com/paularmstrong/swig/tree/v0.9.2) / 2012-01-23
+-----------------------------------------------------------------------
+
+* **Fixed** Correctly reset autoescape after closing an autoescape tag. [gh-39]
+
+[Documentation](https://github.com/paularmstrong/swig/tree/v0.9.2/docs)
+
 [0.9.1](https://github.com/paularmstrong/swig/tree/v0.9.1) / 2012-01-18
 -----------------------------------------------------------------------
 
