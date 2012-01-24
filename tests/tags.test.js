@@ -37,7 +37,7 @@ exports.autoescape = testCase({
         test.done();
     },
 
-    off_after_close_tag: function (test) {
+    'resets after endautoescape': function (test) {
         var tpl = swig.compile('{% autoescape off %}{% endautoescape %}{{ foo }}');
         test.strictEqual(tpl({ foo: '<\'single\' & "double" quotes>' }), '&lt;&#39;single&#39; &amp; &quot;double&quot; quotes&gt;');
         test.done();
