@@ -1,3 +1,10 @@
+[0.9.3](https://github.com/paularmstrong/swig/tree/v0.9.3) / 2012-01-28
+-----------------------------------------------------------------------
+
+* **Fixed** Allow object and array values to be accessed via context variables [gh-40]
+
+[Documentation](https://github.com/paularmstrong/swig/tree/v0.9.3/docs)
+
 [0.9.2](https://github.com/paularmstrong/swig/tree/v0.9.2) / 2012-01-23
 -----------------------------------------------------------------------
 
