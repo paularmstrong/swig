@@ -96,6 +96,9 @@ exports.Variables = testCase({
         tpl = swig.compile('{{ a["b"].b[1] }}');
         test.strictEqual(tpl({ a: { b: { b: ['no', 'yes'] }} }), 'yes', 'mixed notation');
 
+        tpl = swig.compile('{{ a[0][h.g.i]["c"].b[d] }}');
+        test.strictEqual(tpl({ a: { '0': { q: { c: { b: { foo: 'hi!' }}}}}, h: { g: { i: 'q' } }, d: 'foo' }), 'hi!', 'stupid complex variable notation is stupid');
+
         test.done();
     }
 });

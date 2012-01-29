@@ -317,6 +317,12 @@ exports['for'] = testCase({
         var tpl = swig.compile('{% for foo in bar|reverse %}{{ foo }}{% endfor %}');
         test.strictEqual(tpl({ bar: ['baz', 'bar', 'foo'] }), 'foobarbaz');
         test.done();
+    },
+
+    'use forloop.index in var': function (test) {
+        var tpl = swig.compile('{% for key in bar %}{{ foo[forloop.index] }} {% endfor %}');
+        test.strictEqual(tpl({ bar: ['a', 'b', 'c'], foo: ['hi', 'and', 'bye' ]}), 'hi and bye ');
+        test.done();
     }
 });
 
