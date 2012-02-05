@@ -55,7 +55,7 @@ For loops have 4 special context variables accessible inside of the loop:
 
     {% for x in y %}
         {% if forloop.first %}<ul>{% endif %}
-        <li>{% forloop.index %} - {% forloop.key %}: {{ x }}</li>
+        <li>{{ forloop.index }} - {{ forloop.key }}: {{ x }}</li>
         {% if forloop.last %}</ul>{% endif %}
     {% endfor %}
 
