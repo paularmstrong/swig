@@ -126,6 +126,16 @@ exports.include = testCase({
         test.done();
     },
 
+    'include from within parent template': function (test) {
+        swig.init({ allowErrors: true });
+        swig.compile('foobar', { filename: 'foobar' });
+        swig.compile('{% include "foobar" %}', { filename: 'parent' });
+        // ensure this doesn't throw
+        var tpl = swig.compile('{% extends "parent" %}');
+        test.strictEqual(tpl(), 'foobar');
+        test.done();
+    },
+
     variable: function (test) {
         if (typeof window !== 'undefined') {
             swig.compile('{{array.length}}', { filename: 'included_2.html' });
