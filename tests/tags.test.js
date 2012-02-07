@@ -370,6 +370,12 @@ exports.set = testCase({
         var tpl = swig.compile('{% set foo = { bar: "bar" } %} {{ foo.bar }}');
         test.strictEqual(tpl({}), ' bar');
         test.done();
+    },
+
+    'number': function (test) {
+        var tpl = swig.compile('{% set foo = 99 %} {{ foo }}');
+        test.strictEqual(tpl({}), ' 99');
+        test.done();
     }
 });
 
