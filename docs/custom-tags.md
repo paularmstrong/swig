@@ -51,12 +51,12 @@ To parse the inner content of a tag for outputting, use `parser.compile.call(thi
 
         output.push(helpers.setVar('__myArg', myArg));
 
-        output.push('__output += "<h1>";');
-        output.push('__output += __myArg;');
-        output.push('__output += "</h1>";');
-        output.push('__output += "<p>";');
+        output.push('_output += "<h1>";');
+        output.push('_output += __myArg;');
+        output.push('_output += "</h1>";');
+        output.push('_output += "<p>";');
         output.push(parser.compile.call(this, indent + '    '));
-        output.push('__output += "</p>";');
+        output.push('_output += "</p>";');
 
         return output.join('');
     };

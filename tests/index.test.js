@@ -57,5 +57,22 @@ exports.compileFile = testCase({
         });
         delete global.window;
         test.done();
+    },
+
+    extensions: function (test) {
+        test.expect(1);
+        swig.init({
+            allowErrors: true,
+            extensions: { foobar: function () { test.ok(true); } },
+            tags: {
+                foo: function (indent) {
+                    return '_ext.foobar();';
+                }
+            }
+        });
+
+        var tpl = swig.compile('{% foo %}');
+        tpl();
+        test.done();
     }
 });

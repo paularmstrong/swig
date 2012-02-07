@@ -5,7 +5,7 @@ var testCase = require('nodeunit').testCase,
 exports['custom tags'] =  function (test) {
     var tags = {
             foo: function (indent) {
-                return '__output += "hi!";';
+                return '_output += "hi!";';
             }
         },
         tpl;

@@ -233,13 +233,13 @@ exports.Compiling = testCase({
     basic: function (test) {
         var template = { tokens: [{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [], escape: false, args: null }] };
         test.doesNotThrow(function () {
-            eval('var __output = "";' + parser.compile.call(template, ''));
+            eval('var _output = "";' + parser.compile.call(template, ''));
         }, 'broken compilation will throw (from template object)');
 
         template = { tokens: parser.parse('{% if foo %}blah{% endif %}', tags) };
 
         test.doesNotThrow(function () {
-            eval('var __output = "";' + parser.compile.call(template, ''));
+            eval('var _output = "";' + parser.compile.call(template, ''));
         }, 'broken compilation will throw (fromt parsed string)');
 
         test.done();
@@ -248,12 +248,12 @@ exports.Compiling = testCase({
     'throws if bad extends': function (test) {
         var template = { tokens: parser.parse('{% extends foobar %}', tags) };
         test.throws(function () {
-            eval('var __output = "";' + parser.compile.call(template, ''));
+            eval('var _output = "";' + parser.compile.call(template, ''));
         }, 'extend must throw if given variable argument');
 
         template = { tokens: parser.parse('{% extends "foo" "bar" %}', tags) };
         test.throws(function () {
-            eval('var __output = "";' + parser.compile.call(template, ''));
+            eval('var _output = "";' + parser.compile.call(template, ''));
         }, 'extend must throw if given multiple arguments');
 
         test.done();
@@ -262,7 +262,7 @@ exports.Compiling = testCase({
     'throws if extends is not first token': function (test) {
         var template = { tokens: parser.parse('blah!{% extends foobar %}', tags) };
         test.throws(function () {
-            eval('var __output = "";' + parser.compile.call(template, ''));
+            eval('var _output = "";' + parser.compile.call(template, ''));
         }, 'extend must throw if it is not first token');
         test.done();
     },
@@ -270,12 +270,12 @@ exports.Compiling = testCase({
     'block name requirements': function (test) {
         var template = { tokens: parser.parse('{% block foobar %}{% endblock %}', tags), type: parser.TEMPLATE };
         test.doesNotThrow(function () {
-            eval('var __output = "";' + parser.compile.call(template, ''));
+            eval('var _output = "";' + parser.compile.call(template, ''));
         }, 'block name must be alpha');
 
         template = { tokens: parser.parse('{% block 123 %}{% endblock %}', tags), type: parser.TEMPLATE };
         test.throws(function () {
-            eval('var __output = "";' + parser.compile.call(template, ''));
+            eval('var _output = "";' + parser.compile.call(template, ''));
         }, 'block must throw if its name is not alpha');
         test.done();
     },
@@ -283,7 +283,7 @@ exports.Compiling = testCase({
     'block nesting': function (test) {
         var template = { tokens: parser.parse('{% block foobar %}{% block barfoo %}{% endblock %}{% endblock %}', tags) };
         test.throws(function () {
-            eval('var __output = "";' + parser.compile.call(template, ''));
+            eval('var _output = "";' + parser.compile.call(template, ''));
         }, 'block should throw if nested');
         test.done();
     }
