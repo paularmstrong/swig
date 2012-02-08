@@ -1,3 +1,14 @@
+[0.9.4](https://github.com/paularmstrong/swig/tree/v0.9.4) / 2012-02-07
+-----------------------------------------------------------------------
+
+* **Fixed** `parent` tag would not render when called within tags [gh-41]
+* **Fixed** Documentation for forloop.index & forloop.key [gh-42]
+* **Fixed** Errors when using `include` inside base template `block` tags [gh-43]
+* **Fixed** Allow `set` tag to set values to numbers [gh-45]
+* **Fixed** `set` tag for booleans using too many checks
+
+[Documentation](https://github.com/paularmstrong/swig/tree/v0.9.4/docs)
+
 [0.9.3](https://github.com/paularmstrong/swig/tree/v0.9.3) / 2012-01-28
 -----------------------------------------------------------------------
 
