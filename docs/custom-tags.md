@@ -17,7 +17,7 @@ First, include the Swig parser and helpers.
 
 Define your tag and whether or not it requires an "end" tag:
 
-    exports.mytag = function (indent) {
+    exports.mytag = function (indent, parentBlock) {
         return 'output';
     };
     exports.mytag.ends = true;
@@ -27,7 +27,7 @@ A Really Simple Tag <a name="example" href="#example">#</a>
 
 To parse a swig variable with or without filters into a variable token, eg. `bar` or `foo|lowercase`
 
-    exports.mytag = function (indent) {
+    exports.mytag = function (indent, parentBlock) {
         var myArg = parser.parseVariable(this.args[0]);
         return 'output';
     };
@@ -35,7 +35,7 @@ To parse a swig variable with or without filters into a variable token, eg. `bar
 
 Use a parsed variable token with `helpers.setVar()` to bind a variable in your current scope into the templates scope. The `setVar` method cleans up variable output, applies filters and escaping for clean output:
 
-    exports.mytag = function (indent) {
+    exports.mytag = function (indent, parentBlock) {
         var myArg = parser.parseVariable(this.args[0]),
             output = '';
         output += helpers.setVar(name, myArg);
@@ -43,9 +43,9 @@ Use a parsed variable token with `helpers.setVar()` to bind a variable in your c
     };
     exports.mytag.ends = true;
 
-To parse the inner content of a tag for outputting, use `parser.compile.call(this, indent)`:
+To parse the inner content of a tag for outputting, use `parser.compile.apply(this, [indent, parentBlock])`:
 
-    exports.mytag = function (indent) {
+    exports.mytag = function (indent, parentBlock) {
         var myArg = parser.parseVariable(this.args[0]),
             output = [];
 
@@ -55,7 +55,7 @@ To parse the inner content of a tag for outputting, use `parser.compile.call(thi
         output.push('__output += __myArg;');
         output.push('__output += "</h1>";');
         output.push('__output += "<p>";');
-        output.push(parser.compile.call(this, indent + '    '));
+        output.push(parser.compile.apply(this, [indent + '    ', parentBlock]));
         output.push('__output += "</p>";');
 
         return output.join('');

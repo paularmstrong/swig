@@ -108,6 +108,13 @@ exports['extends'] = testCase({
             test.ok((/^<pre>Error: Circular extends found on line 3 of \"extends_circular1\.html\"\!/).test(tpl.render({})), 'throws an error');
         }
         test.done();
+    },
+
+    'parentBlock passed in tags': function (test) {
+        swig.compile('{% block foo %}hi{% endblock %}', { filename: 'parent' });
+        var tpl = swig.compile('{% extends "parent" %}{% block foo %}{% if true %}{% parent %}{% else %}nope{% endif %}{% endblock %}');
+        test.strictEqual(tpl(), 'hi');
+        test.done();
     }
 });
 
