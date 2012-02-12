@@ -2,7 +2,7 @@
   {% if 1 %}
     {% for k in v %}
       <p>{{k}}: {{v}}</p>
-      {% if forloop.index === "af" %}
+      {% if loop.index === "af" %}
         <p>foo: {{foo}}</p>
         <p>Hello World {{k}} {{foo}}</p>
         <p>array.length: {% include "included_2.html" %}</p>

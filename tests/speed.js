@@ -14,7 +14,7 @@ swig.init({
     root: __dirname + '/templates'
 });
 
-tplString = '{% for foo in bar %}{{ forloop.index }} - {{ foo }}{% endfor %}';
+tplString = '{% for foo in bar %}{{ loop.index }} - {{ foo }}{% endfor %}';
 tplF = swig.compile(tplString);
 console.time('object loop');
 i = 10000;
@@ -40,8 +40,8 @@ console.log("    ~ " + Math.round(1000000 / (new Date() - d)) + " renders per se
 tplString = "{% for v in array %}" +
     "{% if 1 %}" +
     "{% for k in v %}" +
-    "\n{{forloop.index}} {{k}}: " +
-    "{% if forloop.index in 'msafas' %}" +
+    "\n{{loop.index}} {{k}}: " +
+    "{% if loop.index in 'msafas' %}" +
     "<p>Hello World {{k}}{{foo}}{{k}}{{foo}}{{k}}{{foo}}</p>" +
     "{% endif %}" +
     "{% endfor %}" +

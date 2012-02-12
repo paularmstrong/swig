@@ -5,7 +5,7 @@
 {% block body %}
 <ul>
     {% for person in people %}
-    <li><a href="/people/{{ forloop.index }}">{{ person.name }}</a> age {{ person.age }}</li>
+    <li><a href="/people/{{ loop.index }}">{{ person.name }}</a> age {{ person.age }}</li>
     {% endfor %}
 </ul>
 {% endblock %}

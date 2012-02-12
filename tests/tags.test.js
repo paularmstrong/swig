@@ -287,7 +287,7 @@ exports['for'] = testCase({
     },
 
     variables: function (test) {
-        var tpl = swig.compile('{% for foo in bar %}[{{ forloop.index }}, {{ forloop.key }}]{% endfor %}');
+        var tpl = swig.compile('{% for foo in bar %}[{{ loop.index }}, {{ loop.key }}]{% endfor %}');
         test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), '[0, 0][1, 1][2, 2]', 'array loop');
         test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '[0, baz][1, pow][2, foo]', 'object loop');
         test.done();
@@ -302,21 +302,21 @@ exports['for'] = testCase({
     },
 
     index: function (test) {
-        var tpl = swig.compile('{% for foo in bar %}{{ forloop.index }}{% endfor %}');
+        var tpl = swig.compile('{% for foo in bar %}{{ loop.index }}{% endfor %}');
         test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), '012', 'index in object');
         test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '012', 'index in object');
         test.done();
     },
 
     first: function (test) {
-        var tpl = swig.compile('{% for foo in bar %}{% if forloop.first %}{{ foo }}{% endif %}{% endfor %}');
+        var tpl = swig.compile('{% for foo in bar %}{% if loop.first %}{{ foo }}{% endif %}{% endfor %}');
         test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), 'foo', 'first in array');
         test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), 'foo', 'first in object');
         test.done();
     },
 
     last: function (test) {
-        var tpl = swig.compile('{% for foo in bar %}{% if forloop.last %}{{ foo }}{% endif %}{% endfor %}');
+        var tpl = swig.compile('{% for foo in bar %}{% if loop.last %}{{ foo }}{% endif %}{% endfor %}');
         test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), 'baz', 'last in array');
         test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), 'baz', 'last in object');
         test.done();
@@ -342,8 +342,8 @@ exports['for'] = testCase({
         test.done();
     },
 
-    'use forloop.index in var': function (test) {
-        var tpl = swig.compile('{% for key in bar %}{{ foo[forloop.index] }} {% endfor %}');
+    'use loop.index in var': function (test) {
+        var tpl = swig.compile('{% for key in bar %}{{ foo[loop.index] }} {% endfor %}');
         test.strictEqual(tpl({ bar: ['a', 'b', 'c'], foo: ['hi', 'and', 'bye' ]}), 'hi and bye ');
         test.done();
     }

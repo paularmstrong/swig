@@ -33,7 +33,7 @@ Basic Example
     <h1>{{ pagename|title }}</h1>
     <ul>
     {% for author in authors %}
-        <li{% if forloop.index <= 0 %} class="first"{% endif %}>{{ author }}</li>
+        <li{% if loop.index <= 0 %} class="first"{% endif %}>{{ author }}</li>
     {% empty %}
         <li>There are no authors.</li>
     {% endfor %}
