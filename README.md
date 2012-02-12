@@ -34,7 +34,7 @@ Basic Example
     <ul>
     {% for author in authors %}
         <li{% if loop.index <= 0 %} class="first"{% endif %}>{{ author }}</li>
-    {% empty %}
+    {% else %}
         <li>There are no authors.</li>
     {% endfor %}
     </ul>

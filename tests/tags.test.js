@@ -244,7 +244,7 @@ exports['if'] = testCase({
         test.strictEqual(tpl({ foo: [1] }), 'nope');
 
         test.throws(function () {
-            swig.compile('{% for i in foo %}hi!{% else %}nope{% endfor %}');
+            swig.compile('{% else %}');
         }, Error, 'Cannot call else tag outside of "if" context.');
         test.done();
     },
@@ -357,17 +357,17 @@ exports['for'] = testCase({
         test.done();
     },
 
-    empty: function (test) {
-        var tpl = swig.compile('{% for foo in bar %}blah{% empty %}hooray!{% endfor %}');
-        test.strictEqual(tpl({ bar: [] }), 'hooray!', 'empty in array');
-        test.strictEqual(tpl({ bar: {}}), 'hooray!', 'empty in object');
+    else: function (test) {
+        var tpl = swig.compile('{% for foo in bar %}blah{% else %}hooray!{% endfor %}');
+        test.strictEqual(tpl({ bar: [] }), 'hooray!', 'else in array');
+        test.strictEqual(tpl({ bar: {}}), 'hooray!', 'else in object');
 
-        test.strictEqual(tpl({ bar: [1] }), 'blah', 'not empty in array');
-        test.strictEqual(tpl({ bar: { foo: 'foo' }}), 'blah', 'not empty in object');
+        test.strictEqual(tpl({ bar: [1] }), 'blah', 'not else in array');
+        test.strictEqual(tpl({ bar: { foo: 'foo' }}), 'blah', 'not else in object');
 
         test.throws(function () {
-            swig.compile('{% if foo %}hi!{% empty %}nope{% endif %}');
-        }, Error, 'Cannot call "empty" tag outside of "for" context.');
+            swig.compile('{% for foo in bar %}hi!{% else if blah %}nope{% endfor %}');
+        }, Error, '"else" tag cannot accept arguments in the "for" context.');
         test.done();
     },
 

@@ -9,10 +9,8 @@ Built-in Tags <a name="builtin" href="#builtin">#</a>
 * [parent](#parent)
 * [include](#include)
 * [raw](#raw)
-* [for](#for)
-* [empty](#empty)
-* [if](#if)
-* [else (if)](#else)
+* [for](#for) - [else](#forelese)
+* [if](#if) - [else (if)](#else)
 * [autoescape](#autoescape)
 * [macro](#macro)
 * [import](#import)
@@ -106,15 +104,15 @@ You can also apply filters to the object that you are iterating over.
         The array `y` will first be reversed before looping over it.
     {% endfor %}
 
-#### empty <a name="empty" href="#empty">#</a>
+#### else <a name="forelse" href="#forelse">#</a>
 
-For loops have a special tag available to them called `{% empty %}`.
+For loops have a special tag available to them called `{% else %}`.
 
-If the loop object is empty or `length === 0`, the content following the `empty` tag will be rendered.
+If the loop object is empty or `length === 0`, the content following the `else` tag will be rendered.
 
     {% for person in people %}
         {{ person }}
-    {% empty %}
+    {% else %}
         There are no people yet!
     {% endfor %}
 
