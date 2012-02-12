@@ -43,6 +43,32 @@ Includes a template in it's place. The template is rendered within the current c
     {% include template_path %}
     {% include "path/to/template.js" %}
 
+Locally declared context variables are _not_ passed to the included template by default. For example, in the following situations, your `inc.html` will not know about the variables `foo` nor `bar`:
+
+    {% set foo = "bar" %}
+    {% include "inc.html" %}
+
+    {% for bar in thing %}
+        {% include "inc.html" %}
+    {% endfor %}
+
+In order to have your included template get these locally declared variables, you can use the `with` argument, followed by space-separated tokens of the local variables to include in the context:
+
+    {% set foo = "bar" %}
+    {% include "inc.html" with foo %}
+
+    {% for bar in thing %}
+        {% include "inc.html" with foo bar %}
+    {% endfor %}
+
+You can also use the `only` argument to restrict the context to the variables that you explicitly define.
+
+Assume that your current context has variables `bar` and `foo` available. In the following situation, only `foo` will be defined in your `inc.html`:
+
+    {% include "inc.html" with foo only %}
+
+The `only` argument _must_ be passed as the last argument in the tag. Any other placement will not work.
+
 ### raw <a name="raw" href="#raw">#</a>
 
 Wrap any section in `{% raw %}...{% endraw %}` to stop the token parser from modifying any of the internal content. Also useful for putting swig templates into JavaScript for swig in the browser. Attempting to do the following without this tag will cause a parsing error and your template will not be displayed.
