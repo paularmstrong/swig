@@ -1,4 +1,5 @@
 var testCase = require('nodeunit').testCase,
+    swig = require('../index'),
     tags = require('../lib/tags'),
     parser = require('../lib/parser');
 
@@ -12,32 +13,83 @@ exports.Tags = testCase({
 
     'basic tag': function (test) {
         var output = parser.parse('{% blah %}', { blah: {} });
-        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, line: 1, name: 'blah', args: [], compile: {}, parent: [] }], output);
+        test.deepEqual([{
+            type: parser.TOKEN_TYPES.LOGIC,
+            line: 1,
+            name: 'blah',
+            args: [],
+            compile: {},
+            strip: { before: false, after: false, start: false, end: false },
+            parent: []
+        }], output);
 
         output = parser.parse('{% blah "foobar" %}', { blah: {} });
-        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, line: 1, name: 'blah', args: ['"foobar"'], compile: {}, parent: [] }], output, 'args appended');
+        test.deepEqual([{
+            type: parser.TOKEN_TYPES.LOGIC,
+            line: 1,
+            name: 'blah',
+            args: ['"foobar"'],
+            compile: {},
+            strip: { before: false, after: false, start: false, end: false },
+            parent: []
+        }], output, 'args appended');
 
         output = parser.parse('{% blah "foobar" barfoo %}', { blah: {} });
-        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, line: 1, name: 'blah', args: ['"foobar"', 'barfoo'], compile: {}, parent: [] }], output, 'multiple args appended');
+        test.deepEqual([{
+            type: parser.TOKEN_TYPES.LOGIC,
+            line: 1,
+            name: 'blah',
+            args: ['"foobar"', 'barfoo'],
+            compile: {},
+            strip: { before: false, after: false, start: false, end: false },
+            parent: []
+        }], output, 'multiple args appended');
 
         test.done();
     },
 
     'basic tag with ends': function (test) {
         var output = parser.parse('{% blah %}{% endblah %}', { blah: { ends: true } });
-        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, line: 1, name: 'blah', args: [], compile: { ends: true }, tokens: [], parent: [] }], output);
+        test.deepEqual([{
+            type: parser.TOKEN_TYPES.LOGIC,
+            line: 1,
+            name: 'blah',
+            args: [],
+            compile: { ends: true },
+            tokens: [],
+            strip: { before: false, after: false, start: false, end: false },
+            parent: []
+        }], output);
         test.done();
     },
 
     'multi-line tag': function (test) {
         var output = parser.parse('{% blah \n arg1 %}{% endblah\n %}', { blah: { ends: true } });
-        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, line: 1, name: 'blah', args: ['arg1'], compile: { ends: true }, tokens: [], parent: [] }], output);
+        test.deepEqual([{
+            type: parser.TOKEN_TYPES.LOGIC,
+            line: 1,
+            name: 'blah',
+            args: ['arg1'],
+            compile: { ends: true },
+            tokens: [],
+            strip: { before: false, after: false, start: false, end: false },
+            parent: []
+        }], output);
         test.done();
     },
 
     'line number included in token': function (test) {
         var output = parser.parse('hi!\n\n\n{% blah %}{% endblah %}', { blah: { ends: true } });
-        test.deepEqual({ type: parser.TOKEN_TYPES.LOGIC, line: 4, name: 'blah', args: [], compile: { ends: true }, tokens: [], parent: [] }, output[1]);
+        test.deepEqual({
+            type: parser.TOKEN_TYPES.LOGIC,
+            line: 4,
+            name: 'blah',
+            args: [],
+            compile: { ends: true },
+            tokens: [],
+            strip: { before: false, after: false, start: false, end: false },
+            parent: []
+        }, output[1]);
         test.done();
     },
 
@@ -64,7 +116,16 @@ exports.Tags = testCase({
 
     'tag with contents': function (test) {
         var output = parser.parse('{% blah %}hello{% endblah %}', { blah: { ends: true } });
-        test.deepEqual([{ type: parser.TOKEN_TYPES.LOGIC, line: 1, name: 'blah', args: [], compile: { ends: true }, tokens: ['hello'], parent: [] }], output);
+        test.deepEqual([{
+            type: parser.TOKEN_TYPES.LOGIC,
+            line: 1,
+            name: 'blah',
+            args: [],
+            compile: { ends: true },
+            tokens: ['hello'],
+            strip: { before: false, after: false, start: false, end: false },
+            parent: []
+        }], output);
         test.done();
     },
 
@@ -109,6 +170,40 @@ exports.Tags = testCase({
         test.throws(function () {
             parser.parse('{% foo "blah is foo %}', { foo: {} });
         });
+        test.done();
+    }
+});
+
+exports.Whitespace = testCase({
+    setUp: function (callback) {
+        var tags = {
+            foo: function (indent, parentBlock) {
+                return parser.compile.apply(this, [indent + '    ', parentBlock]);
+            },
+            bar: function (indent, parentBlock) {
+                return '';
+            }
+        };
+        tags.foo.ends = true;
+        swig.init({
+            tags: tags,
+            allowErrors: true
+        });
+        callback();
+    },
+
+    basic: function (test) {
+        test.strictEqual(swig.compile('{% foo -%} foo{% endfoo %}')(), 'foo', 'whitespace before');
+        test.strictEqual(swig.compile('{% foo %}foo {%- endfoo %}')(), 'foo', 'whitespace after');
+        test.strictEqual(swig.compile('{% foo -%}\n\r\t foo\n\r\t {%- endfoo %}')(), 'foo', 'whitespace before and after');
+        test.strictEqual(swig.compile('a  {%- bar %}b')(), 'ab', 'previous whitespace removed');
+        test.strictEqual(swig.compile('a  {%- foo -%} b {%- endfoo -%} c')(), 'abc', 'all whitespace removed');
+        test.done();
+    },
+
+    'with tags': function (test) {
+        test.strictEqual(swig.compile('{% foo -%} {% bar %} foo{% endfoo %}')(), ' foo', 'whitespace before only up until tag');
+        test.strictEqual(swig.compile('{% foo%}foo {% bar %}{%- endfoo %}')(), 'foo ', 'whitespace after only up until tag');
         test.done();
     }
 });

@@ -1,6 +1,11 @@
 Template Syntax <a name="syntax" href="#syntax">#</a>
 ===============
 
+* [Variables](#variables)
+* [Comments](#comments)
+* [Logic](#logic)
+* [Whitespace Control](#whitespace)
+
 Swig uses the same template syntax as Django Templates
 
 * `{{` opens variable
@@ -44,3 +49,13 @@ Logic tags are operational blocks that have internal logic on how the template s
     {% if something %}
         This will display if something is truthy.
     {% endif %}
+
+### Whitespace Control <a name="whitespace" href="#whitespace">#</a>
+
+Any whitespace in your templates is left in your final output templates. However, you can control the whitespace around logic tags by using whitespace controls. If you put a dash (`-`) at the beginning or end of you tag, it will remove the previous or following whitespace.
+
+    {% for item in seq -%}
+        {{ item }}
+    {%- endfor %}
+
+This will return all `item` objects without any whitespace between them. If `seq` is an array of number `1` through `5`, the output will be `12345`.
