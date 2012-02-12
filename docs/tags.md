@@ -85,10 +85,20 @@ For loops have 4 special context variables accessible inside of the loop:
         {% if loop.last %}</ul>{% endif %}
     {% endfor %}
 
-* `loop.index`: the zero-indexed spot in the iterator.
+* `loop.index`: the current iteration of the loop (1-indexed)
+* `loop.index0`: the current iteration of the loop (0-indexed)
+* `loop.revindex`: the number of iterations from the end of the loop (1-indexed)
+* `loop.revindex0`: the number of iterations from the end of the loop (0-indexed)
 * `loop.key`: if the iterator is an object, this will be the key of the current item, otherwise it will be the same as the `loop.index`.
 * `loop.first`: `true` if the current object is the first in the object or array.
 * `loop.last`: `true` if the current object is the last in the object or array.
+* `loop.cycle`: a helper function to cycle between a the given arguments
+
+The `loop.cycle` helper function can take any number of arguments and will cycle through them during each iteration of the loop. A common use-case may look like this:
+
+    {% for item in items %}
+        <li class="{{ loop.cycle('odd', 'even') }}">{{ item }}</li>
+    {% endfor %}
 
 You can also apply filters to the object that you are iterating over.
 

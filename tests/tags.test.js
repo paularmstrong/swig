@@ -275,7 +275,9 @@ exports['if'] = testCase({
 
 exports['for'] = testCase({
     setUp: function (callback) {
-        swig.init({});
+        swig.init({
+            allowErrors: true
+        });
         callback();
     },
 
@@ -287,7 +289,7 @@ exports['for'] = testCase({
     },
 
     variables: function (test) {
-        var tpl = swig.compile('{% for foo in bar %}[{{ loop.index }}, {{ loop.key }}]{% endfor %}');
+        var tpl = swig.compile('{% for foo in bar %}[{{ loop.index0 }}, {{ loop.key }}]{% endfor %}');
         test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), '[0, 0][1, 1][2, 2]', 'array loop');
         test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '[0, baz][1, pow][2, foo]', 'object loop');
         test.done();
@@ -303,8 +305,29 @@ exports['for'] = testCase({
 
     index: function (test) {
         var tpl = swig.compile('{% for foo in bar %}{{ loop.index }}{% endfor %}');
-        test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), '012', 'index in object');
-        test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '012', 'index in object');
+        test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), '123', 'index in object');
+        test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '123', 'index in object');
+        test.done();
+    },
+
+    index0: function (test) {
+        var tpl = swig.compile('{% for foo in bar %}{{ loop.index0 }}{% endfor %}');
+        test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), '012', 'index0 in object');
+        test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '012', 'index0 in object');
+        test.done();
+    },
+
+    revindex: function (test) {
+        var tpl = swig.compile('{% for foo in bar %}{{ loop.revindex }}{% endfor %}');
+        test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), '321', 'revindex in object');
+        test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '321', 'revindex in object');
+        test.done();
+    },
+
+    revindex0: function (test) {
+        var tpl = swig.compile('{% for foo in bar %}{{ loop.revindex0 }}{% endfor %}');
+        test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), '210', 'revindex0 in object');
+        test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), '210', 'revindex0 in object');
         test.done();
     },
 
@@ -319,6 +342,18 @@ exports['for'] = testCase({
         var tpl = swig.compile('{% for foo in bar %}{% if loop.last %}{{ foo }}{% endif %}{% endfor %}');
         test.strictEqual(tpl({ bar: ['foo', 'bar', 'baz'] }), 'baz', 'last in array');
         test.strictEqual(tpl({ bar: { baz: 'foo', pow: 'bar', foo: 'baz' }}), 'baz', 'last in object');
+        test.done();
+    },
+
+    cycle: function (test) {
+        var tpl = swig.compile('{% for foo in bar %}{{ loop.cycle("odd", "even") }} {% endfor %}');
+        test.strictEqual(tpl({ bar: ['a', 'b', 'c', 'd'] }), 'odd even odd even ', 'cycle');
+
+        tpl = swig.compile('{% for foo in bar %}{{ loop.cycle("a", "b", "c", "d") }} {% endfor %}');
+        test.strictEqual(tpl({ bar: [1, 2, 3, 4, 5, 6, 7] }), 'a b c d a b c ', 'cycle with 4 args');
+
+        tpl = swig.compile('{% for foo in bar %}{{ loop.cycle("oh") }}, {% endfor %}{{ loop.cycle }}');
+        test.strictEqual(tpl({ bar: [0], loop: { cycle: 'hi' }}), 'oh, hi', 'loop.cycle is reset');
         test.done();
     },
 
@@ -342,8 +377,8 @@ exports['for'] = testCase({
         test.done();
     },
 
-    'use loop.index in var': function (test) {
-        var tpl = swig.compile('{% for key in bar %}{{ foo[loop.index] }} {% endfor %}');
+    'use loop.index0 in var': function (test) {
+        var tpl = swig.compile('{% for key in bar %}{{ foo[loop.index0] }} {% endfor %}');
         test.strictEqual(tpl({ bar: ['a', 'b', 'c'], foo: ['hi', 'and', 'bye' ]}), 'hi and bye ');
         test.done();
     }
