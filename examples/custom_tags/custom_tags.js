@@ -15,13 +15,13 @@ exports.input = function (indent) {
         helpers.setVar('__type', type),
         helpers.setVar('__label', label),
         helpers.setVar('__value', value),
-        '    __output += \'<div class="input \' + __type + \'">\';',
-        '    __output += \'\\n\';',
-        '    __output += \'<label for="\' + __name + \'">\' + __label + \'</label>\';',
-        '    __output += \'<input type="\' + __type + \'" name="\' + __name + \'" id="\' + __name + \'" value="\' + __value + \'">\';',
-        '    __output += \'\\n\';',
-        '    __output += "</div>";',
-        '    __output += \'\\n\';',
+        '    _output += \'<div class="input \' + __type + \'">\';',
+        '    _output += \'\\n\';',
+        '    _output += \'<label for="\' + __name + \'">\' + __label + \'</label>\';',
+        '    _output += \'<input type="\' + __type + \'" name="\' + __name + \'" id="\' + __name + \'" value="\' + __value + \'">\';',
+        '    _output += \'\\n\';',
+        '    _output += "</div>";',
+        '    _output += \'\\n\';',
         '})();'
     ];
 

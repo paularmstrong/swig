@@ -17,6 +17,7 @@ var fs = require('fs'),
         filters: filters,
         root: '/',
         tags: tags,
+        extensions: {},
         tzOffset: 0
     },
     _config = _.extend({}, config),
@@ -68,30 +69,30 @@ function createTemplate(data, id) {
     code = parser.compile.call(template);
 
     // The compiled render function - this is all we need
-    render = new Function('__context', '__parents', '__filters', '_', [
-        '__parents = __parents ? __parents.slice() : [];',
+    render = new Function('_context', '_parents', '_filters', '_', '_ext', [
+        '_parents = _parents ? _parents.slice() : [];',
         // Prevents circular includes (which will crash node without warning)
-        'var j = __parents.length,',
-        '    __output = "",',
-        '    __this = this;',
+        'var j = _parents.length,',
+        '    _output = "",',
+        '    _this = this;',
         // Note: this loop averages much faster than indexOf across all cases
         'while (j--) {',
-        '   if (__parents[j] === this.id) {',
-        '         return "Circular import of template " + this.id + " in " + __parents[__parents.length-1];',
+        '   if (_parents[j] === this.id) {',
+        '         return "Circular import of template " + this.id + " in " + _parents[_parents.length-1];',
         '   }',
         '}',
         // Add this template as a parent to all includes in its scope
-        '__parents.push(this.id);',
+        '_parents.push(this.id);',
         code,
-        'return __output;',
+        'return _output;',
     ].join(''));
 
     template.render = function (context, parents) {
         if (_config.allowErrors) {
-            return render.call(this, context, parents, _config.filters, _);
+            return render.call(this, context, parents, _config.filters, _, _config.extensions);
         } else {
             try {
-                return render.call(this, context, parents, _config.filters, _);
+                return render.call(this, context, parents, _config.filters, _, _config.extensions);
             } catch (e) {
                 return new TemplateError(e);
             }
