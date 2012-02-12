@@ -73,6 +73,30 @@ Output:
     <h1>Scrumdiddlyumptious</h1>
     <p>Tacos</p>
 
+Third-Party Extensions <a name="third-party-extensions" href="#third-party-extensions">#</a>
+----------------------
+
+Often times, you'll want to import a third-party javascript extension into your custom tags. For example, if you have a custom tag that compiles some instructions to access library `i18n` like so:
+
+    exports.trans = function (indent) {
+        var myArg = parser.parseVariable(this.args[0]),
+        output = [];
+        output.push(helpers.setVar('__myArg', myArg));
+
+        output.push('_output += i18n(__myArg);');
+
+        return output.join('');
+    };
+
+You'll quickly notice that the compiled templates don't have access to the `i18n` module. To allow access, the `swig.init` method takes an `extensions` config:
+
+    var i18n = require('i18n');
+    swig.init({
+        extensions: {
+            i18n: i18n
+        }
+    });
+
 Write Your Own <a name="write-your-own" href="#write-your-own">#</a>
 --------------
 

@@ -13,6 +13,7 @@ In order to start using Swig, you should initialize it. Swig can be configured u
         filters: {},
         root: '/',
         tags: {},
+        extensions: {},
         tzOffset: 0
     });
 
@@ -51,6 +52,10 @@ The directory to search for templates. If a template passed to `swig.compileFile
 #### tags _optional_
 
 Use this to set any custom tags and/or override any of the built-in tags. For more information on writing your own tags, see the [custom tags guide](custom-tags.md).
+
+#### extensions _optional_
+
+Add library extensions that will be available to compiled templates. For more information, see the custom tags guide on [third party extensions](custom-tags.md#third-party-extensions).
 
 #### tzOffset _optional_
 
