@@ -1,3 +1,15 @@
+[0.10.0](https://github.com/paularmstrong/swig/tree/v0.10.0 / 2012-02-13
+------------------------------------------------------------------------
+
+* **Added** loop.index0, loop.revindex, loop.revindex0, and loop.cycle [gh-48]
+* **Added** init config `extensions` for 3rd party extension access in custom tags [gh-44]
+* **Added** Whitespace Control [gh-46]
+* **Changed** The `empty` tag in `for` loops is now `else` [gh-49]
+* **Changed** `forloop` vars to `loop` closes [gh-47]
+* **Fixed** `include` tag's `with` and `only` args documentation [gh-50]
+
+[Documentation](https://github.com/paularmstrong/swig/tree/v0.10.0/docs)
+
 [0.9.4](https://github.com/paularmstrong/swig/tree/v0.9.4) / 2012-02-07
 -----------------------------------------------------------------------
 
