@@ -386,43 +386,25 @@ exports['for'] = testCase({
 
 exports.set = testCase({
     setUp: function (callback) {
-        swig.init({});
+        swig.init({
+            allowErrors: true
+        });
         callback();
     },
 
     basic: function (test) {
-        var tpl = swig.compile('{% set foo = "bar" %} {{ foo }}');
-        test.strictEqual(tpl({}), ' bar');
+        test.strictEqual(swig.compile('{% set foo = "bar" %} {{ foo }}')({}), ' bar', 'basic');
+        test.strictEqual(swig.compile('{% set foo = bar|lower %} {{ foo }}')({ bar: 'BAR' }), ' bar', 'from var');
+        test.strictEqual(swig.compile('{% set foo = ["hi", "bye"] %} {{ foo[0] }}')({}), ' hi', 'array');
+        test.strictEqual(swig.compile('{% set foo = { bar: "bar" } %} {{ foo.bar }}')({}), ' bar', 'object');
+        test.strictEqual(swig.compile('{% set foo = 99 %} {{ foo }}')({}), ' 99', 'number');
+        test.strictEqual(swig.compile('{% set foo = true %}{% if foo == true %}hi{% endif %}')({}), 'hi');
         test.done();
     },
 
-    'from var': function (test) {
-        var tpl = swig.compile('{% set foo = bar|lower %} {{ foo }}');
-        test.strictEqual(tpl({ bar: 'BAR' }), ' bar');
-        test.done();
-    },
-
-    'array': function (test) {
-        var tpl = swig.compile('{% set foo = ["hi", "bye"] %} {{ foo[0] }}');
-        test.strictEqual(tpl({}), ' hi');
-        test.done();
-    },
-
-    'object': function (test) {
-        var tpl = swig.compile('{% set foo = { bar: "bar" } %} {{ foo.bar }}');
-        test.strictEqual(tpl({}), ' bar');
-        test.done();
-    },
-
-    'number': function (test) {
-        var tpl = swig.compile('{% set foo = 99 %} {{ foo }}');
-        test.strictEqual(tpl({}), ' 99');
-        test.done();
-    },
-
-    'boolean': function (test) {
-        var tpl = swig.compile('{% set foo = true %}{% if foo == true %}hi{% endif %}');
-        test.strictEqual(tpl({}), 'hi');
+    'sets for current context': function (test) {
+        var tpl = swig.compile('{% set foo = true %}{% if foo %}{% set foo = false %}{% endif %}{{ foo }}', { filename: 'hihi' });
+        test.strictEqual(tpl({}), 'false', 'if block');
         test.done();
     }
 });
