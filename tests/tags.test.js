@@ -406,6 +406,17 @@ exports.set = testCase({
         var tpl = swig.compile('{% set foo = true %}{% if foo %}{% set foo = false %}{% endif %}{{ foo }}', { filename: 'hihi' });
         test.strictEqual(tpl({}), 'false', 'if block');
         test.done();
+    },
+
+    'sets across blocks': function (test) {
+        test.strictEqual(swig.compile('{% set foo = "foo" %}{% block a %}{{ foo }}{% set foo = "bar" %}{% endblock %}{{ foo }}{% block b %}{{ foo }}{% endblock %}')(), 'foobarbar');
+        test.done();
+    },
+
+    'sets across extends': function (test) {
+        swig.compile('{% block a %}{{ foo }}{% endblock %}', { filename: 'a' });
+        test.strictEqual(swig.compile('{% extends "a" %}{% set foo = "bar" %}')(), 'bar');
+        test.done();
     }
 });
 
