@@ -71,6 +71,7 @@ function createTemplate(data, id) {
     // The compiled render function - this is all we need
     render = new Function('_context', '_parents', '_filters', '_', '_ext', [
         '_parents = _parents ? _parents.slice() : [];',
+        '_context = _context || {};',
         // Prevents circular includes (which will crash node without warning)
         'var j = _parents.length,',
         '    _output = "",',

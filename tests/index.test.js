@@ -74,5 +74,10 @@ exports.compileFile = testCase({
         var tpl = swig.compile('{% foo %}');
         tpl();
         test.done();
+    },
+
+    'render without context': function (test) {
+        test.strictEqual(swig.compile('{% set foo = "foo" %}{{ foo }}')(), 'foo', 'this should not throw');
+        test.done();
     }
 });
