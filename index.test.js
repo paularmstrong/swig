@@ -1,4 +1,4 @@
-var swig = require('../index'),
+var swig = require('./index'),
     testCase = require('nodeunit').testCase;
 
 exports.compileFile = testCase({
@@ -8,7 +8,7 @@ exports.compileFile = testCase({
 
     basic: function (test) {
         swig.init({
-            root: __dirname + '/templates',
+            root: __dirname + '/tests/templates',
             allowErrors: true
         });
 
@@ -19,7 +19,7 @@ exports.compileFile = testCase({
 
     'allowErrors = false': function (test) {
         swig.init({
-            root: __dirname + '/templates',
+            root: __dirname + '/tests/templates',
             allowErrors: false
         });
         var tpl = swig.compileFile('foobar.html');
@@ -41,10 +41,10 @@ exports.compileFile = testCase({
 
     'absolute path': function (test) {
         swig.init({
-            root: __dirname + '/foobar',
+            root: __dirname + '/tests/templates',
             allowErrors: true
         });
-        var tpl = swig.compileFile('/' + __dirname + '/templates/included_2.html');
+        var tpl = swig.compileFile('/' + __dirname + '/tests/templates/included_2.html');
         test.strictEqual('2', tpl.render({ array: [1, 1] }), 'file from absolute path is a-ok');
         test.done();
     },
