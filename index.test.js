@@ -1,19 +1,16 @@
 var swig = require('./index'),
     testCase = require('nodeunit').testCase;
 
-exports.compileFile = testCase({
-    setUp: function (callback) {
-        callback();
-    },
+exports.init = testCase({
+    'custom filtersm': function (test) {
+        swig.init({ filters: {
+            foo: function (input) {
+                return 'bar';
+            }
+        }});
 
-    basic: function (test) {
-        swig.init({
-            root: __dirname + '/tests/templates',
-            allowErrors: true
-        });
-
-        var tpl = swig.compileFile('included_2.html');
-        test.strictEqual('2', tpl.render({ array: [1, 1] }), 'from file is a-ok');
+        var tpl = swig.compile('{{ asdf|foo }}');
+        test.strictEqual(tpl({ asdf: 'blah' }), 'bar');
         test.done();
     },
 
@@ -39,6 +36,40 @@ exports.compileFile = testCase({
         test.done();
     },
 
+    'custom extensions': function (test) {
+        test.expect(1);
+        swig.init({
+            allowErrors: true,
+            extensions: { foobar: function () { test.ok(true); } },
+            tags: {
+                foo: function (indent) {
+                    return '_ext.foobar();';
+                }
+            }
+        });
+
+        var tpl = swig.compile('{% foo %}');
+        tpl();
+        test.done();
+    }
+});
+
+exports.compileFile = testCase({
+    setUp: function (callback) {
+        callback();
+    },
+
+    basic: function (test) {
+        swig.init({
+            root: __dirname + '/tests/templates',
+            allowErrors: true
+        });
+
+        var tpl = swig.compileFile('included_2.html');
+        test.strictEqual('2', tpl.render({ array: [1, 1] }), 'from file is a-ok');
+        test.done();
+    },
+
     'absolute path': function (test) {
         swig.init({
             root: __dirname + '/tests/templates',
@@ -59,25 +90,66 @@ exports.compileFile = testCase({
         test.done();
     },
 
-    extensions: function (test) {
-        test.expect(1);
-        swig.init({
-            allowErrors: true,
-            extensions: { foobar: function () { test.ok(true); } },
-            tags: {
-                foo: function (indent) {
-                    return '_ext.foobar();';
-                }
-            }
-        });
-
-        var tpl = swig.compile('{% foo %}');
-        tpl();
-        test.done();
-    },
-
     'render without context': function (test) {
         test.strictEqual(swig.compile('{% set foo = "foo" %}{{ foo }}')(), 'foo', 'this should not throw');
         test.done();
     }
 });
+
+exports.Errors = testCase({
+    'allow - parse error': function (test) {
+        swig.init({ allowErrors: true });
+
+        test.throws(function () {
+            swig.compile('{% for foo in blah %}{% endif %}');
+        }, Error);
+        test.done();
+    },
+
+    'allow - compile error': function (test) {
+        swig.init({
+            allowErrors: true,
+            tags: { foo: function (indent) {
+                return 'blargh;';
+            }}
+        });
+
+        var tpl = swig.compile('{% foo %}');
+        test.throws(function () {
+            tpl({});
+        }, Error);
+        test.done();
+    },
+
+    'disallow - parse error': function (test) {
+        swig.init({});
+
+        test.doesNotThrow(function () {
+            swig.compile('{% for foo in bar %}{% endif %}');
+        }, Error);
+        test.done();
+    },
+
+    'disallow - compile error': function (test) {
+        swig.init({
+            tags: { foobar: function (indent) {
+                return 'blargh;';
+            }}
+        });
+
+        var tpl = swig.compile('{% foobar %}');
+        test.doesNotThrow(function () {
+            tpl({});
+        }, Error);
+        test.done();
+    }
+});
+
+exports['double-escape forward-slash'] = function (test) {
+    swig.init({});
+
+    var tpl = swig.compile('foobar\\/');
+    test.strictEqual(tpl({}), 'foobar\\/');
+
+    test.done();
+};
