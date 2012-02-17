@@ -166,6 +166,24 @@ exports.include = testCase({
         test.done();
     },
 
+    'using context': function (test) {
+        swig.compile('{{ foo }}{{ bar }}', { filename: 'withcontext' });
+        var tpl = swig.compile('{% set ctx = {foo: "1"} %}{% include "withcontext" using ctx %}');
+        test.strictEqual(tpl({}), '1');
+
+        tpl = swig.compile('{% set ctx = {foo:"1",bar:"2"} %}{% include "withcontext" using ctx %}');
+        test.strictEqual(tpl({}), '12');
+
+        test.throws(function () {
+            swig.compile('{% include "withcontext" using %}');
+        });
+        test.throws(function () {
+            swig.compile('{% include "withcontext" using ctx ctx %}');
+        });
+
+        test.done();
+    },
+
     only: function (test) {
         swig.compile('{{ foo }}', { filename: 'only' });
         var tpl = swig.compile('{% include "only" only %}');

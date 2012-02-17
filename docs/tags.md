@@ -41,6 +41,8 @@ Includes a template in it's place. The template is rendered within the current c
     {% include template_path %}
     {% include "path/to/template.js" %}
 
+### Including Context
+
 Locally declared context variables are _not_ passed to the included template by default. For example, in the following situations, your `inc.html` will not know about the variables `foo` nor `bar`:
 
     {% set foo = "bar" %}
@@ -66,6 +68,18 @@ Assume that your current context has variables `bar` and `foo` available. In the
     {% include "inc.html" with foo only %}
 
 The `only` argument _must_ be passed as the last argument in the tag. Any other placement will not work.
+
+#### Replacing Context
+
+You can also choose to replace the include's context with another context using the `using` argument. This might be common in child templates that can be rendered standalone.
+
+    {% for bar in thing %}
+        {% include "inc.html" using bar %}
+    {% endfor %}
+
+In this example, `inc.html` will now have `bar` as its context.
+
+You can only pass in one replacement context and it should be an object.
 
 ### raw <a name="raw" href="#raw">#</a>
 
