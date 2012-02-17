@@ -41,7 +41,7 @@ Includes a template in it's place. The template is rendered within the current c
     {% include template_path %}
     {% include "path/to/template.js" %}
 
-### Including Context
+#### Including Context
 
 Locally declared context variables are _not_ passed to the included template by default. For example, in the following situations, your `inc.html` will not know about the variables `foo` nor `bar`:
 
