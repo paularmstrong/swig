@@ -7,7 +7,21 @@
     <link rel="stylesheet" href="nodeunit.css" type="text/css" media="all" />
     <script src="nodeunit.min.js"></script>
     <script src="swig.pack.js"></script>
+    <script src="autoescape.test.js"></script>
+    <script src="block.test.js"></script>
+    <script src="else.test.js"></script>
+    <script src="filter.test.js"></script>
     <script src="filters.test.js"></script>
+    <script src="for.test.js"></script>
+    <script src="helpers.test.js"></script>
+    <script src="if.test.js"></script>
+    <script src="import.test.js"></script>
+    <script src="include.test.js"></script>
+    <script src="macro.test.js"></script>
+    <script src="parent.test.js"></script>
+    <script src="parser.test.js"></script>
+    <script src="raw.test.js"></script>
+    <script src="set.test.js"></script>
     <script src="tags.test.js"></script>
     <script src="templates.test.js"></script>
 </head>
@@ -17,8 +31,21 @@
     <script>
     swig.init({});
     nodeunit.run({
-        Filters: filters,
-        Tags: tags,
+        Autoescape: _autoescape,
+        Block: _block,
+        Else: _else,
+        Filter: _filter,
+        Filters: _filters,
+        For: _for,
+        Helpers: _helpers,
+        If: _if,
+        Import: _import,
+        Include: _include,
+        Macro: _macro,
+        Parent: _parent,
+        Raw: _raw,
+        Set: _set,
+        Tags: _tags,
         Templates: templates
     });
     </script>
