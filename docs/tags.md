@@ -36,10 +36,14 @@ See [Template inheritance](inheritance.md) for more information.
 
 ### include <a name="include" href="#include">#</a>
 
-Includes a template in it's place. The template is rendered within the current context. Does not use and {% endinclude %}.
+Includes a template in it's place. The template is rendered within the current context.
 
     {% include template_path %}
     {% include "path/to/template.js" %}
+
+You can mark an include to `ignore missing` so that if the template does not exist, it will be ignored and no error will be thrown.
+
+    {% include "foobar.html" ignore missing %}
 
 Locally declared context variables are _not_ passed to the included template by default. For example, in the following situations, your `inc.html` will not know about the variables `foo` nor `bar`:
 
