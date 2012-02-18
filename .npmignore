@@ -1,6 +1,6 @@
 .DS_Store
 *.html
-*.test.js
+**.test.js
 dist/**
 docs/**
 examples/**
