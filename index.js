@@ -132,7 +132,7 @@ exports.compileFile = function (filepath) {
     }
 
     get = function () {
-        var file = ((/^\//).test(filepath)) ? filepath : _config.root + '/' + filepath,
+        var file = ((/^\//).test(filepath) || (/^.:/).test(filepath)) ? filepath : _config.root + '/' + filepath,
             data = fs.readFileSync(file, config.encoding);
         tpl = getTemplate(data, { filename: filepath });
     };
