@@ -50,13 +50,13 @@ Locally declared context variables are _not_ passed to the included template by 
         {% include "inc.html" %}
     {% endfor %}
 
-In order to have your included template get these locally declared variables, you can use the `with` argument, followed by space-separated tokens of the local variables to include in the context:
+In order to have your included template get these locally declared variables, you can use the `with` argument, followed by an object that will create the context of the included template:
 
-    {% set foo = "bar" %}
+    {% set foo = { bar: "baz" } %}
     {% include "inc.html" with foo %}
 
     {% for bar in thing %}
-        {% include "inc.html" with foo bar %}
+        {% include "inc.html" with bar %}
     {% endfor %}
 
 You can also use the `only` argument to restrict the context to the variables that you explicitly define.
