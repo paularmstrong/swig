@@ -160,7 +160,7 @@ Also supports using the `{% else %}` and `{% else if ... %}` tags within an if-b
 
 The `autoescape` tag accepts two controls:
 
-1. `on` or `off`: (default is `on` if not provided). These either turn variable auto-escaping on or off for the contents of the filter, regardless of the global setting.
+1. `true` or `false`: (default is `true` if not provided) These either turn variable auto-escaping on or off for the contents of the tag, regardless of the global setting.
 1. escape-type: optionally include `"js"` to escape variables safe for JavaScript
 
 For the following contexts, assume:
