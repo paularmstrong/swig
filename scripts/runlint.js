@@ -22,7 +22,7 @@ function runLint(error, stdout, stderr) {
     var files = stdout.trim().replace(/\n/g, ' ');
 
     child_process.exec('node ' + __dirname + '/../node_modules/nodelint/nodelint ' + files + ' --config ' + configFile + '.js', { cwd: config.root }, function (error, stdout, stderr) {
-        util.puts(stderr);
+        util.puts(stdout);
     });
 }
 

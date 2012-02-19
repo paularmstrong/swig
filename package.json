@@ -16,7 +16,7 @@
     },
     "devDependencies": {
         "express": ">=2.5.0",
-        "nodelint": ">=0.5.2",
+        "nodelint": "~0.6",
         "nodeunit": ">=0.6.4",
         "uglify-js": ">=1.1.0"
     },
