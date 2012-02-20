@@ -10,7 +10,8 @@ var util = require('util'),
     AssertionError = require(__dirname + '/../node_modules/nodeunit/lib/assert').AssertionError,
     config,
     i,
-    l;
+    l,
+    isWindows = (/^Windows/).test(require("os").type());
 
 process.argv.forEach(function (val, index, array) {
     if (index < 2) {
@@ -121,4 +122,7 @@ for (i = 0; i < l; i += 1) {
     ignore += ' ! -path "' + config.pathIgnore[i] + '"';
 }
 
-child_process.exec('find . -name "*.test.js" ' + ignore, { cwd: config.root }, runTests);
+if(isWindows)
+    child_process.exec('find.exe ../. -name "*.test.js" ' + ignore, runTests);
+else
+    child_process.exec('find . -name "*.test.js" ' + ignore, { cwd: config.root }, runTests);

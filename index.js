@@ -30,6 +30,14 @@ exports.init = function (options) {
     _config.filters = _.extend(filters, options.filters);
     _config.tags = _.extend(tags, options.tags);
 
+    if(_config.dateStrings) {
+        dateformat._months   = _config.dateStrings.months   || dateformat._months;
+        dateformat._days     = _config.dateStrings.days     || dateformat._days;
+        dateformat._ordinals = _config.dateStrings.ordinals || dateformat._ordinals;
+        dateformat._ampm     = _config.dateStrings.ampm     || dateformat._ampm;
+        dateformat._AMPM     = _config.dateStrings.AMPM     || dateformat._AMPM;
+    }
+
     dateformat.defaultTZOffset = _config.tzOffset;
 };
 
