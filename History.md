@@ -1,3 +1,19 @@
+[0.11.0](https://github.com/paularmstrong/swig/tree/v0.11.0) / 2012-02-27
+------------------------------------------------------------------------
+
+* **Added** Support for Windows style paths [gh-57]
+* **Added** `ignore missing` tokens to include tag
+* **Changed** include tag `with context` to only work if `context` is an object
+* **Changed** `autoescape` tag controls no longer 'yes' or 'no'. Use `true` and `false`
+* **Changed** parser is now passed into tags as an argument
+* **Changed** don't require passing context object when rendering template
+* **Fixed** dateformats `N` and `w` [gh-59]
+* **Fixed** number changing to string after add filter or set from variable [gh-53] [gh-58]
+* **Fixed** speed decrease caused by loop.cycle fixed
+* **Fixed** Ensure set tag bubbles through extends and blocks
+
+[Documentation](https://github.com/paularmstrong/swig/tree/v0.11.0/docs)
+
 [0.10.0](https://github.com/paularmstrong/swig/tree/v0.10.0) / 2012-02-13
 ------------------------------------------------------------------------
 
