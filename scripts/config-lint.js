@@ -1,8 +1,3 @@
-module.exports = {
-    root: __dirname + '/../',
-    pathIgnore: ['*node_modules*', '*browser/underscore*', '*dist/browser/*', '*dist/test*']
-};
-
 var options = {
     adsafe: false,
     bitwise: true,

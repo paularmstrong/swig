@@ -6,14 +6,16 @@ all:
 browser:
 	@scripts/browser.sh
 
+tests := $(shell find . -name '*.test.js' ! -path "*node_modules/*" ! -path "*dist/*")
+reporter = skip_passed
 test:
-	@node tests/speed.js
-	@node scripts/runtests.js
+	@node_modules/nodeunit/bin/nodeunit --reporter ${reporter} ${tests}
 
-testf:
-	@node_modules/nodeunit/bin/nodeunit ${file}
-
+files := $(shell find . -name '*.js' ! -path "*node_modules/*" ! -path "*dist/*")
 lint:
-	@node scripts/runlint.js
+	@node_modules/nodelint/nodelint ${files} --config=scripts/config-lint.js
 
-.PHONY: all browser test lint
+speed:
+	@node tests/speed.js
+
+.PHONY: all browser test lint speed
