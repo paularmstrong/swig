@@ -91,12 +91,11 @@ function createTemplate(data, id) {
     template.render = function (context, parents) {
         if (_config.allowErrors) {
             return render.call(this, context, parents, _config.filters, _, _config.extensions);
-        } else {
-            try {
-                return render.call(this, context, parents, _config.filters, _, _config.extensions);
-            } catch (e) {
-                return new TemplateError(e);
-            }
+        }
+        try {
+            return render.call(this, context, parents, _config.filters, _, _config.extensions);
+        } catch (e) {
+            return new TemplateError(e);
         }
     };
 
