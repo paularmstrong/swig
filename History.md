@@ -1,3 +1,10 @@
+[0.11.2](https://github.com/paularmstrong/swig/tree/v0.11.2) / 2012-04-10
+-------------------------------------------------------------------------
+
+* **Fixed** Update support for underscore@1.3.3 [gh-70] [gh-71]
+
+[Documentation](https://github.com/paularmstrong/swig/tree/v0.11.2/docs)
+
 [0.11.1](https://github.com/paularmstrong/swig/tree/v0.11.1) / 2012-04-01
 -------------------------------------------------------------------------
 
