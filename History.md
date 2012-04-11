@@ -1,5 +1,12 @@
+[0.11.1](https://github.com/paularmstrong/swig/tree/v0.11.1) / 2012-04-01
+-------------------------------------------------------------------------
+
+* **Fixed** Duplicate (string) tokens were being removed when extending a base template. [gh-67]
+
+[Documentation](https://github.com/paularmstrong/swig/tree/v0.11.1/docs)
+
 [0.11.0](https://github.com/paularmstrong/swig/tree/v0.11.0) / 2012-02-27
-------------------------------------------------------------------------
+-------------------------------------------------------------------------
 
 * **Added** Support for Windows style paths [gh-57]
 * **Added** `ignore missing` tokens to include tag
@@ -15,7 +22,7 @@
 [Documentation](https://github.com/paularmstrong/swig/tree/v0.11.0/docs)
 
 [0.10.0](https://github.com/paularmstrong/swig/tree/v0.10.0) / 2012-02-13
-------------------------------------------------------------------------
+-------------------------------------------------------------------------
 
 * **Added** loop.index0, loop.revindex, loop.revindex0, and loop.cycle [gh-48]
 * **Added** init config `extensions` for 3rd party extension access in custom tags [gh-44]
