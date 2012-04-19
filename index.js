@@ -120,7 +120,7 @@ function getTemplate(source, options, config) {
 }
 
 exports.compileFile = function (filepath, config) {
-    config = config ? _.defaults(config, _config) : _config;
+    config = config || _config;
     var tpl, get;
 
     if (filepath[0] === '/') {
@@ -154,11 +154,25 @@ exports.compileFile = function (filepath, config) {
 };
 
 exports.compile = function (source, options, config) {
-    config = config ? _.defaults(config, _config) : _config;
+    config = config || _config;
     options = options || {};
     var tmpl = getTemplate(source, options, config);
 
     return function (source, options) {
         return tmpl.render(source, options);
     };
+};
+
+exports.engine = function (config) {
+    config = config ? _.defaults(config, _config) : null;
+    var engine = {
+        compileFile: function (filepath) {
+            return exports.compileFile(filepath, config);
+        },
+        compile: function (source, options) {
+            return exports.compile(source, options, config);
+        }
+    };
+
+    return engine;
 };
