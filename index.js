@@ -39,10 +39,13 @@ function TemplateError(error) {
     }};
 }
 
-function createTemplate(data, id) {
+function createTemplate(data, id, config) {
+    config = config || _config;
     var template = {
             // Allows us to include templates from the compiled code
-            compileFile: exports.compileFile,
+            compileFile: function (filepath) {
+                return exports.compileFile(filepath, config);
+            },
             // These are the blocks inside the template
             blocks: {},
             // Distinguish from other tokens
@@ -55,11 +58,11 @@ function createTemplate(data, id) {
         render;
 
     // The template token tree before compiled into javascript
-    if (_config.allowErrors) {
-        template.tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
+    if (config.allowErrors) {
+        template.tokens = parser.parse.call(template, data, config.tags, config.autoescape);
     } else {
         try {
-            template.tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
+            template.tokens = parser.parse.call(template, data, config.tags, config.autoescape);
         } catch (e) {
             return new TemplateError(e);
         }
@@ -89,11 +92,11 @@ function createTemplate(data, id) {
     ].join(''));
 
     template.render = function (context, parents) {
-        if (_config.allowErrors) {
-            return render.call(this, context, parents, _config.filters, _, _config.extensions);
+        if (config.allowErrors) {
+            return render.call(this, context, parents, config.filters, _, config.extensions);
         }
         try {
-            return render.call(this, context, parents, _config.filters, _, _config.extensions);
+            return render.call(this, context, parents, config.filters, _, config.extensions);
         } catch (e) {
             return new TemplateError(e);
         }
@@ -102,27 +105,29 @@ function createTemplate(data, id) {
     return template;
 }
 
-function getTemplate(source, options) {
+function getTemplate(source, options, config) {
+    config = config || _config;
     var key = options.filename || source;
-    if (_config.cache || options.cache) {
+    if (config.cache || options.cache) {
         if (!CACHE.hasOwnProperty(key)) {
-            CACHE[key] = createTemplate(source, key);
+            CACHE[key] = createTemplate(source, key, config);
         }
 
         return CACHE[key];
     }
 
-    return createTemplate(source, key);
+    return createTemplate(source, key, config);
 }
 
-exports.compileFile = function (filepath) {
+exports.compileFile = function (filepath, config) {
+    config = config ? _.defaults(config, _config) : _config;
     var tpl, get;
 
     if (filepath[0] === '/') {
         filepath = filepath.substr(1);
     }
 
-    if (_config.cache && CACHE.hasOwnProperty(filepath)) {
+    if (config.cache && CACHE.hasOwnProperty(filepath)) {
         return CACHE[filepath];
     }
 
@@ -131,12 +136,12 @@ exports.compileFile = function (filepath) {
     }
 
     get = function () {
-        var file = ((/^\//).test(filepath) || (/^.:/).test(filepath)) ? filepath : _config.root + '/' + filepath,
+        var file = ((/^\//).test(filepath) || (/^.:/).test(filepath)) ? filepath : config.root + '/' + filepath,
             data = fs.readFileSync(file, config.encoding);
-        tpl = getTemplate(data, { filename: filepath });
+        tpl = getTemplate(data, { filename: filepath }, config);
     };
 
-    if (_config.allowErrors) {
+    if (config.allowErrors) {
         get();
     } else {
         try {
@@ -148,9 +153,10 @@ exports.compileFile = function (filepath) {
     return tpl;
 };
 
-exports.compile = function (source, options) {
+exports.compile = function (source, options, config) {
+    config = config ? _.defaults(config, _config) : _config;
     options = options || {};
-    var tmpl = getTemplate(source, options || {});
+    var tmpl = getTemplate(source, options, config);
 
     return function (source, options) {
         return tmpl.render(source, options);
