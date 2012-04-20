@@ -156,3 +156,18 @@ exports.compile = function (source, options) {
         return tmpl.render(source, options);
     };
 };
+
+/**
+ * Express 3 support.
+ */
+
+exports.__express = function (path, options, fn) {
+	options = options || {};
+	try {
+		options.filename = path;
+		var tmpl = exports.compileFile(_.last(path.split('/')));
+		fn(null, tmpl.render(options));
+	} catch (err) {
+		fn(err);
+	}
+};

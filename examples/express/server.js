@@ -5,6 +5,8 @@ var express = require('express'),
 
 // Register the template engine
 app.register('.html', swig);
+//express 3: uncomment under code
+//adminHost.engine('html', swig.__express);
 app.set('view engine', 'html');
 
 // Set the view directory
