@@ -19,6 +19,8 @@ In order to start using Swig, you should initialize it. Swig can be configured u
 
 This step is _optional_, however it is recommended to at least set the `root` key when running Swig from node.js.
 
+You can also create multiple instances of the Swig engine in the same runtime. See <a href="#multiple-instances">Creating Multiple Intances of Swig below</a>.
+
 ### Options
 
 #### allowErrors _optional_
@@ -60,6 +62,46 @@ Add library extensions that will be available to compiled templates. For more in
 #### tzOffset _optional_
 
 Sets a default timezone offset, in minutes from GMT. Setting this will make the [date filter](filters.md#date) automatically convert dates parsed through the date filter to the appropriate timezone offset.
+
+Creating Multiple Intances of Swig <a name="multiple-instances" href="#multiple-instances">#</a>
+----------------------------------
+Sometimes you may find you need more than one instance of the Swig template engine in the same program runtime. For example; one for HTTP responses, one for HTML emails, and one for plain text emails. You can do this with the `.engine()` constructor.
+
+    var engineA = swig.engine({
+        root: '/templates/',
+    });
+
+    // ...
+    // Later in your code, maybe in another module, you could do this:
+
+    var engineA = swig.engine({
+        root: '/emails/',
+    });
+
+Any of the options you can pass into `.init()` will work in `.engine()` and the defaults are exactly the same. In fact, you can call `.init()` to set a global configuration and then create multiple Swig engines elsewhere in your program which will inherit your global configs.
+
+    swig.init({
+        allowErrors: true,
+        encoding: 'utf8',
+        root: '/templates',
+    });
+
+    // ...
+    // Later in your code, maybe in another module, you could do this:
+
+    var engine = swig.engine({
+        allowErrors: false,
+        filters: {
+            foo: function (input) {
+                return 'bar';
+            }
+        }
+    });
+
+In that case `allowErrors: false` and the custom `foo` filter will only apply to this engine instance.
+
+### GOTCHA!
+Once the tzOffset option is set, either with a call to `.init()` or `.engine()` it will be set globally for all instances of the Swig engine. You shouldn't need to change this value from the same program runtime anyway.
 
 Parsing a Template <a name="parsing" href="#parsing">#</a>
 ------------------
