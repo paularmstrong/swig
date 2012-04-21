@@ -39,12 +39,11 @@ function TemplateError(error) {
     }};
 }
 
-function createTemplate(data, id, config) {
-    config = config || _config;
+function createTemplate(data, id, conf) {
     var template = {
             // Allows us to include templates from the compiled code
             compileFile: function (filepath) {
-                return exports.compileFile(filepath, config);
+                return exports.compileFile(filepath, conf);
             },
             // These are the blocks inside the template
             blocks: {},
@@ -58,11 +57,11 @@ function createTemplate(data, id, config) {
         render;
 
     // The template token tree before compiled into javascript
-    if (config.allowErrors) {
-        template.tokens = parser.parse.call(template, data, config.tags, config.autoescape);
+    if (conf.allowErrors) {
+        template.tokens = parser.parse.call(template, data, conf.tags, conf.autoescape);
     } else {
         try {
-            template.tokens = parser.parse.call(template, data, config.tags, config.autoescape);
+            template.tokens = parser.parse.call(template, data, conf.tags, conf.autoescape);
         } catch (e) {
             return new TemplateError(e);
         }
@@ -92,11 +91,11 @@ function createTemplate(data, id, config) {
     ].join(''));
 
     template.render = function (context, parents) {
-        if (config.allowErrors) {
-            return render.call(this, context, parents, config.filters, _, config.extensions);
+        if (conf.allowErrors) {
+            return render.call(this, context, parents, conf.filters, _, conf.extensions);
         }
         try {
-            return render.call(this, context, parents, config.filters, _, config.extensions);
+            return render.call(this, context, parents, conf.filters, _, conf.extensions);
         } catch (e) {
             return new TemplateError(e);
         }
@@ -105,30 +104,31 @@ function createTemplate(data, id, config) {
     return template;
 }
 
-function getTemplate(source, options, config) {
-    config = config || _config;
-    var key = options.filename || source;
-    if (config.cache || options.cache) {
-        if (!CACHE.hasOwnProperty(key)) {
-            CACHE[key] = createTemplate(source, key, config);
+function getTemplate(source, options, conf) {
+    var key = options.filename || source,
+        cache = conf.CACHE || CACHE;
+    if (conf.cache || options.cache) {
+        if (!cache.hasOwnProperty(key)) {
+            cache[key] = createTemplate(source, key, conf);
         }
 
-        return CACHE[key];
+        return cache[key];
     }
 
-    return createTemplate(source, key, config);
+    return createTemplate(source, key, conf);
 }
 
-exports.compileFile = function (filepath, config) {
-    config = config || _config;
-    var tpl, get;
+exports.compileFile = function (filepath, conf) {
+    conf = conf || _config;
+    var tpl, get,
+        cache = conf.CACHE || CACHE;
 
     if (filepath[0] === '/') {
         filepath = filepath.substr(1);
     }
 
-    if (config.cache && CACHE.hasOwnProperty(filepath)) {
-        return CACHE[filepath];
+    if (conf.cache && cache.hasOwnProperty(filepath)) {
+        return cache[filepath];
     }
 
     if (typeof window !== 'undefined') {
@@ -136,12 +136,12 @@ exports.compileFile = function (filepath, config) {
     }
 
     get = function () {
-        var file = ((/^\//).test(filepath) || (/^.:/).test(filepath)) ? filepath : config.root + '/' + filepath,
-            data = fs.readFileSync(file, config.encoding);
-        tpl = getTemplate(data, { filename: filepath }, config);
+        var file = ((/^\//).test(filepath) || (/^.:/).test(filepath)) ? filepath : conf.root + '/' + filepath,
+            data = fs.readFileSync(file, conf.encoding);
+        tpl = getTemplate(data, { filename: filepath }, conf);
     };
 
-    if (config.allowErrors) {
+    if (conf.allowErrors) {
         get();
     } else {
         try {
@@ -153,24 +153,29 @@ exports.compileFile = function (filepath, config) {
     return tpl;
 };
 
-exports.compile = function (source, options, config) {
-    config = config || _config;
+exports.compile = function (source, options, conf) {
+    conf = conf || _config;
     options = options || {};
-    var tmpl = getTemplate(source, options, config);
+    var tmpl = getTemplate(source, options, conf);
 
     return function (source, options) {
-        return tmpl.render(source, options);
+        var rv = tmpl.render(source, options);
+        return rv;
     };
 };
 
-exports.engine = function (config) {
-    config = config ? _.defaults(config, _config) : null;
+exports.engine = function (localConfig) {
+    localConfig = _.extend({}, _config, localConfig);
+    localConfig.filters = _.extend({}, _config.filters, localConfig.filters);
+    localConfig.tags = _.extend({}, _config.tags, localConfig.tags);
+    localConfig.CACHE = {};
+
     var engine = {
         compileFile: function (filepath) {
-            return exports.compileFile(filepath, config);
+            return exports.compileFile(filepath, localConfig);
         },
         compile: function (source, options) {
-            return exports.compile(source, options, config);
+            return exports.compile(source, options, localConfig);
         }
     };
 
