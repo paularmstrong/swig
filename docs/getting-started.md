@@ -19,7 +19,7 @@ In order to start using Swig, you should initialize it. Swig can be configured u
 
 This step is _optional_, however it is recommended to at least set the `root` key when running Swig from node.js.
 
-You can also create multiple instances of the Swig engine in the same runtime. See <a href="#multiple-instances">Creating Multiple Intances of Swig below</a>.
+You can also create multiple instances of the Swig engine in the same runtime. See <a href="#multiple-instances">Creating Multiple Intances of Swig</a> below.
 
 ### Options
 
@@ -67,18 +67,18 @@ Creating Multiple Intances of Swig <a name="multiple-instances" href="#multiple-
 ----------------------------------
 Sometimes you may find you need more than one instance of the Swig template engine in the same program runtime. For example; one for HTTP responses, one for HTML emails, and one for plain text emails. You can do this with the `.engine()` constructor.
 
-    var engineA = swig.engine({
+    var templateEngine = swig.engine({
         root: '/templates/',
     });
 
     // ...
     // Later in your code, maybe in another module, you could do this:
 
-    var engineA = swig.engine({
+    var emailEngine = swig.engine({
         root: '/emails/',
     });
 
-Any of the options you can pass into `.init()` will work in `.engine()` and the defaults are exactly the same. In fact, you can call `.init()` to set a global configuration and then create multiple Swig engines elsewhere in your program which will inherit your global configs.
+Any of the options accepted by `.init()` will work in `.engine()`, and the defaults are exactly the same. In fact, you can call `.init()` to set a global configuration and then create multiple Swig engines which will inherit your global configs elsewhere in your program.
 
     swig.init({
         allowErrors: true,
@@ -89,7 +89,7 @@ Any of the options you can pass into `.init()` will work in `.engine()` and the 
     // ...
     // Later in your code, maybe in another module, you could do this:
 
-    var engine = swig.engine({
+    var childEngine = swig.engine({
         allowErrors: false,
         filters: {
             foo: function (input) {
@@ -98,10 +98,10 @@ Any of the options you can pass into `.init()` will work in `.engine()` and the 
         }
     });
 
-In that case `allowErrors: false` and the custom `foo` filter will only apply to this engine instance.
+In the example above the configs option `allowErrors: false` and the custom `foo` filter will only apply to `childEngine`.
 
 ### GOTCHA!
-Once the tzOffset option is set, either with a call to `.init()` or `.engine()` it will be set globally for all instances of the Swig engine. You shouldn't need to change this value from the same program runtime anyway.
+Once the `tzOffset` option is set, either with a call to `.init()` or `.engine()` it will be set globally for all instances of the Swig engine. You shouldn't need to change this value from the same program runtime anyway.
 
 Parsing a Template <a name="parsing" href="#parsing">#</a>
 ------------------
@@ -110,6 +110,8 @@ You have 2 methods for creating a template object:
 
     swig.compileFile("path/to/template/file.html");
     swig.compile("Template string here", { filename: 'templateKey' });
+
+The `.compileFile()` and `compile()` methods are available on an instance of `.engine()` as well.
 
 Rendering a Template <a name="rendering" href="#rendering">#</a>
 --------------------
