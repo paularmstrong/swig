@@ -71,12 +71,16 @@ Sometimes you may find you need more than one instance of the Swig template engi
         root: '/templates/',
     });
 
+    templateEngine.compileFile('index.html');
+
     // ...
     // Later in your code, maybe in another module, you could do this:
 
     var emailEngine = swig.engine({
         root: '/emails/',
     });
+
+    emailEngine.compileFile('email.txt');
 
 Any of the options accepted by `.init()` will work in `.engine()`, and the defaults are exactly the same. In fact, you can call `.init()` to set a global configuration and then create multiple Swig engines which will inherit your global configs elsewhere in your program.
 
@@ -101,7 +105,7 @@ Any of the options accepted by `.init()` will work in `.engine()`, and the defau
 In the example above the configs option `allowErrors: false` and the custom `foo` filter will only apply to `childEngine`.
 
 ### GOTCHA!
-Once the `tzOffset` option is set, either with a call to `.init()` or `.engine()` it will be set globally for all instances of the Swig engine. You shouldn't need to change this value from the same program runtime anyway.
+Whenever the `tzOffset` option is set, either with a call to `.init()` or `.engine()` it will be set globally for all instances of the Swig engine. You shouldn't need to change this value from the same program runtime more than once, so it is probably a good idea to just set it in `.init()` and then leave it alone.
 
 Parsing a Template <a name="parsing" href="#parsing">#</a>
 ------------------
