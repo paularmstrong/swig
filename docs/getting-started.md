@@ -79,5 +79,5 @@ Both of these methods will give you a template object on which you call the rend
 
 OR
 
-    var tpl = swig.compile("path/to/template/file.html");
+    var tpl = swig.compile("Template string here");
     var renderedHtml = tpl({ vars: 'to be inserted in template' });
