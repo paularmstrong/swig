@@ -9,6 +9,7 @@ In order to start using Swig, you should initialize it. Swig can be configured u
     swig.init({
         allowErrors: false,
         autoescape: true,
+        cache: true,
         encoding: 'utf8',
         filters: {},
         root: '/',
@@ -36,6 +37,10 @@ Automatically escape all variable output. This is the default behavior and it is
 * `'js'` - Will escape output safe for JavaScript.
 
 For character conversion tables, see the [escape filter](filters.md#escape).
+
+#### cache _optional_
+
+Default is `true`. Keeping this off will re-compile the template files for each request. Not recommended in production.
 
 #### encoding _optional_
 
