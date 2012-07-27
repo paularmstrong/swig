@@ -1,3 +1,9 @@
+[0.12.0](https://github.com/paularmstrong/swig/tree/v0.12.0) / 2012-07-26
+-------------------------------------------------------------------------
+
+* **Fixed** Misc documenation
+* **Changed** Support Node.js >=v0.6
+
 [0.11.2](https://github.com/paularmstrong/swig/tree/v0.11.2) / 2012-04-10
 -------------------------------------------------------------------------
 
