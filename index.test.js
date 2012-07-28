@@ -70,6 +70,28 @@ exports.compileFile = testCase({
         test.done();
     },
 
+    'using context var with extends tag' : function (test) {
+        swig.init({
+            root: __dirname + '/tests/templates',
+            allowErrors: true
+        });
+
+        var tpl, r1, r2, r3, r4;
+
+        tpl = swig.compileFile('extends_dynamic.html');
+        r1 = tpl.render({baseTmpl: "extends_base.html"});
+        r2 = tpl.render({baseTmpl: "extends_base2.html"});
+        r3 = tpl.render({baseTmpl: "extends_base.html"});
+        r4 = tpl.render({baseTmpl: "extends_base2.html"});
+
+        test.strictEqual(r1,r3, "this should not throw");
+        test.strictEqual(r2,r4, "this should not throw");
+
+        test.notEqual(r1, r2, "these should not be equal, as they use different base templates.");
+
+        test.done();
+    },
+
     'absolute path': function (test) {
         swig.init({
             root: __dirname + '/tests/templates',
