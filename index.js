@@ -39,37 +39,9 @@ function TemplateError(error) {
     }};
 }
 
-function createTemplate(data, id) {
-    var template = {
-            // Allows us to include templates from the compiled code
-            compileFile: exports.compileFile,
-            // These are the blocks inside the template
-            blocks: {},
-            // Distinguish from other tokens
-            type: parser.TEMPLATE,
-            // The template ID (path relative to tempalte dir)
-            id: id
-        },
-        tokens,
-        code,
-        render;
-
-    // The template token tree before compiled into javascript
-    if (_config.allowErrors) {
-        template.tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
-    } else {
-        try {
-            template.tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
-        } catch (e) {
-            return new TemplateError(e);
-        }
-    }
-
-    // The raw template code
-    code = parser.compile.call(template);
-
+function createRenderFunc (code) {
     // The compiled render function - this is all we need
-    render = new Function('_context', '_parents', '_filters', '_', '_ext', [
+   return new Function('_context', '_parents', '_filters', '_', '_ext', [
         '_parents = _parents ? _parents.slice() : [];',
         '_context = _context || {};',
         // Prevents circular includes (which will crash node without warning)
@@ -87,6 +59,51 @@ function createTemplate(data, id) {
         code,
         'return _output;',
     ].join(''));
+}
+
+function createTemplate(data, id) {
+    var template = {
+            // Allows us to include templates from the compiled code
+            compileFile: exports.compileFile,
+            // These are the blocks inside the template
+            blocks: {},
+            // Distinguish from other tokens
+            type: parser.TEMPLATE,
+            // The template ID (path relative to tempalte dir)
+            id: id
+        },
+        tokens,
+        code,
+        render;
+
+    // The template token tree before compiled into javascript
+    if (_config.allowErrors) {
+        tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
+    } else {
+        try {
+            tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
+        } catch (e) {
+            return new TemplateError(e);
+        }
+    }
+
+    template.tokens = tokens;
+
+    // The raw template code
+    code = parser.compile.call(template);
+
+    if (code !== false) {
+        render = createRenderFunc(code);
+    }
+
+    else {
+        render = function (_context, _parents, _filters, _, _ext) {
+            template.tokens = tokens;
+            code = parser.compile.call(template, null, '', _context);
+            var fn = createRenderFunc(code);
+            return fn.call(this, _context, _parents, _filters, _, _ext);
+        }
+    }
 
     template.render = function (context, parents) {
         if (_config.allowErrors) {
