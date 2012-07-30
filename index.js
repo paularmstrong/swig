@@ -39,9 +39,9 @@ function TemplateError(error) {
     }};
 }
 
-function createRenderFunc (code) {
+function createRenderFunc(code) {
     // The compiled render function - this is all we need
-   return new Function('_context', '_parents', '_filters', '_', '_ext', [
+    return new Function('_context', '_parents', '_filters', '_', '_ext', [
         '_parents = _parents ? _parents.slice() : [];',
         '_context = _context || {};',
         // Prevents circular includes (which will crash node without warning)
@@ -94,15 +94,13 @@ function createTemplate(data, id) {
 
     if (code !== false) {
         render = createRenderFunc(code);
-    }
-
-    else {
+    } else {
         render = function (_context, _parents, _filters, _, _ext) {
             template.tokens = tokens;
             code = parser.compile.call(template, null, '', _context);
             var fn = createRenderFunc(code);
             return fn.call(this, _context, _parents, _filters, _, _ext);
-        }
+        };
     }
 
     template.render = function (context, parents) {

@@ -84,8 +84,8 @@ exports.compileFile = testCase({
         r3 = tpl.render({baseTmpl: "extends_base.html"});
         r4 = tpl.render({baseTmpl: "extends_base2.html"});
 
-        test.strictEqual(r1,r3, "this should not throw");
-        test.strictEqual(r2,r4, "this should not throw");
+        test.strictEqual(r1, r3, "rendering the same template with the same context twice, should return identically.");
+        test.strictEqual(r2, r4, "rendering the same template with the same context twice, should return identically.");
 
         test.notEqual(r1, r2, "these should not be equal, as they use different base templates.");
 
