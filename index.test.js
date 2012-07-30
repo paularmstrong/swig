@@ -161,7 +161,7 @@ exports.engine = testCase({
 
         engineA = swig.engine({
             filters: {
-                foo: function (input) {
+                fubu: function (input) {
                     return 'engineA';
                 }
             },
@@ -173,7 +173,7 @@ exports.engine = testCase({
                 }
             },
             tags: {
-                foo: function () {
+                fubu: function () {
                     return '_ext.foobar();';
                 }
             }
@@ -182,7 +182,7 @@ exports.engine = testCase({
 
         engineB = swig.engine({
             filters: {
-                foo: function (input) {
+                fubu: function (input) {
                     return 'engineB';
                 }
             },
@@ -194,7 +194,7 @@ exports.engine = testCase({
                 }
             },
             tags: {
-                foo: function () {
+                fubu: function () {
                     return '_ext.foobar();';
                 }
             }
@@ -217,13 +217,13 @@ exports.engine = testCase({
     },
 
     'usage A custom filters': function (test) {
-        var tpl = this.engineA.compile('{{ asdf|foo }}');
+        var tpl = this.engineA.compile('{{ asdf|fubu }}');
         test.strictEqual(tpl({ asdf: 'blah' }), 'engineA');
         test.done();
     },
 
     'usage B custom filters': function (test) {
-        var tpl = this.engineB.compile('{{ asdf|foo }}');
+        var tpl = this.engineB.compile('{{ asdf|fubu }}');
         test.strictEqual(tpl({ asdf: 'blah' }), 'engineB');
         test.done();
     },
@@ -248,11 +248,11 @@ exports.engine = testCase({
         test.strictEqual(this.engineA.extensionTestValue, null, 'extension A test value init null');
         test.strictEqual(this.engineB.extensionTestValue, null, 'extension B test value init null');
 
-        var tpl = this.engineA.compile('{% foo %}');
+        var tpl = this.engineA.compile('{% fubu %}');
         tpl();
         test.strictEqual(this.engineA.extensionTestValue, 1, 'extension A test value');
 
-        tpl = this.engineB.compile('{% foo %}');
+        tpl = this.engineB.compile('{% fubu %}');
         tpl();
         test.strictEqual(this.engineB.extensionTestValue, 1, 'extension B test value');
         test.done();
