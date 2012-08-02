@@ -376,9 +376,13 @@ If the value is an Array, you can join each value with a delimiter and return it
 
 1. <var>**glue**</var> (_string_) Concatenation string to join each item in the array with.
 
-### json_encode <a name="json_encode" href="#json_encode">#</a>
+### json_encode(indent) <a name="json_encode" href="#json_encode">#</a>
 
-Return a JSON string of the variable.
+Return a JSON string of the variable, optionally pretty-printing the string if **indent** is specified.
+
+#### Arguments
+
+1. <var>**indent**</var> (_number_) _optional_ if greater than zero, the JSON will be pretty-printed using the number of spaces specified by the **indent** parameter.
 
 ### last <a name="last" href="#last">#</a>
 
