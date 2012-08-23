@@ -6,6 +6,7 @@ Swig is compatible with [Express][1]! It's very easy to set up your Express-base
 Note: these instructions are for Express 3.
 
 Load the required packages in your package.json file.
+    
     ...
     "consolidate": "*",
     "swig": "*"
