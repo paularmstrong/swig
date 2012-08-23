@@ -4,7 +4,7 @@ Swig Documentation
 Table of Contents
 -----------------
 
-1. [Getting Started](docs/getting-started.md#getting-started)
+1. [Getting Started](getting-started.md#getting-started)
 1. [Syntax](docs/syntax.md#syntax)
 1. [Filters](docs/filters.md#filters)
 1. [Tags](docs/tags.md#tags)
