@@ -171,3 +171,6 @@ exports.compile = function (source, options) {
         return tmpl.render(source, options);
     };
 };
+
+exports.filters = filters;
+exports.helpers = helpers;
