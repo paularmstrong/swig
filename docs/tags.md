@@ -173,15 +173,15 @@ For the following contexts, assume:
 
 So the following:
 
-    {% autoescape off %}
+    {% autoescape false %}
         {{ some_html_output }}
     {% endautoescape %}
 
-    {% autoescape on %}
+    {% autoescape true %}
         {{ some_html_output }}
     {% endautoescape %}
 
-    {% autoescape on "js" %}
+    {% autoescape true "js" %}
         {{ some_html_output }}
     {% endautoescape %}
 
