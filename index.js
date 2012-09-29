@@ -39,28 +39,6 @@ function TemplateError(error) {
     }};
 }
 
-function createRenderFunc(code) {
-    // The compiled render function - this is all we need
-    return new Function('_context', '_parents', '_filters', '_', '_ext', [
-        '_parents = _parents ? _parents.slice() : [];',
-        '_context = _context || {};',
-        // Prevents circular includes (which will crash node without warning)
-        'var j = _parents.length,',
-        '    _output = "",',
-        '    _this = this;',
-        // Note: this loop averages much faster than indexOf across all cases
-        'while (j--) {',
-        '   if (_parents[j] === this.id) {',
-        '         return "Circular import of template " + this.id + " in " + _parents[_parents.length-1];',
-        '   }',
-        '}',
-        // Add this template as a parent to all includes in its scope
-        '_parents.push(this.id);',
-        code,
-        'return _output;',
-    ].join(''));
-}
-
 function createTemplate(data, id) {
     var template = {
             // Allows us to include templates from the compiled code
@@ -78,30 +56,37 @@ function createTemplate(data, id) {
 
     // The template token tree before compiled into javascript
     if (_config.allowErrors) {
-        tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
+        template.tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
     } else {
         try {
-            tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
+            template.tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
         } catch (e) {
             return new TemplateError(e);
         }
     }
 
-    template.tokens = tokens;
-
     // The raw template code
     code = parser.compile.call(template);
 
-    if (code !== false) {
-        render = createRenderFunc(code);
-    } else {
-        render = function (_context, _parents, _filters, _, _ext) {
-            template.tokens = tokens;
-            code = parser.compile.call(template, null, '', _context);
-            var fn = createRenderFunc(code);
-            return fn.call(this, _context, _parents, _filters, _, _ext);
-        };
-    }
+    // The compiled render function - this is all we need
+    render = new Function('_context', '_parents', '_filters', '_', '_ext', [
+        '_parents = _parents ? _parents.slice() : [];',
+        '_context = _context || {};',
+        // Prevents circular includes (which will crash node without warning)
+        'var j = _parents.length,',
+        '    _output = "",',
+        '    _this = this;',
+        // Note: this loop averages much faster than indexOf across all cases
+        'while (j--) {',
+        '   if (_parents[j] === this.id) {',
+        '         return "Circular import of template " + this.id + " in " + _parents[_parents.length-1];',
+        '   }',
+        '}',
+        // Add this template as a parent to all includes in its scope
+        '_parents.push(this.id);',
+        code,
+        'return _output;',
+    ].join(''));
 
     template.render = function (context, parents) {
         if (_config.allowErrors) {
@@ -133,10 +118,6 @@ function getTemplate(source, options) {
 exports.compileFile = function (filepath) {
     var tpl, get;
 
-    if (filepath[0] === '/') {
-        filepath = filepath.substr(1);
-    }
-
     if (_config.cache && CACHE.hasOwnProperty(filepath)) {
         return CACHE[filepath];
     }
@@ -146,8 +127,9 @@ exports.compileFile = function (filepath) {
     }
 
     get = function () {
-        var file = ((/^\//).test(filepath) || (/^.:/).test(filepath)) ? filepath : _config.root + '/' + filepath,
+    var file = ((/^\//).test(filepath) || (/^.:/).test(filepath)) ? filepath : filepath,
             data = fs.readFileSync(file, config.encoding);
+
         tpl = getTemplate(data, { filename: filepath });
     };
 
