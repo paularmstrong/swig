@@ -1,3 +1,13 @@
+[0.12.1](https://github.com/paularmstrong/swig/tree/v0.12.1) / 2012-10-05
+-------------------------------------------------------------------------
+
+* **Added** More information on some parser errors
+* **Added** indent parameter to json_encode filter to support pretty-printing.
+* **Added** support for variables as `extends` tag parameters
+* **Fixed** Compile errors in Android and other random browsers
+* **Fixed** Misc documentation
+* **Fixed** Leaking __keys variable into global scope
+
 [0.12.0](https://github.com/paularmstrong/swig/tree/v0.12.0) / 2012-07-26
 -------------------------------------------------------------------------
 
