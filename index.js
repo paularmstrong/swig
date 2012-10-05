@@ -57,7 +57,7 @@ function createRenderFunc(code) {
         // Add this template as a parent to all includes in its scope
         '_parents.push(this.id);',
         code,
-        'return _output;',
+        'return _output;'
     ].join(''));
 }
 
