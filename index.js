@@ -69,7 +69,7 @@ function createTemplate(data, id) {
             blocks: {},
             // Distinguish from other tokens
             type: parser.TEMPLATE,
-            // The template ID (path relative to tempalte dir)
+            // The template ID (path relative to template dir)
             id: id
         },
         tokens,
