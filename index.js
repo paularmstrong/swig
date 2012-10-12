@@ -83,6 +83,7 @@ function createTemplate(data, id) {
         try {
             tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
         } catch (e) {
+            e.message =  e.message + ', in file: "' +  template.id + '".' ;
             return new TemplateError(e);
         }
     }
