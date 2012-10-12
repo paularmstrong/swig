@@ -14,6 +14,7 @@ Built-in Tags <a name="builtin" href="#builtin">#</a>
 * [autoescape](#autoescape)
 * [macro](#macro)
 * [import](#import)
+* [partial](#partial)
 * [filter](#filter)
 
 ### extends <a name="extends" href="#extends">#</a>
@@ -250,6 +251,44 @@ Assuming the macro `input` exists in _formmacros.html_, you can run the macro by
 
     {# this, however, will NOT output anything because the macro is scoped to the "form" object: #}
     {{ input("text", "name") }}
+
+### partial <a name="partial" href="#partial">#</a>
+`partial` is used in pair with `arg` tags. This pair of tags performs basically same task as `include` or `macro`,
+but has two substantial differences. First of all, it allows user to pass multi-line strings as macro parameters (e.g.
+massive amounts of HTML markup):
+
+    {% partial "form.html" %}
+        {% arg legend %}<h2>Tax calculator</h2>{% endarg %}
+        {% arg body %}
+            <div>
+                <label for="fname">First Name</label>
+                <input type="text" name="fname" id="fname" value="">
+            </div>
+            <div>
+                <label for="lname">Last Name</label>
+                <input type="text" name="lname" id="lname" value="" class="error">
+            </div>
+        {% endarg %}
+    {% endpartial %}
+
+Second, it allows to pass output of another tags as parameters:
+
+    {% partial "form.html" %}
+        {% arg legend %}
+            <h2>
+                {% if tax %}Tax{% else %}Tip{% endif %}
+                calculator
+            </h2>
+        {% endarg %}
+        {% arg body %}{% include "formbody.html" %}{% endarg %}
+    {% endpartial %}
+
+User don't have to define partial file explicitly, any file that can be used as `include` will do. Just like the with
+`include`, you can use variable as partial name:
+
+    {% partial formPartial %}
+    …
+    {% endpartial %}
 
 ### filter <a name="filter" href="#filter">#</a>
 
