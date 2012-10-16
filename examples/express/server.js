@@ -63,6 +63,10 @@ app.get('/inner', function (req, res) {
     res.render('inner', {});
 });
 
+app.get('/variable', function (req, res) {
+    res.render('variable', { extendFile : 'outer.html' });
+});
+
 people = [
     { name: 'Paul', age: 28 },
     { name: 'Jane', age: 26 },
