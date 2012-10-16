@@ -70,8 +70,13 @@ app.get('/variable', function (req, res) {
 app.get('/test', function (req, res) {
     var parser = require('../../lib/parser');
     var tags = require('../../lib/tags');
-    var template = { tokens: parser.parse('blah!{% extends foobar %}', tags), type: parser.TEMPLATE };
+
+    var template = { tokens: [{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [], escape: false, args: null }] };
     eval('var _output = "";' + parser.compile.call(template, ''));
+        
+    template = { tokens: parser.parse('{% if foo %}blah{% endif %}', tags) };
+    eval('var _output = "";' + parser.compile.call(template, ''));
+
     res.send('done.');
 });
 
