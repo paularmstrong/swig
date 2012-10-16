@@ -67,6 +67,14 @@ app.get('/variable', function (req, res) {
     res.render('variable', { extendFile : 'outer.html' });
 });
 
+app.get('/test', function (req, res) {
+    var parser = require('../../lib/parser');
+    var tags = require('../../lib/tags');
+    var template = { tokens: parser.parse('blah!{% extends foobar %}', tags), type: parser.TEMPLATE };
+    eval('var _output = "";' + parser.compile.call(template, ''));
+    res.send('done.');
+});
+
 people = [
     { name: 'Paul', age: 28 },
     { name: 'Jane', age: 26 },
