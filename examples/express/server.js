@@ -71,13 +71,10 @@ app.get('/test', function (req, res) {
     var parser = require('../../lib/parser');
     var tags = require('../../lib/tags');
 
-    var template = { tokens: [{ type: parser.TOKEN_TYPES.VAR, name: 'foobar', filters: [], escape: false, args: null }] };
-    eval('var _output = "";' + parser.compile.call(template, ''));
-        
-    template = { tokens: parser.parse('{% if foo %}blah{% endif %}', tags) };
-    eval('var _output = "";' + parser.compile.call(template, ''));
+    swig.compile('{% block a %}{{ foo }}{% endblock %}', { filename: 'a' });
+    output = swig.compile('{% extends "a" %}{% set foo = "bar" %}')();
 
-    res.send('done.');
+    res.send(output + '<br /><br />done.');
 });
 
 people = [
