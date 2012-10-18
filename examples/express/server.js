@@ -5,17 +5,19 @@ var express = require('express'),
     people;
 
 swig._cache = {};
-swig.express3 = function (path, options, fn){
-    swig._read(path, options, function(err, str){
-            if (err) return fn(err);
-                try {
-                    options.filename = path;
-                    var tmpl = swig.compile(str, options);
-                    fn(null, tmpl(options));
-                } catch (err) {
-                    fn(err);
-                }
-            });
+swig.express3 = function (path, options, fn) {
+    swig._read(path, options, function (err, str) {
+        if (err) {
+            return fn(err);
+        }
+        try {
+            options.filename = path;
+            var tmpl = swig.compile(str, options);
+            fn(null, tmpl(options));
+        } catch (err) {
+            fn(err);
+        }
+    });
 };
 
 swig._read = function (path, options, fn) {
