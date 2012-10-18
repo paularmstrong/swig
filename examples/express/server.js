@@ -70,9 +70,10 @@ app.get('/variable', function (req, res) {
 app.get('/test', function (req, res) {
     var parser = require('../../lib/parser');
     var tags = require('../../lib/tags');
-
-    swig.compile('{% block a %}{{ foo }}{% endblock %}', { filename: 'a' });
-    output = swig.compile('{% extends "a" %}{% set foo = "bar" %}')();
+    
+    swig.compile('{% block foo %}hi{% endblock %}', { filename: 'parent' });
+    var tpl = swig.compile('{% extends "parent" %}{% block foo %}{% if true %}{% parent %}{% else %}nope{% endif %}{% endblock %}');
+    output = tpl();
 
     res.send(output + '<br /><br />done.');
 });
