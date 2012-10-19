@@ -14,8 +14,8 @@ swig.express3 = function (path, options, fn) {
             options.filename = path;
             var tmpl = swig.compile(str, options);
             fn(null, tmpl(options));
-        } catch (err) {
-            fn(err);
+        } catch (error) {
+            fn(error);
         }
     });
 };
@@ -24,19 +24,25 @@ swig._read = function (path, options, fn) {
     var str = swig._cache[path];
 
     // cached (only if cached is a string and not a compiled template function)
-    if (options.cache && str && typeof str === 'string') return fn(null, str);
+    if (options.cache && str && typeof str === 'string') {
+        return fn(null, str);
+    }
 
     // read
-    require('fs').readFile(path, 'utf8', function(err, str){
-        if (err) return fn(err);
-        if (options.cache) swig._cache[path] = str;
+    require('fs').readFile(path, 'utf8', function (err, str) {
+        if (err) {
+            return fn(err);
+        }
+        if (options.cache) {
+            swig._cache[path] = str;
+        }
         fn(null, str);
     });
-}
+};
 
 app.engine('html', swig.express3);
 app.set('view engine', 'html');
-app.set('views',__dirname + '/views');
+app.set('views', __dirname + '/views');
 app.set('view options', { layout: false });
 app.set('view cache', false);
 
@@ -67,17 +73,6 @@ app.get('/inner', function (req, res) {
 
 app.get('/variable', function (req, res) {
     res.render('variable', { extendFile : 'outer.html' });
-});
-
-app.get('/test', function (req, res) {
-    var parser = require('../../lib/parser');
-    var tags = require('../../lib/tags');
-    
-    swig.compile('{% block foo %}hi{% endblock %}', { filename: 'parent' });
-    var tpl = swig.compile('{% extends "parent" %}{% block foo %}{% if true %}{% parent %}{% else %}nope{% endif %}{% endblock %}');
-    output = tpl();
-
-    res.send(output + '<br /><br />done.');
 });
 
 people = [
