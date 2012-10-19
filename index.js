@@ -97,7 +97,7 @@ function createTemplate(data, id) {
     } else {
         render = function (_context, _parents, _filters, _, _ext) {
             template.tokens = tokens;
-            code = parser.compile.call(template, null, '', _context);
+            code = parser.compile.call(template, '', null, _context);
             var fn = createRenderFunc(code);
             return fn.call(this, _context, _parents, _filters, _, _ext);
         };
