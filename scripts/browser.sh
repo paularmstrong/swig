@@ -23,7 +23,11 @@ function package() {
     echo "filters = {}," >> $BROWSER_FILE
     echo "helpers = {}," >> $BROWSER_FILE
     echo "parser = {}," >> $BROWSER_FILE
-    echo "tags = {};" >> $BROWSER_FILE
+    echo "tags = {}," >> $BROWSER_FILE
+    echo "config, _config, CACHE, KEYWORDS," >> $BROWSER_FILE
+    echo "_months, _days, variableRegexp," >> $BROWSER_FILE
+    echo "logicRegexp, commentRegexp," >> $BROWSER_FILE
+    echo "TEMPLATE, LOGIC_TOKEN, VAR_TOKEN;" >> $BROWSER_FILE
 
     if [[ $1 == 'pack' ]]; then
         cat node_modules/underscore/underscore.js >> $BROWSER_FILE
