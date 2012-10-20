@@ -4,6 +4,10 @@ var express = require('express'),
     app = express(),
     people;
 
+// NOTE: It is preferred to use consolidate.js
+// However, we can't do that in this example, because the example uses
+// The uninstalled version of swig for testing purposes
+// Please see the documentation for proper use with Express
 swig._cache = {};
 swig.express3 = function (path, options, fn) {
     swig._read(path, options, function (err, str) {
@@ -55,32 +59,6 @@ app.get('/', function (req, res) {
     res.render('index', {});
 });
 
-app.get('/sub', function (req, res) {
-    res.render('sub', {});
-});
-
-app.get('/outer', function (req, res) {
-    res.render('outer', {});
-});
-
-app.get('/middle', function (req, res) {
-    res.render('middle', {});
-});
-
-app.get('/inner', function (req, res) {
-    res.render('inner', {});
-});
-
-app.get('/variable', function (req, res) {
-    res.render('variable', { extendFile : 'outer.html' });
-});
-
-people = [
-    { name: 'Paul', age: 28 },
-    { name: 'Jane', age: 26 },
-    { name: 'Jimmy', age: 45 }
-];
-
 app.get('/people', function (req, res) {
     res.render('people', { people: people });
 });
@@ -88,6 +66,20 @@ app.get('/people', function (req, res) {
 app.get('/people/:id', function (req, res) {
     res.render('person', { person: people[req.params.id] });
 });
+
+app.get('/variable', function (req, res) {
+    res.render('variable', { extendFile : 'outer.html' });
+});
+
+app.get('/*', function (req, res) {
+    res.render(req.params[0], {});
+});
+
+people = [
+    { name: 'Paul', age: 28 },
+    { name: 'Jane', age: 26 },
+    { name: 'Jimmy', age: 45 }
+];
 
 app.listen(1337);
 console.log('Application Started on http://localhost:1337/');
