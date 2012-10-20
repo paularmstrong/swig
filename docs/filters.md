@@ -10,7 +10,7 @@ Example
 
 Filters can also be applied to blocks of content directly with the [filter tag](tags.md#filter).
 
-    {% filter uppercase %}oh hi, paul{% endfilter %}
+    {% filter upper %}oh hi, paul{% endfilter %}
 
 Built-In Filters <a name="built-in" href="#built-in">#</a>\
 ----------------

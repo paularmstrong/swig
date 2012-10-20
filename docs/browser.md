@@ -18,9 +18,9 @@ You should only need one of these. If you already include _underscore.js_ in you
 
 Swig's API in the browser is the same as [its API for node.js](getting-started.md), with the only difference being that you cannot use the `swig.compileFile` method, since browsers do not have a filesystem.
 
-Instead, you must always use `swig.fromString` and pre-parse all templates.
+Instead, you must always use `swig.compile` and pre-parse all templates.
 
-In order to use `extends`, `import`, and `include` correctly, another argument is available on `swig.fromString`: `templateKey`
+In order to use `extends`, `import`, and `include` correctly, another argument is available on `swig.compile`: `templateKey`
 
     swig.compile(templateString, { filename: templateKey });
 
