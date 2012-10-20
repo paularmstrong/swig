@@ -16,7 +16,7 @@ First, include the helpers.
 
 Define your tag and whether or not it requires an "end" tag:
 
-    exports.mytag = function (indent, parentBlock, parser) {
+    exports.mytag = function (indent, parser) {
         return 'output';
     };
     exports.mytag.ends = true;
@@ -26,7 +26,7 @@ A Really Simple Tag <a name="example" href="#example">#</a>
 
 To parse a swig variable with or without filters into a variable token, eg. `bar` or `foo|lowercase`
 
-    exports.mytag = function (indent, parentBlock, parser) {
+    exports.mytag = function (indent, parser) {
         var myArg = parser.parseVariable(this.args[0]);
         return 'output';
     };
@@ -34,7 +34,7 @@ To parse a swig variable with or without filters into a variable token, eg. `bar
 
 Use a parsed variable token with `helpers.setVar()` to bind a variable in your current scope into the templates scope. The `setVar` method cleans up variable output, applies filters and escaping for clean output:
 
-    exports.mytag = function (indent, parentBlock, parser) {
+    exports.mytag = function (indent, parser) {
         var myArg = parser.parseVariable(this.args[0]),
             output = '';
         output += helpers.setVar(name, myArg);
@@ -44,7 +44,7 @@ Use a parsed variable token with `helpers.setVar()` to bind a variable in your c
 
 To parse the inner content of a tag for outputting, use `parser.compile.apply(this, [indent, parentBlock])`:
 
-    exports.mytag = function (indent, parentBlock, parser) {
+    exports.mytag = function (indent, parser) {
         var myArg = parser.parseVariable(this.args[0]),
             output = [];
 
@@ -86,7 +86,7 @@ To access a third-party library or method that is defined outside of your templa
 
 Once you've added it, your custom tag can reference the `i18next` extension via the `_ext` object:
 
-    exports.trans = function (indent, parentBlock, parser) {
+    exports.trans = function (indent, parser) {
         var myArg = parser.parseVariable(this.args[0]),
         output = [];
         output.push(helpers.setVar('__myArg', myArg));
