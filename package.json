@@ -1,34 +1,41 @@
 {
-    "name": "swig",
-    "version": "0.12.1",
-    "description": "A fast django-like templating engine for node.js and browsers.",
-    "keywords": ["template", "templating", "html", "django", "express", "block"],
-    "repository": {
-        "type": "git",
-        "url": "http://github.com/paularmstrong/swig.git"
-    },
-    "author": "Paul Armstrong <paul@paularmstrongdesigns.com>",
-    "contributors": [
-        "Dusko Jordanovski <jordanovskid@gmail.com>"
-    ],
-    "dependencies": {
-        "underscore": ">=1.1.7"
-    },
-    "devDependencies": {
-        "express": "~3",
-        "nodelint": "~0.6",
-        "nodeunit": "~0.7",
-        "uglify-js": ">=1.1.0"
-    },
-    "main": "index",
-    "engines": {
-        "node": ">=0.6.0"
-    },
-    "scripts": {
-        "prepublish": "npm prune",
-        "test": "make lint && make test"
-    },
-    "bugs": {
-        "url": "https://github.com/paularmstrong/swig/issues"
-    }
+  "name": "swig",
+  "version": "0.12.1",
+  "description": "A fast django-like templating engine for node.js and browsers.",
+  "keywords": [
+    "template",
+    "templating",
+    "html",
+    "django",
+    "express",
+    "block"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/paularmstrong/swig.git"
+  },
+  "author": "Paul Armstrong <paul@paularmstrongdesigns.com>",
+  "contributors": [
+    "Dusko Jordanovski <jordanovskid@gmail.com>"
+  ],
+  "dependencies": {
+    "underscore": ">=1.1.7"
+  },
+  "devDependencies": {
+    "express": "~3",
+    "nodelint": "~0.6",
+    "nodeunit": "~0.7",
+    "uglify-js": ">=1.1.0"
+  },
+  "main": "index",
+  "engines": {
+    "node": ">=0.6.0"
+  },
+  "scripts": {
+    "prepublish": "npm prune",
+    "test": "make lint && make test"
+  },
+  "bugs": {
+    "url": "https://github.com/paularmstrong/swig/issues"
+  }
 }
