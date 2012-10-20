@@ -1,3 +1,10 @@
+[0.13.0](https://github.com/paularmstrong/swig/tree/v0.13.0) / 2012-10-20
+-------------------------------------------------------------------------
+
+* **Added** Support for nested blocks! (Thanks, @nsaun!) [gh-64] [gh-129]
+* **Changed** Removed the `parentBlock` argument from tags.
+* **Fixed** Object keys may now contain dots
+
 [0.12.1](https://github.com/paularmstrong/swig/tree/v0.12.1) / 2012-10-05
 -------------------------------------------------------------------------
 

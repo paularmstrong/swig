@@ -1,6 +1,6 @@
 {
   "name": "swig",
-  "version": "0.12.1",
+  "version": "0.13.0",
   "description": "A fast django-like templating engine for node.js and browsers.",
   "keywords": [
     "template",
