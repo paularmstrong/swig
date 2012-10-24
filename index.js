@@ -7,9 +7,9 @@ var fs = require('fs'),
     helpers = require('./lib/helpers'),
     dateformat = require('./lib/dateformat'),
 
-    _ = require('underscore'),
+    _ = require('underscore');
 
-    config = {
+var config = {
         allowErrors: false,
         autoescape: true,
         cache: true,
