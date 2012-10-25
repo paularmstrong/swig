@@ -130,7 +130,7 @@ function getTemplate(source, options) {
     return createTemplate(source, key);
 }
 
-exports.compileFile = function (filepath) {
+exports.compileFile = function (filepath, forceAllowErrors) {
     var tpl, get;
 
     if (filepath[0] === '/') {
@@ -151,7 +151,7 @@ exports.compileFile = function (filepath) {
         tpl = getTemplate(data, { filename: filepath });
     };
 
-    if (_config.allowErrors) {
+    if (_config.allowErrors || forceAllowErrors) {
         get();
     } else {
         try {
