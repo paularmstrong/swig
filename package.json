@@ -24,8 +24,10 @@
   "devDependencies": {
     "express": "~3",
     "nodelint": "~0.6",
-    "nodeunit": "~0.7",
-    "uglify-js": ">=1.1.0"
+    "uglify-js": ">=1.1.0",
+    "mocha": "~1.6",
+    "expect.js": "~0.2",
+    "mocha-phantomjs": "~1.0.1"
   },
   "main": "index",
   "engines": {
@@ -33,7 +35,7 @@
   },
   "scripts": {
     "prepublish": "npm prune",
-    "test": "make lint && make test"
+    "test": "make lint && make test reporter=spec && make test-browser"
   },
   "bugs": {
     "url": "https://github.com/paularmstrong/swig/issues"

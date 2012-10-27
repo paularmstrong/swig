@@ -4,3 +4,5 @@ node_modules/*
 dist/browser/*
 dist/test/swig.pack.js
 dist/test/*.test.js
+lib-cov/*
+tests/coverage.html
