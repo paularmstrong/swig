@@ -149,7 +149,7 @@ describe('Filter', function () {
       date = new Date(date.getTime() - ((offset * 60000) - (tzOffset * 60000)));
     }
 
-    it('should return as same time in CDT, relative to PDT', function () {
+    it.skip('should return as same time in CDT, relative to PDT', function () {
       expect(swig.compile('{{ d|date("H:i:s") }}')({ d: date })).to.equal('10:20:10');
       expect(swig.compile('{{ d|date("H:i:s", 300) }}')({ d: date })).to.equal('12:20:10');
       expect(swig.compile('{{ d|date("H:i:s", -200) }}')({ d: date })).to.equal('20:40:10');
