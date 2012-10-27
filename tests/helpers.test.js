@@ -1,5 +1,6 @@
-var expect = require('expect.js'),
-  helpers = require('./helpers');
+var require = require('./testutils').require,
+  expect = require('expect.js'),
+  helpers = require('../lib/helpers');
 
 describe('Helpers', function () {
   describe('isLiteral', function () {

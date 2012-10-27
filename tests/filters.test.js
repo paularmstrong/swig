@@ -1,6 +1,7 @@
-var expect = require('expect.js'),
-  swig = require('../index'),
-  DateZ = require('./dateformat').DateZ;
+var require = require('./testutils').require,
+  expect = require('expect.js'),
+  swig = require('../lib/swig'),
+  DateZ = require('../lib/dateformat').DateZ;
 
 function testFilter(filter, input, output, message) {
   it(message, function () {

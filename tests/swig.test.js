@@ -1,5 +1,6 @@
-var expect = require('expect.js'),
-  swig = require('./index');
+var require = require('./testutils').require,
+  expect = require('expect.js'),
+  swig = require('../lib/swig');
 
 describe('swig.init', function () {
 
@@ -33,7 +34,7 @@ describe('swig.init', function () {
 
     it('does not throw when false, renders instead', function () {
       swig.init({
-        root: __dirname + '/tests/templates',
+        root: __dirname + '/templates',
         allowErrors: false
       });
       expect(swig.compileFile('foobar.html').render())
@@ -49,7 +50,7 @@ describe('swig.compileFile', function () {
 
   it('compiles a template from a file', function () {
     swig.init({
-      root: __dirname + '/tests/templates',
+      root: __dirname + '/templates',
       allowErrors: true
     });
     expect(swig.compileFile('included_2.html').render({ array: [1, 1] }))
@@ -59,10 +60,10 @@ describe('swig.compileFile', function () {
 
   it('can use an absolute path', function () {
     swig.init({
-      root: __dirname + '/tests/templates',
+      root: __dirname + '/templates',
       allowErrors: true
     });
-    expect(swig.compileFile('/' + __dirname + '/tests/templates/included_2.html').render({ array: [1, 1] }))
+    expect(swig.compileFile('/' + __dirname + '/templates/included_2.html').render({ array: [1, 1] }))
       .to.equal('2');
   });
 

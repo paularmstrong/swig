@@ -1,5 +1,6 @@
-var expect = require('expect.js'),
-  swig = require('../../index');
+var require = require('../testutils').require,
+  expect = require('expect.js'),
+  swig = require('../lib/swig');
 
 describe('Tag: block', function () {
   beforeEach(function () {

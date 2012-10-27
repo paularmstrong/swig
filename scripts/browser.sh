@@ -31,7 +31,7 @@ function package() {
     fi
 
     echo "(function (exports) {" >> $BROWSER_FILE
-    cat index.js >> $BROWSER_FILE
+    cat lib/swig.js >> $BROWSER_FILE
     echo "})(swig);" >> $BROWSER_FILE
     echo -ne "."
 
@@ -84,7 +84,7 @@ package "pack"
 cp dist/browser/swig.pack.js dist/test/swig.pack.js
 
 
-find lib -name "*.test.js" ! -name "helpers.test.js" | while read FILE; do
+find tests -name "*.test.js" ! -name "helpers.test.js" | while read FILE; do
     TEST_FILE=$(basename $FILE)
     TEMP_FILE="dist/.$TEST_FILE"
     NAME=$(sed -e 's/.test.js//' <<< $TEST_FILE)

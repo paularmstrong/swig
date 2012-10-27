@@ -1,10 +1,11 @@
-var expect = require('expect.js'),
-  swig = require('../../index');
+var require = require('../testutils').require,
+  expect = require('expect.js'),
+  swig = require('../lib/swig');
 
 describe('Tag: include', function () {
   beforeEach(function () {
     swig.init({
-      root: __dirname + '/../../tests/templates',
+      root: __dirname + '/../templates',
       allowErrors: true
     });
   });
