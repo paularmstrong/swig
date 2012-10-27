@@ -7,9 +7,10 @@ browser:
 	@scripts/browser.sh
 
 tests := $(shell find . -name '*.test.js' ! -path "*node_modules/*" ! -path "*dist/*")
-reporter = skip_passed
+reporter = dot
+opts =
 test:
-	@node_modules/nodeunit/bin/nodeunit --reporter ${reporter} ${tests}
+	@node_modules/mocha/bin/mocha --reporter ${reporter} --require should ${opts} ${tests}
 
 files := $(shell find . -name '*.js' ! -path "*node_modules/*" ! -path "*dist/*")
 lint:
