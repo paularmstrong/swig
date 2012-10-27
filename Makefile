@@ -10,7 +10,7 @@ tests := $(shell find . -name '*.test.js' ! -path "*node_modules/*" ! -path "*di
 reporter = dot
 opts =
 test:
-	@node_modules/mocha/bin/mocha --reporter ${reporter} --require should ${opts} ${tests}
+	@node_modules/mocha/bin/mocha --reporter ${reporter} ${opts} ${tests}
 
 files := $(shell find . -name '*.js' ! -path "*node_modules/*" ! -path "*dist/*")
 lint:

@@ -1,4 +1,5 @@
-var swig = require('./index');
+var expect = require('expect.js'),
+  swig = require('./index');
 
 describe('swig.init', function () {
 
@@ -8,7 +9,7 @@ describe('swig.init', function () {
         return 'bar';
       }
     }});
-    swig.compile('{{ asdf|foo }}')({ asdf: 'blah' }).should.equal('bar');
+    expect(swig.compile('{{ asdf|foo }}')({ asdf: 'blah' })).to.equal('bar');
   });
 
   it('accepts custom extensions', function (done) {
@@ -21,16 +22,13 @@ describe('swig.init', function () {
         }
       }
     });
-    swig.compile('{% foo %}')();
+    expect(function () { swig.compile('{% foo %}')(); }).to.not.throwException();
   });
 
   describe('allowErrors', function () {
     it('throws errors when true', function () {
       swig.init({ allowErrors: true });
-      var fn = function () {
-        swig.compileFile('barfoo.html');
-      };
-      fn.should.throw();
+      expect(function () { swig.compileFile('barfoo.html'); }).to.throwException();
     });
 
     it('does not throw when false, renders instead', function () {
@@ -38,10 +36,10 @@ describe('swig.init', function () {
         root: __dirname + '/tests/templates',
         allowErrors: false
       });
-      swig.compileFile('foobar.html').render()
-        .should.match(/<pre>Error\: ENOENT, no such file or directory/i);
-      swig.compileFile('includes_notfound.html').render()
-        .should.match(/<pre>Error\: ENOENT, no such file or directory/i);
+      expect(swig.compileFile('foobar.html').render())
+        .to.match(/<pre>Error\: ENOENT, no such file or directory/i);
+      expect(swig.compileFile('includes_notfound.html').render())
+        .to.match(/<pre>Error\: ENOENT, no such file or directory/i);
     });
   });
 });
@@ -54,8 +52,8 @@ describe('swig.compileFile', function () {
       root: __dirname + '/tests/templates',
       allowErrors: true
     });
-    swig.compileFile('included_2.html').render({ array: [1, 1] })
-      .should.equal('2');
+    expect(swig.compileFile('included_2.html').render({ array: [1, 1] }))
+      .to.equal('2');
   });
 
 
@@ -64,21 +62,18 @@ describe('swig.compileFile', function () {
       root: __dirname + '/tests/templates',
       allowErrors: true
     });
-    swig.compileFile('/' + __dirname + '/tests/templates/included_2.html').render({ array: [1, 1] })
-      .should.equal('2');
+    expect(swig.compileFile('/' + __dirname + '/tests/templates/included_2.html').render({ array: [1, 1] }))
+      .to.equal('2');
   });
 
   it('throws in a browser context', function () {
     swig.init({});
     global.window = true;
-    var fn = function () {
-      swig.compileFile('foobar');
-    };
-    fn.should.throw();
+    expect(function () { swig.compileFile('foobar'); }).to.throwException();
     delete global.window;
   });
 
   it('can render without context', function () {
-    swig.compile('{% set foo = "foo" %}{{ foo }}')().should.equal('foo');
+    expect(swig.compile('{% set foo = "foo" %}{{ foo }}')()).to.equal('foo');
   });
 });

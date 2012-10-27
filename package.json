@@ -24,10 +24,9 @@
   "devDependencies": {
     "express": "~3",
     "nodelint": "~0.6",
-    "nodeunit": "~0.7",
     "uglify-js": ">=1.1.0",
     "mocha": "~1.6",
-    "should": "~1.2.0"
+    "expect.js": "~0.2"
   },
   "main": "index",
   "engines": {

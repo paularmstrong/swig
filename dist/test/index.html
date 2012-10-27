@@ -4,8 +4,13 @@
     <meta charset="utf-8" />
     <title>Swig Browser Tests</title>
 
-    <link rel="stylesheet" href="nodeunit.css" type="text/css" media="all" />
-    <script src="nodeunit.min.js"></script>
+    <link rel="stylesheet" href="mocha.css" type="text/css" media="all" />
+    <script src="mocha.js"></script>
+    <script src="expect.js"></script>
+    <script>
+      mocha.setup('bdd');
+    </script>
+
     <script src="swig.pack.js"></script>
     <script src="autoescape.test.js"></script>
     <script src="block.test.js"></script>
@@ -25,25 +30,10 @@
 </head>
 <body>
 
-    <h1 id="nodeunit-header">Swig Browser Test Suite</h1>
+    <div id="mocha"></div>
+
     <script>
-    swig.init({});
-    nodeunit.run({
-        Autoescape: _autoescape,
-        Block: _block,
-        Else: _else,
-        Filter: _filter,
-        Filters: _filters,
-        For: _for,
-        If: _if,
-        Import: _import,
-        Include: _include,
-        Macro: _macro,
-        Parent: _parent,
-        Raw: _raw,
-        Set: _set,
-        Tags: _tags
-    });
+    mocha.run();
     </script>
 
 </body>
