@@ -33,7 +33,11 @@
     <div id="mocha"></div>
 
     <script>
-    mocha.run();
+    if (window.mochaPhantomJS) {
+      mochaPhantomJS.run();
+    } else {
+      mocha.run();
+    }
     </script>
 
 </body>

@@ -88,7 +88,7 @@ find tests -name "*.test.js" ! -name "helpers.test.js" | while read FILE; do
     TEST_FILE=$(basename $FILE)
     TEMP_FILE="dist/.$TEST_FILE"
     NAME=$(sed -e 's/.test.js//' <<< $TEST_FILE)
-    cat $FILE >> dist/test/$TEST_FILE
+    cat $FILE > dist/test/$TEST_FILE
 
     cp dist/test/$TEST_FILE $TEMP_FILE
     sed "/require\([^\)]\)/d" <$TEMP_FILE > dist/test/$TEST_FILE

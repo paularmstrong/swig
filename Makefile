@@ -12,6 +12,9 @@ opts =
 test:
 	@node_modules/mocha/bin/mocha --reporter ${reporter} ${opts} ${tests}
 
+test-browser: browser
+	@node_modules/mocha-phantomjs/bin/mocha-phantomjs dist/test/index.html
+
 files := $(shell find . -name '*.js' ! -path "*node_modules/*" ! -path "*dist/*")
 lint:
 	@node_modules/nodelint/nodelint ${files} --config=scripts/config-lint.js
@@ -31,4 +34,4 @@ coverage:
 speed:
 	@node tests/speed.js
 
-.PHONY: all browser test lint coverage speed
+.PHONY: all browser test test-browser lint coverage speed
