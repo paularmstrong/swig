@@ -1,3 +1,5 @@
 language: node_js
+script: "make lint && make test reporter=spec && make test-browser"
 node_js:
   - 0.6
+  - 0.8
