@@ -22,7 +22,10 @@ var options = {
   on: false,
   passfail: false,
   plusplus: false,
-  predef: [],
+  predef: [
+    // Mocha
+    'describe', 'it', 'after', 'afterEach', 'before', 'beforeEach',
+  ],
   regexp: true,
   rhino: false,
   safe: false,
