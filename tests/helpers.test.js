@@ -1,5 +1,6 @@
 var require = require('./testutils').require,
   expect = require('expect.js'),
+  swig = require('../lib/swig'),
   helpers = require('../lib/helpers');
 
 describe('Helpers', function () {
@@ -122,6 +123,16 @@ describe('Helpers', function () {
     });
     it('"foo$" should not be a valid block name', function () {
       expect(helpers.isValidBlockName('foo$')).to.eql(false);
+    });
+  });
+
+  describe('Setting variables', function () {
+    it('does not pull from global/external context', function () {
+      var g = (typeof window !== 'undefined') ? window : global;
+      g._swigglobaltest = 'asdf';
+      expect(swig.compile('{{ _swigglobaltest }}')({ _swigglobaltest: 'fdsa' }))
+        .to.equal('fdsa');
+      delete g._swigglobaltest;
     });
   });
 });

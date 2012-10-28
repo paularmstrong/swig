@@ -10,7 +10,7 @@ tests := $(shell find ./tests -name '*.test.js' ! -path "*node_modules/*")
 reporter = dot
 opts =
 test:
-	@node_modules/mocha/bin/mocha --reporter ${reporter} ${opts} ${tests}
+	@node_modules/mocha/bin/mocha --reporter ${reporter} ${opts} ${tests} --globals "_swigglobaltest"
 
 test-browser: browser
 	@node_modules/mocha-phantomjs/bin/mocha-phantomjs dist/test/index.html
