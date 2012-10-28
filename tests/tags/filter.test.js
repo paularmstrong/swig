@@ -21,4 +21,21 @@ describe('Tag: filter', function () {
     var tpl = swig.compile('{% filter replace "\\." "!" "g" %}hi. my name is paul.{% endfilter %}');
     expect(tpl({})).to.equal('hi! my name is paul!');
   });
+
+  it('throws if filter does not exist', function () {
+    expect(function () { swig.compile('{% filter foobar %}{% endfilter %}'); })
+      .to.throwException();
+    expect(function () { swig.compile('{{ foo|foobar }}'); })
+      .to.throwException();
+  });
+
+  it('does not throw for custom filter', function () {
+    swig.init({ filters: {
+      foo: function (i) { return i; }
+    }});
+    expect(function () { swig.compile('{% filter foo %}{% endfilter %}'); })
+      .to.not.throwException();
+    expect(function () { swig.compile('{{ bar|foo }}'); })
+      .to.not.throwException();
+  });
 });
