@@ -1,8 +1,8 @@
 var require = require('./testutils').require,
   expect = require('expect.js'),
-  swig = require('../lib/swig'),
-  tags = require('../lib/tags'),
-  parser = require('../lib/parser');
+  swig = require('../../lib/swig'),
+  tags = require('../../lib/tags'),
+  parser = require('../../lib/parser');
 
 describe('Tags', function () {
   it('undefined tag throws error', function () {

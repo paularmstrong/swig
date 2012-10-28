@@ -1,6 +1,6 @@
 var require = require('../testutils').require,
   expect = require('expect.js'),
-  swig = require('../lib/swig');
+  swig = require('../../lib/swig');
 
 describe('Tag: else', function () {
   beforeEach(function () {

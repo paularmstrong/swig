@@ -4,18 +4,18 @@ echo -ne "Building For Browser"
 
 function package() {
     if [[ $1 == 'pack' ]]; then
-        BROWSER_FILE="dist/browser/swig.pack.js"
+        BROWSER_FILE="dist/swig.pack.js"
         TEMP_FILE="dist/.swig.pack.js"
-        MIN_FILE="dist/browser/swig.pack.min.js"
+        MIN_FILE="dist/swig.pack.min.js"
     else
-        BROWSER_FILE="dist/browser/swig.js"
+        BROWSER_FILE="dist/swig.js"
         TEMP_FILE="dist/.swig.js"
-        MIN_FILE="dist/browser/swig.min.js"
+        MIN_FILE="dist/swig.min.js"
     fi
 
-    cat dist/header.js > $BROWSER_FILE
+    cat scripts/browser/header.js > $BROWSER_FILE
     echo -ne "."
-    cat dist/browser.js >> $BROWSER_FILE
+    cat scripts/browser/browser.js >> $BROWSER_FILE
     echo -ne "."
     echo "swig = (function () {" >> $BROWSER_FILE
     echo "var swig = {}," >> $BROWSER_FILE
@@ -24,6 +24,14 @@ function package() {
     echo "helpers = {}," >> $BROWSER_FILE
     echo "parser = {}," >> $BROWSER_FILE
     echo "tags = {};" >> $BROWSER_FILE
+
+    if [[ $2 == 'test' ]]; then
+        echo "window.dateformat = dateformat;" >> $BROWSER_FILE
+        echo "window.filters = filters;" >> $BROWSER_FILE
+        echo "window.helpers = helpers;" >> $BROWSER_FILE
+        echo "window.parser = parser;" >> $BROWSER_FILE
+        echo "window.tags = tags;" >> $BROWSER_FILE
+    fi
 
     if [[ $1 == 'pack' ]]; then
         cat node_modules/underscore/underscore.js >> $BROWSER_FILE
@@ -76,26 +84,25 @@ function package() {
     node_modules/uglify-js/bin/uglifyjs $BROWSER_FILE > $MIN_FILE
 }
 
-rm -rf dist/browser
-mkdir -p dist/browser
+rm -rf dist
+mkdir -p dist
 package
+
+package "pack" "test"
+mv dist/swig.pack.js tests/browser/swig.pack.js
+
 package "pack"
 
-cp dist/browser/swig.pack.js dist/test/swig.pack.js
-
-
-find tests -name "*.test.js" ! -name "helpers.test.js" | while read FILE; do
+find tests/node -name "*.test.js" | while read FILE; do
     TEST_FILE=$(basename $FILE)
     TEMP_FILE="dist/.$TEST_FILE"
     NAME=$(sed -e 's/.test.js//' <<< $TEST_FILE)
-    cat $FILE > dist/test/$TEST_FILE
+    cat $FILE > tests/browser/$TEST_FILE
 
-    cp dist/test/$TEST_FILE $TEMP_FILE
-    sed "/require\([^\)]\)/d" <$TEMP_FILE > dist/test/$TEST_FILE
-    cp dist/test/$TEST_FILE $TEMP_FILE
-    sed "s/testCase/nodeunit.testCase/" <$TEMP_FILE > dist/test/$TEST_FILE
-    cp dist/test/$TEST_FILE $TEMP_FILE
-    sed "s/__dirname/\'\'/" <$TEMP_FILE > dist/test/$TEST_FILE
+    cp tests/browser/$TEST_FILE $TEMP_FILE
+    sed "/require[(]/d" <$TEMP_FILE > tests/browser/$TEST_FILE
+    cp tests/browser/$TEST_FILE $TEMP_FILE
+    sed "s/__dirname/\'\'/" <$TEMP_FILE > tests/browser/$TEST_FILE
     rm $TEMP_FILE
 
     echo -ne "."

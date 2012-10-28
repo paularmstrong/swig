@@ -34,7 +34,7 @@
     "node": ">=0.6.0"
   },
   "scripts": {
-    "prepublish": "npm prune",
+    "prepublish": "npm prune && make build",
     "test": "make lint && make test reporter=spec && make test-browser"
   },
   "bugs": {

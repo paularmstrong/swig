@@ -3,19 +3,19 @@ all:
 	@cp scripts/githooks/* .git/hooks/
 	@chmod -R +x .git/hooks/
 
-browser:
+build:
 	@scripts/browser.sh
 
-tests := $(shell find ./tests -name '*.test.js' ! -path "*node_modules/*")
+tests := $(shell find ./tests/node -name '*.test.js' ! -path "*node_modules/*")
 reporter = dot
 opts =
 test:
 	@node_modules/mocha/bin/mocha --reporter ${reporter} ${opts} ${tests} --globals "_swigglobaltest"
 
 test-browser: browser
-	@node_modules/mocha-phantomjs/bin/mocha-phantomjs dist/test/index.html
+	@node_modules/mocha-phantomjs/bin/mocha-phantomjs tests/browser/index.html
 
-files := $(shell find . -name '*.js' ! -path "*node_modules/*" ! -path "*dist/*")
+files := $(shell find . -name '*.js' ! -path "*node_modules/*" ! -path "*dist/*" ! -path "*tests/browser/*")
 lint:
 	@node_modules/nodelint/nodelint ${files} --config=scripts/config-lint.js
 
@@ -34,4 +34,4 @@ coverage:
 speed:
 	@node tests/speed.js
 
-.PHONY: all browser test test-browser lint coverage speed
+.PHONY: all build test test-browser lint coverage speed

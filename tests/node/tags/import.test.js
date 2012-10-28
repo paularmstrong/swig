@@ -1,10 +1,10 @@
 var require = require('../testutils').require,
   expect = require('expect.js'),
-  swig = require('../lib/swig');
+  swig = require('../../lib/swig');
 
 describe('Tag: import (for macros)', function () {
   beforeEach(function () {
-    swig.init({ root: __dirname + '/../../tests/templates' });
+    swig.init({ root: __dirname + '/../templates' });
     if (typeof window !== 'undefined') {
       swig.compile('{% macro foo %}\nhi!\n{% endmacro %}\n\n{% macro bar baz %}\n{% if baz %}\nbye!\n{% else %}\nfudge.\n{% endif %}\n{% endmacro %}', { filename: 'macros.html' });
     }

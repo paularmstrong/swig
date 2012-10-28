@@ -1,7 +1,7 @@
 var require = require('./testutils').require,
   expect = require('expect.js'),
-  swig = require('../lib/swig'),
-  helpers = require('../lib/helpers');
+  swig = require('../../lib/swig'),
+  helpers = require('../../lib/helpers');
 
 describe('Helpers', function () {
   describe('isLiteral', function () {
