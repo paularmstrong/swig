@@ -1,3 +1,13 @@
+[0.13.2](https://github.com/paularmstrong/swig/tree/v0.13.2) / 2012-10-28
+-------------------------------------------------------------------------
+
+* **Changed** Allow variables, filters, arguments to span lines [gh-122](https://github.com/paularmstrong/swig/issues/122)
+* **Changed** Throw Errors when using undefined filters [gh-115](https://github.com/paularmstrong/swig/issues/115)
+* **Fixed** compiling files from absolute paths [gh-103](https://github.com/paularmstrong/swig/issues/103)
+* **Fixed** Prevent global variables from being used before context variables [gh-117](https://github.com/paularmstrong/swig/issues/117)
+
+[Documentation](https://github.com/paularmstrong/swig/tree/v0.13.2/docs)
+
 [0.13.1](https://github.com/paularmstrong/swig/tree/v0.13.1) / 2012-10-28
 -------------------------------------------------------------------------
 
