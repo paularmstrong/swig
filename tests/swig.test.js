@@ -32,40 +32,43 @@ describe('swig.init', function () {
       expect(function () { swig.compileFile('barfoo.html'); }).to.throwException();
     });
 
-    it('does not throw when false, renders instead', function () {
-      swig.init({
-        root: __dirname + '/templates',
-        allowErrors: false
+    if (typeof window === 'undefined') {
+      it('does not throw when false, renders instead', function () {
+        swig.init({
+          root: __dirname + '/templates',
+          allowErrors: false
+        });
+        expect(swig.compileFile('foobar.html').render())
+          .to.match(/<pre>Error\: ENOENT, no such file or directory/i);
+        expect(swig.compileFile('includes_notfound.html').render())
+          .to.match(/<pre>Error\: ENOENT, no such file or directory/i);
       });
-      expect(swig.compileFile('foobar.html').render())
-        .to.match(/<pre>Error\: ENOENT, no such file or directory/i);
-      expect(swig.compileFile('includes_notfound.html').render())
-        .to.match(/<pre>Error\: ENOENT, no such file or directory/i);
-    });
+    }
   });
 });
 
 
 describe('swig.compileFile', function () {
 
-  it('compiles a template from a file', function () {
-    swig.init({
-      root: __dirname + '/templates',
-      allowErrors: true
+  if (typeof window === 'undefined') {
+    it('compiles a template from a file', function () {
+      swig.init({
+        root: __dirname + '/templates',
+        allowErrors: true
+      });
+      expect(swig.compileFile('included_2.html').render({ array: [1, 1] }))
+        .to.equal('2');
     });
-    expect(swig.compileFile('included_2.html').render({ array: [1, 1] }))
-      .to.equal('2');
-  });
 
-
-  it('can use an absolute path', function () {
-    swig.init({
-      root: __dirname + '/templates',
-      allowErrors: true
+    it('can use an absolute path', function () {
+      swig.init({
+        root: __dirname + '/templates',
+        allowErrors: true
+      });
+      expect(swig.compileFile(__dirname + '/templates/included_2.html').render({ array: [1, 1] }))
+        .to.equal('2');
     });
-    expect(swig.compileFile(__dirname + '/templates/included_2.html').render({ array: [1, 1] }))
-      .to.equal('2');
-  });
+  }
 
   it('throws in a browser context', function () {
     swig.init({});
