@@ -299,6 +299,56 @@ describe('Tag: block', function () {
       tpl = swig.compile(extends1, { filename: 'extends1.html' });
       expect(tpl({})).to.equal('Base Content 1\n\n\nOneContent 1\n\nbar\nOneTwoContent\n\nOneContent 2\n\n\nBase Content 2\n');
     });
+
+    it('block macro inheritance', function () {
+      var tpl,
+        extends_base = [
+          'Base Content 1',
+          '',
+          '{% block one %}',
+          'OneContent 1',
+          '{% endblock %}',
+        ].join('\n'),
+        extends1 = [
+          '{% extends "extends_base.html" %}',
+          '',
+          '{% macro custommacro %}',
+          'hello',
+          '{% endmacro %}',
+          '{% block one %}',
+          '{{ custommacro }}',
+          '{% endblock %}',
+        ].join('\n');
+
+      swig.compile(extends_base, { filename: 'extends_base.html' });
+      tpl = swig.compile(extends1, { filename: 'extends1.html' });
+      expect(tpl({})).to.equal('Base Content 1\n\n\n\nhello\n\n');
+    });
+
+    it('block macro inheritance from parent', function () {
+      var tpl,
+        extends_base = [
+          'Base Content 1',
+          '',
+          '{% macro custommacro %}',
+          'hello',
+          '{% endmacro %}',
+          '{% block one %}',
+          'OneContent 1',
+          '{% endblock %}',
+        ].join('\n'),
+        extends1 = [
+          '{% extends "extends_base.html" %}',
+          '',
+          '{% block one %}',
+          '{{ custommacro }}',
+          '{% endblock %}',
+        ].join('\n');
+
+      swig.compile(extends_base, { filename: 'extends_base.html' });
+      tpl = swig.compile(extends1, { filename: 'extends1.html' });
+      expect(tpl({})).to.equal('Base Content 1\n\n\n\n\nhello\n\n');
+    });
   });
 });
 
