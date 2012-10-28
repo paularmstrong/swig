@@ -12,7 +12,7 @@ opts =
 test:
 	@node_modules/mocha/bin/mocha --reporter ${reporter} ${opts} ${tests} --globals "_swigglobaltest"
 
-test-browser: browser
+test-browser: build
 	@node_modules/mocha-phantomjs/bin/mocha-phantomjs tests/browser/index.html
 
 files := $(shell find . -name '*.js' ! -path "*node_modules/*" ! -path "*dist/*" ! -path "*tests/browser/*")
