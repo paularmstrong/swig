@@ -63,7 +63,7 @@ describe('swig.compileFile', function () {
       root: __dirname + '/templates',
       allowErrors: true
     });
-    expect(swig.compileFile('/' + __dirname + '/templates/included_2.html').render({ array: [1, 1] }))
+    expect(swig.compileFile(__dirname + '/templates/included_2.html').render({ array: [1, 1] }))
       .to.equal('2');
   });
 
