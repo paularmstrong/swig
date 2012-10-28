@@ -280,6 +280,10 @@ describe('Variables', function () {
     expect(parser.parse('{{foobar}}')).to.eql(token);
   });
 
+  it('can span lines', function () {
+    expect(parser.parse('{{\n foobar \n}}')).to.eql(token);
+  });
+
   describe('accepts varying notation', function () {
     it('can use dot notation', function () {
       expect(swig.compile('{{ a.b.c }}')({ a: { b: { c: 'hi' }} }))
@@ -399,6 +403,21 @@ describe('Variables', function () {
         escape: false,
         args: null
       }]);
+    });
+
+    it('can have arguments spanning multiple lines', function () {
+      swig.init({
+        filters: {
+          blah: function (value, a, b, c) {
+            expect(a).to.equal('a');
+            expect(b).to.equal('b');
+            expect(c).to.equal('c');
+            return [a, b, c].join('');
+          }
+        }
+      });
+      expect(swig.compile("{{ foo\n|\nblah(\n'a', \n'b',\n'c'\n) }}")({ foo: true }))
+        .to.equal('abc');
     });
   });
 });
