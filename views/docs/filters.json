@@ -1,0 +1,68 @@
+{
+    "filters": {
+        "add": {
+            "title": "add(value)",
+            "desc": "Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated, as in the example below.",
+            "args": [
+                {
+                    "name": "value",
+                    "type": "mixed",
+                    "desc": "The value to add to the variable before printing it to the page. Accepts any <code>array</code>, <code>object</code>, <code>number</code>, and <code>string</code>."
+                }
+            ]
+        },
+        "addslashes": {
+            "title": "addslashes",
+            "desc": "Returns a string with backslashes in front of characters that need to be quoted for database queries, etc."
+        },
+        "capitalize": {
+            "title": "capitalize",
+            "desc": "Capitalize the first character in the string."
+        },
+        "date": {
+            "title": "date(format[, tzOffset])",
+            "desc": "Convert a valid date into a format as specified. Mostly conforms to <a href=\"http://php.net/date\">php.net's date formatting</a>.",
+            "args": [
+                {
+                    "name": "format",
+                    "type": "string",
+                    "desc": "The format to convert the date to. See the date formatting table for formatting options."
+                },
+                {
+                    "name": "tzOffset",
+                    "optional": true,
+                    "type": "number",
+                    "desc": "The timezone offset in minutes from GMT to display the date in."
+                }
+            ],
+            "inc": "docs/filters/date.html"
+        },
+        "default": {
+            "title": "default(value)",
+            "desc": "If the variable is <code>undefined</code>, <code>null</code>, or <code>false</code>, a default return value can be specified.",
+            "args": [
+                {
+                    "name": "value",
+                    "type": "mixed",
+                    "desc": "Fallback value if the variable is falsy."
+                }
+            ]
+        },
+        "e": {
+            "title": "e",
+            "desc": "Shortcut for <a href=\"#escape\">escape</a>"
+        },
+        "escape": {
+            "title": "escape([type])",
+            "desc": "Force escape the output of the variable. Optionally use <code>e</code> as a shortcut filter name. This filter will be applied by default if <var>autoescape</var> is turned on.",
+            "args": [
+                {
+                    "name": "type",
+                    "optional": true,
+                    "type": "If you pass the string <samp>js</samp> in as the type, output will be escaped so that it is safe for JavaScript execution."
+                }
+            ],
+            "inc": "docs/filters/escape.html"
+        }
+    }
+}
