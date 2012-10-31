@@ -63,6 +63,71 @@
                 }
             ],
             "inc": "docs/filters/escape.html"
+        },
+        "first": {
+            "title": "first",
+            "desc": "Returns the first element of an array."
+        },
+        "join": {
+            "title": "join(glue)",
+            "desc": "If the value is an Array, you can join each value with a delimiter and return it as a string.",
+            "args": [
+                {
+                    "name": "glue",
+                    "type": "string",
+                    "desc": "Concatenation string to join each item in the array with."
+                }
+            ]
+        },
+        "json_encode": {
+            "title": "json_encode([indent])",
+            "desc": "Return a json-encoded string of the input.",
+            "args": [
+                {
+                    "name": "indent",
+                    "optional": true,
+                    "type": "number",
+                    "desc": "If greater than zero, the JSON will be pretty-printed using the number of spaces specified by the"
+                }
+            ]
+        },
+        "last": {
+            "title": "last",
+            "desc": "Returns the last element of an array."
+        },
+        "length": {
+            "title": "length",
+            "desc": "Return the <code>length</code> property of the input. If the input is an <code>object</code>, returns the number of keys on the object."
+        },
+        "lower": {
+            "title": "lower",
+            "desc": "Return the input in all lowercase letters."
+        },
+        "raw": {
+            "title": "raw",
+            "desc": "Forces the input to not be auto-escaped."
+        },
+        "replace": {
+            "title": "replace(search, replace[, flags])",
+            "desc": "Uses built-in JavaScript replace method. Provide a regular-expression or a string and a replacement string.",
+            "args": [
+                {
+                    "name": "search",
+                    "type": "string",
+                    "desc": "string or regular expression to find"
+                },
+                {
+                    "name": "replace",
+                    "type": "string",
+                    "desc": "string that will replace the matched parts from <var>search</var>"
+                },
+                {
+                    "name": "flags",
+                    "optional": true,
+                    "type": "string",
+                    "desc": "Regular expression flags. <a href=\"https://developer.mozilla.org/en/JavaScript/Guide/Regular_Expressions#Advanced_Searching_With_Flags\">[reference]</a>"
+                }
+            ]
         }
     }
 }
