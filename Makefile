@@ -9,19 +9,19 @@ SHA := $(shell git rev-parse HEAD)
 THIS_BRANCH := $(shell git branch)
 branch = gh-pages
 build: clean
-	@node_modules/.bin/still ./ -o ${out} -i "node_modules" -i "README" -i ".git" -i "package.json" -i "Makefile"
+	@node_modules/.bin/still views -o ${out} -i "layouts"
 	@git checkout ${branch}
 	@cp ${out}/* ./
 	@rm -rf ${out}
-	# @git commit -n -am "Automated build from ${SHA}"
-	# @git checkout ${THIS_BRANCH}
+	@git commit -n -am "Automated build from ${SHA}"
+	@git checkout ${THIS_BRANCH}
 
 port = 3000
 run:
-	@node_modules/.bin/still-server ./ -p ${port} -o
+	@node_modules/.bin/still-server views/ -p ${port} -o
 
 lint:
-	@echo ''
+	@echo '0 errors'
 
 test:
 	@echo ''

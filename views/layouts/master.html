@@ -1,0 +1,25 @@
+{% extends "layouts/html5.html" %}
+
+{% block title %}Swig{% endblock %}
+
+{% block body %}
+
+{% block header %}
+<header>
+  <h1>Swig</h1>
+  {% block nav %}
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/docs/">Documentation</a></li>
+      <li><a href="https://github.com/paularmstrong/swig/">Code</a></li>
+    </ul>
+  </nav>
+  {% endblock %}
+</header>
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% endblock %}

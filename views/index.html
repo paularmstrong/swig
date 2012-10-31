@@ -1,0 +1,16 @@
+{% extends "layouts/master.html" %}
+
+{% block title %}{% parent %} - A Node.js and Browser JavaScript Template Engine{% endblock %}
+
+{% block content %}
+
+<section>
+  <hgroup>
+    <h1>Swig</h1>
+    <h2>A Node.js and Browser-based JavaScript Template Engine</h2>
+  </hgroup>
+
+  <pre><code>{% raw %}&lt;h1&gt;{{ title }}&lt;/h1&gt;
+&lt;p&gt;A {{ environments|join(&#x27; &amp; &#x27;) }} Template Engine&lt;/p&gt;{% endraw %}</code></pre>
+</section>
+{% endblock %}
