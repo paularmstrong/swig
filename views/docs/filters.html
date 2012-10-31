@@ -18,11 +18,18 @@
   <pre><samp>{% raw %}{% filter upper %}oh hi, paul{% endfilter %}{% endraw %}</samp></pre>
 
   <ul>
-    {% for f in filters %}
-    <li><a href="#{{ loop.key }}">{{ loop.key }}</a></li>
-    {% endfor %}
+    <li>
+      <a href="#built-in">Built-In Filters</a>
+      <ul>
+      {% for f in filters %}
+        <li><a href="#{{ loop.key }}">{{ loop.key }}</a></li>
+      {% endfor %}
+      </ul>
+    </li>
+    <li><a href="#custom">Custom Filters</a></li>
   </ul>
 
+  <h2>Built-In Filters</h2>
   {% for f in filters %}
   <article id="{{ loop.key }}">
     <h1>{{ f.title }}</h1>
@@ -39,57 +46,21 @@
   </article>
   {% endfor %}
 
-
-
-
-
-
-
-
-
-    <h3>reverse</h3>
-
-    <p>If the value is an Array, this filter will reverse all items in the array.</p>
-
-    <h3>striptags</h3>
-
-    <p>Strip all HTML/XML tags.</p>
-
-    <h3>title</h3>
-
-    <p>Change the output to title case–the first letter of every word will uppercase, while all the rest will be lowercase.</p>
-
-    <h3>uniq</h3>
-
-    <p>Produces a duplicate-free version of the array. Uses <a href="http://documentcloud.github.com/underscore/#uniq">underscore.js uniq</a></p>
-
-    <h3>upper</h3>
-
-    <p>Return the variable in all uppercase letters</p>
-
-    <h3>url_encode</h3>
-
-    <p>Encode a URI component.</p>
-
-    <h3>url_decode</h3>
-
-    <p>Decode a URI component.</p>
-
-    <h2>Writing Custom Filters</h2>
+  <article id="custom">
+    <h1>Custom Filters</h1>
 
     <p>Custom filters are very easy to write for your own project that uses Swig.</p>
 
     <p>Create a file called <code>myfilters.js</code> and include it in the Swig init function:</p>
 
-    <pre><code>swig.init({ filters: require('myfilters') });
-    </code></pre>
+    <pre><code>swig.init({ filters: require('myfilters') });</code></pre>
 
     <p>In your <code>myfilters.js</code> file, each filter method is just a simple javascript method. For example, here's a filter to make a variable all lowercase:</p>
 
     <pre><code>exports.lower = function (input) {
-      return input.toString().toLowerCase();
-    };
-  </code></pre>
+  return input.toString().toLowerCase();
+};</code></pre>
+  </article>
 
 </section>
 {% endblock %}
