@@ -1,0 +1,20 @@
+{
+  "name": "swig-website",
+  "version": "0.0.0",
+  "description": "Website and documentation for swig, a node.js template engine.",
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/paularmstrong/swig.git"
+  },
+  "author": "Paul Armstrong <paul@paularmstrongdesigns.com>",
+  "dependencies": {
+    "still": "*",
+    "swig": "*"
+  },
+  "devDependencies": {},
+  "bugs": {
+    "url": "https://github.com/paularmstrong/swig/issues"
+  },
+  "private": true
+}
