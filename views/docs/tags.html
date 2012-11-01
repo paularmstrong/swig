@@ -1,0 +1,49 @@
+{% extends "docs/layout.html" %}
+
+{% block title %}{% parent %} » Tags{% endblock %}
+
+{% block content %}
+{% parent %}
+<section>
+
+  <ul>
+    <li>
+      <a href="#built-in">Built-In Tags</a>
+      <ul>
+      {% for tag in tags %}
+        <li><a href="#{{ loop.key }}">{{ loop.key }}</a></li>
+      {% endfor %}
+      </ul>
+    </li>
+    <li><a href="#custom">Custom Tags</a></li>
+  </ul>
+
+  {% for tag in tags %}
+  <article id="{{ loop.key }}">
+    <h1>{{ loop.key }}</h1>
+
+    <p>{{ tag.desc|raw }}</p>
+
+    {% if tag.args|length %}
+    <h2>Arguments</h2>
+    <ol>
+      {% for arg in tag.args %}
+      <li><var>{{ loop.key|raw }}</var> <code>{{ arg.types|join(', ') }}</code> {% if arg.optional %}<i>optional</i>{% endif %} {{ arg.desc|raw }} {% if arg.default %}Defaults to <code>{{ arg.default }}</code>.{% endif %}</li>
+      {% endfor %}
+    </ol>
+    {% else %}
+    <p><em>Accepts no arguments.</em></p>
+    {% endif %}
+
+    {% if tags.inc %}
+      {% include tags.inc ignore missing %}
+    {% endif %}
+  </article>
+  {% endfor %}
+
+  <article id="custom">
+    <h1>Custom Tags</h1>
+  </article>
+
+</section>
+{% endblock %}
