@@ -4,4 +4,68 @@
 
 {% parent %}
 
+<article>
+  <h1>Basics</h1>
+
+  <nav>
+    <ul>
+      <li><a href="#variables">Variables</a></li>
+      <li><a href="#logic">Logic Tags</a></li>
+      <li><a href="#comments">Comments</a></li>
+      <li><a href="#whitespace">Whitespace Control</a></li>
+    </ul>
+  </nav>
+
+  <section id="variables">
+    <h2>Variables</h2>
+
+    <p>Variables that are passed to templates can be output using double-curly-brackets: <code>{{ foo }}</code>.</p>
+
+    <p>Accessing properties of objects can be done using either dot-notation or bracket-notation. The following examples are equivalent:</p>
+
+    <ul>
+      <li><code>{% raw %}{{ foo.bar }}{% endraw %}</code></li>
+      <li><code>{% raw %}{{ foo['bar'] }}{% endraw %}</code></li>
+    </ul>
+
+    <p>If a variable is not defined, don't worry, your template won't explode. Instead, an empty-string will be output in its place.</p>
+
+    <p>Variables can be modified using using special, chainable control structures called <a href="/docs/filters/">Filters</a>:</p>
+
+    <pre><code>{% raw %}{{ name|title }} was born on {{ birthday|date('F jS, Y') }}{% endraw %}</code></pre>
+
+    <samp>Jane was born on July 6th, 1985</samp>
+  </section>
+
+  <section id="logic">
+    <h2>Logic Tags</h2>
+
+    <p>Swig includes some basic operational blocks, called <a href="/docs/tags/">Tags</a>, for helping you control output on a larger scale than variables. Tags are written using curly-percent syntax: <code>{% if foo %}bar{% endif %}</code>.</p>
+
+    <p>View the <a href="/docs/tags/">Tags documentation</a> for a full list of tags and usage instructions.</p>
+  </section>
+
+  <section id="comments">
+    <h2>Comments</h2>
+
+    <p>Comment tags are simply ignored by the parser. They will removed before your templates are rendered so that no one can see them unless they have access to your source code. Comments are written using the curly-hash syntax:</p>
+
+    <pre><code>{% raw %}{# this is a comment #}{% endraw %}</code></pre>
+  </section>
+
+  <section id="whitespace">
+    <h2>Whitespace Control</h2>
+
+    <p>Any whitespace in your templates is left in your final output templates. However, you can control the whitespace around logic tags by using whitespace controls.</p>
+
+    <p>To remove whitespace, simply put a dash (<code>-</code>) at the beginning or end of your tag to remove the preceding or following whitespace, respectively.</p>
+
+    <pre><code>{% raw %}{% for item in seq -%}
+  {{ item }}
+{%- endfor %}{% endraw %}</code></pre>
+
+  <p>If <code>seq</code> is an array of numbers, <samp>1</samp> through <samp>5</samp>, the output of the above example will be void of whitespace: <samp>12345</samp>.</p>
+  </section>
+</article>
+
 {% endblock %}
