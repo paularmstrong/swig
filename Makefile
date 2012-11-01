@@ -6,14 +6,17 @@ clean:
 	@rm -rf ${out}
 
 SHA := $(shell git rev-parse HEAD)
-THIS_BRANCH := $(shell git branch)
-branch = gh-pages
+THIS_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+remote=dev
+branch=gh-pages
 build: clean
-	@node_modules/.bin/still views -o ${out} -i "layouts"
+	@node_modules/.bin/still views -o ${out} -i "layouts" -i "json"
 	@git checkout ${branch}
-	@cp ${out}/* ./
+	@cp -r ${out}/* ./
 	@rm -rf ${out}
+	@git add .
 	@git commit -n -am "Automated build from ${SHA}"
+	@git push ${remote} ${branch}
 	@git checkout ${THIS_BRANCH}
 
 port = 3000

@@ -42,7 +42,9 @@
       {% endfor %}
     </ol>
     {% endif %}
-    {% include f.inc ignore missing %}
+    {% if f.inc %}
+      {% include f.inc ignore missing %}
+    {% endif %}
   </article>
   {% endfor %}
 
