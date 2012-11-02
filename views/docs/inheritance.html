@@ -1,0 +1,45 @@
+{% extends "docs/layout.html" %}
+
+{% block title %}{% parent %} » Template Inheritance{% endblock %}
+
+{% block content %}
+{% parent %}
+
+<section>
+  <h1>Template Inheritance</h1>
+
+  <p>Swig uses <code>extends</code> &amp; <code>block</code> for template inheritance.</p>
+
+  <h2>layout.html</h2>
+  <pre><code>{% raw %}&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;{% block title %}My Site{% endblock %}&lt;/title&gt;
+
+  {% block head %}
+  &lt;link rel="stylesheet" href="main.css"&gt;
+  {% endblock %}
+&lt;/head&gt;
+&lt;body&gt;
+  {% block content %}{% endblock %}
+&lt;/body&gt;
+&lt;/html&gt;{% endraw %}</code></pre>
+
+  <h2>index.html</h2>
+  <pre><code>{% raw %}{% extends 'layout.html' %}
+
+{% block title %}My Page{% endblock %}
+
+{% block head %}
+  {% parent %}
+  &lt;link rel="stylesheet" href="custom.css"&gt;
+{% endblock %}
+
+{% block content %}
+&lt;p&gt;This is just an awesome page.&lt;/p&gt;
+{% endblock %}{% endraw %}</code></pre>
+
+</section>
+
+{% endblock %}

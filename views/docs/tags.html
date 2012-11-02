@@ -39,8 +39,8 @@
     <p><em>Accepts no arguments.</em></p>
     {% endif %}
 
-    {% if tags.inc %}
-      {% include tags.inc ignore missing %}
+    {% if tag.inc %}
+      {% include tag.inc ignore missing %}
     {% endif %}
   </article>
   {% endfor %}
