@@ -2,14 +2,22 @@
 
 {% block title %}{% parent %} » Documentation{% endblock %}
 
-{% block content %}
-
-<nav>
+{% block section_nav %}
+<nav class="sectionNav">
   <ul>
     <li><a href="/docs/">Basics</a></li>
-    <li><a href="/docs/inheritance/">Template Inheritance</a></li>
-    <li><a href="/docs/filters/">Filters</a></li>
-    <li><a href="/docs/tags/">Tags</a></li>
+    <li>
+      <a href="/docs/inheritance/">Template Inheritance</a>
+      {% block inheritance_subnav %}{% endblock %}
+    </li>
+    <li>
+      <a href="/docs/filters/">Filters</a>
+      {% block filter_subnav %}{% endblock %}
+    </li>
+    <li>
+      <a href="/docs/tags/">Tags</a>
+      {% block tags_subnav %}{% endblock %}
+    </li>
   </ul>
 </nav>
 {% endblock %}

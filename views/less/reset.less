@@ -1,0 +1,211 @@
+* {
+    .box-sizing(border-box);
+}
+a,
+abbr,
+address,
+article,
+aside,
+audio,
+blockquote,
+body,
+canvas,
+caption,
+cite,
+code,
+dd,
+details,
+dfn,
+div,
+dl,
+dt,
+em,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+hr,
+img,
+input,
+li,
+mark,
+menu,
+nav,
+ol,
+p,
+pre,
+section,
+strong,
+summary,
+table,
+td,
+textarea,
+th,
+th,
+time,
+ul,
+var,
+video {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+  text-align: inherit;
+  list-style: inherit;
+  quotes: none;
+}
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+input:focus,
+a:focus,
+textarea:focus {
+  outline: 0;
+}
+blockquote,
+q {
+  &:before,
+  &:after {
+    content: '';
+  }
+}
+
+sup,
+sub {
+  vertical-align: baseline;
+  position: relative;
+  top: -0.2em;
+  font-size: 0.7em;
+}
+  sub {
+    top: 0.4em;
+  }
+
+html,
+body,
+select,
+textarea {
+  font: normal @fontSize~'/'@lineHeight @fontFamily;
+  color: @colorNeutralDark;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  color: @colorAccentSecond;
+  letter-spacing: -0.08em;
+  .font-smoothing;
+}
+  h1 { font-size: 36px; line-height: 40px; }
+  h2 { font-size: 24px; line-height: 30px; }
+  h3 { font-size: 20px; }
+  h4,
+  h5,
+  h6 { font-size: 16px; }
+
+a {
+  color: @colorPrimary;
+  text-decoration: none;
+  @transition: opacity 0.2s, color 0.2s, background-color 0.2s, background-image 0.2s;
+  .transition(@transition);
+  display: inline-block;
+  &:hover {
+    background-color: @colorPrimary;
+    color: #FFF;
+  }
+}
+
+b,
+strong {
+  font-weight: bold;
+}
+i,
+em {
+  font-style: italic;
+}
+
+p,
+ul,
+ol,
+dl,
+table {
+  margin: 0 0 @lineHeight / 2;
+}
+
+pre,
+code,
+samp,
+var,
+kbd {
+  color: @colorAccentDark;
+  background: @colorNeutralLight;
+}
+
+pre {
+  padding: @quarterGutter;
+  .border-radius(5px);
+  .box-shadow-mult(inset 2px 2px 4px -2px fade(@colorNeutralDark, 60%),
+    2px 2px 4px fade(#FFF, 60%));
+  overflow: auto;
+}
+
+.selection(...) {
+  background-color: fade(@colorAccent, 75%);
+  text-shadow: none;
+}
+*::selection {
+  .selection;
+}
+*::-moz-selection {
+  .selection;
+}
+
+.flash(...) {
+  0% { background-color: transparent; }
+  100% { background-color: fade(@colorAccent, 75%); }
+}
+@-webkit-keyframes flash {
+  .flash;
+}
+@-moz-keyframes flash {
+  .flash;
+}
+*:target {
+  .animation(flash, 0.5s, 2);
+  .border-radius(4px);
+}
+
+img, object {
+    max-width: 100%;
+}

@@ -2,12 +2,7 @@
 
 {% block title %}{% parent %} » Tags{% endblock %}
 
-{% block content %}
-{% parent %}
-<section>
-
-  <h1>Tags</h1>
-
+{% block tags_subnav %}
   <ul>
     <li>
       <a href="#built-in">Built-In Tags</a>
@@ -19,8 +14,14 @@
     </li>
     <li><a href="#custom">Custom Tags</a></li>
   </ul>
+{% endblock %}
 
-  <h2>Built-in Tags</h2>
+{% block content %}
+{% parent %}
+<h1>Tags</h1>
+
+<section id="built-in">
+  <h1 id="built-in">Built-in Tags</h1>
 
   {% for tag in tags %}
   <article id="{{ loop.key }}">
@@ -44,10 +45,9 @@
     {% endif %}
   </article>
   {% endfor %}
-
-  <article id="custom">
-    <h1>Custom Tags</h1>
-  </article>
-
 </section>
+
+<article id="custom">
+  <h1>Custom Tags</h1>
+</article>
 {% endblock %}

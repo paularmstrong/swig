@@ -2,22 +2,8 @@
 
 {% block title %}{% parent %} » Filters{% endblock %}
 
-{% block content %}
-{% parent %}
 
-<section>
-  <h1>Variable Filters</h1>
-
-  <p>Used to modify variables. Filters are added directly after variable names, separated by the pipe (<code>|</code>) character. You can chain multiple filters together, applying one after the other in succession.</p>
-
-  <h2>Example</h2>
-
-  <pre><samp>{% raw %}{{ name|title }} was born on {{ birthday|date('F jS, Y') }} and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</samp></pre>
-
-  <p>Filters can also be applied to blocks of content directly with the <a href="tags.md#filter">filter tag</a>.</p>
-
-  <pre><samp>{% raw %}{% filter upper %}oh hi, paul{% endfilter %}{% endraw %}</samp></pre>
-
+{% block filter_subnav %}
   <ul>
     <li>
       <a href="#built-in">Built-In Filters</a>
@@ -29,6 +15,24 @@
     </li>
     <li><a href="#custom">Custom Filters</a></li>
   </ul>
+{% endblock %}
+
+{% block content %}
+{% parent %}
+
+<section>
+  <h1>Variable Filters</h1>
+
+  <p>Used to modify variables. Filters are added directly after variable names, separated by the pipe (<code>|</code>) character. You can chain multiple filters together, applying one after the other in succession.</p>
+
+  <h2>Example</h2>
+
+  <pre><samp>{% raw %}{{ name|title }} was born on {{ birthday|date('F jS, Y') }}
+and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</samp></pre>
+
+  <p>Filters can also be applied to blocks of content directly with the <a href="tags.md#filter">filter tag</a>.</p>
+
+  <pre><samp>{% raw %}{% filter upper %}oh hi, paul{% endfilter %}{% endraw %}</samp></pre>
 
   <h2>Built-In Filters</h2>
   {% for f in filters %}

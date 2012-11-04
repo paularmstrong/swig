@@ -2,24 +2,50 @@
 
 {% block title %}Swig{% endblock %}
 
+{% block css %}
+{% if DEV %}
+  {% set css = 'less' %}
+{% else %}
+  {% set css = 'css' %}
+{% endif %}
+<link rel="stylesheet{% if DEV %}/less{% endif %}" href="/{{ css }}/swig.{{ css }}">
+
+{% if DEV %}
+<script src="/js/lib/less.min.js"></script>
+{% endif %}
+{% endblock %}
+
 {% block body %}
 
 {% block header %}
-<header>
-  <h1>Swig</h1>
-  {% block nav %}
-  <nav>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/docs/">Documentation</a></li>
-      <li><a href="https://github.com/paularmstrong/swig/">Code</a></li>
-    </ul>
-  </nav>
+<header class="header">
+  <div class="content row">
+    <hgroup class="span7">
+      <h1>Swig</h1>
+    </hgroup>
+    {% block nav %}
+    <nav class="span5">
+      <ul class="mainNav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/docs/">Documentation</a></li>
+        <li><a href="https://github.com/paularmstrong/swig/">Code</a></li>
+      </ul>
+    </nav>
   {% endblock %}
+  </div>
 </header>
 {% endblock %}
 
-{% block content %}
+<div class="content row guttered">
+  <div class="span9">
+  {% block content %}{% endblock %}
+  </div>
+
+  <div class="span3">{% block section_nav %}{% endblock %}</div>
+</div>
 {% endblock %}
 
+{% block js %}
+<script src="/js/lib/zepto.min.js"></script>
+<script src="/js/swig.js"></script>
 {% endblock %}

@@ -1,0 +1,45 @@
+@headerHeight: 50px;
+.header {
+  background: #FFF;
+  position: fixed;
+  top: 0;
+  z-index: 900;
+  width: 100%;
+  h1 {
+    color: @colorNeutral;
+  }
+  h2 {
+    color: @colorNeutralLight;
+  }
+  h1,
+  h2 {
+    line-height: @headerHeight;
+  }
+  .box-shadow(0 0 0 #FFF);
+  .transition(box-shadow 0.5s);
+  &.scrolled {
+    .box-shadow(0 3px 2px fade(@colorNeutralDark, 60%));
+  }
+}
+
+.mainNav {
+  list-style: none;
+  text-align: right;
+  margin: 0;
+  li {
+    display: inline-block;
+    width: auto;
+  }
+  a {
+    display: block;
+    width: auto;
+    line-height: @headerHeight;
+    padding: 0 @quarterGutter;
+  }
+}
+
+@media @mq-phone {
+  .mainNav {
+    text-align: left;
+  }
+}
