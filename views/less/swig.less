@@ -22,4 +22,17 @@ ul {
   padding-left: @gutter;
 }
 
+.sectionNav {
+  padding: @quarterGutter;
+  position: fixed;
+  ul {
+    padding: 0;
+    margin: 0;
+    ul {
+      padding-left: @quarterGutter;
+    }
+    list-style: none;
+  }
+}
+
 @import "header";
