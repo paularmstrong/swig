@@ -30,4 +30,4 @@ lint:
 test:
 	@echo ''
 
-.PHONY: all, test, line
+.PHONY: all, clean, build, lint, test
