@@ -59,7 +59,14 @@ describe('swig.compileFile', function () {
       expect(swig.compileFile('included_2.html').render({ array: [1, 1] }))
         .to.equal('2');
     });
-
+    it('accepts an array in root config', function () {
+      swig.init({
+        root: ["/", __dirname + '/templates'],
+        allowErrors: true
+      });
+      expect(swig.compileFile('included_2.html').render({ array: [1, 1] }))
+        .to.equal('2');
+    });
     it('can use an absolute path', function () {
       swig.init({
         root: __dirname + '/templates',
