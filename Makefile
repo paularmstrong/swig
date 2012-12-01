@@ -28,6 +28,8 @@ build: clean
 	@mkdir -p views/css
 	@node_modules/.bin/lessc --yui-compress --include-path=views/less views/less/swig.less views/css/swig.css
 	@node_modules/.bin/still views -o ${tmp} -i "layouts" -i "json" -i "less"
+	@cp -R views/js/swig.* ${tmp}/js/
+	@cp views/js/lib/zepto.min.js ${tmp}/js/lib
 	@git checkout ${branch}
 	@cp -r ${tmp}/* ./
 	@rm -rf ${tmp}
