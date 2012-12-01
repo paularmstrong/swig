@@ -185,10 +185,14 @@ and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</code></pre>
     {% endfor %}
   </section>
 
+  <hr>
+
   <article id="tags-custom">
-    <h1>Custom Tags</h1>
+    {% include "docs/tags/custom.html" %}
   </article>
 </section>
+
+<hr>
 {% endblock %}
 
 {% block section_nav %}
@@ -226,11 +230,11 @@ and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</code></pre>
       <ol>
         <li>
           <a href="#tags-built-in">Built-In Tags</a>
-          <ul>
+          <ol>
           {% for tag in tags %}
             <li><a href="#tags-{{ loop.key }}">{{ loop.key }}</a></li>
           {% endfor %}
-          </ul>
+          </ol>
         </li>
         <li><a href="#tags-custom">Custom Tags</a></li>
       </ol>

@@ -1,0 +1,99 @@
+<h1>Custom Tags</h1>
+
+<p>Swig makes it easy to write custom tags specific for your project.</p>
+
+<p>First, make sure to include your node.js file that declares your tags in the swig init:</p>
+
+<pre><code data-language="javascript">swig.init({ tags: require('mytags') });</code></pre>
+
+<h2>Requirements</h2>
+
+<p>First, include the helpers.</p>
+
+<pre><code data-language="javascript">var helpers = require('swig/lib/helpers');</code></pre>
+
+<p>Define your tag and whether or not it requires an "end" tag:</p>
+
+<pre><code data-language="javascript">exports.mytag = function (indent, parser) {
+    return 'output';
+};
+exports.mytag.ends = true;
+</code></pre>
+
+<h2>A Really Simple Tag</h2>
+
+<p>To parse a swig variable with or without filters into a variable token, eg. <code>bar</code> or <code>foo|lowercase</code></p>
+
+<pre><code data-language="javascript">exports.mytag = function (indent, parser) {
+    var myArg = parser.parseVariable(this.args[0]);
+    return 'output';
+};
+exports.mytag.ends = true;</code></pre>
+
+<p>Use a parsed variable token with <code>helpers.setVar()</code> to bind a variable in your current scope into the templates scope. The <code>setVar</code> method cleans up variable output, applies filters and escaping for clean output:</p>
+
+<pre><code data-language="javascript">exports.mytag = function (indent, parser) {
+    var myArg = parser.parseVariable(this.args[0]),
+        output = '';
+    output += helpers.setVar(name, myArg);
+    return output;
+};
+exports.mytag.ends = true;</code></pre>
+
+<p>To parse the inner content of a tag for outputting, use <code>parser.compile.apply(this, [indent, parentBlock])</code>:</p>
+
+<pre><code data-language="javascript">exports.mytag = function (indent, parser) {
+    var myArg = parser.parseVariable(this.args[0]),
+        output = [];
+
+    output.push(helpers.setVar('__myArg', myArg));
+
+    output.push('_output += "&lt;h1&gt;";');
+    output.push('_output += __myArg;');
+    output.push('_output += "&lt;/h1&gt;";');
+    output.push('_output += "&lt;p&gt;";');
+    output.push(parser.compile.call(this, indent + '    '));
+    output.push('_output += "&lt;/p&gt;";');
+
+    return output.join('');
+};
+exports.mytag.ends = true;</code></pre>
+
+<p>When using your tag, it might have the following effect (assume <code>blah</code> is equal to "Scrumdiddlyumptious"):</p>
+
+<p>Template:</p>
+
+<pre><code data-language="swig">{% raw %}{% mytag blah %}Tacos{% endmytag %}{% endraw %}</code></pre>
+
+<p>Output:</p>
+
+<pre><code data-language="html">&lt;h1&gt;Scrumdiddlyumptious&lt;/h1&gt;
+&lt;p&gt;Tacos&lt;/p&gt;
+</code></pre>
+
+<h2>Third-Party Extensions</h2>
+
+<p>To access a third-party library or method that is defined outside of your templates, you can add it to swig as an extention. For example, if you are using the i18next node module, add it as an extension when you initialize swig:</p>
+
+<pre><code data-language="javascript">var i18next = require('i18next');
+swig.init({
+    extensions: {
+        i18next: i18next
+    }
+});</code></pre>
+
+<p>Once you've added it, your custom tag can reference the <code>i18next</code> extension via the <code>_ext</code> object:</p>
+
+<pre><code data-language="javascript">exports.trans = function (indent, parser) {
+    var myArg = parser.parseVariable(this.args[0]),
+    output = [];
+    output.push(helpers.setVar('__myArg', myArg));
+
+    output.push('_output += _ext.i18next.t(__myArg);');
+
+    return output.join('');
+};</code></pre>
+
+<h2>Write Your Own</h2>
+
+<p>To best understand how to write your own tag, reference <a href="https://github.com/paularmstrong/swig/tree/master/lib/tags"><code>swig/lib/tags/</code></a> to see how the internal tags are written. These will give you a pretty clear indication of how to write your own.</p>
