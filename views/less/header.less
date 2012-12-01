@@ -1,24 +1,39 @@
 @headerHeight: 50px;
 .header {
   background: #FFF;
-  position: fixed;
   top: 0;
   z-index: 900;
   width: 100%;
   h1 {
-    color: @colorNeutral;
+    a {
+      display: block;
+      .border-radius(0 0 5px 5px);
+      @shadow: 0 1px 3px fade(@colorAccentDark, 60%), inset 0 -1px 3px fade(@colorLight, 40%);
+      .box-shadow(@shadow);
+      border: 1px solid #000;
+      border-top: 0;
+      padding: 0 @halfGutter;
+      color: @colorLight;
+      text-shadow: 0 1px 2px @colorAccentDark;
+      font-weight: normal;
+      font-size: @fontSize * 2;
+      #gradient .radial(@colorNeutralDark, @colorAccentDark);
+      &:hover {
+        #gradient .radial(lighten(@colorNeutralDark, 10%), lighten(@colorAccentDark, 10%));
+        @shadow: 0 1px 3px fade(@colorAccentDark, 80%), inset 0 -1px 3px fade(@colorLight, 50%);
+        .box-shadow(@shadow);
+      }
+    }
   }
   h2 {
+    font-size: @fontSize;
     color: @colorNeutralLight;
   }
   h1,
   h2 {
     line-height: @headerHeight;
-  }
-  .box-shadow(0 0 0 #FFF);
-  .transition(box-shadow 0.5s);
-  &.scrolled {
-    .box-shadow(0 3px 2px fade(@colorNeutralDark, 60%));
+    display: inline-block;
+    margin-right: @quarterGutter;
   }
 }
 

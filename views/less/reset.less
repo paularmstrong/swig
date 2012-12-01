@@ -1,6 +1,4 @@
-* {
-    .box-sizing(border-box);
-}
+* { .box-sizing(border-box); }
 a,
 abbr,
 address,
@@ -112,7 +110,7 @@ html,
 body,
 select,
 textarea {
-  font: normal @fontSize~'/'@lineHeight @fontFamily;
+  font: normal @fontSize~'/'@lineHeight @fonts;
   color: @colorNeutralDark;
 }
 
@@ -122,7 +120,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: bold;
+  font: normal @fontSize~'/'@lineHeight @fontsFancy;
   color: @colorAccentSecond;
   letter-spacing: -0.08em;
   .font-smoothing;
@@ -175,8 +173,8 @@ kbd {
 pre {
   padding: @quarterGutter;
   .border-radius(5px);
-  .box-shadow-mult(inset 2px 2px 4px -2px fade(@colorNeutralDark, 60%),
-    2px 2px 4px fade(#FFF, 60%));
+  @shadow: inset 2px 2px 4px -2px fade(@colorNeutralDark, 60%), 2px 2px 4px fade(#FFF, 60%);
+  .box-shadow(@shadow);
   overflow: auto;
 }
 
