@@ -1,21 +1,36 @@
+SHA := $(shell git rev-parse HEAD)
+THIS_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+
 all:
 	@npm install
 
-out = 'tmp_build'
+tmp = 'tmp_build'
 clean:
-	@rm -rf ${out}
+	@rm -rf ${tmp}
 
-SHA := $(shell git rev-parse HEAD)
-THIS_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+get-swig: clean
+	@git checkout master
+	@make && make build
+	@mkdir -p ${tmp}
+	@cp -r dist/swig* ${tmp}/
+	@git checkout ${THIS_BRANCH}
+	@rm views/js/swig*
+	@(cd views/js && ln -s ../../dist/swig.js ./swig.js)
+	@(cd views/js && ln -s ../../dist/swig.min.js ./swig.min.js)
+	@(cd views/js && ln -s ../../dist/swig.pack.js ./swig.pack.js)
+	@(cd views/js && ln -s ../../dist/swig.pack.min.js ./swig.pack.min.js)
+	@git commit -n -am "Automated updating swig.js" &>/dev/null
+
+
 remote=dev
 branch=gh-pages
 build: clean
 	@mkdir -p views/css
 	@node_modules/.bin/lessc --yui-compress --include-path=views/less views/less/swig.less views/css/swig.css
-	@node_modules/.bin/still views -o ${out} -i "layouts" -i "json" -i "less"
+	@node_modules/.bin/still views -o ${tmp} -i "layouts" -i "json" -i "less"
 	@git checkout ${branch}
-	@cp -r ${out}/* ./
-	@rm -rf ${out}
+	@cp -r ${tmp}/* ./
+	@rm -rf ${tmp}
 	@git add .
 	@git commit -n -am "Automated build from ${SHA}"
 	@git push ${remote} ${branch}
@@ -31,4 +46,4 @@ lint:
 test:
 	@echo ''
 
-.PHONY: all, clean, build, lint, test
+.PHONY: all, clean, get_swig, build, lint, test
