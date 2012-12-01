@@ -25,6 +25,7 @@ get-swig: clean
 remote=dev
 branch=gh-pages
 build: clean
+	@make get-swig -i
 	@mkdir -p views/css
 	@node_modules/.bin/lessc --yui-compress --include-path=views/less views/less/swig.less views/css/swig.css
 	@node_modules/.bin/still views -o ${tmp} -i "layouts" -i "json" -i "less"
