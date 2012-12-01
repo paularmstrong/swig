@@ -1,20 +1,8 @@
 {% extends "docs/layout.html" %}
 
 {% block content %}
-
-{% parent %}
-
-<article>
-  <h1>Basics</h1>
-
-  <nav>
-    <ul>
-      <li><a href="#variables">Variables</a></li>
-      <li><a href="#logic">Logic Tags</a></li>
-      <li><a href="#comments">Comments</a></li>
-      <li><a href="#whitespace">Whitespace Control</a></li>
-    </ul>
-  </nav>
+<section>
+  <h1 id="basics">Basics</h1>
 
   <section id="variables">
     <h2>Variables</h2>
@@ -30,7 +18,7 @@
 
     <p>If a variable is not defined, don't worry, your template won't explode. Instead, an empty-string will be output in its place.</p>
 
-    <p>Variables can be modified using using special, chainable control structures called <a href="/docs/filters/">Filters</a>:</p>
+    <p>Variables can be modified using using special, chainable control structures called <a href="#filters">Filters</a>:</p>
 
     <pre><code>{% raw %}{{ name|title }} was born on {{ birthday|date('F jS, Y') }}{% endraw %}</code></pre>
 
@@ -40,9 +28,9 @@
   <section id="logic">
     <h2>Logic Tags</h2>
 
-    <p>Swig includes some basic operational blocks, called <a href="/docs/tags/">Tags</a>, for helping you control output on a larger scale than variables. Tags are written using curly-percent syntax: <code>{% if foo %}bar{% endif %}</code>.</p>
+    <p>Swig includes some basic operational blocks, called <a href="#tags">Tags</a>, for helping you control output on a larger scale than variables. Tags are written using curly-percent syntax: <code>{% if foo %}bar{% endif %}</code>.</p>
 
-    <p>View the <a href="/docs/tags/">Tags documentation</a> for a full list of tags and usage instructions.</p>
+    <p>View the <a href="#tags">Tags documentation</a> for a full list of tags and usage instructions.</p>
   </section>
 
   <section id="comments">
@@ -66,6 +54,180 @@
 
   <p>If <code>seq</code> is an array of numbers, <samp>1</samp> through <samp>5</samp>, the output of the above example will be void of whitespace: <samp>12345</samp>.</p>
   </section>
-</article>
+</section>
 
+<hr>
+
+<section>
+  <h1 id="inheritance">Template Inheritance</h1>
+
+  <p>Swig uses <code>extends</code> &amp; <code>block</code> for template inheritance.</p>
+
+  <h2>layout.html</h2>
+  <pre><code>{% raw %}&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;{% block title %}My Site{% endblock %}&lt;/title&gt;
+
+  {% block head %}
+  &lt;link rel="stylesheet" href="main.css"&gt;
+  {% endblock %}
+&lt;/head&gt;
+&lt;body&gt;
+  {% block content %}{% endblock %}
+&lt;/body&gt;
+&lt;/html&gt;{% endraw %}</code></pre>
+
+  <h2>index.html</h2>
+  <pre><code>{% raw %}{% extends 'layout.html' %}
+
+{% block title %}My Page{% endblock %}
+
+{% block head %}
+  {% parent %}
+  &lt;link rel="stylesheet" href="custom.css"&gt;
+{% endblock %}
+
+{% block content %}
+&lt;p&gt;This is just an awesome page.&lt;/p&gt;
+{% endblock %}{% endraw %}</code></pre>
+</section>
+
+<hr>
+
+<section>
+  <h1 id="filters">Variable Filters</h1>
+
+  <p>Used to modify variables. Filters are added directly after variable names, separated by the pipe (<code>|</code>) character. You can chain multiple filters together, applying one after the other in succession.</p>
+
+  <h2>Example</h2>
+
+  <pre><samp>{% raw %}{{ name|title }} was born on {{ birthday|date('F jS, Y') }}
+and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</samp></pre>
+
+  <p>Filters can also be applied to blocks of content directly with the <a href="tags.md#filter">filter tag</a>.</p>
+
+  <pre><samp>{% raw %}{% filter upper %}oh hi, paul{% endfilter %}{% endraw %}</samp></pre>
+
+  <h2 id="filters-built-in">Built-In Filters</h2>
+  {% for f in filters %}
+  <article id="filters-{{ loop.key }}">
+    <h1><code>{{ f.title }}</code></h1>
+    <p>{{ f.desc }}</p>
+    {% if f.args|length %}
+    <h2>Arguments</h2>
+    <ol>
+      {% for arg in f.args %}
+      <li><var>{{ arg.name }}</var> <code>{{ arg.type }}</code> {% if arg.optional %}<i>optional</i>{% endif %} {{ arg.desc|raw }}</li>
+      {% endfor %}
+    </ol>
+    {% endif %}
+    {% if f.inc %}
+      {% include f.inc ignore missing %}
+    {% endif %}
+  </article>
+  {% endfor %}
+
+  <article id="filters-custom">
+    <h1>Custom Filters</h1>
+
+    <p>Custom filters are very easy to write for your own project that uses Swig.</p>
+
+    <p>Create a file called <code>myfilters.js</code> and include it in the Swig init function:</p>
+
+    <pre><code>swig.init({ filters: require('myfilters') });</code></pre>
+
+    <p>In your <code>myfilters.js</code> file, each filter method is just a simple javascript method. For example, here's a filter to make a variable all lowercase:</p>
+
+    <pre><code>exports.lower = function (input) {
+  return input.toString().toLowerCase();
+};</code></pre>
+  </article>
+</section>
+
+<hr>
+
+<section>
+<h1 id="tags">Tags</h1>
+
+  <section>
+    <h1 id="tags-built-in">Built-in Tags</h1>
+
+    {% for tag in tags %}
+    <article id="tags-{{ loop.key }}">
+      <h1><code>{{ loop.key }}</code></h1>
+
+      <p>{{ tag.desc|raw }}</p>
+
+      {% if tag.args|length %}
+      <h2>Arguments</h2>
+      <ol>
+        {% for arg in tag.args %}
+        <li><var>{{ loop.key|raw }}</var> <code>{{ arg.types|join(', ') }}  </code> {% if arg.optional %}<i>optional</i>{% endif %} {{ arg. desc|raw }} {% if arg.default %}Defaults to <code>{{ arg.default   }}</code>.{% endif %}</li>
+        {% endfor %}
+      </ol>
+      {% else %}
+      <p><em>Accepts no arguments.</em></p>
+      {% endif %}
+
+      {% if tag.inc %}
+        {% include tag.inc ignore missing %}
+      {% endif %}
+    </article>
+    {% endfor %}
+  </section>
+
+  <article id="tags-custom">
+    <h1>Custom Tags</h1>
+  </article>
+</section>
+{% endblock %}
+
+{% block section_nav %}
+<nav>
+  <ol class="sidenav">
+    <li>
+      <a href="#basics">Basics</a>
+      <ol>
+        <li><a href="#variables">Variables</a></li>
+        <li><a href="#logic">Logic Tags</a></li>
+        <li><a href="#comments">Comments</a></li>
+        <li><a href="#whitespace">Whitespace Control</a></li>
+      </ol>
+    </li>
+    <li>
+      <a href="#inheritance">Template Inheritance</a>
+      {% block inheritance_subnav %}{% endblock %}
+    </li>
+    <li>
+      <a href="#filters">Filters</a>
+      <ol>
+        <li>
+          <a href="#filters-built-in">Built-In Filters</a>
+          <ol>
+          {% for f in filters %}
+            <li><a href="#filters-{{ loop.key }}">{{ loop.key }}</a></li>
+          {% endfor %}
+          </ol>
+        </li>
+        <li><a href="#filters-custom">Custom Filters</a></li>
+      </ol>
+    </li>
+    <li>
+      <a href="#tags">Tags</a>
+      <ol>
+        <li>
+          <a href="#tags-built-in">Built-In Tags</a>
+          <ul>
+          {% for tag in tags %}
+            <li><a href="#tags-{{ loop.key }}">{{ loop.key }}</a></li>
+          {% endfor %}
+          </ul>
+        </li>
+        <li><a href="#tags-custom">Custom Tags</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
 {% endblock %}

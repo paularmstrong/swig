@@ -1,0 +1,28 @@
+.sidenav {
+  list-style: none;
+  &.fixed {
+    position: fixed;
+    top: @quarterGutter;
+  }
+  ol {
+    padding: 0 0 0 @quarterGutter / 2;
+    margin: 0 0 0 @quarterGutter / 2;
+    border-left: 3px solid @colorNeutralLight;
+    height: 0;
+    overflow: hidden;
+    .transition(height 0.25s);
+  }
+  li.current {
+    & > a {
+      background: @colorNeutralLight;
+    }
+    a.current {
+      color: #FFF;
+      background: @colorPrimary;
+    }
+    ol {
+      height: auto;
+      overflow: visible;
+    }
+  }
+}

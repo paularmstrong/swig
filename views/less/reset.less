@@ -122,12 +122,17 @@ h5,
 h6 {
   font: normal @fontSize~'/'@lineHeight @fontsFancy;
   color: @colorAccentSecond;
-  letter-spacing: -0.08em;
-  .font-smoothing;
+  margin: 0 0 0.25em;
+  code,
+  var,
+  samp {
+    font-size: @fontSize;
+    color: @colorAccentSecond;
+  }
 }
-  h1 { font-size: 36px; line-height: 40px; }
-  h2 { font-size: 24px; line-height: 30px; }
-  h3 { font-size: 20px; }
+  h1 { font-size: 28px; line-height: 32px; }
+  h2 { font-size: 20px; }
+  h3,
   h4,
   h5,
   h6 { font-size: 16px; }
@@ -138,6 +143,10 @@ a {
   @transition: opacity 0.2s, color 0.2s, background-color 0.2s, background-image 0.2s;
   .transition(@transition);
   display: inline-block;
+  padding: 2px;
+  margin: -2px;
+  .border-radius(3px);
+  border: none;
   &:hover {
     background-color: @colorPrimary;
     color: #FFF;
@@ -153,12 +162,15 @@ em {
   font-style: italic;
 }
 
+section,
+article,
 p,
 ul,
 ol,
 dl,
-table {
-  margin: 0 0 @lineHeight / 2;
+table,
+pre {
+  margin: 0 0 @lineHeight;
 }
 
 pre,
@@ -166,12 +178,14 @@ code,
 samp,
 var,
 kbd {
+  font: normal 12px~'/'20px @fontsMono;
   color: @colorAccentDark;
-  background: @colorNeutralLight;
+  background: @colorLight;
 }
 
 pre {
   padding: @quarterGutter;
+  border: 1px solid @colorNeutralLight;
   .border-radius(5px);
   @shadow: inset 2px 2px 4px -2px fade(@colorNeutralDark, 60%), 2px 2px 4px fade(#FFF, 60%);
   .box-shadow(@shadow);
@@ -191,7 +205,7 @@ pre {
 
 .flash(...) {
   0% { background-color: transparent; }
-  100% { background-color: fade(@colorAccent, 75%); }
+  100% { background-color: fade(@colorAccent, 40%); }
 }
 @-webkit-keyframes flash {
   .flash;
@@ -200,10 +214,27 @@ pre {
   .flash;
 }
 *:target {
-  .animation(flash, 0.5s, 2);
+  .animation(flash, 0.2s, 4);
   .border-radius(4px);
 }
 
 img, object {
     max-width: 100%;
+}
+
+hr {
+  position: relative;
+  z-index: -1;
+  clear: both;
+  &:before {
+    content: '…';
+    .text-hidden;
+    left: 0;
+    right: 0;
+    top: 0;
+    position: absolute;
+    .box-shadow(0 -8px 8px -8px fade(@colorNeutralDark, 60%));
+  }
+  border-top: 1px solid @colorNeutralLight;
+  margin: @gutter 0;
 }

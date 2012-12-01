@@ -3,21 +3,31 @@
 {% block title %}{% parent %} » Documentation{% endblock %}
 
 {% block section_nav %}
-<nav class="sectionNav">
-  <ul>
-    <li><a href="/docs/">Basics</a></li>
+<nav>
+  <ol class="sidenav">
+    <li><a href="#basics">Basics</a></li>
     <li>
-      <a href="/docs/inheritance/">Template Inheritance</a>
+      <a href="#inheritance">Template Inheritance</a>
       {% block inheritance_subnav %}{% endblock %}
     </li>
     <li>
-      <a href="/docs/filters/">Filters</a>
-      {% block filter_subnav %}{% endblock %}
+      <a href="#filters">Filters</a>
+      <ol>
+        <li>
+          <a href="#built-in">Built-In Filters</a>
+          <ol>
+          {% for f in filters %}
+            <li><a href="#{{ loop.key }}">{{ loop.key }}</a></li>
+          {% endfor %}
+          </ol>
+        </li>
+        <li><a href="#custom">Custom Filters</a></li>
+      </ol>
     </li>
     <li>
-      <a href="/docs/tags/">Tags</a>
+      <a href="#tags">Tags</a>
       {% block tags_subnav %}{% endblock %}
     </li>
-  </ul>
+  </ol>
 </nav>
 {% endblock %}
