@@ -71,8 +71,11 @@ td > samp {
       content: ":";
     }
   }
-  dd + dd:before {
+  dd:after {
     content: ", ";
     margin: 0 0.5em 0 0;
+  }
+  dd:last-of-type:after {
+    content: '';
   }
 }
