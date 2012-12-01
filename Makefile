@@ -14,6 +14,7 @@ get-swig: clean
 	@mkdir -p ${tmp}
 	@cp -r dist/swig* ${tmp}/
 	@git checkout ${THIS_BRANCH}
+	@rm -rf tests
 	@rm views/js/swig*
 	@(cd views/js && ln -s ../../dist/swig.js ./swig.js)
 	@(cd views/js && ln -s ../../dist/swig.min.js ./swig.min.js)
