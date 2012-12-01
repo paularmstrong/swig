@@ -2,24 +2,38 @@
 @import "reset";
 @import "mixins";
 @import "layout";
+@import "rainbow";
 @import "sidenav";
+@import "header";
 
-html {
-  min-height: 100%;
-  #gradient .vertical(#FFF, lighten(@colorNeutralLight, 10%));
+table {
+  margin-left: @quarterGutter;
+  margin-right: @quarterGutter;
+  td,
+  th {
+    padding: 5px;
+  }
+  thead {
+    td,
+    th {
+      font-weight: bold;
+      border-bottom: 3px solid @colorNeutralLight;
+    }
+  }
+  tbody {
+    tr {
+      background: #FFF;
+    }
+    tr:nth-child(even) {
+      background: @colorLight;
+    }
+    th {
+      font-weight: bold;
+    }
+  }
 }
-body {
-  background: transparent;
-  text-align: center;
-}
-
 td > samp {
   display: inline-block;
-}
-
-ol,
-ul {
-  padding-left: @gutter;
 }
 
 .sectionNav {
@@ -35,4 +49,30 @@ ul {
   }
 }
 
-@import "header";
+.doc {
+  h2 { font-size: @fontSize; }
+  dl {
+    .clearfix;
+    padding: 0 0 0 @quarterGutter;
+    margin: 0 0 @quarterGutter @quarterGutter;
+    border-left: 3px solid @colorNeutralLight;
+  }
+
+  dt,
+  dd {
+    display: block;
+    width: auto;
+    float: left;
+  }
+  dt {
+    margin: 0 0.5em 0 0;
+    clear: left;
+    &:after {
+      content: ":";
+    }
+  }
+  dd + dd:before {
+    content: ", ";
+    margin: 0 0.5em 0 0;
+  }
+}

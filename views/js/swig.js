@@ -1,5 +1,36 @@
 (function () {
 
+  Rainbow.extend('swig', [
+    {
+      name: 'comment',
+      pattern: /\{\#[^#]*?\#\}/g
+    },
+    {
+      name: 'variable',
+      pattern: /(\{\{\s*?[a-zA-Z0-9.]+)|(\}\})/g
+    },
+    {
+      name: 'string',
+      pattern: /('|")(.*?)(\1)/g
+    },
+    {
+      name: 'filter',
+      pattern: /(\|[^\}\(]+)/g
+    },
+    {
+      name: 'tag',
+      pattern: /(\{\%\s*?[a-zA-Z0-9.]+)|(\%\})/g
+    },
+    {
+      // name: 'tag.arg',
+      matches: {
+        0: 'tag',
+        1: 'tag.arg'
+      },
+      pattern: /\{\%\s*?\S+\s([^%]+)/g
+    }
+  ], true)
+
   var $sidebar = $('.sidenav'),
     top = $sidebar.offset().top,
     $links = $sidebar.find('a');

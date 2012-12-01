@@ -51,7 +51,7 @@
     },
     "e": {
       "title": "e",
-      "desc": "Shortcut for <a href=\"#escape\">escape</a>"
+      "desc": "Shortcut for <a href=\"#filters-escape\">escape</a>"
     },
     "escape": {
       "title": "escape([type])",
@@ -60,7 +60,8 @@
         {
           "name": "type",
           "optional": true,
-          "type": "If you pass the string <samp>js</samp> in as the type, output will be escaped so that it is safe for JavaScript execution."
+          "type": "string",
+          "desc": "If you pass the string <samp>js</samp> in as the type, output will be escaped so that it is safe for JavaScript execution."
         }
       ],
       "inc": "docs/filters/escape.html"
@@ -220,7 +221,10 @@
           "types": ["token"],
           "desc": "Loop-accessible name for the current loop iteration's value."
         },
-        "in": {},
+        "in": {
+          "types": "token",
+          "desc": "The literal token 'in' is a required token."
+        },
         "y": {
           "types": ["var"],
           "desc": "Iterable object. Can be modified with filters as desired."
@@ -261,7 +265,10 @@
           "types": ["token"],
           "desc": "Variable name to assign the value to."
         },
-        "=": {},
+        "=": {
+          "types": "token",
+          "desc": "The literal equals sign is a required token."
+        },
         "value": {
           "types": ["mixed"],
           "desc": "Value to apply to <var>name</var>."
@@ -286,7 +293,10 @@
           "types": ["var", "string"],
           "desc": "The path, relative to the template root, to import macros from."
         },
-        "as": {},
+        "as": {
+          "types": "token",
+          "desc": "The literal token 'as' is a required token."
+        },
         "var": {
           "types": ["token"],
           "desc": "Context-accessible object name to assign the macros to."
