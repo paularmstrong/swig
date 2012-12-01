@@ -10,6 +10,7 @@ THIS_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 remote=dev
 branch=gh-pages
 build: clean
+	@mkdir -p views/css
 	@node_modules/.bin/lessc --yui-compress --include-path=views/less views/less/swig.less views/css/swig.css
 	@node_modules/.bin/still views -o ${out} -i "layouts" -i "json" -i "less"
 	@git checkout ${branch}
