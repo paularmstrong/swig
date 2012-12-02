@@ -23,7 +23,7 @@ Installation
 Documentation
 -------------
 
-All documentation can be viewed online. [Documentation Table of Contents](https://github.com/paularmstrong/swig/tree/master/docs#readme)
+All documentation can be viewed online on the [Swig Website](http://paularmstrong.github.com/swig/).
 
 Basic Example
 -------------
