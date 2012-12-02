@@ -872,20 +872,18 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
         <dt><var>file</var></dt>
         <dd><code>string, var</code></dd>
         
-        <dd>The path, relative to the template root, to use as the parent layout for the current file. Must be the first token of this file.</dd>
+        <dd>The path, relative to the template root, to use as the parent layout for the current file. Must be the first token of this file.<br><br>See <a href="#inheritance">Template inheritance</a> for more information.</dd>
         
  
       </dl>
       
- 
- <p>For examples of using the <code>extends</code> tag, refer to the <a href="/docs/inheritance/">Template Inheritance</a> documentation.</p>
  
     </article>
     
     <article class="doc">
       <h1 id="tags-block"><code data-language="swig">block</code></h1>
 
-      <p>Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.</p>
+      <p>Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.<br><br>See <a href="#inheritance">Template inheritance</a> for more information.</p>
 
       
       <h2>Arguments</h2>
@@ -900,24 +898,12 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
       </dl>
       
  
- <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/block.html'
-    at Object.fs.openSync (fs.js:338:18)
-    at Object.fs.readFileSync (fs.js:182:15)
-    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
-    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
-    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
- 
     </article>
     
     <article class="doc">
       <h1 id="tags-parent"><code data-language="swig">parent</code></h1>
 
-      <p>Inject the content from the parent template's block of the same name into the current block.</p>
+      <p>Inject the content from the parent template's block of the same name into the current block.<br><br>See <a href="#inheritance">Template inheritance</a> for more information.</p>
 
       
       <p><em>Accepts no arguments.</em></p>
@@ -973,17 +959,42 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
       </dl>
       
  
- <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/include.html'
-    at Object.fs.openSync (fs.js:338:18)
-    at Object.fs.readFileSync (fs.js:182:15)
-    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
-    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
-    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+
+<h3>Usage Instructions</h3>
+<pre><code data-language="swig">{% include template_path %}
+{% include "path/to/template.js" %}</code></pre>
+
+<p>You can mark an include to <code>ignore missing</code> so that if the template does not exist, it will be ignored and no error will be thrown.</p>
+
+<pre><code data-language="swig">{% include "foobar.html" ignore missing %}</code></pre>
+
+<p>Locally declared context variables are _not_ passed to the included template by default. For example, in the following situations, your <code>inc.html</code> will not know about the variables <code>foo</code> nor <code>bar</code>:</p>
+
+<pre><code data-language="swig">{% set foo = "bar" %}
+{% include "inc.html" %}
+
+{% for bar in thing %}
+    {% include "inc.html" %}
+{% endfor %}</code></pre>
+
+<p>In order to have your included template get these locally declared variables, you can use the <code>with</code> argument, followed by an object that will create the context of the included template:</p>
+
+<pre><code data-language="swig">{% set foo = { bar: "baz" } %}
+{% include "inc.html" with foo %}
+
+{% for bar in thing %}
+    {% include "inc.html" with bar %}
+{% endfor %}</code></pre>
+
+<p>You can also use the <code>only</code> argument to restrict the context to the variables that you explicitly define.</p>
+
+<p>Assume that your current context has variables <code>bar</code> and <code>foo</code> available. In the following situation, only <code>foo</code> will be defined in your <code>inc.html</code>:</p>
+
+<pre><code data-language="swig">{% include "inc.html" with foo only %}</code></pre>
+
+<p>The <code>only</code> argument <em>must</em> be passed as the last argument in the tag. Any other placement will not work.</p>
+
  
     </article>
     
@@ -996,17 +1007,11 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
       <p><em>Accepts no arguments.</em></p>
       
  
- <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/raw.html'
-    at Object.fs.openSync (fs.js:338:18)
-    at Object.fs.readFileSync (fs.js:182:15)
-    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
-    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
-    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+<p>Wrap any section in <code>{&#37; raw &#37;}...{&#37; endraw &#37;}</code> to stop the token parser from modifying any of the internal content. Also useful for putting swig templates into JavaScript for swig in the browser. Attempting to do the following without this tag will cause a parsing error and your template will not be displayed.</p>
+
+<pre><code data-language="html">You can output any content, including swig tag modifiers like {% raw %}&lt;code&gt;{{&lt;/code&gt; and &lt;code&gt;{%&lt;/code&gt; without having them parsed and errors thrown.</code></pre>
+false
  
     </article>
     
@@ -1040,17 +1045,62 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
       </dl>
       
  
- <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/for.html'
-    at Object.fs.openSync (fs.js:338:18)
-    at Object.fs.readFileSync (fs.js:182:15)
-    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
-    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
-    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+<p>For loops have 4 special context variables accessible inside of the loop:</p>
+
+<pre><code data-language="swig">{% for x in y %}
+  {% if loop.first %}&lt;ul&gt;{% endif %}
+  &lt;li&gt;{{ loop.index }} - {{ loop.key }}: {{ x }}&lt;/li&gt;
+  {% if loop.last %}&lt;/ul&gt;{% endif %}
+{% endfor %}
+</code></pre>
+
+<h3>Special Loop Variables</h3>
+<dl>
+  <dt><code>loop.index</code></dt>
+  <dd>the current iteration of the loop (1-indexed)</dd>
+  <dt><code>loop.index0</code></dt>
+  <dd>the current iteration of the loop (0-indexed)</dd>
+  <dt><code>loop.revindex</code></dt>
+  <dd>the number of iterations from the end of the loop (1-indexed)</dd>
+  <dt><code>loop.revindex0</code></dt>
+  <dd>the number of iterations from the end of the loop (0-indexed)</dd>
+  <dt><code>loop.key</code></dt>
+  <dd>if the iterator is an object, this will be the key of the current item, otherwise it will be the same as the <code>loop.index</code>.</dd>
+  <dt><code>loop.first</code></dt>
+  <dd><code>true</code> if the current object is the first in the object or array.</dd>
+  <dt><code>loop.last</code></dt>
+  <dd><code>true</code> if the current object is the last in the  object or array.</dd>
+  <dt><code>loop.cycle</code></dt>
+  <dd>a helper function to cycle between a the given arguments</dd>
+</dl>
+
+<p>The <code>loop.cycle</code> helper function can take any number of arguments and will cycle through them during each iteration of the loop. A common use-case may look like this:</p>
+
+<pre><code data-language="swig">{% for item in items %}
+  &lt;li class="{{ loop.cycle('odd', 'even') }}"&gt;{{ item }}&lt;/li&gt;
+{% endfor %}
+</code></pre>
+
+<p>You can also apply filters to the object that you are iterating over.</p>
+
+<pre><code data-language="swig">{% for x in y|reverse %}
+  The array `y` will first be reversed before looping over it.
+{% endfor %}
+</code></pre>
+
+<h2><code>else</code> in <code>for</code> tags</h2>
+<p>For loops have a special tag available to them called <code>{% else %}</code>.</p>
+
+<p>If the loop object is empty or <code>length === 0</code>, the content following the <code>else</code> tag will be rendered.</p>
+
+<pre><code data-language="swig">{% for person in people %}
+  {{ person }}
+{% else %}
+  There are no people yet!
+{% endfor %}
+</code></pre>
+
  
     </article>
     
@@ -1072,17 +1122,50 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
       </dl>
       
  
- <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/if.html'
-    at Object.fs.openSync (fs.js:338:18)
-    at Object.fs.readFileSync (fs.js:182:15)
-    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
-    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
-    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+<p>All normal JavaScript-valid if statements are supported, including some extra helpful syntaxes:</p>
+
+<pre><code data-language="swig">{% if x %}{% endif %}
+{% if !x %}{% endif %}
+{% if not x %}{% endif %}
+
+{% if x and y %}{% endif %}
+{% if x &amp;&amp; y %}{% endif %}
+{% if x or y %}{% endif %}
+{% if x || y %}{% endif %}
+{% if x || (y &amp;&amp; z) %}{% endif %}
+
+{% if x [operator] y %}
+  Operators: ==, !=, &lt;, &lt;=, &gt;, &gt;=, ===, !==
+{% endif %}
+
+{% if x == 'five' %}
+  The operands can be also be string or number literals
+{% endif %}
+
+{% if x|length === 3 %}
+  You can use filters on any operand in the statement.
+{% endif %}
+
+{% if x in y %}
+  If x is a value that is present in y, this will return true.
+{% endif %}
+</code></pre>
+
+<h3><code>else</code> and <code>else if</code></h3>
+
+<p>The <code>{% else %}</code> and <code>{% else if ... %}</code> tags are allowed within an if-block. Using <code>{% else [if ...] %}</code> anywhere outside an immediate parent if-block will throw an exception.</p>
+
+<pre><code data-language="swig">{% if foo %}
+  Some content.
+{% else if "foo" in bar %}
+  Content if the array `bar` has "foo" in it.
+{% else %}
+  Fallback content.
+{% endif %}
+</code></pre>
+
+
  
     </article>
     
@@ -1110,17 +1193,48 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
       </dl>
       
  
- <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/autoescape.html'
-    at Object.fs.openSync (fs.js:338:18)
-    at Object.fs.readFileSync (fs.js:182:15)
-    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
-    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
-    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+<p>The <code>autoescape</code> tag accepts two controls:</p>
+
+<dl>
+  <dt><code>true</code> or <code>false</code></dt>
+  <dd>(default is <code>true</code> if not provided) These either turn variable auto-escaping on or off for the contents of the tag, regardless of the global setting.</dd>
+  <dt>escape-type</dt>
+  <dd>optionally include <code>"js"</code> to escape variables safe for JavaScript</dd>
+</dl>
+
+<p>For the following contexts, assume:</p>
+
+<pre><code data-language="javascript">some_html_output = '&lt;p&gt;Hello "you" &amp; \'them\'&lt;/p&gt;';
+</code></pre>
+
+<p>So the following:</p>
+
+<pre><code data-language="swig">{% autoescape false %}
+  {{ some_html_output }}
+{% endautoescape %}
+
+{% autoescape true %}
+  {{ some_html_output }}
+{% endautoescape %}
+
+{% autoescape true "js" %}
+  {{ some_html_output }}
+{% endautoescape %}
+</code></pre>
+
+<p>Will output:</p>
+
+<pre><code data-language="html">&lt;p&gt;Hello "you" &amp; 'them'&lt;/p&gt;
+
+&amp;lt;p&amp;gt;Hello &amp;quot;you&amp;quot; &amp;amp; &amp;#39;them&amp;#39; &amp;lt;/p&amp;gt;
+
+\u003Cp\u003EHello \u0022you\u0022 &amp; \u0027them\u0027\u003C\u005Cp\u003E
+</code></pre>
+
+<p>For more information on how the autoescape tag filters variable output, see the <a href="#filters-escape">escape filter documentation</a>.</p>
+
+
  
     </article>
     
@@ -1154,17 +1268,13 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
       </dl>
       
  
- <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/set.html'
-    at Object.fs.openSync (fs.js:338:18)
-    at Object.fs.readFileSync (fs.js:182:15)
-    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
-    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
-    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+<pre><code data-language="swig">{% set foo = [0, 1, 2, 3, 4, 5] %}
+{% for num in foo %}
+  &lt;li&gt;{{ num }}&lt;/li&gt;
+{% endfor %}
+</code></pre>
+
  
     </article>
     
@@ -1186,17 +1296,33 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
       </dl>
       
  
- <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/macro.html'
-    at Object.fs.openSync (fs.js:338:18)
-    at Object.fs.readFileSync (fs.js:182:15)
-    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
-    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
-    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+<p>One of the most common use-case for macros is form inputs. To start, define your <code>input</code> macro somewhere in your template scope (the top of a template, or an included template is a good spot):</p>
+
+<pre><code data-language="swig">{% macro input type name id label value error %}
+  &lt;label for="{{ name }}"&gt;{{ label }}&lt;/label&gt;
+  &lt;input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}"{% if error %} class="error"{% endif %}&gt;
+{% endmacro %}
+</code></pre>
+
+<p>Somewhere later in your template, invoke the macro using a variable:</p>
+
+<pre><code data-language="swig">&lt;div&gt;{{ input("text", "fname", "fname", "First Name", fname.value, fname.errors) }}&lt;/div&gt;
+&lt;div&gt;{{ input("text", "lname", "lname", "Last Name", lname.value, lname.errors) }}&lt;/div&gt;
+</code></pre>
+
+<p>Your output may look like this:</p>
+
+<pre><code data-language="swig">&lt;div&gt;
+  &lt;label for="fname"&gt;First Name&lt;/label&gt;
+  &lt;input type="text" name="fname" id="fname" value="Paul"&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;label for="lname"&gt;Last Name&lt;/label&gt;
+  &lt;input type="text" name="lname" id="lname" value="" class="error"&gt;
+&lt;/div&gt;
+</code></pre>
+
  
     </article>
     
@@ -1230,17 +1356,23 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
       </dl>
       
  
- <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/import.html'
-    at Object.fs.openSync (fs.js:338:18)
-    at Object.fs.readFileSync (fs.js:182:15)
-    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
-    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
-    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+<p>The <code>import</code> tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.</p>
+
+<p>Note that <code>import</code> is context-sensitive. If you import a macro in a <code>for</code> loop, the imported macro will only be available within that loop. It's best to import macros from your parent template, if possible, otherwise import at the beginning of the block you'll be using it.</p>
+
+<p>Assuming the macro <code>input</code> exists in <code>formmacros.html</code>, you can run the macro by using <code data-language="swig">{{ form.input }}</code> as follows:</p>
+
+<pre><code data-language="swig">{% import 'formmacros.html' as form %}
+
+{# this will run the input macro #}
+{{ form.input("text", "name") }}
+
+{# this, however, will NOT output anything because the macro is scoped to the "form" object: #}
+{{ input("text", "name") }}
+</code></pre>
+
+
  
     </article>
     
@@ -1268,17 +1400,16 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
       </dl>
       
  
- <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/filter.html'
-    at Object.fs.openSync (fs.js:338:18)
-    at Object.fs.readFileSync (fs.js:182:15)
-    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
-    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
-    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
-    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+<pre><code data-language="swig">{% filter uppercase %}oh hi, {{ name }}{% endfilter %}
+{% filter replace "." "!" "g" %}Hi. My name is Paul.{% endfilter %}</code></pre>
+
+<p>Will output the following:</p>
+
+<pre><code>OH HI, PAUL
+Hi! My name is Paul!
+</code></pre>
+
  
     </article>
     
