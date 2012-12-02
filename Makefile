@@ -12,7 +12,6 @@ get-swig: clean
 	@git checkout master
 	@make && make build
 	@mkdir -p ${tmp}
-	@cp -r dist/swig* ${tmp}/
 	@git checkout ${THIS_BRANCH}
 	@rm -rf tests
 	@rm views/js/swig*
@@ -25,11 +24,11 @@ get-swig: clean
 
 remote=dev
 branch=gh-pages
-build: clean
+build: all clean
 	@make get-swig -i
 	@mkdir -p views/css
 	@node_modules/.bin/lessc --yui-compress --include-path=views/less views/less/swig.less views/css/swig.css
-	@node_modules/.bin/still views -o ${tmp} -i "layouts" -i "json" -i "less"
+	@node_modules/.bin/still views -o ${tmp} -i "layout" -i "json" -i "less"
 	@mkdir -p ${tmp}/js
 	@cp dist/swig.* ${tmp}/js/
 	@cp node_modules/zepto/zepto.min.js ${tmp}/js/lib
