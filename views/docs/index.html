@@ -215,6 +215,18 @@ var mypage = swig.compile('{% raw %}{% extends "main" %}{% block content %}Oh he
   <p>When you render mypage, <code data-language="javascript">mypage.render({});</code>, you will see</p>
 
   <pre><code data-language="html">&lt;p&gt;Oh hey there!&lt;/p&gt;</code></pre>
+
+  <h2 id="browser-issues">Known Issues</h2>
+
+  <ul>
+    <li>Opera and Internet Explorer fail to comply with the date filter format <code>r</code>.</li>
+    <li>Internet Explorer 9.0 in <em>compatibility mode</em> and IE 6 through 8:
+      <ul>
+        <li>Is unable to compute the ISO date time for date filter format <code>c</code>  .</li>
+        <li>Does not handle unicode properly and so it fails to escape output for <code>  'js'</code>.</li>
+      </ul>
+    </li>
+  </ul>
 </section>
 
 <hr>
@@ -264,7 +276,12 @@ var mypage = swig.compile('{% raw %}{% extends "main" %}{% block content %}Oh he
         <li><a href="#tags-custom">Custom Tags</a></li>
       </ol>
     </li>
-    <li><a href="#browser">In The Browser</a></li>
+    <li>
+      <a href="#browser">In The Browser</a>
+      <ol>
+        <li><a href="#browser-issues">Known Issues</a></li>
+      </ol>
+    </li>
   </ol>
 </nav>
 {% endblock %}
