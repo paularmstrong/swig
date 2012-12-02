@@ -8,7 +8,7 @@
 {% else %}
   {% set css = 'css' %}
 {% endif %}
-<link rel="stylesheet{% if DEV %}/less{% endif %}" href="/{{ css }}/swig.{{ css }}">
+<link rel="stylesheet{% if DEV %}/less{% endif %}" href="{{ baseurl }}/{{ css }}/swig.{{ css }}">
 
 {% if DEV %}
 <script src="{{ baseurl }}/js/lib/less.min.js"></script>
