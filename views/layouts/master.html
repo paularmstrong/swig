@@ -1,4 +1,9 @@
 {% extends "layouts/html5.html" %}
+{%- if DEV %}
+  {% set baseurl = '' %}
+{% else %}
+  {% set css = '/swig' %}
+{% endif -%}
 
 {% block title %}Swig{% endblock %}
 
