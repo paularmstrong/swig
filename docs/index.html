@@ -140,6 +140,165 @@
 <hr>
 
 <section>
+  <h1 id="api">Swig API</h1>
+
+  <p id="api-init">In order to start using Swig, you should initialize it. Swig can be configured using the following:</p>
+
+  <pre><code data-language="javascript">swig.init({
+&nbsp;&nbsp;allowErrors: false,
+&nbsp;&nbsp;autoescape: true,
+&nbsp;&nbsp;cache: true,
+&nbsp;&nbsp;encoding: &#39;utf8&#39;,
+&nbsp;&nbsp;filters: {},
+&nbsp;&nbsp;root: /,
+&nbsp;&nbsp;tags: {},
+&nbsp;&nbsp;extensions: {},
+&nbsp;&nbsp;tzOffset: 0
+});
+</code></pre>
+
+  <p>This step, and all options are <em>optional</em> (unless you are using Express), however it is recommended to at least set the <code>root</code> key when running Swig from node.js.</p>
+
+  <h3 id="api-options">Options</h3>
+
+  
+  <article id="api-allowErrors" class="doc">
+    <h1><var>allowErrors</var></h1>
+    <p>Default is <code>false</code>. Keeping this off will render all template parsing and compiling errors straight to the template output. If <code>true</code>, errors will be thrown straight to the Node.js process, potentially crashing your application.</p>
+    
+  </article>
+  
+  <article id="api-autoescape" class="doc">
+    <h1><var>autoescape</var></h1>
+    <p>Automatically escape all variable output. This is the default behavior and it is highly recommended to leave this on. For character conversion tables, see the <a href="#filters-escape">escape filter</a>.</p>
+    
+    <h2>Possible Values</h2>
+    <dl>
+      
+      <dt><code data-language="javascript">true</code></dt>
+      <dd>Will escape output safe for HTML.</dd>
+      
+      <dt><code data-language="javascript">false</code></dt>
+      <dd>Will not escape any output unless forced via the escape filter or autoescape tag.</dd>
+      
+      <dt><code data-language="javascript">&#39;js&#39;</code></dt>
+      <dd>Will escape output safe for JavaScript.</dd>
+      
+    </dl>
+    
+  </article>
+  
+  <article id="api-cache" class="doc">
+    <h1><var>cache</var></h1>
+    <p>Changing this to <code>false</code> will re-compile the template files for each request. It is recommended to leave this as <code>true</code> for production use.</p>
+    
+  </article>
+  
+  <article id="api-encoding" class="doc">
+    <h1><var>encoding</var></h1>
+    <p>The character encoding for template files.</p>
+    
+  </article>
+  
+  <article id="api-filters" class="doc">
+    <h1><var>filters</var></h1>
+    <p>Use this to set any custom filters and/or override any of the built-in filters. For more information on writing your own filters, see the <a href="#filters-custom">custom filters guide</a>.</p>
+    
+  </article>
+  
+  <article id="api-root" class="doc">
+    <h1><var>root</var></h1>
+    <p>The directory to search for templates. If a template passed to <code data-language="javascript">swig.compileFile</code> is an absolute path (starts with /), Swig will not look in the template root.</p>
+    
+  </article>
+  
+  <article id="api-tags" class="doc">
+    <h1><var>tags</var></h1>
+    <p>Use this to set any custom tags and/or override any of the built-in tags. For more information on writing your own tags, see the <a href="#tags-custom">custom tags guide</a>.</p>
+    
+  </article>
+  
+  <article id="api-extensions" class="doc">
+    <h1><var>extensions</var></h1>
+    <p>Add library extensions that will be available to compiled templates. For more information, see the <a href="#tags-custom">custom tags guide</a> on third party extensions.</p>
+    
+  </article>
+  
+  <article id="api-tzOffset" class="doc">
+    <h1><var>tzOffset</var></h1>
+    <p>Sets a default timezone offset, in minutes from GMT. Setting this will make the <a href="#filters-date">date filter</a> automatically convert dates parsed through the date filter to the appropriate timezone offset.</p>
+    
+  </article>
+  
+
+  <section>
+    <h1 id="api-parse">Parsing a Template</h1>
+    <p>There are 2 methods for creating a template object:</p>
+
+    <pre><code data-language="javascript">swig.compileFile("path/to/template/file.html");
+swig.compile("Template string here", { filename: 'templateKey' });</code></pre>
+  </section>
+
+  <section>
+    <h1 id="api-render">Rendering a Template</h1>
+    <p>Both of these methods will give you a template object on which you call the render method passing it a map of context values.</p>
+
+    <p>If you know the path to the file:</p>
+
+    <pre><code data-language="javascript">var tpl = swig.compileFile("path/to/template/file.html");
+var renderedHtml = tpl.render({ vars: 'to be inserted in template' });</code></pre>
+
+    <p><em>OR</em>, if your file has already been read and you have the template in the form of a string:</p>
+
+   <pre><code data-language="javascript">var tpl = swig.compile("Template string here");
+var renderedHtml = tpl({ vars: 'to be inserted in template' });</code></pre>
+  </section>
+
+  <section>
+    <h1 id="api-express">Using Swig with Express.js</h1>
+
+    <p>Swig is compatible with <a href="http://expressjs.com/">Express</a>! It's very easy to set up your Express-based node project to use Swig as its template renderer. Here's how:</p>
+
+    <p>First, get Express and Consolidate.js</p>
+
+    <pre><code data-language="shell">npm install express
+npm install consolidate</code></pre>
+
+    <p>Require <code>express</code>, <code>consolidate</code>, <code>Swig</code>, and create the express server.</p>
+    <pre><code data-language="javascript">var express = require('express'),
+  cons = require('consolidate'),
+  swig = require('swig'),
+  app = express.createServer();</code></pre>
+
+    <p>Register Swig as the template renderer.</p>
+
+    <pre><code data-language="javascript">app.engine('.html', cons.swig);
+app.set('view engine', 'html');</code></pre>
+
+    <p>Set up your views directory. <strong>This is extremely important</strong></p>
+
+    <pre><code data-language="javascript">// NOTE: Swig requires some extra setup
+// This helps it know where to look for includes and parent templates
+swig.init({
+    root: '/path/to/views/directory/',
+    allowErrors: true // allows errors to be thrown and caught by express instead of suppressed by Swig
+});
+app.set('views', '/path/to/views/directory/');</code></pre>
+
+    <p><strong>Important!</strong> Don't allow express to automatically pipe your template into a layout.html file. Setting this to false allows you to properly use <code data-language="swig">{% extends %}</code> and <code data-language="swig">{% block %}</code> tags!</p>
+
+    <p>Render your <code>index.html</code> page!</p>
+
+  <pre><code data-language="javascript">app.get('/', function (req, res) {
+    res.render('index.html', { foo: 'bar' });
+});</code></pre>
+  </section>
+
+</section>
+
+<hr>
+
+<section>
   <h1 id="filters">Variable Filters</h1>
 
   <p>Used to modify variables. Filters are added directly after variable names, separated by the pipe (<code data-language="swig">|</code>) character. You can chain multiple filters together, applying one after the other in succession.</p>
@@ -155,8 +314,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
 
   <h2 id="filters-built-in">Built-In Filters</h2>
   
-  <article id="filters-add" class="doc">
-    <h1><code data-language="swig">add(value)</code></h1>
+  <article class="doc">
+    <h1 id="filters-add"><code data-language="swig">add(value)</code></h1>
     <p>Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated, as in the example below.</p>
     
     <h2>Arguments</h2>
@@ -172,22 +331,22 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
   </article>
   
-  <article id="filters-addslashes" class="doc">
-    <h1><code data-language="swig">addslashes</code></h1>
+  <article class="doc">
+    <h1 id="filters-addslashes"><code data-language="swig">addslashes</code></h1>
     <p>Returns a string with backslashes in front of characters that need to be quoted for database queries, etc.</p>
     
  
   </article>
   
-  <article id="filters-capitalize" class="doc">
-    <h1><code data-language="swig">capitalize</code></h1>
+  <article class="doc">
+    <h1 id="filters-capitalize"><code data-language="swig">capitalize</code></h1>
     <p>Capitalize the first character in the string.</p>
     
  
   </article>
   
-  <article id="filters-date" class="doc">
-    <h1><code data-language="swig">date(format[, tzOffset])</code></h1>
+  <article class="doc">
+    <h1 id="filters-date"><code data-language="swig">date(format[, tzOffset])</code></h1>
     <p>Convert a valid date into a format as specified. Mostly conforms to <a href="http://php.net/date">php.net's date formatting</a>.</p>
     
     <h2>Arguments</h2>
@@ -402,8 +561,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
   </article>
   
-  <article id="filters-default" class="doc">
-    <h1><code data-language="swig">default(value)</code></h1>
+  <article class="doc">
+    <h1 id="filters-default"><code data-language="swig">default(value)</code></h1>
     <p>If the variable is <code>undefined</code>, <code>null</code>, or <code>false</code>, a default return value can be specified.</p>
     
     <h2>Arguments</h2>
@@ -419,15 +578,15 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
   </article>
   
-  <article id="filters-e" class="doc">
-    <h1><code data-language="swig">e</code></h1>
+  <article class="doc">
+    <h1 id="filters-e"><code data-language="swig">e</code></h1>
     <p>Shortcut for <a href="#filters-escape">escape</a></p>
     
  
   </article>
   
-  <article id="filters-escape" class="doc">
-    <h1><code data-language="swig">escape([type])</code></h1>
+  <article class="doc">
+    <h1 id="filters-escape"><code data-language="swig">escape([type])</code></h1>
     <p>Force escape the output of the variable. Optionally use <code>e</code> as a shortcut filter name. This filter will be applied by default if <var>autoescape</var> is turned on.</p>
     
     <h2>Arguments</h2>
@@ -527,15 +686,15 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
   </article>
   
-  <article id="filters-first" class="doc">
-    <h1><code data-language="swig">first</code></h1>
+  <article class="doc">
+    <h1 id="filters-first"><code data-language="swig">first</code></h1>
     <p>Returns the first element of an array.</p>
     
  
   </article>
   
-  <article id="filters-join" class="doc">
-    <h1><code data-language="swig">join(glue)</code></h1>
+  <article class="doc">
+    <h1 id="filters-join"><code data-language="swig">join(glue)</code></h1>
     <p>If the value is an Array, you can join each value with a delimiter and return it as a string.</p>
     
     <h2>Arguments</h2>
@@ -551,8 +710,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
   </article>
   
-  <article id="filters-json_encode" class="doc">
-    <h1><code data-language="swig">json_encode([indent])</code></h1>
+  <article class="doc">
+    <h1 id="filters-json_encode"><code data-language="swig">json_encode([indent])</code></h1>
     <p>Return a json-encoded string of the input.</p>
     
     <h2>Arguments</h2>
@@ -568,36 +727,36 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
   </article>
   
-  <article id="filters-last" class="doc">
-    <h1><code data-language="swig">last</code></h1>
+  <article class="doc">
+    <h1 id="filters-last"><code data-language="swig">last</code></h1>
     <p>Returns the last element of an array.</p>
     
  
   </article>
   
-  <article id="filters-length" class="doc">
-    <h1><code data-language="swig">length</code></h1>
+  <article class="doc">
+    <h1 id="filters-length"><code data-language="swig">length</code></h1>
     <p>Return the <code>length</code> property of the input. If the input is an <code>object</code>, returns the number of keys on the object.</p>
     
  
   </article>
   
-  <article id="filters-lower" class="doc">
-    <h1><code data-language="swig">lower</code></h1>
+  <article class="doc">
+    <h1 id="filters-lower"><code data-language="swig">lower</code></h1>
     <p>Return the input in all lowercase letters.</p>
     
  
   </article>
   
-  <article id="filters-raw" class="doc">
-    <h1><code data-language="swig">raw</code></h1>
+  <article class="doc">
+    <h1 id="filters-raw"><code data-language="swig">raw</code></h1>
     <p>Forces the input to not be auto-escaped.</p>
     
  
   </article>
   
-  <article id="filters-replace" class="doc">
-    <h1><code data-language="swig">replace(search, replace[, flags])</code></h1>
+  <article class="doc">
+    <h1 id="filters-replace"><code data-language="swig">replace(search, replace[, flags])</code></h1>
     <p>Uses built-in JavaScript replace method. Provide a regular-expression or a string and a replacement string.</p>
     
     <h2>Arguments</h2>
@@ -623,58 +782,58 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
   </article>
   
-  <article id="filters-reverse" class="doc">
-    <h1><code data-language="swig">reverse</code></h1>
+  <article class="doc">
+    <h1 id="filters-reverse"><code data-language="swig">reverse</code></h1>
     <p>If the input value is an Array, this filter will reverse all items in the array.</p>
     
  
   </article>
   
-  <article id="filters-striptags" class="doc">
-    <h1><code data-language="swig">striptags</code></h1>
+  <article class="doc">
+    <h1 id="filters-striptags"><code data-language="swig">striptags</code></h1>
     <p>Strip all HTML/XML tags.</p>
     
  
   </article>
   
-  <article id="filters-title" class="doc">
-    <h1><code data-language="swig">title</code></h1>
+  <article class="doc">
+    <h1 id="filters-title"><code data-language="swig">title</code></h1>
     <p>Change the output to title-case: the first letter of every word will be uppercase, while all the rest will be lowercase.</p>
     
  
   </article>
   
-  <article id="filters-uniq" class="doc">
-    <h1><code data-language="swig">uniq</code></h1>
+  <article class="doc">
+    <h1 id="filters-uniq"><code data-language="swig">uniq</code></h1>
     <p>Produces a duplicate-free version of an input array.</p>
     
  
   </article>
   
-  <article id="filters-upper" class="doc">
-    <h1><code data-language="swig">upper</code></h1>
+  <article class="doc">
+    <h1 id="filters-upper"><code data-language="swig">upper</code></h1>
     <p>Change the output to all uppercase letters.</p>
     
  
   </article>
   
-  <article id="filters-url_encode" class="doc">
-    <h1><code data-language="swig">url_encode</code></h1>
+  <article class="doc">
+    <h1 id="filters-url_encode"><code data-language="swig">url_encode</code></h1>
     <p>Encode the ouput as a URI component.</p>
     
  
   </article>
   
-  <article id="filters-url_decode" class="doc">
-    <h1><code data-language="swig">url_decode</code></h1>
+  <article class="doc">
+    <h1 id="filters-url_decode"><code data-language="swig">url_decode</code></h1>
     <p>Decode the ouput as a URI component.</p>
     
  
   </article>
   
 
-  <article id="filters-custom">
-    <h1>Custom Filters</h1>
+  <article>
+    <h1 id="filters-custom">Custom Filters</h1>
 
     <p>Custom filters are very easy to write for your own project that uses Swig.</p>
 
@@ -699,8 +858,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
     <h1 id="tags-built-in">Built-in Tags</h1>
 
     
-    <article id="tags-extends" class="doc">
-      <h1><code data-language="swig">extends</code></h1>
+    <article class="doc">
+      <h1 id="tags-extends"><code data-language="swig">extends</code></h1>
 
       <p>Makes the current template extend a parent template. This tag must be the first item in your template.</p>
 
@@ -721,8 +880,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
     </article>
     
-    <article id="tags-block" class="doc">
-      <h1><code data-language="swig">block</code></h1>
+    <article class="doc">
+      <h1 id="tags-block"><code data-language="swig">block</code></h1>
 
       <p>Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.</p>
 
@@ -753,8 +912,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
     </article>
     
-    <article id="tags-parent" class="doc">
-      <h1><code data-language="swig">parent</code></h1>
+    <article class="doc">
+      <h1 id="tags-parent"><code data-language="swig">parent</code></h1>
 
       <p>Inject the content from the parent template's block of the same name into the current block.</p>
 
@@ -776,8 +935,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
     </article>
     
-    <article id="tags-include" class="doc">
-      <h1><code data-language="swig">include</code></h1>
+    <article class="doc">
+      <h1 id="tags-include"><code data-language="swig">include</code></h1>
 
       <p>Includes a template in it's place. The template is rendered within the current context.</p>
 
@@ -826,8 +985,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
     </article>
     
-    <article id="tags-raw" class="doc">
-      <h1><code data-language="swig">raw</code></h1>
+    <article class="doc">
+      <h1 id="tags-raw"><code data-language="swig">raw</code></h1>
 
       <p>Stop token parsing within this tag. All content will be output as-is.</p>
 
@@ -849,8 +1008,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
     </article>
     
-    <article id="tags-for" class="doc">
-      <h1><code data-language="swig">for</code></h1>
+    <article class="doc">
+      <h1 id="tags-for"><code data-language="swig">for</code></h1>
 
       <p>Loop over objects and arrays.</p>
 
@@ -893,8 +1052,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
     </article>
     
-    <article id="tags-if" class="doc">
-      <h1><code data-language="swig">if</code></h1>
+    <article class="doc">
+      <h1 id="tags-if"><code data-language="swig">if</code></h1>
 
       <p>Conditional statements</p>
 
@@ -925,8 +1084,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
     </article>
     
-    <article id="tags-autoescape" class="doc">
-      <h1><code data-language="swig">autoescape</code></h1>
+    <article class="doc">
+      <h1 id="tags-autoescape"><code data-language="swig">autoescape</code></h1>
 
       <p>Change the current behavior of variable auto-escaping.</p>
 
@@ -963,8 +1122,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
     </article>
     
-    <article id="tags-set" class="doc">
-      <h1><code data-language="swig">set</code></h1>
+    <article class="doc">
+      <h1 id="tags-set"><code data-language="swig">set</code></h1>
 
       <p>Set a variable for re-use in the current context.</p>
 
@@ -1007,8 +1166,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
     </article>
     
-    <article id="tags-macro" class="doc">
-      <h1><code data-language="swig">macro</code></h1>
+    <article class="doc">
+      <h1 id="tags-macro"><code data-language="swig">macro</code></h1>
 
       <p>Create custom, reusable snippets within your templates.</p>
 
@@ -1039,8 +1198,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
     </article>
     
-    <article id="tags-import" class="doc">
-      <h1><code data-language="swig">import</code></h1>
+    <article class="doc">
+      <h1 id="tags-import"><code data-language="swig">import</code></h1>
 
       <p>Allows you to import macros from another file directly into your current context.</p>
 
@@ -1083,8 +1242,8 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
  
     </article>
     
-    <article id="tags-filter" class="doc">
-      <h1><code data-language="swig">filter</code></h1>
+    <article class="doc">
+      <h1 id="tags-filter"><code data-language="swig">filter</code></h1>
 
       <p>Apply a filter to an entire block of template.</p>
 
@@ -1230,6 +1389,41 @@ swig.init({
 
 <hr>
 
+<section>
+  <h1 id="browser">In The Browser</h1>
+
+  <p>Swig's API in the browser is the same as its API for node.js, with the only difference being that you cannot use the swig.compileFile method, since browsers do not have a filesystem.</p>
+
+  <p>Instead, you must always use <code data-language="javascript">swig.compile</code> and pre-parse all templates.</p>
+
+  <p>In order to use <code>extends</code>, <code>import</code>, and <code>include</code> correctly, another argument is available on <code data-language="javascript">swig.compile</code>: <var>templateKey</var></p>
+
+  <pre><code data-language="javascript">swig.compile(templateString, { filename: templateKey });</code></pre>
+
+  <p>This is the key that will be used to lookup a template. For instance:</p>
+
+  <pre><code data-language="javascript">var template = swig.compile('<p>{% block content %}{% endblock %}</p>', { filename: 'main' });
+var mypage = swig.compile('{% extends "main" %}{% block content %}Oh hey there!{% endblock %}', { filename: 'mypage' });</code></pre>
+
+  <p>When you render mypage, <code data-language="javascript">mypage.render({});</code>, you will see</p>
+
+  <pre><code data-language="html">&lt;p&gt;Oh hey there!&lt;/p&gt;</code></pre>
+
+  <h2 id="browser-issues">Known Issues</h2>
+
+  <ul>
+    <li>Opera and Internet Explorer fail to comply with the date filter format <code>r</code>.</li>
+    <li>Internet Explorer 9.0 in <em>compatibility mode</em> and IE 6 through 8:
+      <ul>
+        <li>Is unable to compute the ISO date time for date filter format <code>c</code>  .</li>
+        <li>Does not handle unicode properly and so it fails to escape output for <code>  'js'</code>.</li>
+      </ul>
+    </li>
+  </ul>
+</section>
+
+<hr>
+
   </div>
 
   <div class="span3">
@@ -1247,6 +1441,15 @@ swig.init({
     <li>
       <a href="#inheritance">Template Inheritance</a>
       
+    </li>
+    <li>
+      <a href="#api">Swig API</a>
+      <ol>
+        <li><a href="#api-init">Initialization</a></li>
+        <li><a href="#api-parse">Parsing</a></li>
+        <li><a href="#api-render">Rendering</a></li>
+        <li><a href="#api-express">Express.js</a></li>
+      </ol>
     </li>
     <li>
       <a href="#filters">Filters</a>
@@ -1340,10 +1543,19 @@ swig.init({
         <li><a href="#tags-custom">Custom Tags</a></li>
       </ol>
     </li>
+    <li>
+      <a href="#browser">In The Browser</a>
+      <ol>
+        <li><a href="#browser-issues">Known Issues</a></li>
+      </ol>
+    </li>
   </ol>
 </nav>
 </div>
 </div>
+
+
+<a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
 
  
 <script src="/js/lib/zepto.min.js"></script>

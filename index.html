@@ -39,24 +39,75 @@
 </header>
 
 
-<div class="content row guttered">
-  <div class="span9">
-  
 
-<section>
-  <hgroup>
-    <h1>Swig</h1>
-    <h2>A Node.js and Browser-based JavaScript Template Engine</h2>
-  </hgroup>
+<section class="content">
+  <h1>Swig</h1>
+  <p>A Node.js and Browser-based JavaScript Template Engine</p>
 
-  <pre><code data-language="swig">&lt;h1&gt;{{ title }}&lt;/h1&gt;
-&lt;p&gt;A {{ environments|join(&#x27; &amp; &#x27;) }} Template Engine&lt;/p&gt;</code></pre>
-</section>
+  <hr class="small">
+
+  <div class="row guttered">
+
+    <section class="span6">
+      <h2>Get Started</h2>
+
+      <h3>Install Swig</h3>
+      <pre><code>npm install swig</code></pre>
+
+      <h3>Create Your Template</h3>
+      <pre><code data-language="swig">&lt;h1&gt;{{ pagename|title }}&lt;/h1&gt;
+&lt;ul&gt;
+{% for author in authors %}
+  &lt;li{% if loop.first%} class="first"{% endif %}&gt;
+    {{ author }}
+  &lt;/li&gt;
+{% else %}
+  &lt;li&gt;There are no authors.&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;</code></pre>
+
+      <h3>Render Your Template</h3>
+      <pre><code data-language="javascript">var template  = require('swig');
+var tmpl = template.compileFile('/path/to/template.html');
+tmpl.render({
+    pagename: 'awesome people',
+    authors: ['Paul', 'Jim', 'Jane']
+});</code></pre>
+
+      <h3>The End Result</h3>
+      <pre><code data-language="html">&lt;h1&gt;Awesome People&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li class="first"&gt;Paul&lt;/li&gt;
+  &lt;li&gt;Jim&lt;/li&gt;
+  &lt;li&gt;Jane&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+    </section>
+
+    <section class="span6">
+      <h2>Features</h2>
+      <ul>
+        <li>Incredibly fast!</li>
+        <li>Available for node.js and major web browsers!</li>
+        <li>Extendable and customizable.</li>
+        <li>Express compatible.</li>
+        <li>Object-Oriented template inheritance.</li>
+        <li>Apply filters and transformations to output in your templates.</li>
+        <li>Automatically escapes all output.</li>
+        <li>Lots of iteration and conditionals supported.</li>
+      </ul>
+
+      <hr class="small">
+
+      <h2>Download For the Browser</h2>
+      <p>Swig also works in all major browsers. Just download the following file and follow the <a href="/docs/#browser">Documentation</a>.</p>
+      <p class="download"><a href="/js/swig.pack.min.js" class="btn">Download</a></p>
+    </section>
 
   </div>
+</section>
 
-  <div class="span3"></div>
-</div>
+
+<a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
 
  
 <script src="/js/lib/zepto.min.js"></script>
