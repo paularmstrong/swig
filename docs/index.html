@@ -1,0 +1,1355 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <!--[if IE]>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <![endif]-->
+  <title>Swig » Documentation</title>
+  
+ 
+
+ 
+
+<link rel="stylesheet" href="/css/swig.css">
+
+
+
+</head>
+<body class="docs">
+
+  
+
+<header class="header">
+  <div class="content row">
+    <hgroup class="span7">
+      <h1><a href="/">Swig</a></h1>
+      <h2>A Node.js and Browser-based JavaScript Template Engine</h2>
+    </hgroup>
+    
+    <nav class="span5">
+      <ul class="mainNav">
+        <li><a href="/docs/">Documentation</a></li>
+        <li><a href="https://github.com/paularmstrong/swig/">Code</a></li>
+      </ul>
+    </nav>
+  
+  </div>
+</header>
+
+
+<div class="content row guttered">
+  <div class="span9">
+  
+<h1>Documentation</h1>
+
+<section>
+  <h1 id="basics">Basics</h1>
+
+  <section id="variables">
+    <h2>Variables</h2>
+
+    <p>Variables that are passed to templates can be output using double-curly-brackets: <code data-language="swig"></code>.</p>
+
+    <p>Accessing properties of objects can be done using either dot-notation or bracket-notation. The following examples are equivalent:</p>
+
+    <ul>
+      <li><code data-language="swig">{{ foo.bar }}</code></li>
+      <li><code data-language="swig">{{ foo['bar'] }}</code></li>
+    </ul>
+
+    <p>If a variable is not defined, don't worry, your template won't explode. Instead, an empty-string will be output in its place.</p>
+
+    <p>Variables can be modified using using special, chainable control structures called <a href="#filters">Filters</a>:</p>
+
+    <pre><code data-language="swig">{{ name|title }} was born on {{ birthday|date('F jS, Y') }}</code></pre>
+
+    <samp>Jane was born on July 6th, 1985</samp>
+  </section>
+
+  <section id="logic">
+    <h2>Logic Tags</h2>
+
+    <p>Swig includes some basic operational blocks, called <a href="#tags">Tags</a>, for helping you control output on a larger scale than variables. Tags are written using curly-percent syntax: <code data-language="swig"></code>.</p>
+
+    <p>View the <a href="#tags">Tags documentation</a> for a full list of tags and usage instructions.</p>
+  </section>
+
+  <section id="comments">
+    <h2>Comments</h2>
+
+    <p>Comment tags are simply ignored by the parser. They will removed before your templates are rendered so that no one can see them unless they have access to your source code. Comments are written using the curly-hash syntax:</p>
+
+    <pre><code data-language="swig">{# this is a comment #}</code></pre>
+  </section>
+
+  <section id="whitespace">
+    <h2>Whitespace Control</h2>
+
+    <p>Any whitespace in your templates is left in your final output templates. However, you can control the whitespace around logic tags by using whitespace controls.</p>
+
+    <p>To remove whitespace, simply put a dash (<code data-language="swig">-</code>) at the beginning or end of your tag to remove the preceding or following whitespace, respectively.</p>
+
+    <pre><code data-language="swig">{% for item in seq -%}
+  {{ item }}
+{%- endfor %}</code></pre>
+
+  <p>If <code data-language="swig">seq</code> is an array of numbers, <samp>1</samp> through <samp>5</samp>, the output of the above example will be void of whitespace: <samp>12345</samp>.</p>
+  </section>
+</section>
+
+<hr>
+
+<section>
+  <h1 id="inheritance">Template Inheritance</h1>
+
+  <p>Swig uses <code data-language="swig">extends</code> &amp; <code data-language="swig">block</code> for template inheritance.</p>
+
+  <h2>layout.html</h2>
+  <pre><code data-language="swig">&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;{% block title %}My Site{% endblock %}&lt;/title&gt;
+
+  {% block head %}
+  &lt;link rel="stylesheet" href="main.css"&gt;
+  {% endblock %}
+&lt;/head&gt;
+&lt;body&gt;
+  {% block content %}{% endblock %}
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+  <h2>index.html</h2>
+  <pre><code data-language="swig">{% extends 'layout.html' %}
+
+{% block title %}My Page{% endblock %}
+
+{% block head %}
+  {% parent %}
+  &lt;link rel="stylesheet" href="custom.css"&gt;
+{% endblock %}
+
+{% block content %}
+&lt;p&gt;This is just an awesome page.&lt;/p&gt;
+{% endblock %}</code></pre>
+</section>
+
+<hr>
+
+<section>
+  <h1 id="filters">Variable Filters</h1>
+
+  <p>Used to modify variables. Filters are added directly after variable names, separated by the pipe (<code data-language="swig">|</code>) character. You can chain multiple filters together, applying one after the other in succession.</p>
+
+  <h2>Example</h2>
+
+  <pre><code data-language="swig">{{ name|title }} was born on {{ birthday|date('F jS, Y') }}
+and has {{ bikes|length|default("zero") }} bikes.</code></pre>
+
+  <p>Filters can also be applied to blocks of content directly with the <a href="#tags-filter">filter tag</a>.</p>
+
+  <pre><code data-language="swig">{% filter upper %}oh hi, paul{% endfilter %}</code></pre>
+
+  <h2 id="filters-built-in">Built-In Filters</h2>
+  
+  <article id="filters-add" class="doc">
+    <h1><code data-language="swig">add(value)</code></h1>
+    <p>Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated, as in the example below.</p>
+    
+    <h2>Arguments</h2>
+    <dl>
+      
+      <dt><var>value</var></dt>
+      <dd><code data-language="swig">mixed</code></dd>
+      
+      <dd>The value to add to the variable before printing it to the page. Accepts any <code>array</code>, <code>object</code>, <code>number</code>, and <code>string</code>.</dd>
+      
+    </dl>
+    
+ 
+  </article>
+  
+  <article id="filters-addslashes" class="doc">
+    <h1><code data-language="swig">addslashes</code></h1>
+    <p>Returns a string with backslashes in front of characters that need to be quoted for database queries, etc.</p>
+    
+ 
+  </article>
+  
+  <article id="filters-capitalize" class="doc">
+    <h1><code data-language="swig">capitalize</code></h1>
+    <p>Capitalize the first character in the string.</p>
+    
+ 
+  </article>
+  
+  <article id="filters-date" class="doc">
+    <h1><code data-language="swig">date(format[, tzOffset])</code></h1>
+    <p>Convert a valid date into a format as specified. Mostly conforms to <a href="http://php.net/date">php.net's date formatting</a>.</p>
+    
+    <h2>Arguments</h2>
+    <dl>
+      
+      <dt><var>format</var></dt>
+      <dd><code data-language="swig">string</code></dd>
+      
+      <dd>The format to convert the date to. See the date formatting table for formatting options.</dd>
+      
+      <dt><var>tzOffset</var></dt>
+      <dd><code data-language="swig">number</code></dd>
+      <dd><i>optional</i></dd>
+      <dd>The timezone offset in minutes from GMT to display the date in.</dd>
+      
+    </dl>
+    
+ 
+ <table>
+  <caption>Date formatting character information from <a href="http://php.net/date">php.net/date</a>.</caption>
+  <thead>
+    <tr>
+      <th>Format Character</th>
+      <th>Description</th>
+      <th>Example Output</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="col" colspan="3">Day</th>
+    </tr>
+    <tr>
+      <th scope="row"><code>d</code></th>
+      <td>Day of the month, 2 digits with leading zeros</td>
+      <td><samp>01</samp> - <samp>31</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>D</code></th>
+      <td>A textual representation of a day, three letters</td>
+      <td><samp>Mon</samp> - <samp>Sun</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>j</code></th>
+      <td>Day of the month without leading zeros</td>
+      <td><samp>1</samp> - <samp>31</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>l</code></th>
+      <td>A full textual representation of the day of the week</td>
+      <td><samp>Monday</samp> - <samp>Sunday</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>N</code></th>
+      <td>ISO-8601 numeric representation of the day of the week</td>
+      <td><samp>1</samp> - <samp>7</samp> (Monday - Sunday)</td>
+    </tr>
+    <tr>
+      <th scope="row"><code>S</code></th>
+      <td>English ordinal suffix for the day of the month, 2 characters</td>
+      <td><samp>st</samp>, <samp>nd</samp>, <samp>rd</samp>, or <samp>th</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>w</code></th>
+      <td>Numeric representation of the day of the week</td>
+      <td><samp>0</samp> - <samp>6</samp> (Sunday - Saturday)</td>
+    </tr>
+    <tr>
+      <th scope="row"><code>z</code></th>
+      <td>The day of the year starting from 0</td>
+      <td><samp>0</samp> - <samp>365</samp> (January 1st - December 31st [only on leap year])</td>
+    </tr>
+    <tr>
+      <th scope="col" colspan="3">Week</th>
+    </tr>
+    <tr>
+      <th scope="row"><code>W</code></th>
+      <td>ISO-8601 week number of the year</td>
+      <td><samp>42</samp></td>
+    </tr>
+    <tr>
+      <th scope="col" colspan="3">Month</th>
+    </tr>
+    <tr>
+      <th scope="row"><code>F</code></th>
+      <td>A full textual representation of a month, such as January or March</td>
+      <td><samp>January</samp> - <samp>December</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>m</code></th>
+      <td>Numeric representation of a month, with leading zeros</td>
+      <td><samp>12</samp> - <samp>01</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>M</code></th>
+      <td>A short textual representation of a month, three letters</td>
+      <td><samp>Jan</samp> - <samp>Dec</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>n</code></th>
+      <td>Numeric representation of a month, without leading zeros</td>
+      <td><samp>1</samp> - <samp>12</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>t</code></th>
+      <td>Number of days in the given month</td>
+      <td><samp>28</samp> - <samp>31</samp></td>
+    </tr>
+    <tr>
+      <th scope="col" colspan="3">Year</th>
+    </tr>
+    <tr>
+      <th scope="row"><code>L</code></th>
+      <td>Whether or not the given year is a leap year.</td>
+      <td><samp>true</samp> or <samp>false</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>o</code></th>
+      <td>ISO-8601 year number. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead.</td>
+      <td><samp>1999</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>Y</code></th>
+      <td>A full numeric representation of a year, 4 digits</td>
+      <td><samp>1999</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>y</code></th>
+      <td>A two digit representation of a year</td>
+      <td><samp>99</samp></td>
+    </tr>
+    <tr>
+      <th scope="col" colspan="3">Time</th>
+    </tr>
+    <tr>
+      <th scope="row"><code>a</code></th>
+      <td>Lowercase Ante meridiem and Post meridiem</td>
+      <td><samp>am</samp> or <samp>pm</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>A</code></th>
+      <td>Uppercase Ante meridiem and Post meridiem</td>
+      <td><samp>AM</samp> or <samp>PM</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>B</code></th>
+      <td><a href="http://en.wikipedia.org/wiki/Swatch_Internet_Time">Swatch Internet Time</a></td>
+      <td><samp>000</samp> - <samp>999</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>g</code></th>
+      <td>12-hour format of an hour without leading zeros</td>
+      <td><samp>1</samp> - <samp>12</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>G</code></th>
+      <td>24-hour format of an hour without leading zeros</td>
+      <td><samp>0</samp> - <samp>23</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>h</code></th>
+      <td>12-hour format of an hour with leading zeros</td>
+      <td><samp>01</samp> - <samp>12</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>H</code></th>
+      <td>24-hour format of an hour with leading zeros</td>
+      <td><samp>00</samp> - <samp>23</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>i</code></th>
+      <td>Minutes with leading zeros</td>
+      <td><samp>00</samp> - <samp>59</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>s</code></th>
+      <td>Seconds, with leading zeros</td>
+      <td><samp>00</samp> - <samp>59</samp></td>
+    </tr>
+    <tr>
+      <th scope="col" colspan="3">Timezone</th>
+    </tr>
+    <tr>
+      <th scope="row"><code>O</code></th>
+      <td>Difference to Greenwich time (GMT) in hours</td>
+      <td><samp>+0200</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>Z</code></th>
+      <td>Timezone offset in seconds. The offset for timezones west of UTC is always negative, and for those east of UTC is always positive.</td>
+      <td><samp>-43200</samp> - <samp>50400</samp></td>
+    </tr>
+    <tr>
+      <th scope="col" colspan="3">Full Date &amp; Time</th>
+    </tr>
+    <tr>
+      <th scope="row"><code>c</code></th>
+      <td>ISO 8601 formatted date</td>
+      <td><samp>2011-09-06T16:05:02.000Z</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>r</code></th>
+      <td><a href="http://www.faqs.org/rfcs/rfc2822">RFC 2822</a> formatted date</td>
+      <td><samp>Tue, 06 Sep 2011 16:05:02 GMT</samp></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>U</code></th>
+      <td>Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)</td>
+      <td><samp>1315690513</samp></td>
+    </tr>
+  </tbody>
+</table>
+ 
+  </article>
+  
+  <article id="filters-default" class="doc">
+    <h1><code data-language="swig">default(value)</code></h1>
+    <p>If the variable is <code>undefined</code>, <code>null</code>, or <code>false</code>, a default return value can be specified.</p>
+    
+    <h2>Arguments</h2>
+    <dl>
+      
+      <dt><var>value</var></dt>
+      <dd><code data-language="swig">mixed</code></dd>
+      
+      <dd>Fallback value if the variable is falsy.</dd>
+      
+    </dl>
+    
+ 
+  </article>
+  
+  <article id="filters-e" class="doc">
+    <h1><code data-language="swig">e</code></h1>
+    <p>Shortcut for <a href="#filters-escape">escape</a></p>
+    
+ 
+  </article>
+  
+  <article id="filters-escape" class="doc">
+    <h1><code data-language="swig">escape([type])</code></h1>
+    <p>Force escape the output of the variable. Optionally use <code>e</code> as a shortcut filter name. This filter will be applied by default if <var>autoescape</var> is turned on.</p>
+    
+    <h2>Arguments</h2>
+    <dl>
+      
+      <dt><var>type</var></dt>
+      <dd><code data-language="swig">string</code></dd>
+      <dd><i>optional</i></dd>
+      <dd>If you pass the string <samp>js</samp> in as the type, output will be escaped so that it is safe for JavaScript execution.</dd>
+      
+    </dl>
+    
+ 
+ <h2>Default Escaping</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Character</th>
+      <th>Replacement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><kbd>&amp;</kbd></td>
+      <td><samp>&amp;amp;</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>&lt;</kbd></td>
+      <td><samp>&amp;lt;</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>&gt;</kbd></td>
+      <td><samp>&amp;gt;</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>"</kbd></td>
+      <td><samp>&amp;quot;</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>&#39;</kbd></td>
+      <td><samp>&amp;#39;</samp></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>JavaScript Variable Replacements</h2>
+
+<p>Pass <code>js</code> as the type to your escape filter to toggle escaping as JavaScript.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Character</th>
+      <th>Replacement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ASCII charCodes less than 32<br /><kbd>ESC</kbd>, <kbd>TAB</kbd>, <kbd>SPACE,</kbd> etc&hellip;</td>
+      <td><samp>\u0001</samp> - <samp>\u001F</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>&amp;</kbd></td>
+      <td><samp>\u0026</samp></td>
+    </tr>
+    <tr>
+      <td><samp>&lt;</samp></td>
+      <td><samp>\u003C</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>&gt;</kbd></td>
+      <td><samp>\u003E</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>'</kbd></td>
+      <td><samp>\u0027</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>"</kbd></td>
+      <td><samp>\u0022</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>=</kbd></td>
+      <td><samp>\u003D</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>-</kbd></td>
+      <td><samp>\u002D</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>;</kbd></td>
+      <td><samp>\u003B</samp></td>
+    </tr>
+  </tbody>
+</table>
+ 
+  </article>
+  
+  <article id="filters-first" class="doc">
+    <h1><code data-language="swig">first</code></h1>
+    <p>Returns the first element of an array.</p>
+    
+ 
+  </article>
+  
+  <article id="filters-join" class="doc">
+    <h1><code data-language="swig">join(glue)</code></h1>
+    <p>If the value is an Array, you can join each value with a delimiter and return it as a string.</p>
+    
+    <h2>Arguments</h2>
+    <dl>
+      
+      <dt><var>glue</var></dt>
+      <dd><code data-language="swig">string</code></dd>
+      
+      <dd>Concatenation string to join each item in the array with.</dd>
+      
+    </dl>
+    
+ 
+  </article>
+  
+  <article id="filters-json_encode" class="doc">
+    <h1><code data-language="swig">json_encode([indent])</code></h1>
+    <p>Return a json-encoded string of the input.</p>
+    
+    <h2>Arguments</h2>
+    <dl>
+      
+      <dt><var>indent</var></dt>
+      <dd><code data-language="swig">number</code></dd>
+      <dd><i>optional</i></dd>
+      <dd>If greater than zero, the JSON will be pretty-printed using the number of spaces specified by the</dd>
+      
+    </dl>
+    
+ 
+  </article>
+  
+  <article id="filters-last" class="doc">
+    <h1><code data-language="swig">last</code></h1>
+    <p>Returns the last element of an array.</p>
+    
+ 
+  </article>
+  
+  <article id="filters-length" class="doc">
+    <h1><code data-language="swig">length</code></h1>
+    <p>Return the <code>length</code> property of the input. If the input is an <code>object</code>, returns the number of keys on the object.</p>
+    
+ 
+  </article>
+  
+  <article id="filters-lower" class="doc">
+    <h1><code data-language="swig">lower</code></h1>
+    <p>Return the input in all lowercase letters.</p>
+    
+ 
+  </article>
+  
+  <article id="filters-raw" class="doc">
+    <h1><code data-language="swig">raw</code></h1>
+    <p>Forces the input to not be auto-escaped.</p>
+    
+ 
+  </article>
+  
+  <article id="filters-replace" class="doc">
+    <h1><code data-language="swig">replace(search, replace[, flags])</code></h1>
+    <p>Uses built-in JavaScript replace method. Provide a regular-expression or a string and a replacement string.</p>
+    
+    <h2>Arguments</h2>
+    <dl>
+      
+      <dt><var>search</var></dt>
+      <dd><code data-language="swig">string</code></dd>
+      
+      <dd>string or regular expression to find</dd>
+      
+      <dt><var>replace</var></dt>
+      <dd><code data-language="swig">string</code></dd>
+      
+      <dd>string that will replace the matched parts from <var>search</var></dd>
+      
+      <dt><var>flags</var></dt>
+      <dd><code data-language="swig">string</code></dd>
+      <dd><i>optional</i></dd>
+      <dd>Regular expression flags. <a href="https://developer.mozilla.org/en/JavaScript/Guide/Regular_Expressions#Advanced_Searching_With_Flags">[reference]</a></dd>
+      
+    </dl>
+    
+ 
+  </article>
+  
+  <article id="filters-reverse" class="doc">
+    <h1><code data-language="swig">reverse</code></h1>
+    <p>If the input value is an Array, this filter will reverse all items in the array.</p>
+    
+ 
+  </article>
+  
+  <article id="filters-striptags" class="doc">
+    <h1><code data-language="swig">striptags</code></h1>
+    <p>Strip all HTML/XML tags.</p>
+    
+ 
+  </article>
+  
+  <article id="filters-title" class="doc">
+    <h1><code data-language="swig">title</code></h1>
+    <p>Change the output to title-case: the first letter of every word will be uppercase, while all the rest will be lowercase.</p>
+    
+ 
+  </article>
+  
+  <article id="filters-uniq" class="doc">
+    <h1><code data-language="swig">uniq</code></h1>
+    <p>Produces a duplicate-free version of an input array.</p>
+    
+ 
+  </article>
+  
+  <article id="filters-upper" class="doc">
+    <h1><code data-language="swig">upper</code></h1>
+    <p>Change the output to all uppercase letters.</p>
+    
+ 
+  </article>
+  
+  <article id="filters-url_encode" class="doc">
+    <h1><code data-language="swig">url_encode</code></h1>
+    <p>Encode the ouput as a URI component.</p>
+    
+ 
+  </article>
+  
+  <article id="filters-url_decode" class="doc">
+    <h1><code data-language="swig">url_decode</code></h1>
+    <p>Decode the ouput as a URI component.</p>
+    
+ 
+  </article>
+  
+
+  <article id="filters-custom">
+    <h1>Custom Filters</h1>
+
+    <p>Custom filters are very easy to write for your own project that uses Swig.</p>
+
+    <p>Create a file called <code>myfilters.js</code> and include it in the Swig init function:</p>
+
+    <pre><code data-language="javascript">swig.init({ filters: require('myfilters') });</code></pre>
+
+    <p>In your <code>myfilters.js</code> file, each filter method is just a simple javascript method. For example, here's a filter to make a variable all lowercase:</p>
+
+    <pre><code data-language="javascript">exports.lower = function (input) {
+  return input.toString().toLowerCase();
+};</code></pre>
+  </article>
+</section>
+
+<hr>
+
+<section>
+<h1 id="tags">Tags</h1>
+
+  <section>
+    <h1 id="tags-built-in">Built-in Tags</h1>
+
+    
+    <article id="tags-extends" class="doc">
+      <h1><code data-language="swig">extends</code></h1>
+
+      <p>Makes the current template extend a parent template. This tag must be the first item in your template.</p>
+
+      
+      <h2>Arguments</h2>
+      <dl>
+        
+        <dt><var>file</var></dt>
+        <dd><code>string, var</code></dd>
+        
+        <dd>The path, relative to the template root, to use as the parent layout for the current file. Must be the first token of this file.</dd>
+        
+ 
+      </dl>
+      
+ 
+ <p>For examples of using the <code>extends</code> tag, refer to the <a href="/docs/inheritance/">Template Inheritance</a> documentation.</p>
+ 
+    </article>
+    
+    <article id="tags-block" class="doc">
+      <h1><code data-language="swig">block</code></h1>
+
+      <p>Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.</p>
+
+      
+      <h2>Arguments</h2>
+      <dl>
+        
+        <dt><var>name</var></dt>
+        <dd><code>token</code></dd>
+        
+        <dd>Name for the current block context. Must start with a letter and only include letters, numbers, and underscores.</dd>
+        
+ 
+      </dl>
+      
+ 
+ <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/block.html'
+    at Object.fs.openSync (fs.js:338:18)
+    at Object.fs.readFileSync (fs.js:182:15)
+    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
+    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
+    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+    </article>
+    
+    <article id="tags-parent" class="doc">
+      <h1><code data-language="swig">parent</code></h1>
+
+      <p>Inject the content from the parent template's block of the same name into the current block.</p>
+
+      
+      <p><em>Accepts no arguments.</em></p>
+      
+ 
+ <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/parent.html'
+    at Object.fs.openSync (fs.js:338:18)
+    at Object.fs.readFileSync (fs.js:182:15)
+    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
+    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
+    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+    </article>
+    
+    <article id="tags-include" class="doc">
+      <h1><code data-language="swig">include</code></h1>
+
+      <p>Includes a template in it's place. The template is rendered within the current context.</p>
+
+      
+      <h2>Arguments</h2>
+      <dl>
+        
+        <dt><var>file</var></dt>
+        <dd><code>string, var</code></dd>
+        
+        <dd>The path, relative to the template root, to render into the current context.</dd>
+        
+ 
+        <dt><var>ignore missing</var></dt>
+        <dd><code></code></dd>
+        <dd><i>optional</i></dd>
+        <dd>Do not error if the file does not exist.</dd>
+        
+ 
+        <dt><var>with <var>x</var></var></dt>
+        <dd><code>var</code></dd>
+        <dd><i>optional</i></dd>
+        <dd>Set <var>x</var> to the root context object to pass to the rendering of the template. This should always be a key:value object.</dd>
+        
+ 
+        <dt><var>only</var></dt>
+        <dd><code></code></dd>
+        <dd><i>optional</i></dd>
+        <dd>Restrict the context of the template to those explicitly defined the the <var>with x</var> argument</dd>
+        
+ 
+      </dl>
+      
+ 
+ <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/include.html'
+    at Object.fs.openSync (fs.js:338:18)
+    at Object.fs.readFileSync (fs.js:182:15)
+    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
+    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
+    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+    </article>
+    
+    <article id="tags-raw" class="doc">
+      <h1><code data-language="swig">raw</code></h1>
+
+      <p>Stop token parsing within this tag. All content will be output as-is.</p>
+
+      
+      <p><em>Accepts no arguments.</em></p>
+      
+ 
+ <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/raw.html'
+    at Object.fs.openSync (fs.js:338:18)
+    at Object.fs.readFileSync (fs.js:182:15)
+    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
+    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
+    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+    </article>
+    
+    <article id="tags-for" class="doc">
+      <h1><code data-language="swig">for</code></h1>
+
+      <p>Loop over objects and arrays.</p>
+
+      
+      <h2>Arguments</h2>
+      <dl>
+        
+        <dt><var>x</var></dt>
+        <dd><code>token</code></dd>
+        
+        <dd>Loop-accessible name for the current loop iteration's value.</dd>
+        
+ 
+        <dt><var>in</var></dt>
+        <dd><code>token</code></dd>
+        
+        <dd>The literal token 'in' is a required token.</dd>
+        
+ 
+        <dt><var>y</var></dt>
+        <dd><code>var</code></dd>
+        
+        <dd>Iterable object. Can be modified with filters as desired.</dd>
+        
+ 
+      </dl>
+      
+ 
+ <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/for.html'
+    at Object.fs.openSync (fs.js:338:18)
+    at Object.fs.readFileSync (fs.js:182:15)
+    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
+    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
+    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+    </article>
+    
+    <article id="tags-if" class="doc">
+      <h1><code data-language="swig">if</code></h1>
+
+      <p>Conditional statements</p>
+
+      
+      <h2>Arguments</h2>
+      <dl>
+        
+        <dt><var>...</var></dt>
+        <dd><code>mixed</code></dd>
+        
+        <dd>Accepts any valid JavaScript conditional statement, as well as some other human readable syntaxes.</dd>
+        
+ 
+      </dl>
+      
+ 
+ <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/if.html'
+    at Object.fs.openSync (fs.js:338:18)
+    at Object.fs.readFileSync (fs.js:182:15)
+    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
+    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
+    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+    </article>
+    
+    <article id="tags-autoescape" class="doc">
+      <h1><code data-language="swig">autoescape</code></h1>
+
+      <p>Change the current behavior of variable auto-escaping.</p>
+
+      
+      <h2>Arguments</h2>
+      <dl>
+        
+        <dt><var>on</var></dt>
+        <dd><code>token</code></dd>
+        
+        <dd>Whether the content should be escaped (<samp>true</samp>) or not (<samp>false</samp>).</dd>
+        
+ 
+        <dt><var>type</var></dt>
+        <dd><code>string</code></dd>
+        <dd><i>optional</i></dd>
+        <dd>Escape type. One of <samp>html</samp> or <samp>js</samp>.</dd>
+        <dd>Defaults to <code data-language="swig">html</code></dd>
+ 
+      </dl>
+      
+ 
+ <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/autoescape.html'
+    at Object.fs.openSync (fs.js:338:18)
+    at Object.fs.readFileSync (fs.js:182:15)
+    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
+    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
+    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+    </article>
+    
+    <article id="tags-set" class="doc">
+      <h1><code data-language="swig">set</code></h1>
+
+      <p>Set a variable for re-use in the current context.</p>
+
+      
+      <h2>Arguments</h2>
+      <dl>
+        
+        <dt><var>name</var></dt>
+        <dd><code>token</code></dd>
+        
+        <dd>Variable name to assign the value to.</dd>
+        
+ 
+        <dt><var>=</var></dt>
+        <dd><code>token</code></dd>
+        
+        <dd>The literal equals sign is a required token.</dd>
+        
+ 
+        <dt><var>value</var></dt>
+        <dd><code>mixed</code></dd>
+        
+        <dd>Value to apply to <var>name</var>.</dd>
+        
+ 
+      </dl>
+      
+ 
+ <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/set.html'
+    at Object.fs.openSync (fs.js:338:18)
+    at Object.fs.readFileSync (fs.js:182:15)
+    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
+    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
+    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+    </article>
+    
+    <article id="tags-macro" class="doc">
+      <h1><code data-language="swig">macro</code></h1>
+
+      <p>Create custom, reusable snippets within your templates.</p>
+
+      
+      <h2>Arguments</h2>
+      <dl>
+        
+        <dt><var>...</var></dt>
+        <dd><code>token</code></dd>
+        
+        <dd>User defined.</dd>
+        
+ 
+      </dl>
+      
+ 
+ <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/macro.html'
+    at Object.fs.openSync (fs.js:338:18)
+    at Object.fs.readFileSync (fs.js:182:15)
+    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
+    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
+    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+    </article>
+    
+    <article id="tags-import" class="doc">
+      <h1><code data-language="swig">import</code></h1>
+
+      <p>Allows you to import macros from another file directly into your current context.</p>
+
+      
+      <h2>Arguments</h2>
+      <dl>
+        
+        <dt><var>file</var></dt>
+        <dd><code>var, string</code></dd>
+        
+        <dd>The path, relative to the template root, to import macros from.</dd>
+        
+ 
+        <dt><var>as</var></dt>
+        <dd><code>token</code></dd>
+        
+        <dd>The literal token 'as' is a required token.</dd>
+        
+ 
+        <dt><var>var</var></dt>
+        <dd><code>token</code></dd>
+        
+        <dd>Context-accessible object name to assign the macros to.</dd>
+        
+ 
+      </dl>
+      
+ 
+ <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/import.html'
+    at Object.fs.openSync (fs.js:338:18)
+    at Object.fs.readFileSync (fs.js:182:15)
+    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
+    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
+    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+    </article>
+    
+    <article id="tags-filter" class="doc">
+      <h1><code data-language="swig">filter</code></h1>
+
+      <p>Apply a filter to an entire block of template.</p>
+
+      
+      <h2>Arguments</h2>
+      <dl>
+        
+        <dt><var>filter_name</var></dt>
+        <dd><code>token</code></dd>
+        
+        <dd>Name of the filter to use.</dd>
+        
+ 
+        <dt><var>...</var></dt>
+        <dd><code>mixed</code></dd>
+        
+        <dd>Accepts any number of arguments, will be passed to the filter.</dd>
+        
+ 
+      </dl>
+      
+ 
+ <pre>Error: ENOENT, no such file or directory '/Users/paularms/Sites/swig/views/docs/tags/filter.html'
+    at Object.fs.openSync (fs.js:338:18)
+    at Object.fs.readFileSync (fs.js:182:15)
+    at exports.compileFile.get (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:146:17)
+    at Object.exports.compileFile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:154:7)
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.eval (eval at createRenderFunc (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:44:10))
+    at Object.template.render (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:111:21)
+    at exports.compile (/Users/paularms/Sites/swig/node_modules/swig/lib/swig.js:167:17)</pre>
+ 
+    </article>
+    
+  </section>
+
+  <hr>
+
+  <article id="tags-custom">
+    <h1>Custom Tags</h1>
+
+<p>Swig makes it easy to write custom tags specific for your project.</p>
+
+<p>First, make sure to include your node.js file that declares your tags in the swig init:</p>
+
+<pre><code data-language="javascript">swig.init({ tags: require('mytags') });</code></pre>
+
+<h2>Requirements</h2>
+
+<p>First, include the helpers.</p>
+
+<pre><code data-language="javascript">var helpers = require('swig/lib/helpers');</code></pre>
+
+<p>Define your tag and whether or not it requires an "end" tag:</p>
+
+<pre><code data-language="javascript">exports.mytag = function (indent, parser) {
+    return 'output';
+};
+exports.mytag.ends = true;
+</code></pre>
+
+<h2>A Really Simple Tag</h2>
+
+<p>To parse a swig variable with or without filters into a variable token, eg. <code>bar</code> or <code>foo|lowercase</code></p>
+
+<pre><code data-language="javascript">exports.mytag = function (indent, parser) {
+    var myArg = parser.parseVariable(this.args[0]);
+    return 'output';
+};
+exports.mytag.ends = true;</code></pre>
+
+<p>Use a parsed variable token with <code>helpers.setVar()</code> to bind a variable in your current scope into the templates scope. The <code>setVar</code> method cleans up variable output, applies filters and escaping for clean output:</p>
+
+<pre><code data-language="javascript">exports.mytag = function (indent, parser) {
+    var myArg = parser.parseVariable(this.args[0]),
+        output = '';
+    output += helpers.setVar(name, myArg);
+    return output;
+};
+exports.mytag.ends = true;</code></pre>
+
+<p>To parse the inner content of a tag for outputting, use <code>parser.compile.apply(this, [indent, parentBlock])</code>:</p>
+
+<pre><code data-language="javascript">exports.mytag = function (indent, parser) {
+    var myArg = parser.parseVariable(this.args[0]),
+        output = [];
+
+    output.push(helpers.setVar('__myArg', myArg));
+
+    output.push('_output += "&lt;h1&gt;";');
+    output.push('_output += __myArg;');
+    output.push('_output += "&lt;/h1&gt;";');
+    output.push('_output += "&lt;p&gt;";');
+    output.push(parser.compile.call(this, indent + '    '));
+    output.push('_output += "&lt;/p&gt;";');
+
+    return output.join('');
+};
+exports.mytag.ends = true;</code></pre>
+
+<p>When using your tag, it might have the following effect (assume <code>blah</code> is equal to "Scrumdiddlyumptious"):</p>
+
+<p>Template:</p>
+
+<pre><code data-language="swig">{% mytag blah %}Tacos{% endmytag %}</code></pre>
+
+<p>Output:</p>
+
+<pre><code data-language="html">&lt;h1&gt;Scrumdiddlyumptious&lt;/h1&gt;
+&lt;p&gt;Tacos&lt;/p&gt;
+</code></pre>
+
+<h2>Third-Party Extensions</h2>
+
+<p>To access a third-party library or method that is defined outside of your templates, you can add it to swig as an extention. For example, if you are using the i18next node module, add it as an extension when you initialize swig:</p>
+
+<pre><code data-language="javascript">var i18next = require('i18next');
+swig.init({
+    extensions: {
+        i18next: i18next
+    }
+});</code></pre>
+
+<p>Once you've added it, your custom tag can reference the <code>i18next</code> extension via the <code>_ext</code> object:</p>
+
+<pre><code data-language="javascript">exports.trans = function (indent, parser) {
+    var myArg = parser.parseVariable(this.args[0]),
+    output = [];
+    output.push(helpers.setVar('__myArg', myArg));
+
+    output.push('_output += _ext.i18next.t(__myArg);');
+
+    return output.join('');
+};</code></pre>
+
+<h2>Write Your Own</h2>
+
+<p>To best understand how to write your own tag, reference <a href="https://github.com/paularmstrong/swig/tree/master/lib/tags"><code>swig/lib/tags/</code></a> to see how the internal tags are written. These will give you a pretty clear indication of how to write your own.</p>
+  </article>
+</section>
+
+<hr>
+
+  </div>
+
+  <div class="span3">
+<nav>
+  <ol class="sidenav">
+    <li>
+      <a href="#basics">Basics</a>
+      <ol>
+        <li><a href="#variables">Variables</a></li>
+        <li><a href="#logic">Logic Tags</a></li>
+        <li><a href="#comments">Comments</a></li>
+        <li><a href="#whitespace">Whitespace Control</a></li>
+      </ol>
+    </li>
+    <li>
+      <a href="#inheritance">Template Inheritance</a>
+      
+    </li>
+    <li>
+      <a href="#filters">Filters</a>
+      <ol>
+        <li>
+          <a href="#filters-built-in">Built-In Filters</a>
+          <ol>
+          
+            <li><a href="#filters-add">add</a></li>
+          
+            <li><a href="#filters-addslashes">addslashes</a></li>
+          
+            <li><a href="#filters-capitalize">capitalize</a></li>
+          
+            <li><a href="#filters-date">date</a></li>
+          
+            <li><a href="#filters-default">default</a></li>
+          
+            <li><a href="#filters-e">e</a></li>
+          
+            <li><a href="#filters-escape">escape</a></li>
+          
+            <li><a href="#filters-first">first</a></li>
+          
+            <li><a href="#filters-join">join</a></li>
+          
+            <li><a href="#filters-json_encode">json_encode</a></li>
+          
+            <li><a href="#filters-last">last</a></li>
+          
+            <li><a href="#filters-length">length</a></li>
+          
+            <li><a href="#filters-lower">lower</a></li>
+          
+            <li><a href="#filters-raw">raw</a></li>
+          
+            <li><a href="#filters-replace">replace</a></li>
+          
+            <li><a href="#filters-reverse">reverse</a></li>
+          
+            <li><a href="#filters-striptags">striptags</a></li>
+          
+            <li><a href="#filters-title">title</a></li>
+          
+            <li><a href="#filters-uniq">uniq</a></li>
+          
+            <li><a href="#filters-upper">upper</a></li>
+          
+            <li><a href="#filters-url_encode">url_encode</a></li>
+          
+            <li><a href="#filters-url_decode">url_decode</a></li>
+          
+          </ol>
+        </li>
+        <li><a href="#filters-custom">Custom Filters</a></li>
+      </ol>
+    </li>
+    <li>
+      <a href="#tags">Tags</a>
+      <ol>
+        <li>
+          <a href="#tags-built-in">Built-In Tags</a>
+          <ol>
+          
+            <li><a href="#tags-extends">extends</a></li>
+          
+            <li><a href="#tags-block">block</a></li>
+          
+            <li><a href="#tags-parent">parent</a></li>
+          
+            <li><a href="#tags-include">include</a></li>
+          
+            <li><a href="#tags-raw">raw</a></li>
+          
+            <li><a href="#tags-for">for</a></li>
+          
+            <li><a href="#tags-if">if</a></li>
+          
+            <li><a href="#tags-autoescape">autoescape</a></li>
+          
+            <li><a href="#tags-set">set</a></li>
+          
+            <li><a href="#tags-macro">macro</a></li>
+          
+            <li><a href="#tags-import">import</a></li>
+          
+            <li><a href="#tags-filter">filter</a></li>
+          
+          </ol>
+        </li>
+        <li><a href="#tags-custom">Custom Tags</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+</div>
+</div>
+
+ 
+<script src="/js/lib/zepto.min.js"></script>
+<script src="/js/lib/rainbow.min.js"></script>
+<script src="/js/swig.pack.min.js"></script>
+<script src="/js/master.js"></script>
+
+</body>
+</html>

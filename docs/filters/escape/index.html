@@ -1,0 +1,83 @@
+<h2>Default Escaping</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Character</th>
+      <th>Replacement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><kbd>&amp;</kbd></td>
+      <td><samp>&amp;amp;</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>&lt;</kbd></td>
+      <td><samp>&amp;lt;</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>&gt;</kbd></td>
+      <td><samp>&amp;gt;</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>"</kbd></td>
+      <td><samp>&amp;quot;</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>&#39;</kbd></td>
+      <td><samp>&amp;#39;</samp></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>JavaScript Variable Replacements</h2>
+
+<p>Pass <code>js</code> as the type to your escape filter to toggle escaping as JavaScript.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Character</th>
+      <th>Replacement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ASCII charCodes less than 32<br /><kbd>ESC</kbd>, <kbd>TAB</kbd>, <kbd>SPACE,</kbd> etc&hellip;</td>
+      <td><samp>\u0001</samp> - <samp>\u001F</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>&amp;</kbd></td>
+      <td><samp>\u0026</samp></td>
+    </tr>
+    <tr>
+      <td><samp>&lt;</samp></td>
+      <td><samp>\u003C</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>&gt;</kbd></td>
+      <td><samp>\u003E</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>'</kbd></td>
+      <td><samp>\u0027</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>"</kbd></td>
+      <td><samp>\u0022</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>=</kbd></td>
+      <td><samp>\u003D</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>-</kbd></td>
+      <td><samp>\u002D</samp></td>
+    </tr>
+    <tr>
+      <td><kbd>;</kbd></td>
+      <td><samp>\u003B</samp></td>
+    </tr>
+  </tbody>
+</table>
