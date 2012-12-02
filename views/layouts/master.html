@@ -11,7 +11,7 @@
 <link rel="stylesheet{% if DEV %}/less{% endif %}" href="/{{ css }}/swig.{{ css }}">
 
 {% if DEV %}
-<script src="/js/lib/less.min.js"></script>
+<script src="{{ baseurl }}/js/lib/less.min.js"></script>
 {% endif %}
 {% endblock %}
 
@@ -21,13 +21,13 @@
 <header class="header">
   <div class="content row">
     <hgroup class="span7">
-      <h1><a href="/">Swig</a></h1>
+      <h1><a href="{{ baseurl }}/">Swig</a></h1>
       <h2>A Node.js and Browser-based JavaScript Template Engine</h2>
     </hgroup>
     {% block nav %}
     <nav class="span5">
       <ul class="mainNav">
-        <li><a href="/docs/">Documentation</a></li>
+        <li><a href="{{ baseurl }}/docs/">Documentation</a></li>
         <li><a href="https://github.com/paularmstrong/swig/">Code</a></li>
       </ul>
     </nav>
@@ -50,8 +50,8 @@
 {% endblock %}
 
 {% block js %}
-<script src="/js/lib/zepto.min.js"></script>
-<script src="/js/lib/rainbow.min.js"></script>
-<script src="/js/swig.pack.min.js"></script>
-<script src="/js/master.js"></script>
+<script src="{{ baseurl }}/js/lib/zepto.min.js"></script>
+<script src="{{ baseurl }}/js/lib/rainbow.min.js"></script>
+<script src="{{ baseurl }}/js/swig.pack.min.js"></script>
+<script src="{{ baseurl }}/js/master.js"></script>
 {% endblock %}
