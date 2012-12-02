@@ -99,6 +99,105 @@
 <hr>
 
 <section>
+  <h1 id="api">Swig API</h1>
+
+  <p id="api-init">In order to start using Swig, you should initialize it. Swig can be configured using the following:</p>
+
+  <pre><code data-language="javascript">swig.init({
+{%- for opt in apiOptions %}
+&nbsp;&nbsp;{{ loop.key }}: {{ opt.default }}{% if not loop.last %},{% endif %}
+{%- endfor %}
+});
+</code></pre>
+
+  <p>This step, and all options are <em>optional</em> (unless you are using Express), however it is recommended to at least set the <code>root</code> key when running Swig from node.js.</p>
+
+  <h3 id="api-options">Options</h3>
+
+  {% for opt in apiOptions %}
+  <article id="api-{{ loop.key }}" class="doc">
+    <h1><var>{{ loop.key }}</var></h1>
+    <p>{{ opt.desc|raw }}</p>
+    {% if opt.values %}
+    <h2>Possible Values</h2>
+    <dl>
+      {% for v in opt.values %}
+      <dt><code data-language="javascript">{{ loop.key }}</code></dt>
+      <dd>{{ v|raw }}</dd>
+      {% endfor %}
+    </dl>
+    {% endif %}
+  </article>
+  {% endfor %}
+
+  <section>
+    <h1 id="api-parse">Parsing a Template</h1>
+    <p>There are 2 methods for creating a template object:</p>
+
+    <pre><code data-language="javascript">swig.compileFile("path/to/template/file.html");
+swig.compile("Template string here", { filename: 'templateKey' });</code></pre>
+  </section>
+
+  <section>
+    <h1 id="api-render">Rendering a Template</h1>
+    <p>Both of these methods will give you a template object on which you call the render method passing it a map of context values.</p>
+
+    <p>If you know the path to the file:</p>
+
+    <pre><code data-language="javascript">var tpl = swig.compileFile("path/to/template/file.html");
+var renderedHtml = tpl.render({ vars: 'to be inserted in template' });</code></pre>
+
+    <p><em>OR</em>, if your file has already been read and you have the template in the form of a string:</p>
+
+   <pre><code data-language="javascript">var tpl = swig.compile("Template string here");
+var renderedHtml = tpl({ vars: 'to be inserted in template' });</code></pre>
+  </section>
+
+  <section>
+    <h1 id="api-express">Using Swig with Express.js</h1>
+
+    <p>Swig is compatible with <a href="http://expressjs.com/">Express</a>! It's very easy to set up your Express-based node project to use Swig as its template renderer. Here's how:</p>
+
+    <p>First, get Express and Consolidate.js</p>
+
+    <pre><code data-language="shell">npm install express
+npm install consolidate</code></pre>
+
+    <p>Require <code>express</code>, <code>consolidate</code>, <code>Swig</code>, and create the express server.</p>
+    <pre><code data-language="javascript">var express = require('express'),
+  cons = require('consolidate'),
+  swig = require('swig'),
+  app = express.createServer();</code></pre>
+
+    <p>Register Swig as the template renderer.</p>
+
+    <pre><code data-language="javascript">app.engine('.html', cons.swig);
+app.set('view engine', 'html');</code></pre>
+
+    <p>Set up your views directory. <strong>This is extremely important</strong></p>
+
+    <pre><code data-language="javascript">// NOTE: Swig requires some extra setup
+// This helps it know where to look for includes and parent templates
+swig.init({
+    root: '/path/to/views/directory/',
+    allowErrors: true // allows errors to be thrown and caught by express instead of suppressed by Swig
+});
+app.set('views', '/path/to/views/directory/');</code></pre>
+
+    <p><strong>Important!</strong> Don't allow express to automatically pipe your template into a layout.html file. Setting this to false allows you to properly use {% raw %}<code data-language="swig">{% extends %}</code> and <code data-language="swig">{% block %}</code>{% endraw %} tags!</p>
+
+    <p>Render your <code>index.html</code> page!</p>
+
+  <pre><code data-language="javascript">app.get('/', function (req, res) {
+    res.render('index.html', { foo: 'bar' });
+});</code></pre>
+  </section>
+
+</section>
+
+<hr>
+
+<section>
   <h1 id="filters">Variable Filters</h1>
 
   <p>Used to modify variables. Filters are added directly after variable names, separated by the pipe (<code data-language="swig">|</code>) character. You can chain multiple filters together, applying one after the other in succession.</p>
@@ -114,8 +213,8 @@ and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</code></pre>
 
   <h2 id="filters-built-in">Built-In Filters</h2>
   {% for f in filters %}
-  <article id="filters-{{ loop.key }}" class="doc">
-    <h1><code data-language="swig">{{ f.title }}</code></h1>
+  <article class="doc">
+    <h1 id="filters-{{ loop.key }}"><code data-language="swig">{{ f.title }}</code></h1>
     <p>{{ f.desc|raw }}</p>
     {% if f.args|length %}
     <h2>Arguments</h2>
@@ -134,8 +233,8 @@ and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</code></pre>
   </article>
   {% endfor %}
 
-  <article id="filters-custom">
-    <h1>Custom Filters</h1>
+  <article>
+    <h1 id="filters-custom">Custom Filters</h1>
 
     <p>Custom filters are very easy to write for your own project that uses Swig.</p>
 
@@ -160,8 +259,8 @@ and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</code></pre>
     <h1 id="tags-built-in">Built-in Tags</h1>
 
     {% for tag in tags %}
-    <article id="tags-{{ loop.key }}" class="doc">
-      <h1><code data-language="swig">{{ loop.key }}</code></h1>
+    <article class="doc">
+      <h1 id="tags-{{ loop.key }}"><code data-language="swig">{{ loop.key }}</code></h1>
 
       <p>{{ tag.desc|raw }}</p>
 
@@ -247,6 +346,15 @@ var mypage = swig.compile('{% raw %}{% extends "main" %}{% block content %}Oh he
     <li>
       <a href="#inheritance">Template Inheritance</a>
       {% block inheritance_subnav %}{% endblock %}
+    </li>
+    <li>
+      <a href="#api">Swig API</a>
+      <ol>
+        <li><a href="#api-init">Initialization</a></li>
+        <li><a href="#api-parse">Parsing</a></li>
+        <li><a href="#api-render">Rendering</a></li>
+        <li><a href="#api-express">Express.js</a></li>
+      </ol>
     </li>
     <li>
       <a href="#filters">Filters</a>
