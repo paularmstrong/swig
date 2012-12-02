@@ -195,6 +195,29 @@ and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</code></pre>
 </section>
 
 <hr>
+
+<section>
+  <h1 id="browser">In The Browser</h1>
+
+  <p>Swig's API in the browser is the same as its API for node.js, with the only difference being that you cannot use the swig.compileFile method, since browsers do not have a filesystem.</p>
+
+  <p>Instead, you must always use <code data-language="javascript">swig.compile</code> and pre-parse all templates.</p>
+
+  <p>In order to use <code>extends</code>, <code>import</code>, and <code>include</code> correctly, another argument is available on <code data-language="javascript">swig.compile</code>: <var>templateKey</var></p>
+
+  <pre><code data-language="javascript">swig.compile(templateString, { filename: templateKey });</code></pre>
+
+  <p>This is the key that will be used to lookup a template. For instance:</p>
+
+  <pre><code data-language="javascript">var template = swig.compile('<p>{% raw %}{% block content %}{% endblock %}{% endraw %}</p>', { filename: 'main' });
+var mypage = swig.compile('{% raw %}{% extends "main" %}{% block content %}Oh hey there!{% endblock %}{% endraw %}', { filename: 'mypage' });</code></pre>
+
+  <p>When you render mypage, <code data-language="javascript">mypage.render({});</code>, you will see</p>
+
+  <pre><code data-language="html">&lt;p&gt;Oh hey there!&lt;/p&gt;</code></pre>
+</section>
+
+<hr>
 {% endblock %}
 
 {% block section_nav %}
@@ -241,6 +264,7 @@ and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</code></pre>
         <li><a href="#tags-custom">Custom Tags</a></li>
       </ol>
     </li>
+    <li><a href="#browser">In The Browser</a></li>
   </ol>
 </nav>
 {% endblock %}

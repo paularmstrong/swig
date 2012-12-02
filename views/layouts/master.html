@@ -36,6 +36,7 @@
 </header>
 {% endblock %}
 
+{% block page_content %}
 <div class="content row guttered">
   <div class="span9">
   {% block content %}{% endblock %}
@@ -43,6 +44,7 @@
 
   <div class="span3">{% block section_nav %}{% endblock %}</div>
 </div>
+{% endblock %}
 {% endblock %}
 
 {% block js %}

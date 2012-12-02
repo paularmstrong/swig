@@ -173,6 +173,12 @@ pre {
   margin: 0 0 @lineHeight;
 }
 
+ul,
+ol,
+dl {
+  margin-left: @gutter;
+}
+
 pre,
 code,
 samp,
@@ -237,4 +243,8 @@ hr {
   }
   border-top: 1px solid @colorNeutralLight;
   margin: @gutter * 2 0;
+  &.small {
+    margin: @gutter 0;
+    opacity: 0.5;
+  }
 }
