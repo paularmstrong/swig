@@ -1,0 +1,44 @@
+{% raw %}
+<p>All normal JavaScript-valid if statements are supported, including some extra helpful syntaxes:</p>
+
+<pre><code data-language="swig">{% if x %}{% endif %}
+{% if !x %}{% endif %}
+{% if not x %}{% endif %}
+
+{% if x and y %}{% endif %}
+{% if x &amp;&amp; y %}{% endif %}
+{% if x or y %}{% endif %}
+{% if x || y %}{% endif %}
+{% if x || (y &amp;&amp; z) %}{% endif %}
+
+{% if x [operator] y %}
+  Operators: ==, !=, &lt;, &lt;=, &gt;, &gt;=, ===, !==
+{% endif %}
+
+{% if x == 'five' %}
+  The operands can be also be string or number literals
+{% endif %}
+
+{% if x|length === 3 %}
+  You can use filters on any operand in the statement.
+{% endif %}
+
+{% if x in y %}
+  If x is a value that is present in y, this will return true.
+{% endif %}
+</code></pre>
+
+<h3><code>else</code> and <code>else if</code></h3>
+
+<p>The <code>{% else %}</code> and <code>{% else if ... %}</code> tags are allowed within an if-block. Using <code>{% else [if ...] %}</code> anywhere outside an immediate parent if-block will throw an exception.</p>
+
+<pre><code data-language="swig">{% if foo %}
+  Some content.
+{% else if "foo" in bar %}
+  Content if the array `bar` has "foo" in it.
+{% else %}
+  Fallback content.
+{% endif %}
+</code></pre>
+
+{% endraw %}

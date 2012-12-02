@@ -1,0 +1,56 @@
+{% raw %}
+<p>For loops have 4 special context variables accessible inside of the loop:</p>
+
+<pre><code data-language="swig">{% for x in y %}
+  {% if loop.first %}&lt;ul&gt;{% endif %}
+  &lt;li&gt;{{ loop.index }} - {{ loop.key }}: {{ x }}&lt;/li&gt;
+  {% if loop.last %}&lt;/ul&gt;{% endif %}
+{% endfor %}
+</code></pre>
+
+<h3>Special Loop Variables</h3>
+<dl>
+  <dt><code>loop.index</code></dt>
+  <dd>the current iteration of the loop (1-indexed)</dd>
+  <dt><code>loop.index0</code></dt>
+  <dd>the current iteration of the loop (0-indexed)</dd>
+  <dt><code>loop.revindex</code></dt>
+  <dd>the number of iterations from the end of the loop (1-indexed)</dd>
+  <dt><code>loop.revindex0</code></dt>
+  <dd>the number of iterations from the end of the loop (0-indexed)</dd>
+  <dt><code>loop.key</code></dt>
+  <dd>if the iterator is an object, this will be the key of the current item, otherwise it will be the same as the <code>loop.index</code>.</dd>
+  <dt><code>loop.first</code></dt>
+  <dd><code>true</code> if the current object is the first in the object or array.</dd>
+  <dt><code>loop.last</code></dt>
+  <dd><code>true</code> if the current object is the last in the  object or array.</dd>
+  <dt><code>loop.cycle</code></dt>
+  <dd>a helper function to cycle between a the given arguments</dd>
+</dl>
+
+<p>The <code>loop.cycle</code> helper function can take any number of arguments and will cycle through them during each iteration of the loop. A common use-case may look like this:</p>
+
+<pre><code data-language="swig">{% for item in items %}
+  &lt;li class="{{ loop.cycle('odd', 'even') }}"&gt;{{ item }}&lt;/li&gt;
+{% endfor %}
+</code></pre>
+
+<p>You can also apply filters to the object that you are iterating over.</p>
+
+<pre><code data-language="swig">{% for x in y|reverse %}
+  The array `y` will first be reversed before looping over it.
+{% endfor %}
+</code></pre>
+
+<h2><code>else</code> in <code>for</code> tags</h2>
+<p>For loops have a special tag available to them called <code>{% else %}</code>.</p>
+
+<p>If the loop object is empty or <code>length === 0</code>, the content following the <code>else</code> tag will be rendered.</p>
+
+<pre><code data-language="swig">{% for person in people %}
+  {{ person }}
+{% else %}
+  There are no people yet!
+{% endfor %}
+</code></pre>
+{% endraw %}

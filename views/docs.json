@@ -209,23 +209,21 @@
       "args": {
         "file": {
           "types": ["string", "var"],
-          "desc": "The path, relative to the template root, to use as the parent layout for the current file. Must be the first token of this file."
+          "desc": "The path, relative to the template root, to use as the parent layout for the current file. Must be the first token of this file.<br><br>See <a href=\"#inheritance\">Template inheritance</a> for more information."
         }
-      },
-      "inc": "docs/tags/extends.html"
+      }
     },
     "block": {
-      "desc": "Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.",
+      "desc": "Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.<br><br>See <a href=\"#inheritance\">Template inheritance</a> for more information.",
       "args": {
         "name": {
           "types": ["token"],
           "desc": "Name for the current block context. Must start with a letter and only include letters, numbers, and underscores."
         }
-      },
-      "inc": "docs/tags/block.html"
+      }
     },
     "parent": {
-      "desc": "Inject the content from the parent template's block of the same name into the current block.",
+      "desc": "Inject the content from the parent template's block of the same name into the current block.<br><br>See <a href=\"#inheritance\">Template inheritance</a> for more information.",
       "inc": "docs/tags/parent.html"
     },
     "include": {
