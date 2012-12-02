@@ -22,7 +22,7 @@ get-swig: clean
 	@git commit -n -am "Automated updating swig.js" &>/dev/null
 
 
-remote=dev
+remote=origin
 branch=gh-pages
 build: all clean
 	@make get-swig -i
