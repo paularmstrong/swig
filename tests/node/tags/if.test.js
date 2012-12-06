@@ -43,18 +43,34 @@ describe('Tag: if', function () {
     expect(tpl({ foo: 'b', bar: ['a', 'b', 'c'] })).to.equal('hi!');
   });
 
+  it('can use the "%" operator', function () {
+    var tpl = swig.compile('{% if foo % 2 == 0 %}hi!{% endif %}');
+    expect(tpl({ foo: 4 })).to.equal('hi!');
+
+    tpl = swig.compile('{% if foo % 2 == 0 %}hi!{% endif %}');
+    expect(tpl({ foo: 5 })).to.equal('');
+
+    tpl = swig.compile('{% if foo % 2 %}hi!{% endif %}');
+    expect(tpl({ foo: 4 })).to.equal('');
+
+    tpl = swig.compile('{% if foo % 2 %}hi!{% endif %}');
+    expect(tpl({ foo: 3 })).to.equal('hi!');
+
+  });
+
   it('can use the "mod" operator', function () {
     var tpl = swig.compile('{% if foo mod 2 == 0 %}hi!{% endif %}');
-    expect(tpl({ foo: 4})).to.equal('hi!');
+    expect(tpl({ foo: 4 })).to.equal('hi!');
 
     tpl = swig.compile('{% if foo mod 2 == 0 %}hi!{% endif %}');
-    expect(tpl({ foo: 5})).to.equal('');
+    expect(tpl({ foo: 5 })).to.equal('');
 
     tpl = swig.compile('{% if foo mod 2 %}hi!{% endif %}');
-    expect(tpl({ foo: 4})).to.equal('');
+    expect(tpl({ foo: 4 })).to.equal('');
 
     tpl = swig.compile('{% if foo mod 2 %}hi!{% endif %}');
-    expect(tpl({ foo: 3})).to.equal('hi!');
+    expect(tpl({ foo: 3 })).to.equal('hi!');
+
   });
 
 
