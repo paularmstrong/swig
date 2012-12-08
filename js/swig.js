@@ -239,9 +239,32 @@ exports.compileFile = function (filepath, forceAllowErrors) {
   }
 
   get = function () {
-    var file = ((/^\//).test(filepath) || (/^.:/).test(filepath)) ? filepath : _config.root + '/' + filepath,
-      data = fs.readFileSync(file, config.encoding);
-    tpl = getTemplate(data, { filename: filepath });
+    var excp,
+      getSingle,
+      c;
+    getSingle = function (prefix) {
+      var file = ((/^\//).test(filepath) || (/^.:/).test(filepath)) ? filepath : prefix + '/' + filepath,
+        data;
+      try {
+        data = fs.readFileSync(file, config.encoding);
+        tpl = getTemplate(data, { filename: filepath });
+      } catch (e) {
+        excp = e;
+      }
+    };
+    if (typeof _config.root === "string") {
+      getSingle(_config.root);
+    }
+    if (_config.root instanceof Array) {
+      c = 0;
+      while (tpl === undefined || c < _config.root.length) {
+        getSingle(_config.root[c]);
+        c = c + 1;
+      }
+    }
+    if (tpl === undefined) {
+      throw excp;
+    }
   };
 
   if (_config.allowErrors || forceAllowErrors) {
