@@ -1,3 +1,8 @@
+[0.13.3](https://github.com/paularmstrong/swig/tree/v0.13.3) / 2012-12-07
+
+* **Added** Support % (modulus) in if tags [gh-155](https://github.com/paularmstrong/swig/pull/155)
+* **Added** Support multi-root via array [gh-143](https://github.com/paularmstrong/swig/pull/143)
+
 [0.13.2](https://github.com/paularmstrong/swig/tree/v0.13.2) / 2012-10-28
 -------------------------------------------------------------------------
 
