@@ -1,0 +1,77 @@
+{% extends "layouts/master.html" %}
+{%- if DEV %}
+  {% set baseurl = '' %}
+{% else %}
+  {% set baseurl = '/swig' %}
+{% endif -%}
+
+{% block title %}{% parent %} - A Node.js and Browser JavaScript Template Engine{% endblock %}
+
+{% block page_content %}
+
+<section class="content">
+  <h1>Swig</h1>
+  <p>A Node.js and Browser-based JavaScript Template Engine</p>
+
+  <hr class="small">
+
+  <div class="row guttered">
+
+    <section class="span6">
+      <h2>Get Started</h2>
+
+      <h3>Install Swig</h3>
+      <pre><code>npm install swig</code></pre>
+
+      <h3>Create Your Template</h3>
+      <pre><code data-language="swig">{% raw %}&lt;h1&gt;{{ pagename|title }}&lt;/h1&gt;
+&lt;ul&gt;
+{% for author in authors %}
+  &lt;li{% if loop.first%} class="first"{% endif %}&gt;
+    {{ author }}
+  &lt;/li&gt;
+{% else %}
+  &lt;li&gt;There are no authors.&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;{% endraw %}</code></pre>
+
+      <h3>Render Your Template</h3>
+      <pre><code data-language="javascript">var template  = require('swig');
+var tmpl = template.compileFile('/path/to/template.html');
+tmpl.render({
+    pagename: 'awesome people',
+    authors: ['Paul', 'Jim', 'Jane']
+});</code></pre>
+
+      <h3>The End Result</h3>
+      <pre><code data-language="html">&lt;h1&gt;Awesome People&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li class="first"&gt;Paul&lt;/li&gt;
+  &lt;li&gt;Jim&lt;/li&gt;
+  &lt;li&gt;Jane&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+    </section>
+
+    <section class="span6">
+      <h2>Features</h2>
+      <ul>
+        <li>Incredibly fast!</li>
+        <li>Available for node.js and major web browsers!</li>
+        <li>Extendable and customizable.</li>
+        <li>Express compatible.</li>
+        <li>Object-Oriented template inheritance.</li>
+        <li>Apply filters and transformations to output in your templates.</li>
+        <li>Automatically escapes all output.</li>
+        <li>Lots of iteration and conditionals supported.</li>
+      </ul>
+
+      <hr class="small">
+
+      <h2>Download For the Browser</h2>
+      <p>Swig also works in all major browsers. Just download the following file and follow the <a href="{{ baseurl }}/docs/#browser">Documentation</a>.</p>
+      <p class="download"><a href="{{ baseurl }}/js/swig.pack.min.js" class="btn">Download</a></p>
+    </section>
+
+  </div>
+</section>
+{% endblock %}

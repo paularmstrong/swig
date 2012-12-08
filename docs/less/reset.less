@@ -1,0 +1,250 @@
+* { .box-sizing(border-box); }
+a,
+abbr,
+address,
+article,
+aside,
+audio,
+blockquote,
+body,
+canvas,
+caption,
+cite,
+code,
+dd,
+details,
+dfn,
+div,
+dl,
+dt,
+em,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+hr,
+img,
+input,
+li,
+mark,
+menu,
+nav,
+ol,
+p,
+pre,
+section,
+strong,
+summary,
+table,
+td,
+textarea,
+th,
+th,
+time,
+ul,
+var,
+video {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+  text-align: inherit;
+  list-style: inherit;
+  quotes: none;
+}
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+input:focus,
+a:focus,
+textarea:focus {
+  outline: 0;
+}
+blockquote,
+q {
+  &:before,
+  &:after {
+    content: '';
+  }
+}
+
+sup,
+sub {
+  vertical-align: baseline;
+  position: relative;
+  top: -0.2em;
+  font-size: 0.7em;
+}
+  sub {
+    top: 0.4em;
+  }
+
+html,
+body,
+select,
+textarea {
+  font: normal @fontSize~'/'@lineHeight @fonts;
+  color: @colorNeutralDark;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font: normal @fontSize~'/'@lineHeight @fontsFancy;
+  color: @colorAccentSecond;
+  margin: 0 0 0.25em;
+  code,
+  var,
+  samp {
+    font-size: @fontSize;
+    color: @colorAccentSecond;
+  }
+}
+  h1 { font-size: 28px; line-height: 32px; }
+  h2 { font-size: 20px; }
+  h3,
+  h4,
+  h5,
+  h6 { font-size: 16px; }
+
+a {
+  color: @colorPrimary;
+  text-decoration: none;
+  @transition: opacity 0.2s, color 0.2s, background-color 0.2s, background-image 0.2s;
+  .transition(@transition);
+  display: inline-block;
+  padding: 2px;
+  margin: -2px;
+  .border-radius(3px);
+  border: none;
+  &:hover {
+    background-color: @colorPrimary;
+    color: #FFF;
+  }
+}
+
+b,
+strong {
+  font-weight: bold;
+}
+i,
+em {
+  font-style: italic;
+}
+
+section,
+article,
+p,
+ul,
+ol,
+dl,
+table,
+pre {
+  margin: 0 0 @lineHeight;
+}
+
+ul,
+ol,
+dl {
+  margin-left: @gutter;
+}
+
+pre,
+code,
+samp,
+var,
+kbd {
+  font: normal 12px~'/'20px @fontsMono;
+  color: @colorAccentDark;
+  background: @colorLight;
+}
+
+pre {
+  padding: @quarterGutter;
+  border: 1px solid @colorNeutralLight;
+  .border-radius(5px);
+  @shadow: inset 2px 2px 4px -3px fade(@colorNeutralDark, 60%), 2px 2px 4px fade(#FFF, 60%);
+  .box-shadow(@shadow);
+  overflow: auto;
+}
+
+.selection(...) {
+  background-color: fade(@colorAccent, 75%);
+  text-shadow: none;
+}
+*::selection {
+  .selection;
+}
+*::-moz-selection {
+  .selection;
+}
+
+.flash(...) {
+  0% { background-color: transparent; }
+  100% { background-color: fade(@colorAccent, 40%); }
+}
+@-webkit-keyframes flash {
+  .flash;
+}
+@-moz-keyframes flash {
+  .flash;
+}
+*:target {
+  .animation(flash, 0.2s, 4);
+  .border-radius(4px);
+}
+
+img, object {
+    max-width: 100%;
+}
+
+hr {
+  position: relative;
+  z-index: -1;
+  clear: both;
+  &:before {
+    content: '…';
+    .text-hidden;
+    left: 0;
+    right: 0;
+    top: 0;
+    position: absolute;
+    .box-shadow(0 -8px 8px -8px fade(@colorNeutralDark, 60%));
+  }
+  border-top: 1px solid @colorNeutralLight;
+  margin: @gutter * 2 0;
+  &.small {
+    margin: @gutter 0;
+    opacity: 0.5;
+  }
+}

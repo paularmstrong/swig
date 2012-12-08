@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Swig [![Build Status](https://secure.travis-ci.org/paularmstrong/swig.png)](http://travis-ci.org/paularmstrong/swig)
 ====
 
@@ -74,3 +75,38 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [1]: http://paularmstrong.github.com/node-templates/
+=======
+Swig Website
+============
+
+Use Swig to build the Website for Swig and publish to GitHub pages. Uses [still](https://github.com/paularmstrong/still).
+
+Getting Started
+---------------
+
+Install dependencies
+
+```
+make
+```
+
+Editing & Testing
+-----------------
+
+Start the server
+
+```
+make run
+```
+
+Edit and reload pages at will.
+
+Publishing
+----------
+
+Publish to gh-pages. Requires swig main repo push access.
+
+```
+make build
+```
+>>>>>>> site-templates

@@ -1,0 +1,25 @@
+{%- if DEV %}
+  {% set baseurl = '' %}
+{% else %}
+  {% set baseurl = '/swig' %}
+{% endif -%}
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  {% block prefetch %}{% endblock %}
+  <!--[if IE]>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <![endif]-->
+  <title>{% block title %}{% endblock %}</title>
+  {% block meta %}{% endblock %}
+
+  {% block css %}{% endblock %}
+</head>
+<body class="{{ section }}">
+
+  {% block body %}{% endblock %}
+
+  {% block js %}{% endblock %}
+</body>
+</html>

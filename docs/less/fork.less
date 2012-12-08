@@ -1,0 +1,23 @@
+.forkme {
+  position: fixed;
+  right: -60px;
+  bottom: 50px;
+  z-index: 10;
+  line-height: @lineHeight * 1.5;
+  color: @colorLight;
+  text-align: center;
+  width: 250px;
+  .transform(rotate(-45deg));
+  .transition(none);
+  font-weight: bold;
+  text-shadow: -1px 1px 1px rgba(0,0,0,0.7);
+  @shadow: 0 1px 3px fade(@colorAccentDark, 80%), inset 0 -1px 3px fade(@colorLight, 50%);
+  .box-shadow(@shadow);
+  border: 1px solid #000;
+  #gradient .radial(@colorNeutralDark, @colorAccentDark);
+  &:hover {
+    #gradient .radial(lighten(@colorNeutralDark, 10%), lighten(@colorAccentDark, 10%));
+    @shadow: 0 1px 3px fade(@colorAccentDark, 80%), inset 0 -1px 3px fade(@colorLight, 50%);
+    .box-shadow(@shadow);
+  }
+}

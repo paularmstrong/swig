@@ -1,0 +1,58 @@
+.rainbow {
+  word-wrap: break-word;
+  background: transparent;
+  .comment {
+    color: #8E908C;
+  }
+  .variable {
+    color: #C82829;
+  }
+  .string{
+    color: #718C00;
+  }
+  .filter {
+    color: #4271AE;
+  }
+  .tag {
+    color: #8959A8;
+    &.arg {
+      color: #C99E00;
+    }
+  }
+
+
+  .variable.global,
+  .variable.class,
+  .variable.instance {
+      color: #C82829;
+  }
+
+  .constant.numeric,
+  .constant.language,
+  .constant.hex-color,
+  .keyword.unit {
+      color: #C99E00;
+  }
+
+  .constant,
+  .entity,
+  .entity.class,
+  .support {
+      color: #4271AE;
+  }
+
+  .constant.symbol,
+  .string {
+      color: #718C00;
+  }
+
+  .function.call {
+      color: saturate(#366280, 10%);
+  }
+
+  .keyword,
+  .storage {
+      color: lighten(#573146, 15%);
+  }
+}
+

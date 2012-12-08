@@ -1,0 +1,10 @@
+{% raw %}
+<pre><code data-language="swig">{% filter uppercase %}oh hi, {{ name }}{% endfilter %}
+{% filter replace "." "!" "g" %}Hi. My name is Paul.{% endfilter %}</code></pre>
+
+<p>Will output the following:</p>
+
+<pre><code>OH HI, PAUL
+Hi! My name is Paul!
+</code></pre>
+{% endraw %}

@@ -1,0 +1,57 @@
+{% extends "layouts/html5.html" %}
+
+{% block title %}Swig{% endblock %}
+
+{% block css %}
+{% if DEV %}
+  {% set css = 'less' %}
+{% else %}
+  {% set css = 'css' %}
+{% endif %}
+<link rel="stylesheet{% if DEV %}/less{% endif %}" href="{{ baseurl }}/{{ css }}/swig.{{ css }}">
+
+{% if DEV %}
+<script src="{{ baseurl }}/js/lib/less.min.js"></script>
+{% endif %}
+{% endblock %}
+
+{% block body %}
+
+{% block header %}
+<header class="header">
+  <div class="content row">
+    <hgroup class="span7">
+      <h1><a href="{{ baseurl }}/">Swig</a></h1>
+      <h2>A Node.js and Browser-based JavaScript Template Engine</h2>
+    </hgroup>
+    {% block nav %}
+    <nav class="span5">
+      <ul class="mainNav">
+        <li><a href="{{ baseurl }}/docs/">Documentation</a></li>
+        <li><a href="https://github.com/paularmstrong/swig/">Code</a></li>
+      </ul>
+    </nav>
+  {% endblock %}
+  </div>
+</header>
+{% endblock %}
+
+{% block page_content %}
+<div class="content row guttered">
+  <div class="span9">
+  {% block content %}{% endblock %}
+  </div>
+
+  <div class="span3">{% block section_nav %}{% endblock %}</div>
+</div>
+{% endblock %}
+
+<a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
+{% endblock %}
+
+{% block js %}
+<script src="{{ baseurl }}/js/lib/zepto.min.js"></script>
+<script src="{{ baseurl }}/js/lib/rainbow.min.js"></script>
+<script src="{{ baseurl }}/js/swig.pack.min.js"></script>
+<script src="{{ baseurl }}/js/master.js"></script>
+{% endblock %}

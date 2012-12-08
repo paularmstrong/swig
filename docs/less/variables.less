@@ -1,0 +1,42 @@
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Source Sans Pro Semibold'), local('SourceSansPro-Semibold'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v5/toadOcfmlt9b38dHJxOBGCmgpmuQqK2I-L2S9cF65Ek.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Source Code Pro'), local('SourceCodePro-Regular'), url(http://themes.googleusercontent.com/static/fonts/sourcecodepro/v2/mrl8jkM18OlOQN8JLgasD9Hq-FFgoDNV3GTKpHwuvtI.woff) format('woff');
+}
+
+@colorPrimary: #366280;
+@colorAccent: #D03A4A;
+@colorAccentSecond: #573146;
+@colorAccentDark: #363644;
+@colorNeutralDark: #4C5B63;
+@colorNeutral: #565963;
+@colorNeutralLight: #BCC7CC;
+@colorLight: lighten(@colorNeutralLight, 20%);
+
+@fonts: Helvetica, Arial, Verdana, sans-serif;
+@fontsFancy: 'Source Sans Pro', Helvetica, Arial, Verdana, sans-serif;
+@fontsMono: 'Source Code Pro', Monaco, 'Courier New', monospace;
+@fontSize: 14px;
+@lineHeight: 20px;
+
+// LAYOUT
+@gutter: 40px;
+@columns: 12;
+@halfGutter: floor(@gutter / 2);
+@quarterGutter: floor(@gutter / 4);
+@bodyPadding: 6.382978723;
+@bodyPaddingPhone: 2.762430939%;
+
+// MEDIA QUERIES
+@mq-phone: ~'(max-width: 767px)';
+@mq-tablet: ~'(min-width: 768px) and (max-width: 979px)';
+@mq-desktop: ~'(min-width: 980px)';
+@mq-dpi-2: ~'(-webkit-min-device-pixel-ratio: 2)';
