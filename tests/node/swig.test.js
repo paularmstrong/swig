@@ -68,6 +68,33 @@ describe('swig.compileFile', function () {
       expect(swig.compileFile(__dirname + '/templates/included_2.html').render({ array: [1, 1] }))
         .to.equal('2');
     });
+
+    it('can use an array as root', function () {
+      swig.init({
+        root: [__dirname + '/themes/theme1', __dirname + '/themes/theme2'],
+        allowErrors: true
+      });
+      expect(swig.compileFile('array_length.html').render({ array: [1, 1] }))
+        .to.equal('2');
+    });
+
+    it('should load template from theme1', function () {
+      swig.init({
+        root: [__dirname + '/themes/theme1', __dirname + '/themes/theme2'],
+        allowErrors: true
+      });
+      expect(swig.compileFile('array_1.html').render({ array: [1, 2] }))
+        .to.equal('1');
+    });
+
+    it('should load template from theme2', function () {
+      swig.init({
+        root: [__dirname + '/themes/theme1', __dirname + '/themes/theme2'],
+        allowErrors: true
+      });
+      expect(swig.compileFile('array_2.html').render({ array: [1, 2] }))
+        .to.equal('2');
+    });
   }
 
   it('throws in a browser context', function () {
