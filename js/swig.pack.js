@@ -1882,7 +1882,7 @@ exports.setVar = function (varName, argument) {
 };
 
 exports.parseIfArgs = function (args, parser) {
-  var operators = ['==', '<', '>', '!=', '<=', '>=', '===', '!==', '&&', '||', 'in', 'and', 'or'],
+  var operators = ['==', '<', '>', '!=', '<=', '>=', '===', '!==', '&&', '||', 'in', 'and', 'or', 'mod', '%'],
     errorString = 'Bad if-syntax in `{% if ' + args.join(' ') + ' %}...',
     tokens = [],
     prevType,
@@ -1924,7 +1924,7 @@ exports.parseIfArgs = function (args, parser) {
       if (prevType === 'operator') {
         throw new Error(errorString);
       }
-      value = value.replace('and', '&&').replace('or', '||');
+      value = value.replace('and', '&&').replace('or', '||').replace('mod', '%');
       tokens.push({
         value: value
       });
