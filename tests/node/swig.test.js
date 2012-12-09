@@ -26,6 +26,13 @@ describe('swig.init', function () {
     expect(function () { swig.compile('{% foo %}')(); }).to.not.throwException();
   });
 
+  it('accepts global context', function () {
+    swig.init({
+      globals: {bar: 'world'}
+    });
+    expect(swig.compile('{{ foo }} {{ bar }}')({ foo: 'hello' })).to.equal('hello world');
+  });
+
   describe('allowErrors', function () {
     it('throws errors when true', function () {
       swig.init({ allowErrors: true });
