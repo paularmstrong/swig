@@ -26,6 +26,13 @@ describe('swig.init', function () {
     expect(function () { swig.compile('{% foo %}')(); }).to.not.throwException();
   });
 
+  it('accepts global context', function () {
+    swig.init({
+      globals: {bar: 'world'}
+    });
+    expect(swig.compile('{{ foo }} {{ bar }}')({ foo: 'hello' })).to.equal('hello world');
+  });
+
   describe('allowErrors', function () {
     it('throws errors when true', function () {
       swig.init({ allowErrors: true });
@@ -44,6 +51,37 @@ describe('swig.init', function () {
           .to.match(/<pre>Error\: ENOENT, no such file or directory/i);
       });
     }
+  });
+});
+
+describe('swig.config', function () {
+  it('can get config information', function () {
+    // rest a value for test
+    expect(swig.config()).to.have.key('tzOffset');
+  });
+
+  it('should update config', function () {
+    swig.init({ allowErrors: true });
+    swig.config({ allowErrors: false });
+    expect(swig.config().allowErrors).not.to.be.ok();
+  });
+
+  it('should not change other config', function () {
+    swig.init({ root: '/data/' });
+    swig.config({ allowErrors: true });
+    expect(swig.config().root).to.equal('/data/');
+  });
+
+  it('should merge filters', function () {
+    swig.init({});
+    swig.config({
+      filters: {
+        min: Math.min
+      }
+    });
+    var filters = swig.config().filters;
+    expect(filters).to.have.key('min');
+    expect(filters).to.have.key('add');
   });
 });
 
