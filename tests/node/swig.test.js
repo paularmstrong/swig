@@ -72,8 +72,8 @@ describe('swig.compileFile', function () {
         root: ["/", __dirname + '/templates'],
         allowErrors: true
       });
-      expect(swig.compileFile('notexistingFile.html').render({ array: [1, 1] }))
-        .to.equal('2');
+      expect(function() {swig.compileFile('notexistingFile.html').render({ array: [1, 1] })})
+        .to.throwException();
     });
     it('can use an absolute path', function () {
       swig.init({
