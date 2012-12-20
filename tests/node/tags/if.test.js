@@ -93,12 +93,29 @@ describe('Tag: if', function () {
     expect(fn4).to.throwException();
   });
 
+  it('can accept some arbitrary parentheses', function () {
+    var tpl = swig.compile('{% if (foo) %}bar{% endif %}');
+    expect(tpl({ foo: true })).to.equal('bar');
+
+    tpl = swig.compile('{% if ( foo ) %}bar{% endif %}');
+    expect(tpl({ foo: true })).to.equal('bar');
+
+    tpl = swig.compile('{% if ( foo && (bar)) %}bar{% endif %}');
+    expect(tpl({ foo: true, bar: true })).to.equal('bar');
+
+    tpl = swig.compile('{% if (( foo && (bar )) ) %}bar{% endif %}');
+    expect(tpl({ foo: true, bar: true })).to.equal('bar');
+  });
+
   it('allows filters on variables', function () {
     var tpl = swig.compile('{% if foo|length > 1 %}hi!{% endif %}');
     expect(tpl({ foo: [1, 2, 3] })).to.equal('hi!');
 
     tpl = swig.compile('{% if foo|length === bar|length %}hi!{% endif %}{% if foo|length !== bar|length %}fail{% endif %}');
     expect(tpl({ foo: [1, 2], bar: [3, 4] })).to.equal('hi!');
+
+    tpl = swig.compile('{% if d|date("j") == "1" %}hi{% endif %}');
+    expect(tpl({ d: new Date(2012, 0, 1) })).to.equal('hi');
   });
 
 });
