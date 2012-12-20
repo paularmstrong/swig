@@ -1477,7 +1477,7 @@ exports.compileFile = function (filepath, forceAllowErrors) {
     }
     if (_config.root instanceof Array) {
       c = 0;
-      while (tpl === undefined || c < _config.root.length) {
+      while (tpl === undefined && c < _config.root.length) {
         getSingle(_config.root[c]);
         c = c + 1;
       }
@@ -1500,7 +1500,6 @@ exports.compileFile = function (filepath, forceAllowErrors) {
 };
 
 exports.compile = function (source, options) {
-  options = options || {};
   var tmpl = getTemplate(source, options || {});
 
   return function (source, options) {
@@ -1884,19 +1883,27 @@ exports.setVar = function (varName, argument) {
 exports.parseIfArgs = function (args, parser) {
   var operators = ['==', '<', '>', '!=', '<=', '>=', '===', '!==', '&&', '||', 'in', 'and', 'or', 'mod', '%'],
     errorString = 'Bad if-syntax in `{% if ' + args.join(' ') + ' %}...',
+    startParen = /^\(+/,
+    endParen = /\)+$/,
     tokens = [],
     prevType,
     last,
     closing = 0;
 
   _.each(args, function (value, index) {
-    var endsep = false,
+    var endsep = 0,
+      startsep = 0,
       operand;
 
-    if ((/^\(/).test(value)) {
-      closing += 1;
-      value = value.substr(1);
-      tokens.push({ type: 'separator', value: '(' });
+    if (startParen.test(value)) {
+      startsep = value.match(startParen)[0].length;
+      closing += startsep;
+      value = value.replace(startParen, '');
+
+      while (startsep) {
+        startsep -= 1;
+        tokens.push({ type: 'separator', value: '(' });
+      }
     }
 
     if ((/^\![^=]/).test(value) || (value === 'not')) {
@@ -1908,13 +1915,13 @@ exports.parseIfArgs = function (args, parser) {
       tokens.push({ type: 'operator', value: '!' });
     }
 
-    if ((/\)$/).test(value)) {
+    if (endParen.test(value) && value.indexOf('(') === -1) {
       if (!closing) {
         throw new Error(errorString);
       }
-      value = value.replace(/\)$/, '');
-      endsep = true;
-      closing -= 1;
+      endsep = value.match(endParen)[0].length;
+      value = value.replace(endParen, '');
+      closing -= endsep;
     }
 
     if (value === 'in') {
@@ -1950,7 +1957,8 @@ exports.parseIfArgs = function (args, parser) {
       prevType = 'value';
     }
 
-    if (endsep) {
+    while (endsep) {
+      endsep -= 1;
       tokens.push({ type: 'separator', value: ')' });
     }
   });
