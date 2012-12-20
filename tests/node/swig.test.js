@@ -67,6 +67,14 @@ describe('swig.compileFile', function () {
       expect(swig.compileFile('included_2.html').render({ array: [1, 1] }))
         .to.equal('2');
     });
+    it('accepts an array in root config and does not hangs on missing file', function () {
+      swig.init({
+        root: ["/", __dirname + '/templates'],
+        allowErrors: true
+      });
+      expect(function () { swig.compileFile('notexistingFile.html').render({ array: [1, 1] }); })
+        .to.throwException();
+    });
     it('can use an absolute path', function () {
       swig.init({
         root: __dirname + '/templates',
