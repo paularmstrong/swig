@@ -1,4 +1,11 @@
+[0.13.4](https://github.com/paularmstrong/swig/tree/v0.13.4) / 2012-12-19
+-------------------------------------------------------------------------
+
+* **Fixed** Runaway loop on missing template [gh-162](https://github.com/paularmstrong/swig/pull/162) [gh-165](https://github.com/paularmstrong/swig/pull/165)
+* **Fixed** Allow variables in if tag conditionals to have filters with arguments [gh-167](https://github.com/paularmstrong/swig/pull/167)
+
 [0.13.3](https://github.com/paularmstrong/swig/tree/v0.13.3) / 2012-12-07
+-------------------------------------------------------------------------
 
 * **Added** Support % (modulus) in if tags [gh-155](https://github.com/paularmstrong/swig/pull/155)
 * **Added** Support multi-root via array [gh-143](https://github.com/paularmstrong/swig/pull/143)
