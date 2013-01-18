@@ -284,7 +284,7 @@ describe('Variables', function () {
     expect(parser.parse('{{\n foobar \n}}')).to.eql(token);
   });
 
-  it('can contain method calls with no argument', function() {
+  it('can contain method calls with no argument', function () {
     expect(parser.parse('{{ foobar() }}')).to.eql([{
       type: parser.TOKEN_TYPES.VAR,
       name: 'foobar',
@@ -294,7 +294,7 @@ describe('Variables', function () {
     }]);
   });
 
-  it('can contain method calls with one argument', function() {
+  it('can contain method calls with one argument', function () {
     expect(parser.parse('{{ foobar(123) }}')).to.eql([{
       type: parser.TOKEN_TYPES.VAR,
       name: 'foobar',
@@ -304,7 +304,7 @@ describe('Variables', function () {
     }]);
   });
 
-  it('can contain method calls with two arguments', function() {
+  it('can contain method calls with two arguments', function () {
     expect(parser.parse('{{ foobar(123, 456) }}')).to.eql([{
       type: parser.TOKEN_TYPES.VAR,
       name: 'foobar',
@@ -314,35 +314,35 @@ describe('Variables', function () {
     }]);
   });
 
-  it('accepts method calls with no arguments', function() {
-    var FooObject = function(arg) {
+  it('accepts method calls with no arguments', function () {
+    var FooObject = function (arg) {
       this.arg = arg;
-    }
-    FooObject.prototype.test = function() {
+    };
+    FooObject.prototype.test = function () {
       return this.arg + 'bar';
-    }
+    };
     expect(swig.compile('{{ foo.test() }}')({ foo: new FooObject('bar') }))
       .to.eql('barbar');
   });
 
-  it('accepts method calls with one arguments', function() {
-    var FooObject = function(arg) {
+  it('accepts method calls with one arguments', function () {
+    var FooObject = function (arg) {
       this.arg = arg;
-    }
-    FooObject.prototype.test = function(arg) {
+    };
+    FooObject.prototype.test = function (arg) {
       return arg + this.arg;
-    }
+    };
     expect(swig.compile('{{ foo.test("baz") }}')({ foo: new FooObject('bar') }))
       .to.eql('bazbar');
   });
 
-  it('accepts method calls with two arguments', function() {
-    var FooObject = function(arg) {
+  it('accepts method calls with two arguments', function () {
+    var FooObject = function (arg) {
       this.arg = arg;
-    }
-    FooObject.prototype.test = function(arg1, arg2) {
+    };
+    FooObject.prototype.test = function (arg1, arg2) {
       return arg1 + this.arg + arg2;
-    }
+    };
     expect(swig.compile('{{ foo.test("oo", "aa") }}')({ foo: new FooObject('bar') }))
       .to.eql('oobaraa');
   });
