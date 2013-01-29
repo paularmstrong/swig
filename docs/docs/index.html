@@ -247,6 +247,27 @@ and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</code></pre>
     <pre><code data-language="javascript">exports.lower = function (input) {
   return input.toString().toLowerCase();
 };</code></pre>
+
+    <p>Use your filters like any other:</p>
+
+    <pre><code data-language="swig">{{ name|lower }}</code></pre>
+
+    <p>When applied to blocks of content:</p>
+
+    <pre><code data-language="swig">{% filter lower %}I WILL BE LOWERCASE{% endfilter %}</code></pre>
+
+    <p>You can pass parameters to your custom filters too, and even dynamic ones:</p>
+
+    <pre><code data-language="javascript">exports.prefix = function(input, prefix) {
+  return prefix.toString() + input.toString();
+};</code></pre>
+
+    <pre><code data-language="swig">{{ name|prefix("my prefix") }}</code></pre>
+
+    <pre><code data-language="swig">{% filter prefix myvariable %}I will be prefixed{% endfilter %}</code></pre>
+
+    <p>Above <code data-language="swig">myvariable</code> is the name of a variable passed to the render function.</p>
+
   </article>
 </section>
 
