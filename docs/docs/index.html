@@ -244,29 +244,26 @@ and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</code></pre>
 
     <p>In your <code>myfilters.js</code> file, each filter method is just a simple javascript method. For example, here's a filter to make a variable all lowercase:</p>
 
-    <pre><code data-language="javascript">exports.lower = function (input) {
-  return input.toString().toLowerCase();
+    <pre><code data-language="javascript">exports.myfilter = function (input) {
+  return input.toString().split('').reverse().join('');
 };</code></pre>
 
-    <p>Use your filters like any other:</p>
+    <p>Once your filter has been imported, you can use it like any other, as a direct variable filter, or a tag-level filter:</p>
 
-    <pre><code data-language="swig">{{ name|lower }}</code></pre>
+    <pre><code data-language="swig">{% raw %}{{ name|myfilter }}{% endraw %}</code></pre>
 
-    <p>When applied to blocks of content:</p>
+    <pre><code data-language="swig">{% raw %}{% filter myfilter %}I shall be filtered{% endfilter %}{% endraw %}</code></pre>
 
-    <pre><code data-language="swig">{% filter lower %}I WILL BE LOWERCASE{% endfilter %}</code></pre>
-
-    <p>You can pass parameters to your custom filters too, and even dynamic ones:</p>
+    <p>You can pass arguments to your custom filters as well:</p>
 
     <pre><code data-language="javascript">exports.prefix = function(input, prefix) {
   return prefix.toString() + input.toString();
 };</code></pre>
 
-    <pre><code data-language="swig">{{ name|prefix("my prefix") }}</code></pre>
+    <pre><code data-language="swig">{% raw %}{{ name|prefix('my prefix') }}{% endraw %}</code></pre>
 
-    <pre><code data-language="swig">{% filter prefix myvariable %}I will be prefixed{% endfilter %}</code></pre>
-
-    <p>Above <code data-language="swig">myvariable</code> is the name of a variable passed to the render function.</p>
+    <pre><code data-language="swig">{% raw %}{% filter prefix 'my prefix' %}I will be prefixed with "my prefix".{% endfilter %}
+{% filter prefix foo %}I will be prefixed with the value stored to `foo`.{% endfilter %}{% endraw %}</code></pre>
 
   </article>
 </section>
