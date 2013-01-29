@@ -1,3 +1,8 @@
+[0.13.5](https://github.com/paularmstrong/swig/tree/v0.13.5) / 2013-01-29
+-------------------------------------------------------------------------
+
+* **Fixed** date filter output for 'O' when time-zone offset is negative [gh-185](https://github.com/paularmstrong/swig/pull/185)
+
 [0.13.4](https://github.com/paularmstrong/swig/tree/v0.13.4) / 2012-12-19
 -------------------------------------------------------------------------
 
