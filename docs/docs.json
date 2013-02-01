@@ -46,7 +46,7 @@
   "filters": {
     "add": {
       "title": "add(value)",
-      "desc": "Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated, as in the example below.",
+      "desc": "Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated.",
       "args": [
         {
           "name": "value",
