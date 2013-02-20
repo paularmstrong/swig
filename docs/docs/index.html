@@ -242,7 +242,7 @@ and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</code></pre>
 
     <pre><code data-language="javascript">swig.init({ filters: require('myfilters') });</code></pre>
 
-    <p>In your <code>myfilters.js</code> file, each filter method is just a simple javascript method. For example, here's a filter to make a variable all lowercase:</p>
+    <p>In your <code>myfilters.js</code> file, each filter method is just a simple javascript method. For example, here's a filter to reverse the order of characters in a variable:</p>
 
     <pre><code data-language="javascript">exports.myfilter = function (input) {
   return input.toString().split('').reverse().join('');
