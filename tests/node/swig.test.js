@@ -26,6 +26,39 @@ describe('swig.init', function () {
     expect(function () { swig.compile('{% foo %}')(); }).to.not.throwException();
   });
 
+  it('accepts simpleTags - custom tag functions that return html', function (done) {
+    swig.init({
+      allowErrors: true,
+      simpleTags: {
+        foo: function (args) {
+          return "Hello, World's : " + args[0];
+        }
+      }
+    });
+    expect(function () { swig.compile('{% foo %}')(); }).to.not.throwException();
+    expect(swig.compile('{% foo 3 %}')()).to.match(/Hello, World's : 3/);
+    done();
+  });
+
+  it('simpleTags can have default content', function (done) {
+    var notablock = function () {return "Hi"; },
+      notablock2 = function () {};
+
+    notablock.ends = true;
+    notablock2.ends = true;
+
+    swig.init({
+      allowErrors: true,
+      simpleTags: {
+        notablock: notablock,
+        notablock2: notablock2
+      }
+    });
+    expect(function () { swig.compile('{% notablock %}foo{% endnotablock %}')(); }).to.not.throwException();
+    expect(swig.compile('{% notablock %}Foo{% endnotablock %}{% notablock2 %}!{% endnotablock2 %}')()).to.match(/Hi!/);
+    done();
+  });
+
   describe('allowErrors', function () {
     it('throws errors when true', function () {
       swig.init({ allowErrors: true });
