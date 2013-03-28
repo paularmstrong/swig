@@ -26,6 +26,20 @@ describe('swig.init', function () {
     expect(function () { swig.compile('{% foo %}')(); }).to.not.throwException();
   });
 
+  it('accepts simpleTags - custom tag functions that return html', function (done) {
+    swig.init({
+      allowErrors: true,
+      simpleTags: {
+        foo: function (args) {
+          return "Hello, World's : " + args[0];
+        }
+      }
+    });
+    expect(function () { swig.compile('{% foo %}')(); }).to.not.throwException();
+    expect(swig.compile('{% foo 3 %}')()).to.match(/Hello, World's : 3/);
+    done();
+  });
+
   describe('allowErrors', function () {
     it('throws errors when true', function () {
       swig.init({ allowErrors: true });
