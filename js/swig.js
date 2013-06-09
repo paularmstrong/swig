@@ -460,7 +460,10 @@ exports.check = check;
 * Returns an escaped string (safe for evaling). If context is passed
 * then returns a concatenation of context and the escaped variable name.
 */
-exports.escapeVarName = function (variable, context) {
+exports.escapeVarName = function (variable, context, args) {
+  if (variable === '') {
+    return '';
+  }
   if (_.isArray(variable)) {
     _.each(variable, function (val, key) {
       variable[key] = exports.escapeVarName(val, context);
@@ -522,21 +525,15 @@ exports.escapeVarName = function (variable, context) {
     prevDot = false;
   });
 
-  return chain;
+  return '(typeof ' + chain + ' === \'function\') ? ' + chain + '(' + args + ') : ' + chain;
 };
 
-exports.wrapMethod = function (variable, filter, context) {
-  var output = '(function () {\n',
-    args;
-
-  variable = variable || '""';
-
-  if (!filter) {
-    return variable;
+exports.wrapArgs = function (args) {
+  if (!args) {
+    return { declarations: '', args: ''};
   }
-
-  args = filter.args.split(',');
-  args = _.map(args, function (value) {
+  var declarations = '';
+  args = _.map(args.split(','), function (value) {
     var varname,
       stripped = value.replace(/^\s+|\s+$/g, '');
 
@@ -547,20 +544,37 @@ exports.wrapMethod = function (variable, filter, context) {
     }
 
     if (exports.isValidName(stripped)) {
-      output += exports.setVar(varname, parser.parseVariable(stripped));
+      declarations += exports.setVar(varname, parser.parseVariable(stripped));
       return varname;
     }
 
     return value;
   });
 
-  args = (args && args.length) ? args.join(',') : '""';
+  return { declarations: declarations, args: (args && args.length) ? args.join(',') : '""' };
+};
+
+exports.wrapMethod = function (variable, filter, context) {
+  var output = '(function () {\n',
+    args,
+    wrappedArgs;
+
+  variable = variable || '""';
+
+  if (!filter) {
+    return variable;
+  }
+
+  wrappedArgs = exports.wrapArgs(filter.args, output);
+
+  output += wrappedArgs.declarations;
+
   output += 'return ';
   output += (context) ? context + '["' : '';
   output += filter.name;
   output += (context) ? '"]' : '';
-  output += '.call(this';
-  output += (args.length) ? ', ' + args : '';
+  output += '(';
+  output += wrappedArgs.args;
   output += ');\n';
 
   return output + '})()';
@@ -586,8 +600,8 @@ exports.wrapFilter = function (variable, filter) {
   return output;
 };
 
-exports.wrapFilters = function (variable, filters, context, escape) {
-  var output = exports.escapeVarName(variable, context);
+exports.wrapFilters = function (variable, filters, context, escape, args) {
+  var output = exports.escapeVarName(variable, context, args);
 
   if (filters && filters.length > 0) {
     _.each(filters, function (filter) {
@@ -614,11 +628,12 @@ exports.wrapFilters = function (variable, filters, context, escape) {
   return output;
 };
 
-exports.setVar = function (varName, argument) {
+exports.setVar = function (varName, argument, args) {
   var out = '',
     props,
     output,
-    inArr;
+    inArr,
+    wrappedArgs;
   if ((/\[/).test(argument.name)) {
     props = argument.name.split(/(\[|\])/);
     output = [];
@@ -644,16 +659,19 @@ exports.setVar = function (varName, argument) {
       }
     });
   }
+
+  wrappedArgs = exports.wrapArgs(args);
+  out += wrappedArgs.declarations;
   out += 'var ' + varName + ' = "";\n' +
     'if (' + check(argument.name, '_context') + ') {\n' +
-    '  ' + varName + ' = ' + exports.wrapFilters(argument.name, argument.filters, '_context', argument.escape) + ';\n' +
+    '  ' + varName + ' = ' + exports.wrapFilters(argument.name, argument.filters, '_context', argument.escape, wrappedArgs.args) + ';\n' +
     '} else if (' + check(argument.name) + ') {\n' +
-    '  ' + varName + ' = ' + exports.wrapFilters(argument.name, argument.filters, null, argument.escape)  + ';\n' +
+    '  ' + varName + ' = ' + exports.wrapFilters(argument.name, argument.filters, null, argument.escape, wrappedArgs.args)  + ';\n' +
     '}\n';
 
   if (argument.filters.length) {
     out += ' else if (true) {\n';
-    out += '  ' + varName + ' = ' + exports.wrapFilters('', argument.filters, null, argument.escape) + ';\n';
+    out += '  ' + varName + ' = ' + exports.wrapFilters('', argument.filters, null, argument.escape, wrappedArgs.args) + ';\n';
     out += '}\n';
   }
 
@@ -1674,7 +1692,7 @@ exports.compile = function compile(indent, context, template) {
         code += '  _output = (typeof _output === "undefined") ? ' + wrappedInMethod + ': _output + ' + wrappedInMethod + ';\n';
       }
       code += '} else {\n';
-      code += helpers.setVar('__' + name, token);
+      code += helpers.setVar('__' + name, token, args);
       code += '  _output = (typeof _output === "undefined") ? __' + name + ': _output + __' + name + ';\n';
       code += '}\n';
     }
@@ -1846,12 +1864,6 @@ module.exports = function (indent, parser) {
   if (!helpers.isValidShortName(operand1)) {
     throw new Error('Invalid arguments (' + operand1 + ') passed to "for" tag');
   }
-
-  if (!helpers.isValidName(operand2.name)) {
-    throw new Error('Invalid arguments (' + operand2.name + ') passed to "for" tag');
-  }
-
-  operand1 = helpers.escapeVarName(operand1);
 
   loopShared = 'loop.index = __loopIndex + 1;\n' +
     'loop.index0 = __loopIndex;\n' +
@@ -2112,6 +2124,29 @@ module.exports = function (indent, parser) {
     '  return _output;\n' +
     '})();\n';
 };
+return module.exports;
+})();
+tags['spaceless'] = (function () {
+module = {};
+/**
+ * spaceless
+ */
+module.exports = function (indent, parser) {
+	var output = [],
+		i = this.tokens.length - 1;
+
+	for (i; i >= 0; i -= 1) {
+		this.tokens[i] = this.tokens[i]
+			.replace(/^\s+/gi, "") // trim leading white-space
+			.replace(/>\s+</gi,  "><") // trim white-space between tags
+			.replace(/\s+$/gi, ""); // trim trailing white-space
+	}
+
+	output.push(parser.compile.call(this, indent + '    '));
+	return output.join('');
+};
+
+module.exports.ends = true;
 return module.exports;
 })();
 return swig;

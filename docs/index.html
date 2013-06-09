@@ -318,7 +318,7 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
   
   <article class="doc">
     <h1 id="filters-add"><code data-language="swig">add(value)</code></h1>
-    <p>Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated, as in the example below.</p>
+    <p>Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated.</p>
     
     <h2>Arguments</h2>
     <dl>
@@ -843,7 +843,7 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
 
     <pre><code data-language="javascript">swig.init({ filters: require('myfilters') });</code></pre>
 
-    <p>In your <code>myfilters.js</code> file, each filter method is just a simple javascript method. For example, here's a filter to make a variable all lowercase:</p>
+    <p>In your <code>myfilters.js</code> file, each filter method is just a simple javascript method. For example, here's a filter to reverse the order of characters in a variable:</p>
 
     <pre><code data-language="javascript">exports.myfilter = function (input) {
   return input.toString().split('').reverse().join('');
@@ -932,7 +932,7 @@ and has {{ bikes|length|default("zero") }} bikes.</code></pre>
     <article class="doc">
       <h1 id="tags-include"><code data-language="swig">include</code></h1>
 
-      <p>Includes a template in it's place. The template is rendered within the current context.</p>
+      <p>Includes a template in its place. The template is rendered within the current context.</p>
 
       
       <h2>Arguments</h2>
@@ -1419,6 +1419,30 @@ Hi! My name is Paul!
  
     </article>
     
+    <article class="doc">
+      <h1 id="tags-spaceless"><code data-language="swig">spaceless</code></h1>
+
+      <p>Attempts to remove whitespace between HTML tags. Use at your own risk.</p>
+
+      
+      <p><em>Accepts no arguments.</em></p>
+      
+ 
+ 
+<pre><code data-language="swig">{% spaceless %}
+{% for num in foo %}
+  &lt;li&gt;{{ loop.index }}&lt;/li&gt;
+{% endfor %}
+{% endspaceless %}
+</code></pre>
+
+
+<pre><code data-language="html">
+&lt;li&gt;1&lt;/li&gt;&lt;li&gt;2&lt;/li&gt;&lt;li&gt;3&lt;/li&gt;
+</code></pre>
+ 
+    </article>
+    
   </section>
 
   <hr>
@@ -1676,6 +1700,8 @@ var mypage = swig.compile('{% extends "main" %}{% block content %}Oh hey there!{
             <li><a href="#tags-import">import</a></li>
           
             <li><a href="#tags-filter">filter</a></li>
+          
+            <li><a href="#tags-spaceless">spaceless</a></li>
           
           </ol>
         </li>
