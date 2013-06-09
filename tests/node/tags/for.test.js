@@ -88,6 +88,11 @@ describe('Tag: for', function () {
       var tpl = swig.compile('{% for key in bar %}{{ foo[loop.index0] }} {% endfor %}');
       expect(tpl({ bar: ['a', 'b', 'c'], foo: ['hi', 'and', 'bye' ]})).to.equal('hi and bye ');
     });
+
+    it('can loop nested objects', function () {
+      var tpl = swig.compile('{% for c in a.b %}{{ c }}{% endfor %}');
+      expect(tpl({ a: { b: [1, 2, 3] }})).to.equal('123');
+    });
   });
 
 
