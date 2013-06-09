@@ -1,0 +1,12 @@
+{% raw %}
+<pre><code data-language="swig">{% spaceless %}
+{% for num in foo %}
+  &lt;li&gt;{{ loop.index }}&lt;/li&gt;
+{% endfor %}
+{% endspaceless %}
+</code></pre>
+{% endraw %}
+
+<pre><code data-language="html">
+&lt;li&gt;1&lt;/li&gt;&lt;li&gt;2&lt;/li&gt;&lt;li&gt;3&lt;/li&gt;
+</code></pre>

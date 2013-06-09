@@ -357,6 +357,10 @@
         }
       },
       "inc": "docs/tags/filter.html"
+    },
+    "spaceless": {
+      "desc": "Attempts to remove whitespace between HTML tags. Use at your own risk.",
+      "inc": "docs/tags/spaceless.html"
     }
   }
 }
