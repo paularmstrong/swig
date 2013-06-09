@@ -1,3 +1,11 @@
+
+[0.14.0](https://github.com/paularmstrong/swig/tree/v0.14.0) / 2013-06-08
+==================
+
+* **Added** Allow executing functions from within templates [gh-182](https://github.com/paularmstrong/swig/pull/182)
+* **Added** New `spaceless` tag [gh-193](https://github.com/paularmstrong/swig/pull/193)
+* **Fixed** bug when attempting to loop over nested vars with `for`. [gh-232](https://github.com/paularmstrong/swig/pull/232)
+
 [0.13.5](https://github.com/paularmstrong/swig/tree/v0.13.5) / 2013-01-29
 -------------------------------------------------------------------------
 
