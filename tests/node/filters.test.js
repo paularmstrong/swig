@@ -68,6 +68,8 @@ describe('Filter', function () {
     testFormat('S', 'th');
     testFormat('w', '2');
     testFormat('z', '248');
+    testFormat('O', '+0700');
+    testFilter('date("O", -120)', { v: makeDate(-120, 2011, 0, 2) }, '-0200', 'O');
     testFilter('date("z", 480)', { v: makeDate(480, 2011, 0, 1) }, '0', 'z');
     testFilter('date("z", 480)', { v: makeDate(480, 2011, 11, 31) }, '364', 'z');
 

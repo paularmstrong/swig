@@ -22,6 +22,11 @@ describe('Tag: filter', function () {
     expect(tpl({})).to.equal('hi! my name is paul!');
   });
 
+  it('can accept dynamic arguments for the filter', function () {
+    var tpl = swig.compile('{% filter replace replaced by "g" %}hi. my name is paul.{% endfilter %}');
+    expect(tpl({ replaced: '\\.', by: "!"})).to.equal('hi! my name is paul!');
+  });
+
   it('throws if filter does not exist', function () {
     expect(function () { swig.compile('{% filter foobar %}{% endfilter %}'); })
       .to.throwException();

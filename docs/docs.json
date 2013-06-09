@@ -46,7 +46,7 @@
   "filters": {
     "add": {
       "title": "add(value)",
-      "desc": "Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated, as in the example below.",
+      "desc": "Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated.",
       "args": [
         {
           "name": "value",
@@ -226,7 +226,7 @@
       "desc": "Inject the content from the parent template's block of the same name into the current block.<br><br>See <a href=\"#inheritance\">Template inheritance</a> for more information."
     },
     "include": {
-      "desc": "Includes a template in it's place. The template is rendered within the current context.",
+      "desc": "Includes a template in its place. The template is rendered within the current context.",
       "args": {
         "file": {
           "types": ["string", "var"],
