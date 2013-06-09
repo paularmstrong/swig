@@ -23,11 +23,11 @@ test:
 	@node_modules/mocha/bin/mocha --reporter ${reporter} ${opts} ${tests} --globals "_swigglobaltest"
 
 test-browser: build
-	@node_modules/mocha-phantomjs/bin/mocha-phantomjs tests/browser/index.html
+	@node_modules/.bin/mocha-phantomjs tests/browser/index.html
 
 files := $(shell find . -name '*.js' ! -path "./node_modules/*" ! -path "./dist/*" ! -path "./tests/browser/*" ! -path "./docs*")
 lint:
-	@node_modules/nodelint/nodelint ${files} --config=scripts/config-lint.js
+	@node_modules/.bin/nodelint ${files} --config=scripts/config-lint.js
 
 out = tests/coverage.html
 coverage:
