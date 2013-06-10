@@ -43,4 +43,13 @@ describe('Tag: set', function () {
     expect(swig.compile('{% set foo = 1 %} {% set foo = foo|add(1) %}{% set foo = foo|add(1) %}{{ foo|add(1) }}')())
       .to.equal(' 4');
   });
+
+  it('set object literal properties from vars in current context', function () {
+    expect(swig.compile('{% set foo = "bar" %}{% set qux = {"foo": foo, "foo2": "bar2"} %}{{ qux.foo }}-{{ qux.foo2 }}-{{ foo }}')())
+      .to.equal('bar-bar2-bar');
+
+    expect(swig.compile('{% set qux = {"foo": foo, "foo2": "bar2"} %}{{ qux.foo }}-{{ qux.foo2 }}-{{ foo }}')({foo: 'bar'}))
+      .to.equal('bar-bar2-bar');
+  });
+
 });
