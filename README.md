@@ -15,6 +15,7 @@ Features
 * Automatically escapes all output.
 * Lots of iteration and conditionals supported.
 * Extendable and customizable.
+* Great [code coverage](http://paularmstrong.github.io/swig/)
 
 Installation
 ------------
