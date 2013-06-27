@@ -29,7 +29,7 @@
     "expect.js": "~0.2",
     "swig": "*",
     "still": "*",
-    "less": "~1.4",
+    "less": "~1.3",
     "zepto": "0.0.3",
     "mocha-phantomjs": "~3",
     "blanket": "~1.1",
