@@ -1,6 +1,6 @@
 var expect = require('expect.js'),
   swig = require('../../lib/swig'),
-  DateZ = require('../../lib/dateformat').DateZ;
+  DateZ = require('../../old/dateformat').DateZ;
 
 function testFilter(filter, input, output, message) {
   it(message, function () {

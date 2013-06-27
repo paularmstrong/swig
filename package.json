@@ -19,7 +19,8 @@
     "Dusko Jordanovski <jordanovskid@gmail.com>"
   ],
   "dependencies": {
-    "underscore": ">=1.1.7"
+    "underscore": ">=1.1.7",
+    "lodash": "~1.3.1"
   },
   "devDependencies": {
     "express": "~3",
