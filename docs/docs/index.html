@@ -154,6 +154,21 @@ var renderedHtml = tpl({ vars: 'to be inserted in template' });</code></pre>
   </section>
 
   <section>
+    <h1 id="api-precompile">Precompiling a Template</h1>
+    <p>Precompiling templates is useful for saving initializing time in the browser, and have a Node based server. You can serve the precompiled template to the client, then register and not have parsing overhead:</p>
+
+    <pre><code data-language="javascript">
+var code = swig.precompile("Template string here");</code></pre>
+
+    <p>Then, in the <em>browser</em> you send the template from the server, register the template and it's available for use:</p>
+    <pre><code data-language="javascript">
+var tmpl = swig.registerTemplate("template-name", code);
+tmpl.render({ vars : 'go here, like normal' });</code></pre>
+
+    <p>This is very noticeable with mobile apps, where the initializing time and string parsing can be very slow.</p>
+  </section>
+
+  <section>
     <h1 id="api-express">Using Swig with Express.js</h1>
 
     <p>Swig is compatible with <a href="http://expressjs.com/">Express</a>! It's very easy to set up your Express-based node project to use Swig as its template renderer. Here's how:</p>

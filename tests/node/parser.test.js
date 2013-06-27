@@ -552,4 +552,17 @@ describe('Compiling', function () {
     expect(swig.compile('{% extends "foo" %}')({ e: 'e', f: 'f', g: 'g', h: 'h' })).to.equal('"e"f"g"h');
   });
 
+  describe('precompiling templates', function () {
+    it('returns a string for precompiling', function () {
+      var code = swig.precompile('Precompiled {{ tmpl }}'),
+        tmpl,
+        fn;
+      // eval to turn the string into a function
+      eval('fn = ' + code);
+      // Now register the function back into swig
+      tmpl = swig.registerTemplate('precompile-test', fn);
+      // And render
+      expect(tmpl.render({ tmpl : 'template '}), 'Precompiled template');
+    });
+  });
 });
