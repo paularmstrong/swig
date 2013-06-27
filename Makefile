@@ -14,6 +14,7 @@ all:
 
 clean:
 	@rm -rf ${TMP}
+	@rm tests/coverage.html
 
 build:
 	@scripts/browser.sh
@@ -33,13 +34,13 @@ lint:
 
 out = tests/coverage.html
 cov-reporter = html-cov
-path = "$(shell pwd)"
 coverage:
 ifeq (${cov-reporter}, travis-cov)
 	@${BIN}/mocha ${opts} ${tests} --globals "_swigglobaltest" --require blanket -R ${cov-reporter}
 else
 	@${BIN}/mocha ${opts} ${tests} --globals "_swigglobaltest" --require blanket -R ${cov-reporter} > ${out}
 	@sed -i .bak -e "s/${PWD}//g" ${out}
+	@${BIN}/opener ${out}
 	@rm ${out}.bak
 	@echo
 	@echo "Built Report to ${out}"

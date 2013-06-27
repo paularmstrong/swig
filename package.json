@@ -34,7 +34,8 @@
     "mocha-phantomjs": "~3",
     "blanket": "~1.1",
     "travis-cov": "~0.2",
-    "phantomjs": "~1.9"
+    "phantomjs": "~1.9",
+    "opener": "~1.3.0"
   },
   "main": "index",
   "engines": {
