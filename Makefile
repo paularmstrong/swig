@@ -5,6 +5,7 @@ TMP = 'tmp_build'
 REMOTE = origin
 BRANCH = gh-pages
 BIN = node_modules/.bin
+PWD = $(shell pwd | sed -e 's/[\/&]/\\&/g')
 
 all:
 	@npm install -d
@@ -32,14 +33,14 @@ lint:
 
 out = tests/coverage.html
 cov-reporter = html-cov
+path = "$(shell pwd)"
 coverage:
 ifeq (${cov-reporter}, travis-cov)
 	@${BIN}/mocha ${opts} ${tests} --globals "_swigglobaltest" --require blanket -R ${cov-reporter}
 else
 	@${BIN}/mocha ${opts} ${tests} --globals "_swigglobaltest" --require blanket -R ${cov-reporter} > ${out}
-ifeq (${cov-reporter}, html-cov)
-	@${BIN}/opener ${out}
-endif
+	@sed -i .bak -e "s/${PWD}//g" ${out}
+	@rm ${out}.bak
 	@echo
 	@echo "Built Report to ${out}"
 	@echo
@@ -48,13 +49,15 @@ endif
 speed:
 	@node tests/speed.js
 
-docs: all clean build
+docs: all clean build coverage
 	@mkdir -p docs/css
 	@${BIN}/lessc --yui-compress --include-path=docs/less docs/less/swig.less docs/css/swig.css
 	@${BIN}/still docs -o ${TMP} -i "layout" -i "json" -i "less"
+	@cp ${out} ${TMP}/
 	@mkdir -p ${TMP}/js
 	@cp dist/swig.* ${TMP}/js/
 	@cp node_modules/zepto/zepto.min.js ${TMP}/js/lib
+ifeq (${THIS_BRANCH}, master)
 	@git checkout ${BRANCH}
 	@cp -r ${TMP}/* ./
 	@rm -rf ${TMP}
@@ -62,6 +65,7 @@ docs: all clean build
 	@git commit -n -am "Automated build from ${SHA}"
 	@git push ${REMOTE} ${BRANCH}
 	@git checkout ${THIS_BRANCH}
+endif
 
 port = 3000
 test-docs:
