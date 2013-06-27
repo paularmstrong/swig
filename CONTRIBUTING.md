@@ -3,6 +3,8 @@ Contributing
 
 First, please do contribute! As the maintainer of swig, I care very much for the template engine. However, my time is actually quite limited. No guarantees can be made that your pull request will be accepted. If you are thinking about adding something controversial, open an Issue and discuss it.
 
+Swig has a high standard for code coverage. We currently require 90%+ coverage for all pull requests. View the [current code coverage report](http://paularmstrong.github.io/swig/).
+
 Checklist
 ---------
 
