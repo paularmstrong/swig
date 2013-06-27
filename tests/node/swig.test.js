@@ -1,5 +1,4 @@
-var require = require('./testutils').require,
-  expect = require('expect.js'),
+var expect = require('expect.js'),
   swig = require('../../lib/swig');
 
 describe('swig.init', function () {
