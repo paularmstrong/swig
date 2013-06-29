@@ -1,5 +1,6 @@
 var swig = require('../index.js'),
   expect = require('expect.js'),
+  _ = require('lodash'),
   Swig = swig.Swig;
 
 describe('Sanity', function () {
@@ -43,37 +44,44 @@ describe('options', function () {
       expect(swig.compile('<# hello #>')({})).to.eql('');
     });
 
-    it('must be different', function () {
-      expect(function () {
-        swig.compile('', { vars: ['**', '**'] })();
-      }).to.throwError(/Option \"vars\" open and close controls must not be the same\./);
-      expect(function () {
-        swig.compile('', { tags: ['**', '**'] })();
-      }).to.throwError(/Option \"tags\" open and close controls must not be the same\./);
-      expect(function () {
-        swig.compile('', { cmts: ['**', '**'] })();
-      }).to.throwError(/Option \"cmts\" open and close controls must not be the same\./);
+    it('must be an array with 2 strings', function () {
+      _.each(['vars', 'tags', 'cmts'], function (key) {
+        expect(function () {
+          var o = {};
+          o[key] = 'ab';
+          swig.compile('', o)();
+        }).to.throwError('Option "' + key + '" must be an array containing 2 different control strings.');
+        expect(function () {
+          var o = {};
+          o[key] = ['a'];
+          swig.compile('', o)();
+        }).to.throwError('Option "' + key + '" must be an array containing 2 different control strings.');
+      });
     });
 
-    it('must be at least 2 characters', function () {
-      expect(function () {
-        swig.compile('', { vars: ['&', '**'] })();
-      }).to.throwError('Option "vars" open control must be at least 2 characters. Saw "&" instead.');
-      expect(function () {
-        swig.compile('', { vars: ['**', '!'] })();
-      }).to.throwError('Option "vars" close control must be at least 2 characters. Saw "!" instead.');
-      expect(function () {
-        swig.compile('', { tags: ['@', '**'] })();
-      }).to.throwError('Option "tags" open control must be at least 2 characters. Saw "@" instead.');
-      expect(function () {
-        swig.compile('', { tags: ['**', '#'] })();
-      }).to.throwError('Option "tags" close control must be at least 2 characters. Saw "#" instead.');
-      expect(function () {
-        swig.compile('', { cmts: ['$', '**'] })();
-      }).to.throwError('Option "cmts" open control must be at least 2 characters. Saw "$" instead.');
-      expect(function () {
-        swig.compile('', { cmts: ['**', '%'] })();
-      }).to.throwError('Option "cmts" close control must be at least 2 characters. Saw "%" instead.');
+    it('must be different', function () {
+      _.each(['vars', 'tags', 'cmts'], function (key) {
+        var o = {};
+        o[key] = ['**', '**'];
+        expect(function () {
+          swig.compile('', { vars: ['**', '**'] })();
+        }).to.throwError('Option "' + key + '" open and close controls must not be the same.');
+      });
+    });
+
+    it.only('must be at least 2 characters', function () {
+      _.each(['vars', 'tags', 'cmts'], function (key) {
+        expect(function () {
+          var o = {};
+          o[key] = ['&', '**'];
+          swig.compile('', o)();
+        }).to.throwError('Option "' + key + '" open control must be at least 2 characters. Saw "&" instead.');
+        expect(function () {
+          var o = {};
+          o[key] = ['**', '!'];
+          swig.compile('', o)();
+        }).to.throwError('Option "' + key + '" close control must be at least 2 characters. Saw "!" instead.');
+      });
     });
   });
 });
