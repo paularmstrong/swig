@@ -19,7 +19,7 @@ clean:
 build:
 	@scripts/browser.sh
 
-tests := $(shell find ./tests/node -name '*.test.js' ! -path "*node_modules/*")
+tests := $(shell find ./tests -name '*.test.js' ! -path "*node_modules/*")
 reporter = dot
 opts =
 test:
@@ -28,7 +28,7 @@ test:
 test-browser: build
 	@${BIN}/mocha-phantomjs tests/browser/index.html
 
-files := $(shell find . -name '*.js' ! -path "./node_modules/*" ! -path "./dist/*" ! -path "./tests/browser/*" ! -path "./docs*")
+files := $(shell find . -name '*.js' ! -path "./node_modules/*" ! -path "./dist/*" ! -path "./oldtests/browser/*" ! -path "./docs*")
 lint:
 	@${BIN}/nodelint ${files} --config=scripts/config-lint.js
 
