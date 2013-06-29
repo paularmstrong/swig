@@ -69,7 +69,7 @@ describe('options', function () {
       });
     });
 
-    it.only('must be at least 2 characters', function () {
+    it('must be at least 2 characters', function () {
       _.each(['vars', 'tags', 'cmts'], function (key) {
         expect(function () {
           var o = {};
@@ -83,5 +83,14 @@ describe('options', function () {
         }).to.throwError('Option "' + key + '" close control must be at least 2 characters. Saw "!" instead.');
       });
     });
+  });
+});
+
+describe('separate instances', function () {
+  it('can be created and don\'t interfere', function () {
+    var a = new Swig({ vars: ['<%', '%>'] }),
+      b = new Swig();
+    expect(a.options.vars[0]).to.equal('<%');
+    expect(b.options.vars[0]).to.equal('{{');
   });
 });
