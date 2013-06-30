@@ -5,7 +5,7 @@ var swig = require('../index.js'),
 
 describe('Sanity', function () {
   it('Check', function () {
-    expect(swig.render('{{ a }}, {{ b }}', {}, { a: 'apples', b: 'burritos' })).to.equal('apples, burritos');
+    expect(swig.render('{{ a }}, {{ b }}', { locals: { a: 'apples', b: 'burritos' }})).to.equal('apples, burritos');
   });
 });
 
@@ -28,9 +28,9 @@ describe('options', function () {
     });
 
     it('can be set at render time', function () {
-      expect(swig.render('<%= a %>', { varControls: [ '<%=', '%>' ]}, { a: 'b' })).to.eql('b');
-      expect(swig.render('<^ if a ^>b<^ endif ^>', { tagControls: [ '<^', '^>' ]}, { a: 1 })).to.eql('b');
-      expect(swig.render('<!-- hello -->', { cmtControls: [ '<!--', '-->' ]}, {})).to.eql('');
+      expect(swig.render('<%= a %>', { varControls: [ '<%=', '%>' ], locals: { a: 'b' }})).to.eql('b');
+      expect(swig.render('<^ if a ^>b<^ endif ^>', { tagControls: [ '<^', '^>' ], locals: { a: 1 }})).to.eql('b');
+      expect(swig.render('<!-- hello -->', { cmtControls: [ '<!--', '-->' ]})).to.eql('');
     });
 
     it('can be set as default', function () {
@@ -82,6 +82,16 @@ describe('options', function () {
           swig.compile('', o)();
         }).to.throwError('Option "' + key + '" close control must be at least 2 characters. Saw "!" instead.');
       });
+    });
+  });
+
+  describe('locals', function () {
+    it.only('can be set as defaults', function () {
+      swig.setDefaults({ locals: { a: 1, b: 2 }});
+      var tpl = '{{ a }}{{ b }}{{ c }}';
+      expect(swig.compile(tpl)({ c: 3 })).to.equal('123');
+      expect(swig.compile(tpl, { locals: { c: 3 }})()).to.equal('123');
+      expect(swig.render(tpl, { locals: { c: 3 }})).to.equal('123');
     });
   });
 });
