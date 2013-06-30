@@ -22,22 +22,22 @@ describe('options', function () {
 
   describe('open/close controls', function () {
     it('can be set at compile time', function () {
-      expect(swig.compile('<%= a %>', { vars: [ '<%=', '%>' ]})({ a: 'b' })).to.eql('b');
-      expect(swig.compile('<* if a *>b<* endif *>', { tags: [ '<*', '*>' ]})({ a: 1 })).to.eql('b');
-      expect(swig.compile('<!-- hello -->', { cmts: [ '<!--', '-->' ]})({})).to.eql('');
+      expect(swig.compile('<%= a %>', { varControls: [ '<%=', '%>' ]})({ a: 'b' })).to.eql('b');
+      expect(swig.compile('<* if a *>b<* endif *>', { tagControls: [ '<*', '*>' ]})({ a: 1 })).to.eql('b');
+      expect(swig.compile('<!-- hello -->', { cmtControls: [ '<!--', '-->' ]})({})).to.eql('');
     });
 
     it('can be set at render time', function () {
-      expect(swig.render('<%= a %>', { vars: [ '<%=', '%>' ]}, { a: 'b' })).to.eql('b');
-      expect(swig.render('<^ if a ^>b<^ endif ^>', { tags: [ '<^', '^>' ]}, { a: 1 })).to.eql('b');
-      expect(swig.render('<!-- hello -->', { cmts: [ '<!--', '-->' ]}, {})).to.eql('');
+      expect(swig.render('<%= a %>', { varControls: [ '<%=', '%>' ]}, { a: 'b' })).to.eql('b');
+      expect(swig.render('<^ if a ^>b<^ endif ^>', { tagControls: [ '<^', '^>' ]}, { a: 1 })).to.eql('b');
+      expect(swig.render('<!-- hello -->', { cmtControls: [ '<!--', '-->' ]}, {})).to.eql('');
     });
 
     it('can be set as default', function () {
       swig.setDefaults({
-        vars: ['<=', '=>'],
-        tags: ['<%', '%>'],
-        cmts: ['<#', '#>']
+        varControls: ['<=', '=>'],
+        tagControls: ['<%', '%>'],
+        cmtControls: ['<#', '#>']
       });
       expect(swig.compile('<= a =>')({ a: 'b' })).to.eql('b');
       expect(swig.compile('<% if a %>b<% endif %>')({ a: 1 })).to.eql('b');
@@ -45,7 +45,7 @@ describe('options', function () {
     });
 
     it('must be an array with 2 strings', function () {
-      _.each(['vars', 'tags', 'cmts'], function (key) {
+      _.each(['varControls', 'tagControls', 'cmtControls'], function (key) {
         expect(function () {
           var o = {};
           o[key] = 'ab';
@@ -60,17 +60,17 @@ describe('options', function () {
     });
 
     it('must be different', function () {
-      _.each(['vars', 'tags', 'cmts'], function (key) {
+      _.each(['varControls', 'tagControls', 'cmtControls'], function (key) {
         var o = {};
         o[key] = ['**', '**'];
         expect(function () {
-          swig.compile('', { vars: ['**', '**'] })();
+          swig.compile('', o)();
         }).to.throwError('Option "' + key + '" open and close controls must not be the same.');
       });
     });
 
     it('must be at least 2 characters', function () {
-      _.each(['vars', 'tags', 'cmts'], function (key) {
+      _.each(['varControls', 'tagControls', 'cmtControls'], function (key) {
         expect(function () {
           var o = {};
           o[key] = ['&', '**'];
@@ -88,9 +88,9 @@ describe('options', function () {
 
 describe('separate instances', function () {
   it('can be created and don\'t interfere', function () {
-    var a = new Swig({ vars: ['<%', '%>'] }),
+    var a = new Swig({ varControls: ['<%', '%>'] }),
       b = new Swig();
-    expect(a.options.vars[0]).to.equal('<%');
-    expect(b.options.vars[0]).to.equal('{{');
+    expect(a.options.varControls[0]).to.equal('<%');
+    expect(b.options.varControls[0]).to.equal('{{');
   });
 });
