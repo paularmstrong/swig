@@ -21,7 +21,7 @@ describe('options', function () {
   });
 
   describe('open/close controls', function () {
-    it('can be set at compile time', function () {
+    it.only('can be set at compile time', function () {
       expect(swig.compile('<%= a %>', { varControls: [ '<%=', '%>' ]})({ a: 'b' })).to.eql('b');
       expect(swig.compile('<* if a *>b<* endif *>', { tagControls: [ '<*', '*>' ]})({ a: 1 })).to.eql('b');
       expect(swig.compile('<!-- hello -->', { cmtControls: [ '<!--', '-->' ]})({})).to.eql('');
@@ -86,7 +86,7 @@ describe('options', function () {
   });
 
   describe('locals', function () {
-    it.only('can be set as defaults', function () {
+    it('can be set as defaults', function () {
       swig.setDefaults({ locals: { a: 1, b: 2 }});
       var tpl = '{{ a }}{{ b }}{{ c }}';
       expect(swig.compile(tpl)({ c: 3 })).to.equal('123');
