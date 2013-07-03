@@ -1,5 +1,5 @@
 
-Swig [![Build Status](https://secure.travis-ci.org/paularmstrong/swig.png)](http://travis-ci.org/paularmstrong/swig)
+Swig [![Build Status](https://secure.travis-ci.org/paularmstrong/swig.png?branch=master)](http://travis-ci.org/paularmstrong/swig) [![Dependency Status](https://gemnasium.com/paularmstrong/swig.png)](https://gemnasium.com/paularmstrong/swig) [![NPM version](https://badge.fury.io/js/swig.png)](http://badge.fury.io/js/swig)
 ====
 
 [Swig](http://paularmstrong.github.com/swig/) is a fast, Django-like template engine for node.js.
