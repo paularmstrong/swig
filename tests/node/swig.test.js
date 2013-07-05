@@ -86,9 +86,14 @@ describe('swig.compileFile', function () {
 
   it('throws in a browser context', function () {
     swig.init({});
-    global.window = true;
-    expect(function () { swig.compileFile('foobar'); }).to.throwException();
-    delete global.window;
+    var fn = function () { swig.compileFile('foobar'); };
+    if (typeof global !== 'undefined' && global.process) {
+      // Running in Node
+      expect(fn).to.not.throwException();
+    } else {
+      // Running in Browser
+      expect(fn).to.throwException();
+    }
   });
 
   it('can render without context', function () {
