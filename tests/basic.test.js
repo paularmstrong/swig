@@ -23,7 +23,7 @@ describe('options', function () {
   describe('open/close controls', function () {
     it('can be set at compile time', function () {
       expect(swig.compile('<%= a %>', { varControls: [ '<%=', '%>' ]})({ a: 'b' })).to.eql('b');
-      expect(swig.compile('<* if a *>b<* endif *>', { tagControls: [ '<*', '*>' ]})({ a: 1 })).to.eql('b');
+      expect(swig.compile('<* if a *>c<* endif *>', { tagControls: [ '<*', '*>' ]})({ a: 1 })).to.eql('c');
       expect(swig.compile('<!-- hello -->', { cmtControls: [ '<!--', '-->' ]})({})).to.eql('');
     });
 
