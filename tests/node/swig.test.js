@@ -87,7 +87,7 @@ describe('swig.compileFile', function () {
   it('throws in a browser context', function () {
     swig.init({});
     var fn = function () { swig.compileFile('foobar'); };
-    if (typeof process !== 'undefined') {
+    if (typeof global !== 'undefined' && global.process) {
       // Running in Node
       expect(fn).to.not.throwException();
     } else {
