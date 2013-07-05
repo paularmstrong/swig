@@ -3,6 +3,14 @@ var swig = require('../index.js'),
   _ = require('lodash'),
   Swig = swig.Swig;
 
+var n = new Swig(),
+  oDefaults = n.options;
+
+function resetOptions() {
+  swig.setDefaults(oDefaults);
+  swig.invalidateCache();
+}
+
 describe('Sanity', function () {
   it('Check', function () {
     expect(swig.render('{{ a }}, {{ b }}', { locals: { a: 'apples', b: 'burritos' }})).to.equal('apples, burritos');
@@ -11,14 +19,8 @@ describe('Sanity', function () {
 
 describe('options', function () {
   var oDefaults;
-  before(function () {
-    var n = new Swig();
-    oDefaults = n.options;
-  });
-
-  after(function () {
-    swig.setDefaults(oDefaults);
-  });
+  beforeEach(resetOptions);
+  afterEach(resetOptions);
 
   describe('open/close controls', function () {
     it('can be set at compile time', function () {
@@ -87,11 +89,55 @@ describe('options', function () {
 
   describe('locals', function () {
     it('can be set as defaults', function () {
-      swig.setDefaults(_.extend({}, oDefaults, { locals: { a: 1, b: 2 }}));
+      swig.setDefaults({ locals: { a: 1, b: 2 }});
       var tpl = '{{ a }}{{ b }}{{ c }}';
       expect(swig.compile(tpl)({ c: 3 })).to.equal('123');
       expect(swig.compile(tpl, { locals: { c: 3 }})()).to.equal('123');
       expect(swig.render(tpl, { locals: { c: 3 }})).to.equal('123');
+    });
+  });
+
+  describe('cache', function () {
+    it('can be falsy', function () {
+      var s = new Swig({ cache: false });
+      s.compile('a', { filename: 'a' })();
+      expect(s.cache).to.eql({});
+
+      s.options.cache = null;
+      s.compile('a', { filename: 'a' })();
+      expect(s.cache).to.eql({});
+    });
+
+    it('can be "memory" and is by default', function () {
+      var s = new Swig();
+      s.compile('a', { filename: 'a' });
+      expect(s.cache.a).to.be.a(Function);
+
+      s.compile('b', { cache: 'memory', filename: 'b' });
+      expect(s.cache.b).to.be.a(Function);
+    });
+
+    it('can accept custom "get" and "set" methods', function () {
+      var c = {};
+      swig.setDefaults({ cache: {
+        get: function (key) {
+          return c[key];
+        },
+        set: function (key, val) {
+          c[key] = val;
+        }
+      }});
+
+      swig.compile('a', { filename: 'a' });
+      expect(c.a).to.be.a(Function);
+    });
+
+    it('throws on anything else', function () {
+      expect(function () { var s = new Swig({ cache: 'dookie' }); })
+        .to.throwError();
+
+      expect(function () { swig.setDefaults({ cache: { a: 1, b: 2 } }); })
+        .to.throwError();
     });
   });
 });
