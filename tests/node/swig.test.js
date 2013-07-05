@@ -86,16 +86,14 @@ describe('swig.compileFile', function () {
 
   it('throws in a browser context', function () {
     swig.init({});
-    global.process = true;
     var fn = function () { swig.compileFile('foobar'); };
-    if (typeof global.process !== true) {
+    if (typeof global.process !== 'undefined') {
       // Running in Node
       expect(fn).to.not.throwException();
     } else {
       // Running in Browser
       expect(fn).to.throwException();
     }
-    delete global.process;
   });
 
   it('can render without context', function () {
