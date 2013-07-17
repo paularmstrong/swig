@@ -22,4 +22,8 @@ describe('Variables', function () {
     expect(swig.render('{{ 3 - a }}', opts)).to.equal('2');
     expect(swig.render('{{ a % 3 }}', opts)).to.equal('1');
   });
+
+  it('can run multiple filters', function () {
+    expect(swig.render('{{ a|default("")|default(1) }}')).to.equal('1');
+  });
 });
