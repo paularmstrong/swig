@@ -13,4 +13,13 @@ describe('Variables', function () {
   it('return empty string if undefined', function () {
     expect(swig.render('"{{ a }}"')).to.eql('""');
   });
+
+  it('can use operators', function () {
+    var opts = { locals: { a: 1 }};
+    expect(swig.render('{{ a + 3 }}', opts)).to.equal('4');
+    expect(swig.render('{{ a * 3 }}', opts)).to.equal('3');
+    expect(swig.render('{{ a / 3 }}', opts)).to.equal(String(1 / 3));
+    expect(swig.render('{{ 3 - a }}', opts)).to.equal('2');
+    expect(swig.render('{{ a % 3 }}', opts)).to.equal('1');
+  });
 });
