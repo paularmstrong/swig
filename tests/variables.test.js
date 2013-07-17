@@ -9,4 +9,8 @@ describe('Variables', function () {
     expect(swig.render('{{ 1 }}')).to.eql('1');
     expect(swig.render('{{ 1.5 }}')).to.eql('1.5');
   });
+
+  it('return empty string if undefined', function () {
+    expect(swig.render('"{{ a }}"')).to.eql('""');
+  });
 });
