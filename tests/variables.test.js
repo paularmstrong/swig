@@ -36,4 +36,21 @@ describe('Variables', function () {
   it('can run multiple filters', function () {
     expect(swig.render('{{ a|default("")|default(1) }}')).to.equal('1');
   });
+
+  describe('notation', function () {
+    var opts = { locals: { foo: { a: 'tacos' }}};
+    it('can use dot-notation', function () {
+      expect(swig.render('{{ foo.a }}', opts)).to.equal('tacos');
+    });
+
+    it('can use bracket-notation', function () {
+      expect(swig.render('{{ foo["a"] }}', opts)).to.equal('tacos');
+    });
+
+    it.skip('can be very complex', function () {
+      opts.locals = { a: { '0': { q: { c: { b: { foo: 'hi!' }}}}}, h: { g: {  i: 'q' } }, d: 'foo' };
+
+      expect(swig.render('{{ a[0][h.g.i]["c"].b[d] }}', opts)).to.equal('hi!');
+    });
+  });
 });
