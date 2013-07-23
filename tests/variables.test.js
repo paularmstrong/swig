@@ -53,4 +53,36 @@ describe('Variables', function () {
       expect(swig.render('{{ a[0][h.g.i]["c"].b[d] }}', opts)).to.equal('hi!');
     });
   });
+
+  describe('can throw errors when parsing', function () {
+    it('with left open state', function () {
+      expect(function () {
+        swig.render('{{ a(asdf }}');
+      }).to.throwError(/Unable to parse "a\(asdf" on line 1\./);
+      expect(function () {
+        swig.render('{{ a[foo }}');
+      }).to.throwError(/Unable to parse "a\[foo" on line 1\./);
+    });
+
+    it('with unknown filters', function () {
+      expect(function () {
+        swig.render('\n\n{{ a|bar() }}');
+      }).to.throwError(/Invalid filter "bar" found on line 3\./);
+    });
+
+    it('with weird closing characters', function () {
+      expect(function () {
+        swig.render('\n{{ a) }}\n');
+      }).to.throwError(/Unexpected closing parenthesis on line 2\./);
+      expect(function () {
+        swig.render('\n\n{{ a] }}');
+      }).to.throwError(/Unexpected closing square bracket on line 3\./);
+    });
+
+    it('with random commas', function () {
+      expect(function () {
+        swig.render('\n{{ a, b }}\n');
+      }).to.throwError(/Unexpected comma on line 2\./);
+    });
+  });
 });
