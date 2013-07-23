@@ -47,7 +47,7 @@ describe('Variables', function () {
       expect(swig.render('{{ foo["a"] }}', opts)).to.equal('tacos');
     });
 
-    it.skip('can be very complex', function () {
+    it('can be very complex', function () {
       opts.locals = { a: { '0': { q: { c: { b: { foo: 'hi!' }}}}}, h: { g: {  i: 'q' } }, d: 'foo' };
 
       expect(swig.render('{{ a[0][h.g.i]["c"].b[d] }}', opts)).to.equal('hi!');
