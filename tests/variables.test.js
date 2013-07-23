@@ -23,6 +23,10 @@ describe('Variables', function () {
     expect(swig.render('{{ a % 3 }}', opts)).to.equal('1');
   });
 
+  it('can include arrays', function () {
+    expect(swig.render('{{ [0, 1, 3] }}')).to.equal('0,1,3');
+  });
+
   it('can execute functions', function () {
     var opts = { locals: {
       a: function (b) { return (b) ? 'barfoo' : 'foobar'; },
