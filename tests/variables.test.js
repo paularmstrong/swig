@@ -23,6 +23,11 @@ describe('Variables', function () {
     expect(swig.render('{{ a % 3 }}', opts)).to.equal('1');
   });
 
+  it('can include objects', function () {
+    expect(swig.render('{{ {0: 1, a: "b" } }}')).to.equal('[object Object]');
+    expect(swig.render('{{ Object.keys({ 0: 1, a: "b" }) }}')).to.equal('0,a');
+  });
+
   it('can include arrays', function () {
     expect(swig.render('{{ [0, 1, 3] }}')).to.equal('0,1,3');
   });
