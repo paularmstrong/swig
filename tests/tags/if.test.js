@@ -52,16 +52,16 @@ describe('Tag: if', function () {
 
   it('throws on bad logic', function () {
     var baddies = [
-      '{% if && foo %}{% endif %}',
-      '{% if foo && %}{% endif %}',
-      '{% if foo > %}{% endif %}',
-      '{% if foo ! %}{% endif %}',
-      '{% if (foo %}{% endif %}'
+      [ '{% if && foo %}{% endif %}', /Unexpected logic "\&\&" on line 1\./ ],
+      [ '{% if foo && %}{% endif %}', /Unexpected logic "\&\&" on line 1\./ ],
+      [ '{% if foo > %}{% endif %}', /Unexpected logic ">" on line 1\./ ],
+      [ '{% if foo ! %}{% endif %}', /Unexpected logic "\!" on line 1\./ ],
+      [ '{% if foo not in bar %}{% endif %}', /Attempted logic "not in" on line 1\. Use \!\(foo in\) instead\./ ]
     ];
     _.each(baddies, function (b) {
       expect(function () {
-        swig.render(b);
-      }).to.throwError();
+        swig.render(b[0], opts);
+      }).to.throwError(b[1]);
     });
   });
 
