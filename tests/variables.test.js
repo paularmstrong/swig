@@ -32,6 +32,11 @@ describe('Variables', function () {
     expect(swig.render('{{ [0, 1, 3] }}')).to.equal('0,1,3');
   });
 
+  it('are escaped by default', function () {
+    expect(swig.render('{{ foo }}', { locals: { foo: '<blah>' }}))
+      .to.equal('&lt;blah&gt;');
+  });
+
   it('can execute functions', function () {
     var opts = { locals: {
       a: function (b) { return (b) ? 'barfoo' : 'foobar'; },
