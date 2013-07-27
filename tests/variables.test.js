@@ -40,11 +40,15 @@ describe('Variables', function () {
   it('can execute functions', function () {
     var opts = { locals: {
       a: function (b) { return (b) ? 'barfoo' : 'foobar'; },
-      b: function (c) { return; }
+      b: function (c) { return; },
+      c: { d: function () { return 'eeeee'; } }
     }};
     expect(swig.render('{{ a() }}', opts)).to.equal('foobar');
     expect(swig.render('{{ a(1) }}', opts)).to.equal('barfoo');
     expect(swig.render('{{ b(1)|default("tacos") }}', opts)).to.equal('tacos');
+    expect(swig.render('{{ c.d(4, "blah") }}', opts)).to.equal('eeeee');
+    expect(swig.render('{{ q.r(4, "blah") }}', opts)).to.equal('');
+    expect(swig.render('{{ c["d"](4, "blah") }}', opts)).to.equal('eeeee');
   });
 
   it('can run multiple filters', function () {
@@ -97,10 +101,5 @@ describe('Variables', function () {
       }).to.throwError(/Unexpected closing square bracket on line 3\./);
     });
 
-    it('with random commas', function () {
-      expect(function () {
-        swig.render('\n{{ a, b }}\n');
-      }).to.throwError(/Unexpected comma on line 2\./);
-    });
   });
 });
