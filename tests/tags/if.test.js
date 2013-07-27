@@ -38,7 +38,7 @@ var cases = [
   { code: '1 === foo',          result: true },
   { code: '1 === bar',          result: false },
   { code: 'true && false',      result: false },
-  { code: '0 || (bar && foo)',  result: false },
+  { code: '0 || (bar && foo)',  result: false }
 ];
 
 describe('Tag: if', function () {
