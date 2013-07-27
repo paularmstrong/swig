@@ -24,7 +24,7 @@ describe('Variables', function () {
   });
 
   it('can include objects', function () {
-    expect(swig.render('{{ {0: 1, a: "b" } }}')).to.equal('[object Object]');
+    expect(swig.render('{{ {0: 1, a: "b"} }}')).to.equal('[object Object]');
     expect(swig.render('{{ Object.keys({ 0: 1, a: "b" }) }}')).to.equal('0,a');
   });
 
@@ -51,6 +51,10 @@ describe('Variables', function () {
     expect(swig.render('{{ a|default("")|default(1) }}')).to.equal('1');
   });
 
+  it('can have filters with operators', function () {
+    expect(swig.render('{{ a|default("1") + b|default("2") }}')).to.equal('12');
+  });
+
   describe('notation', function () {
     var opts = { locals: { foo: { a: 'tacos' }}};
     it('can use dot-notation', function () {
@@ -75,7 +79,7 @@ describe('Variables', function () {
       }).to.throwError(/Unable to parse "a\(asdf" on line 1\./);
       expect(function () {
         swig.render('{{ a[foo }}');
-      }).to.throwError(/Unable to parse "a\[foo" on line 1\./);
+      }).to.throwError(/Mismatched nesting state on line 1\./);
     });
 
     it('with unknown filters', function () {
@@ -87,7 +91,7 @@ describe('Variables', function () {
     it('with weird closing characters', function () {
       expect(function () {
         swig.render('\n{{ a) }}\n');
-      }).to.throwError(/Unexpected closing parenthesis on line 2\./);
+      }).to.throwError(/Mismatched nesting state on line 2\./);
       expect(function () {
         swig.render('\n\n{{ a] }}');
       }).to.throwError(/Unexpected closing square bracket on line 3\./);
