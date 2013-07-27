@@ -25,4 +25,8 @@ describe('Filters', function () {
     expect(swig.render('{{ b|foo(3) }}')).to.equal('3');
   });
 
+  it('can be very complexly nested', function () {
+    expect(swig.render('{{ b|default(c|default("3")) }}')).to.equal('3');
+  });
+
 });
