@@ -18,14 +18,18 @@ describe('Templates', function () {
     expectations = _.filter(casefiles, isExpectation),
     cases = _.groupBy(tests.concat(expectations), function (f) {
       return f.split('.')[0];
-    });
+    }),
+    locals = {
+      first: 'Tacos',
+      second: 'Burritos'
+    };
 
   _.each(cases, function (files, c) {
     var test = _.find(files, isTest),
       expectation = fs.readFileSync(__dirname + '/cases/' + _.find(files, isExpectation), 'utf8');
 
     it(c, function () {
-      expect(swig.compileFile(__dirname + '/cases/' + test)()).to.equal(expectation);
+      expect(swig.compileFile(__dirname + '/cases/' + test)(locals)).to.equal(expectation);
     });
   });
 });
