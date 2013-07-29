@@ -76,6 +76,9 @@ var n = new Swig(),
     ],
     title: [
       { v: 'this iS titLe case', e: 'This Is Title Case' }
+    ],
+    uniq: [
+      { v: [2, 1, 2, 3, 4, 4], e: '2,1,3,4' }
     ]
   };
 
