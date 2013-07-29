@@ -85,6 +85,12 @@ var n = new Swig(),
       { v: 345, e: '345' },
       { v: ['foo', 'bAr'], e: 'FOO,BAR' },
       { c: 'v|upper|join("")', v: { foo: 'bar' }, e: 'BAR' }
+    ],
+    url_encode: [
+      { v: 'param=1&anotherParam=2', e: 'param%3D1%26anotherParam%3D2' }
+    ],
+    url_decode: [
+      { c: 'v|url_decode', v: 'param%3D1%26anotherParam%3D2', e: 'param=1&amp;anotherParam=2' }
     ]
   };
 
