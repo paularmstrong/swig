@@ -8,32 +8,38 @@ var n = new Swig(),
   cases = {
     addslashes: [
       {
-        c: 'v|addslashes',
         v: "\"Top O' the\\ mornin\"",
         e: "\\&quot;Top O\\&#39; the\\\\ mornin\\&quot;"
       },
       {
-        c: 'v|addslashes',
         v: ["\"Top", "O'", "the\\", "mornin\""],
         e: "\\\"Top,O\\',the\\\\,mornin\\\""
       }
     ],
     capitalize: [
-      {
-        c: 'v|capitalize',
-        v: 'awesome sAuce.',
-        e: 'Awesome sauce.'
-      },
-      {
-        c: 'v|capitalize',
-        v: 345,
-        e: '345'
-      },
-      {
-        c: 'v|capitalize',
-        v: ['foo', 'bar'],
-        e: 'Foo,Bar'
-      }
+      { v: 'awesome sAuce.', e: 'Awesome sauce.' },
+      { v: 345, e: '345' },
+      { v: ['foo', 'bar'], e: 'Foo,Bar' }
+    ],
+    'default': [
+      { c: 'v|default("tacos")', v: 'foo', e: 'foo' },
+      { c: 'v|default("tacos")', v: 0, e: '0' },
+      { c: 'v|default("tacos")', v: '', e: 'tacos' },
+      { c: 'v|default("tacos")', v: undefined, e: 'tacos' },
+      { c: 'v|default("tacos")', v: null, e: 'tacos' },
+      { c: 'v|default("tacos")', v: false, e: 'tacos' },
+    ],
+    first: [
+      { v: [1, 2, 3, 4], e: '1' },
+      { v: '213', e: '2' },
+      { v: { foo: 'blah' }, e: '' }
+    ],
+    join: [
+      { c: 'v|join("+")', v: [1, 2, 3], e: '1+2+3' },
+      { c: 'v|join(" * ")', v: [1, 2, 3], e: '1 * 2 * 3' },
+      { c: 'v|join(",")', v: [1, 2, 3], e: '1,2,3' },
+      { c: 'v|join(", ")', v: { f: 1, b: 2, z: 3 }, e: '1, 2, 3' },
+      { c: 'v|join("-")', v: 'asdf', e: 'asdf' }
     ]
   };
 
@@ -76,8 +82,9 @@ describe('Filters:', function () {
   _.each(cases, function (cases, filter) {
     describe(filter, function () {
       _.each(cases, function (c) {
-        it('{{ ' + c.c + ' }}', function () {
-          expect(swig.render('{{ ' + c.c + ' }}', { locals: { v: c.v }}))
+        var code = '{{ ' + (c.c || 'v|' + filter) + ' }}';
+        it(code, function () {
+          expect(swig.render(code, { locals: { v: c.v }}))
             .to.equal(c.e);
         });
       });
