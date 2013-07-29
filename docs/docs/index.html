@@ -329,7 +329,7 @@ and has {{ bikes|length|default("zero") }} bikes.{% endraw %}</code></pre>
   <pre><code data-language="javascript">var template = swig.compile('<p>{% raw %}{% block content %}{% endblock %}{% endraw %}</p>', { filename: 'main' });
 var mypage = swig.compile('{% raw %}{% extends "main" %}{% block content %}Oh hey there!{% endblock %}{% endraw %}', { filename: 'mypage' });</code></pre>
 
-  <p>When you render mypage, <code data-language="javascript">mypage.render({});</code>, you will see</p>
+  <p>When you render mypage, <code data-language="javascript">mypage({});</code>, you will see</p>
 
   <pre><code data-language="html">&lt;p&gt;Oh hey there!&lt;/p&gt;</code></pre>
 
