@@ -73,6 +73,9 @@ var n = new Swig(),
     ],
     striptags: [
       { v: '<h1>foo</h1> <div class="blah">hi</div>', e: 'foo hi' },
+    ],
+    title: [
+      { v: 'this iS titLe case', e: 'This Is Title Case' }
     ]
   };
 
