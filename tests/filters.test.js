@@ -49,6 +49,12 @@ var n = new Swig(),
       { v: [1, 2, 3, 4], e: '4' },
       { v: '123', e: '3' },
       { v: { foo: 'blah', bar: 'nope' }, e: ''}
+    ],
+    lower: [
+      { v: 'BaR', e: 'bar' },
+      { v: '345', e: '345' },
+      { v: ['FOO', 'bAr'], e: 'foo,bar' },
+      { c: 'v|lower|join("")', v: { foo: 'BAR' }, e: 'bar' }
     ]
   };
 
