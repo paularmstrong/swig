@@ -60,6 +60,11 @@ var n = new Swig(),
       { c: 'v|raw', v: '<&>', e: '<&>' },
       { c: 'v|first|raw', v: ['<&>'], e: '<&>' },
       { c: 'v|raw|lower', v: '<&>fOo', e: '<&>foo' }
+    ],
+    replace: [
+      { c: 'v|replace("o", "a")', v: 'foo', e: 'fao' },
+      { c: 'v|replace("o", "", "g")', v: 'fooboo', e: 'fb' },
+      { c: 'v|replace("\\W+", "-")', v: '$*&1aZ', e: '-1aZ' },
     ]
   };
 
