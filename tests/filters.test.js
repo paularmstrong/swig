@@ -55,6 +55,11 @@ var n = new Swig(),
       { v: '345', e: '345' },
       { v: ['FOO', 'bAr'], e: 'foo,bar' },
       { c: 'v|lower|join("")', v: { foo: 'BAR' }, e: 'bar' }
+    ],
+    raw: [
+      { c: 'v|raw', v: '<&>', e: '<&>' },
+      { c: 'v|first|raw', v: ['<&>'], e: '<&>' },
+      { c: 'v|raw|lower', v: '<&>fOo', e: '<&>foo' }
     ]
   };
 
@@ -79,19 +84,6 @@ describe('Filters:', function () {
 
   it('can be very complexly nested', function () {
     expect(swig.render('{{ b|default(c|default("3")) }}')).to.equal('3');
-  });
-
-  describe('raw', function () {
-    it('{{ "<foo>"|raw }}', function () {
-      expect(swig.render('{{ "<foo>"|raw }}')).to.equal('<foo>');
-      expect(swig.render('{{ "<foo>"|raw() }}')).to.equal('<foo>');
-    });
-
-    it('{{ "<&>"|raw }}', function () {
-      var opts = { locals: { foo: '<&>' }};
-      expect(swig.render('{{ foo|raw }}', opts)).to.equal('<&>');
-      expect(swig.render('{{ foo|raw() }}', opts)).to.equal('<&>');
-    });
   });
 
   _.each(cases, function (cases, filter) {
