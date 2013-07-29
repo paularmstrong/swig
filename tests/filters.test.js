@@ -79,6 +79,12 @@ var n = new Swig(),
     ],
     uniq: [
       { v: [2, 1, 2, 3, 4, 4], e: '2,1,3,4' }
+    ],
+    upper: [
+      { v: 'bar', e: 'BAR' },
+      { v: 345, e: '345' },
+      { v: ['foo', 'bAr'], e: 'FOO,BAR' },
+      { c: 'v|upper|join("")', v: { foo: 'bar' }, e: 'BAR' }
     ]
   };
 
