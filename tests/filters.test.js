@@ -6,16 +6,33 @@ var swig = require('../index.js'),
 var n = new Swig(),
   oDefaults = n.options,
   cases = {
-    'addslashes': [
+    addslashes: [
       {
         c: 'v|addslashes',
-        l: { v: "\"Top O' the\\ mornin\""},
+        v: "\"Top O' the\\ mornin\"",
         e: "\\&quot;Top O\\&#39; the\\\\ mornin\\&quot;"
       },
       {
         c: 'v|addslashes',
-        l: { v: ["\"Top", "O'", "the\\", "mornin\""] },
+        v: ["\"Top", "O'", "the\\", "mornin\""],
         e: "\\\"Top,O\\',the\\\\,mornin\\\""
+      }
+    ],
+    capitalize: [
+      {
+        c: 'v|capitalize',
+        v: 'awesome sAuce.',
+        e: 'Awesome sauce.'
+      },
+      {
+        c: 'v|capitalize',
+        v: 345,
+        e: '345'
+      },
+      {
+        c: 'v|capitalize',
+        v: ['foo', 'bar'],
+        e: 'Foo,Bar'
       }
     ]
   };
@@ -60,7 +77,7 @@ describe('Filters:', function () {
     describe(filter, function () {
       _.each(cases, function (c) {
         it('{{ ' + c.c + ' }}', function () {
-          expect(swig.render('{{ ' + c.c + ' }}', { locals: c.l }))
+          expect(swig.render('{{ ' + c.c + ' }}', { locals: { v: c.v }}))
             .to.equal(c.e);
         });
       });
