@@ -11,7 +11,7 @@ function resetOptions() {
   swig.invalidateCache();
 }
 
-describe('Filters', function () {
+describe('Filters:', function () {
   beforeEach(resetOptions);
   afterEach(resetOptions);
 
@@ -27,6 +27,19 @@ describe('Filters', function () {
 
   it('can be very complexly nested', function () {
     expect(swig.render('{{ b|default(c|default("3")) }}')).to.equal('3');
+  });
+
+  describe('raw', function () {
+    it('{{ "<foo>"|raw }}', function () {
+      expect(swig.render('{{ "<foo>"|raw }}')).to.equal('<foo>');
+      expect(swig.render('{{ "<foo>"|raw() }}')).to.equal('<foo>');
+    });
+
+    it('{{ "<&>"|raw }}', function () {
+      var opts = { locals: { foo: '<&>' }};
+      expect(swig.render('{{ foo|raw }}', opts)).to.equal('<&>');
+      expect(swig.render('{{ foo|raw() }}', opts)).to.equal('<&>');
+    });
   });
 
 });
