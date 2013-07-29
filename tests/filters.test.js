@@ -98,7 +98,7 @@ describe('Filters:', function () {
     describe(filter, function () {
       _.each(cases, function (c) {
         var code = '{{ ' + (c.c || 'v|' + filter) + ' }}';
-        it(code, function () {
+        it(code + ', v=' + JSON.stringify(c.v) + ' should render ' + c.e.replace(/\n/g, '\\n'), function () {
           expect(swig.render(code, { locals: { v: c.v }}))
             .to.equal(c.e);
         });
