@@ -40,6 +40,10 @@ var n = new Swig(),
       { c: 'v|join(",")', v: [1, 2, 3], e: '1,2,3' },
       { c: 'v|join(", ")', v: { f: 1, b: 2, z: 3 }, e: '1, 2, 3' },
       { c: 'v|join("-")', v: 'asdf', e: 'asdf' }
+    ],
+    json: [
+      { v: { foo: 'bar', baz: [1, 2, 3] }, e: '{&quot;foo&quot;:&quot;bar&quot;,&quot;baz&quot;:[1,2,3]}' },
+      { c: 'v|json(2)', v: { foo: 'bar', baz: [1, 2, 3] }, e: '{\n  &quot;foo&quot;: &quot;bar&quot;,\n  &quot;baz&quot;: [\n    1,\n    2,\n    3\n  ]\n}'}
     ]
   };
 
