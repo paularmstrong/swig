@@ -64,7 +64,12 @@ var n = new Swig(),
     replace: [
       { c: 'v|replace("o", "a")', v: 'foo', e: 'fao' },
       { c: 'v|replace("o", "", "g")', v: 'fooboo', e: 'fb' },
-      { c: 'v|replace("\\W+", "-")', v: '$*&1aZ', e: '-1aZ' },
+      { c: 'v|replace("\\W+", "-")', v: '$*&1aZ', e: '-1aZ' }
+    ],
+    reverse: [
+      { c: 'v|reverse', v: [1, 2, 3], e: '3,2,1' },
+      { c: 'v|reverse', v: 'asdf', e: 'asdf' },
+      { c: 'v|reverse|join("")', v: { foo: 'bar', baz: 'bop' }, e: 'barbop' }
     ]
   };
 
