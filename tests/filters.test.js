@@ -70,6 +70,9 @@ var n = new Swig(),
       { c: 'v|reverse', v: [1, 2, 3], e: '3,2,1' },
       { c: 'v|reverse', v: 'asdf', e: 'asdf' },
       { c: 'v|reverse|join("")', v: { foo: 'bar', baz: 'bop' }, e: 'barbop' }
+    ],
+    striptags: [
+      { v: '<h1>foo</h1> <div class="blah">hi</div>', e: 'foo hi' },
     ]
   };
 
