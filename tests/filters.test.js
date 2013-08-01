@@ -17,8 +17,7 @@ function makeDate(tzOffset, y, m, d, h, i, s) {
 
 var n = new Swig(),
   oDefaults = n.options,
-  offset = (new Date()).getTimezoneOffset(),
-  d = makeDate(offset, 2011, 8, 6, 9, 5, 2),
+  d = makeDate(420, 2011, 8, 6, 9, 5, 2),
   cases = {
     addslashes: [
       {
@@ -92,19 +91,17 @@ var n = new Swig(),
       { c: 'v|date("U")', v: d, e: '1315325102' },
 
       // More complete S ordinal testing
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 1), e: 'st' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 2), e: 'nd' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 3), e: 'rd' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 4), e: 'th' },
-      { c: 'v|date("w", 420)', v: makeDate(420, 2011, 8, 4), e: '0' },
-      { c: 'v|date("N", 420)', v: makeDate(420, 2011, 8, 4), e: '7' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 10), e: 'th' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 11), e: 'th' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 12), e: 'th' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 13), e: 'th' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 21), e: 'st' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 22), e: 'nd' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 23), e: 'rd' }
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 1), e: 'st' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 2), e: 'nd' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 3), e: 'rd' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 4), e: 'th' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 10), e: 'th' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 11), e: 'th' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 12), e: 'th' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 13), e: 'th' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 21), e: 'st' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 22), e: 'nd' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 23), e: 'rd' }
     ],
     'default': [
       { c: 'v|default("tacos")', v: 'foo', e: 'foo' },
@@ -207,6 +204,9 @@ describe('Filters:', function () {
       _.each(cases, function (c) {
         var code = '{{ ' + (c.c || 'v|' + filter) + ' }}';
         it(code + ', v=' + JSON.stringify(c.v) + ' should render ' + c.e.replace(/\n/g, '\\n'), function () {
+          if ((/\|date\(/).test(code)) {
+            code = '{{ ' + c.c.replace(/\"\)$/, '", 420)') + ' }}';
+          }
           expect(swig.render(code, { locals: { v: c.v }}))
             .to.equal(c.e);
         });
