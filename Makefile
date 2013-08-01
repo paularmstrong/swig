@@ -24,6 +24,28 @@ dist:
 dist/swig.js: dist
 	@${BIN}/browserify browser/index.js > $@
 
+.INTERMEDIATE browser/test/tests.js: \
+	tests/comments.test.js \
+	tests/filters.test.js \
+	tests/tags.test.js \
+	tests/variables.test.js \
+	tests/tags/autoescape.test.js \
+	tests/tags/else.test.js \
+	tests/tags/filter.test.js \
+	tests/tags/for.test.js \
+	tests/tags/if.test.js \
+	tests/tags/macro.test.js \
+	tests/tags/raw.test.js \
+	tests/tags/set.test.js \
+	tests/tags/spaceless.test.js \
+	tests/basic.test.js
+
+browser/test/tests.js:
+	@cat $^ > tests/browser.js
+	@perl -pi -e 's/\.\.\/\.\.\/lib/\.\.\/lib/g' tests/browser.js
+	@${BIN}/browserify tests/browser.js > $@
+	@rm tests/browser.js
+
 # PHONY
 
 tests := $(shell find ./tests -name '*.test.js' ! -path "*node_modules/*")
@@ -32,10 +54,10 @@ opts =
 test:
 	@${BIN}/mocha --reporter ${reporter} ${opts} ${tests} --globals "_swigglobaltest"
 
-test-browser: build
-	@${BIN}/mocha-phantomjs tests/browser/index.html
+test-browser: clean browser/test/tests.js
+	@${BIN}/mocha-phantomjs browser/test/index.html --reporter ${reporter}
 
-files := $(shell find . -name '*.js' ! -path "./node_modules/*" ! -path "./dist/*" ! -path "./oldtests/browser/*" ! -path "./docs*")
+files := $(shell find . -name '*.js' ! -path "./node_modules/*" ! -path "./dist/*" ! -path "./browser*" ! -path "./docs*")
 lint:
 	@${BIN}/nodelint ${files} --config=scripts/config-lint.js
 
@@ -75,4 +97,4 @@ port = 3000
 test-docs:
 	@${BIN}/still-server docs/ -p ${port} -o
 
-.PHONY: all build test test-browser lint coverage docs test-docs
+.PHONY: all build browser/test/tests.js test test-browser lint coverage docs test-docs
