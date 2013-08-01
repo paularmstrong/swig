@@ -11,12 +11,6 @@ function resetOptions() {
   swig.invalidateCache();
 }
 
-describe('Sanity', function () {
-  it('Check', function () {
-    expect(swig.render('{{ a }}, {{ b }}', { locals: { a: 'apples', b: 'burritos' }})).to.equal('apples, burritos');
-  });
-});
-
 describe('options', function () {
   var oDefaults;
   beforeEach(resetOptions);
