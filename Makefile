@@ -13,11 +13,18 @@ all:
 	@chmod -R +x .git/hooks/
 
 clean:
+	@rm -rf dist
 	@rm -rf ${TMP}
-	@rm tests/coverage.html
 
-build:
-	@scripts/browser.sh
+build: clean dist dist/swig.js
+
+dist:
+	@mkdir -p $@
+
+dist/swig.js: dist
+	@${BIN}/browserify browser/index.js > $@
+
+# PHONY
 
 tests := $(shell find ./tests -name '*.test.js' ! -path "*node_modules/*")
 reporter = dot
@@ -46,9 +53,6 @@ else
 	@echo
 endif
 
-speed:
-	@node tests/speed.js
-
 docs: all clean build coverage
 	@mkdir -p docs/css
 	@${BIN}/lessc --yui-compress --include-path=docs/less docs/less/swig.less docs/css/swig.css
@@ -71,4 +75,4 @@ port = 3000
 test-docs:
 	@${BIN}/still-server docs/ -p ${port} -o
 
-.PHONY: all build test test-browser lint coverage speed docs test-docs
+.PHONY: all build test test-browser lint coverage docs test-docs
