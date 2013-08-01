@@ -17,7 +17,8 @@ function makeDate(tzOffset, y, m, d, h, i, s) {
 
 var n = new Swig(),
   oDefaults = n.options,
-  d = makeDate(420, 2011, 8, 6, 9, 5, 2),
+  offset = (new Date()).getTimezoneOffset(),
+  d = makeDate(offset, 2011, 8, 6, 9, 5, 2),
   cases = {
     addslashes: [
       {
@@ -44,8 +45,6 @@ var n = new Swig(),
       { c: 'v|date("S")', v: d, e: 'th' },
       { c: 'v|date("w")', v: d, e: '2' },
       { c: 'v|date("z")', v: d, e: '248' },
-      { c: 'v|date("O")', v: d, e: '+0700' },
-      { c: 'v|date("O", -120)', v: makeDate(-120, 2011, 0, 2), e: '-0200' },
       { c: 'v|date("z", 480)', v: makeDate(480, 2011, 0, 1), e: '0' },
       { c: 'v|date("z", 480)', v: makeDate(480, 2011, 11, 31), e: '364' },
 
@@ -82,6 +81,7 @@ var n = new Swig(),
 
       // Timezone
       { c: 'v|date("O")', v: d, e: '+0700' },
+      { c: 'v|date("O", -120)', v: makeDate(-120, 2011, 0, 2), e: '-0200' },
       { c: 'v|date("Z")', v: d, e: '25200' },
       { c: 'v|date("O", 360)', v: d, e: '+0600' },
       { c: 'v|date("G", 320)', v: d, e: '10' },
