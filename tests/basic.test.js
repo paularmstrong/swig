@@ -1,4 +1,4 @@
-var swig = require('../index.js'),
+var swig = require('../lib/swig'),
   expect = require('expect.js'),
   _ = require('lodash'),
   Swig = swig.Swig;
@@ -10,12 +10,6 @@ function resetOptions() {
   swig.setDefaults(oDefaults);
   swig.invalidateCache();
 }
-
-describe('Sanity', function () {
-  it('Check', function () {
-    expect(swig.render('{{ a }}, {{ b }}', { locals: { a: 'apples', b: 'burritos' }})).to.equal('apples, burritos');
-  });
-});
 
 describe('options', function () {
   var oDefaults;

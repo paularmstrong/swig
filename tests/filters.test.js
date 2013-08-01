@@ -1,4 +1,4 @@
-var swig = require('../index.js'),
+var swig = require('../lib/swig'),
   expect = require('expect.js'),
   _ = require('lodash'),
   Swig = swig.Swig;
@@ -44,8 +44,6 @@ var n = new Swig(),
       { c: 'v|date("S")', v: d, e: 'th' },
       { c: 'v|date("w")', v: d, e: '2' },
       { c: 'v|date("z")', v: d, e: '248' },
-      { c: 'v|date("O")', v: d, e: '+0700' },
-      { c: 'v|date("O", -120)', v: makeDate(-120, 2011, 0, 2), e: '-0200' },
       { c: 'v|date("z", 480)', v: makeDate(480, 2011, 0, 1), e: '0' },
       { c: 'v|date("z", 480)', v: makeDate(480, 2011, 11, 31), e: '364' },
 
@@ -82,6 +80,7 @@ var n = new Swig(),
 
       // Timezone
       { c: 'v|date("O")', v: d, e: '+0700' },
+      { c: 'v|date("O", -120)', v: makeDate(-120, 2011, 0, 2), e: '-0200' },
       { c: 'v|date("Z")', v: d, e: '25200' },
       { c: 'v|date("O", 360)', v: d, e: '+0600' },
       { c: 'v|date("G", 320)', v: d, e: '10' },
@@ -92,19 +91,17 @@ var n = new Swig(),
       { c: 'v|date("U")', v: d, e: '1315325102' },
 
       // More complete S ordinal testing
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 1), e: 'st' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 2), e: 'nd' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 3), e: 'rd' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 4), e: 'th' },
-      { c: 'v|date("w", 420)', v: makeDate(420, 2011, 8, 4), e: '0' },
-      { c: 'v|date("N", 420)', v: makeDate(420, 2011, 8, 4), e: '7' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 10), e: 'th' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 11), e: 'th' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 12), e: 'th' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 13), e: 'th' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 21), e: 'st' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 22), e: 'nd' },
-      { c: 'v|date("S", 420)', v: makeDate(420, 2011, 8, 23), e: 'rd' }
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 1), e: 'st' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 2), e: 'nd' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 3), e: 'rd' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 4), e: 'th' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 10), e: 'th' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 11), e: 'th' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 12), e: 'th' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 13), e: 'th' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 21), e: 'st' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 22), e: 'nd' },
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 23), e: 'rd' }
     ],
     'default': [
       { c: 'v|default("tacos")', v: 'foo', e: 'foo' },
@@ -207,6 +204,9 @@ describe('Filters:', function () {
       _.each(cases, function (c) {
         var code = '{{ ' + (c.c || 'v|' + filter) + ' }}';
         it(code + ', v=' + JSON.stringify(c.v) + ' should render ' + c.e.replace(/\n/g, '\\n'), function () {
+          if ((/\|date\(/).test(code)) {
+            code = '{{ ' + c.c.replace(/\"\)$/, '", 420)') + ' }}';
+          }
           expect(swig.render(code, { locals: { v: c.v }}))
             .to.equal(c.e);
         });

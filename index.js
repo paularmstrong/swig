@@ -1,1 +1,1 @@
-module.exports = require(__dirname + '/lib/swig');
+module.exports = require('./lib/swig');

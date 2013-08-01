@@ -1,78 +1,79 @@
-var swig = require('../index.js'),
+var swig = require('../lib/swig'),
   expect = require('expect.js'),
   _ = require('lodash'),
   Swig = swig.Swig;
 
+var cases = {
+  'can be output': [
+    { c: '{{ ap }}, {{ bu }}', e: 'apples, burritos' }
+  ],
+  'can be string and number literals': [
+    { c: '{{ "a" }}', e: 'a' },
+    { c: '{{ 1 }}', e: '1' },
+    { c: '{{ 1.5 }}', e: '1.5' }
+  ],
+  'return empty string if undefined': [
+    { c: '"{{ u }}"', e: '""' }
+  ],
+  'can use operators': [
+    { c: '{{ a + 3 }}', e: '4' },
+    { c: '{{ a * 3 }}', e: '3' },
+    { c: '{{ a / 3 }}', e: String(1 / 3) },
+    { c: '{{ 3 - a }}', e: '2' },
+    { c: '{{ a % 3 }}', e: '1' },
+  ],
+  'can include objects': [
+    { c: '{{ {0: 1, a: "b"} }}', e: '[object Object]' },
+    { c: '{{ Object.keys({ 0: 1, a: "b" }) }}', e: '0,a' }
+  ],
+  'can include arrays': [
+    { c: '{{ [0, 1, 3] }}', e: '0,1,3' }
+  ],
+  'are escaped by default': [
+    { c: '{{ foo }}', e: '&lt;blah&gt;' }
+  ],
+  'can execute functions': [
+    { c: '{{ c() }}', e: 'foobar' },
+    { c: '{{ c(1) }}', e: 'barfoo' },
+    { c: '{{ d(1)|default("tacos") }}', e: 'tacos' },
+    { c: '{{ e.f(4, "blah") }}', e: 'eeeee' },
+    { c: '{{ q.r(4, "blah") }}', e: '' },
+    { c: '{{ e["f"](4, "blah") }}', e: 'eeeee' }
+  ],
+  'can run multiple filters': [
+    { c: '{{ a|default("")|default(1) }}', e: '1' }
+  ],
+  'can have filters with operators': [
+    { c: '{{ a|default("1") + b|default("2") }}', e: '12' }
+  ],
+  'can use both notation types': [
+    { c: '{{ food.a }}', e: 'tacos' },
+    { c: '{{ food["a"] }}', e: 'tacos' },
+    { c: '{{ g[0][h.g.i]["c"].b[i] }}', e: 'hi!' },
+  ]
+};
+
 describe('Variables', function () {
-  it('can be string and number literals', function () {
-    expect(swig.render('{{ "a" }}')).to.eql('a');
-    expect(swig.render('{{ 1 }}')).to.eql('1');
-    expect(swig.render('{{ 1.5 }}')).to.eql('1.5');
-  });
-
-  it('return empty string if undefined', function () {
-    expect(swig.render('"{{ a }}"')).to.eql('""');
-  });
-
-  it('can use operators', function () {
-    var opts = { locals: { a: 1 }};
-    expect(swig.render('{{ a + 3 }}', opts)).to.equal('4');
-    expect(swig.render('{{ a * 3 }}', opts)).to.equal('3');
-    expect(swig.render('{{ a / 3 }}', opts)).to.equal(String(1 / 3));
-    expect(swig.render('{{ 3 - a }}', opts)).to.equal('2');
-    expect(swig.render('{{ a % 3 }}', opts)).to.equal('1');
-  });
-
-  it('can include objects', function () {
-    expect(swig.render('{{ {0: 1, a: "b"} }}')).to.equal('[object Object]');
-    expect(swig.render('{{ Object.keys({ 0: 1, a: "b" }) }}')).to.equal('0,a');
-  });
-
-  it('can include arrays', function () {
-    expect(swig.render('{{ [0, 1, 3] }}')).to.equal('0,1,3');
-  });
-
-  it('are escaped by default', function () {
-    expect(swig.render('{{ foo }}', { locals: { foo: '<blah>' }}))
-      .to.equal('&lt;blah&gt;');
-  });
-
-  it('can execute functions', function () {
-    var opts = { locals: {
-      a: function (b) { return (b) ? 'barfoo' : 'foobar'; },
-      b: function (c) { return; },
-      c: { d: function () { return 'eeeee'; } }
-    }};
-    expect(swig.render('{{ a() }}', opts)).to.equal('foobar');
-    expect(swig.render('{{ a(1) }}', opts)).to.equal('barfoo');
-    expect(swig.render('{{ b(1)|default("tacos") }}', opts)).to.equal('tacos');
-    expect(swig.render('{{ c.d(4, "blah") }}', opts)).to.equal('eeeee');
-    expect(swig.render('{{ q.r(4, "blah") }}', opts)).to.equal('');
-    expect(swig.render('{{ c["d"](4, "blah") }}', opts)).to.equal('eeeee');
-  });
-
-  it('can run multiple filters', function () {
-    expect(swig.render('{{ a|default("")|default(1) }}')).to.equal('1');
-  });
-
-  it('can have filters with operators', function () {
-    expect(swig.render('{{ a|default("1") + b|default("2") }}')).to.equal('12');
-  });
-
-  describe('notation', function () {
-    var opts = { locals: { foo: { a: 'tacos' }}};
-    it('can use dot-notation', function () {
-      expect(swig.render('{{ foo.a }}', opts)).to.equal('tacos');
-    });
-
-    it('can use bracket-notation', function () {
-      expect(swig.render('{{ foo["a"] }}', opts)).to.equal('tacos');
-    });
-
-    it('can be very complex', function () {
-      opts.locals = { a: { '0': { q: { c: { b: { foo: 'hi!' }}}}}, h: { g: {  i: 'q' } }, d: 'foo' };
-
-      expect(swig.render('{{ a[0][h.g.i]["c"].b[d] }}', opts)).to.equal('hi!');
+  var opts = { locals: {
+    ap: 'apples',
+    bu: 'burritos',
+    a: 1,
+    foo: '<blah>',
+    c: function (b) { return (b) ? 'barfoo' : 'foobar'; },
+    d: function (c) { return; },
+    e: { f: function () { return 'eeeee'; } },
+    food: { a: 'tacos' },
+    g: { '0': { q: { c: { b: { foo: 'hi!' }}}}},
+    h: { g: {  i: 'q' } },
+    i: 'foo'
+  }};
+  _.each(cases, function (cases, description) {
+    describe(description, function () {
+      _.each(cases, function (c) {
+        it(c.c, function () {
+          expect(swig.render(c.c, opts)).to.equal(c.e);
+        });
+      });
     });
   });
 
