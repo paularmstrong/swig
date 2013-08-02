@@ -21,8 +21,12 @@ build: clean dist dist/swig.js
 dist:
 	@mkdir -p $@
 
-dist/swig.js: dist
-	@${BIN}/browserify browser/index.js > $@
+.INTERMEDIATE dist/swig.js: \
+	browser/comments.js
+
+dist/swig.js:
+	@cat $^ > $@
+	@${BIN}/browserify browser/index.js >> $@
 
 .INTERMEDIATE browser/test/tests.js: \
 	tests/comments.test.js \
