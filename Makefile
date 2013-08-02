@@ -7,26 +7,13 @@ BRANCH = gh-pages
 BIN = node_modules/.bin
 PWD = $(shell pwd | sed -e 's/[\/&]/\\&/g')
 
-all:
-	@npm install -d
-	@cp scripts/githooks/* .git/hooks/
-	@chmod -R +x .git/hooks/
+.PRECIOUS: *.js
 
-clean:
-	@rm -rf dist
-	@rm -rf ${TMP}
-
-build: clean dist dist/swig.js
-
-dist:
-	@mkdir -p $@
-
-.INTERMEDIATE dist/swig.js: \
+.SECONDARY dist/swig.js: \
 	browser/comments.js
 
-dist/swig.js:
-	@cat $^ > $@
-	@${BIN}/browserify browser/index.js >> $@
+.SECONDARY dist/swig.min.js: \
+	dist/swig.js
 
 .INTERMEDIATE browser/test/tests.js: \
 	tests/comments.test.js \
@@ -44,13 +31,33 @@ dist/swig.js:
 	tests/tags/spaceless.test.js \
 	tests/basic.test.js
 
+all:
+	@npm install -d
+	@cp scripts/githooks/* .git/hooks/
+	@chmod -R +x .git/hooks/
+
+clean:
+	@rm -rf dist
+	@rm -rf ${TMP}
+
+build: clean dist dist/swig.min.js
+	@echo "Built to ./dist/"
+
+dist:
+	@mkdir -p $@
+
+dist/swig.js:
+	@cat $^ > $@
+	@${BIN}/browserify browser/index.js >> $@
+
+dist/swig.min.js:
+	@${BIN}/uglifyjs $^ --comments -c -m > $@
+
 browser/test/tests.js:
 	@cat $^ > tests/browser.js
 	@perl -pi -e 's/\.\.\/\.\.\/lib/\.\.\/lib/g' tests/browser.js
 	@${BIN}/browserify tests/browser.js > $@
 	@rm tests/browser.js
-
-# PHONY
 
 tests := $(shell find ./tests -name '*.test.js' ! -path "*node_modules/*")
 reporter = dot
@@ -101,4 +108,4 @@ port = 3000
 test-docs:
 	@${BIN}/still-server docs/ -p ${port} -o
 
-.PHONY: all build browser/test/tests.js test test-browser lint coverage docs test-docs
+.PHONY: all build test test-browser browser/test/tests.js lint coverage docs test-docs
