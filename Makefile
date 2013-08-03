@@ -7,8 +7,6 @@ BRANCH = gh-pages
 BIN = node_modules/.bin
 PWD = $(shell pwd | sed -e 's/[\/&]/\\&/g')
 
-.PRECIOUS: *.js
-
 .SECONDARY dist/swig.js: \
 	browser/comments.js
 
