@@ -19,6 +19,7 @@
     "Dusko Jordanovski <jordanovskid@gmail.com>"
   ],
   "dependencies": {
+    "optimist": "~0.6.0"
   },
   "devDependencies": {
     "lodash": "~1.3.1",
@@ -40,6 +41,9 @@
   "main": "index",
   "engines": {
     "node": ">=0.6.0"
+  },
+  "bin": {
+    "swig": "./bin/swig.js"
   },
   "scripts": {
     "prepublish": "npm prune && make build",
