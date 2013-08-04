@@ -10,3 +10,4 @@ tmp_build/*
 docs/css/*
 browser/test/tests.js
 tests/browser.js
+tmp
