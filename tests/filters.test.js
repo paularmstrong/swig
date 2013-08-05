@@ -210,6 +210,12 @@ describe('Filters:', function () {
     expect(swig.render('{{ b|default(c|default("3")) }}')).to.equal('3');
   });
 
+  it('throws on unknown filter', function () {
+    expect(function () {
+      swig.render('{{ foo|thisisnotreal }}');
+    }).to.throwError(/Invalid filter "thisisnotreal" found on line 1\./);
+  });
+
   _.each(cases, function (cases, filter) {
     describe(filter, function () {
       _.each(cases, function (c) {
