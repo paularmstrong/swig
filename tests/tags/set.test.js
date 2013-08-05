@@ -11,8 +11,7 @@ var cases = [
   { code: '-= 1', result: '0' },
   { code: '*= 3', result: '3' },
   { code: '/= 2', result: '0.5' },
-  // TODO
-  // { code: '= bar|default(1)', result: '1' }
+  { code: '= bar|default(1)', result: '1' }
 ];
 
 describe('Tag: set', function () {
@@ -24,4 +23,12 @@ describe('Tag: set', function () {
     });
   });
 
+  it('throws on incorrect assignments', function () {
+    expect(function () {
+      swig.render('{% set = foo %}');
+    }).to.throwError(/Unexpected assignment "=" on line 1\./);
+    expect(function () {
+      swig.render('{% set blah = foo /= foo %}');
+    }).to.throwError(/Unexpected assignment "\/=" on line 1\./);
+  });
 });
