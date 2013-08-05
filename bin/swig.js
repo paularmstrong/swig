@@ -16,17 +16,17 @@ var command,
       '    $0 build [files] [options]\n'
       )
     .describe({
+      o: 'Output locaion, defaults to stdout.',
       h: 'Show this help screen.',
       j: 'Variable context as a JSON file.',
       c: 'Variable context as a CommonJS-style file. Used only if option `j` is not provided.',
-      o: 'Output locaion, defaults to stdout.',
       m: 'Minify compiled functions with uglify-js'
     })
+    .alias('o', 'output')
+    .default('o', 'stdout')
     .alias('h', 'help')
     .alias('j', 'json')
     .alias('c', 'context')
-    .alias('o', 'output')
-    .default('o', 'stdout')
     .alias('m', 'minify')
     .check(function (argv) {
       if (!argv._.length) {
