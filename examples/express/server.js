@@ -8,52 +8,12 @@ var express = require('express'),
 // However, we can't do that in this example, because the example uses
 // The uninstalled version of swig for testing purposes
 // Please see the documentation for proper use with Express
-swig._cache = {};
-swig.express3 = function (path, options, fn) {
-  swig._read(path, options, function (err, str) {
-    if (err) {
-      return fn(err);
-    }
-    try {
-      options.filename = path;
-      var tmpl = swig.compile(str, options);
-      fn(null, tmpl(options));
-    } catch (error) {
-      fn(error);
-    }
-  });
-};
 
-swig._read = function (path, options, fn) {
-  var str = swig._cache[path];
-
-  // cached (only if cached is a string and not a compiled template function)
-  if (options.cache && str && typeof str === 'string') {
-    return fn(null, str);
-  }
-
-  // read
-  require('fs').readFile(path, 'utf8', function (err, str) {
-    if (err) {
-      return fn(err);
-    }
-    if (options.cache) {
-      swig._cache[path] = str;
-    }
-    fn(null, str);
-  });
-};
-
-app.engine('html', swig.express3);
+app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
-app.set('view options', { layout: false });
-app.set('view cache', false);
-
-swig.init({
-  root: __dirname + '/views',
-  allowErrors: true
-});
+// Optional: use swig's caching methods
+// app.set('view cache', false);
 
 app.get('/', function (req, res) {
   res.render('index', {});
