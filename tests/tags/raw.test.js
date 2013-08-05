@@ -20,4 +20,9 @@ describe('Tag: raw', function () {
       .to.equal('{# foo #}');
   });
 
+  it('does not accept arguments', function () {
+    expect(function () {
+      swig.render('{% raw foobar %}foo{% endraw %}');
+    }).to.throwError(/Unexpected token "foobar" in raw tag on line 1\./);
+  });
 });
