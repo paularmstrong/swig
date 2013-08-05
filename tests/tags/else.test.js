@@ -24,6 +24,11 @@ describe('Tag: else', function () {
     }).to.throwError(/Unexpected tag "else" on line 1\./);
   });
 
+  it('does not accept conditionals/args (use elseif, elif)', function () {
+    expect(function () {
+      swig.render('{% if foo %}{% else what %}{% endif %}');
+    }).to.throwError(/"else" tag does not accept any tokens. Found "what" on line 1\./);
+  });
 });
 
 describe('Tag: elseif, elif', function () {
@@ -47,5 +52,4 @@ describe('Tag: elseif, elif', function () {
       swig.render('{% elseif %}foo');
     }).to.throwError(/Unexpected tag "elseif" on line 1\./);
   });
-
 });
