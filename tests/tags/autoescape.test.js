@@ -28,4 +28,10 @@ describe('Tag: autoescape', function () {
       .to.equal('<foo>&lt;bar&gt;');
   });
 
+  it('{% autoescape whatthewhat %} throws because unknown argument', function () {
+    expect(function () {
+      swig.render('{% autoescape whatthewhat %}huh?{% endautoescape %}');
+    }).to.throwError(/Unexpected token "whatthewhat" in autoescape tag on line 1\./);
+  });
+
 });
