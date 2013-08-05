@@ -60,7 +60,7 @@ tests := $(shell find ./tests -name '*.test.js' ! -path "*node_modules/*")
 reporter = dot
 opts =
 test:
-	@${BIN}/mocha --reporter ${reporter} ${opts} ${tests} --globals "_swigglobaltest"
+	@${BIN}/mocha --reporter ${reporter} ${opts} ${tests}
 
 test-browser: clean browser/test/tests.js
 	@${BIN}/mocha-phantomjs browser/test/index.html --reporter ${reporter}
@@ -73,9 +73,9 @@ out = tests/coverage.html
 cov-reporter = html-cov
 coverage:
 ifeq (${cov-reporter}, travis-cov)
-	@${BIN}/mocha ${opts} ${tests} --globals "_swigglobaltest" --require blanket -R ${cov-reporter}
+	@${BIN}/mocha ${opts} ${tests} --require blanket -R ${cov-reporter}
 else
-	@${BIN}/mocha ${opts} ${tests} --globals "_swigglobaltest" --require blanket -R ${cov-reporter} > ${out}
+	@${BIN}/mocha ${opts} ${tests} --require blanket -R ${cov-reporter} > ${out}
 	@sed -i .bak -e "s/${PWD}//g" ${out}
 	@rm ${out}.bak
 	@echo
