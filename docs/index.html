@@ -27,7 +27,7 @@
       <pre><code data-language="swig">{% raw %}&lt;h1&gt;{{ pagename|title }}&lt;/h1&gt;
 &lt;ul&gt;
 {% for author in authors %}
-  &lt;li{% if loop.first%} class="first"{% endif %}&gt;
+  &lt;li{% if loop.first %} class="first"{% endif %}&gt;
     {{ author }}
   &lt;/li&gt;
 {% else %}
@@ -36,12 +36,11 @@
 &lt;/ul&gt;{% endraw %}</code></pre>
 
       <h3>Render Your Template</h3>
-      <pre><code data-language="javascript">var template  = require('swig');
-var tmpl = template.compileFile('/path/to/template.html');
-tmpl.render({
+      <pre><code data-language="javascript">var swig  = require('swig');
+swig.renderFile('/path/to/template.html', { locals: {
     pagename: 'awesome people',
     authors: ['Paul', 'Jim', 'Jane']
-});</code></pre>
+}});</code></pre>
 
       <h3>The End Result</h3>
       <pre><code data-language="html">&lt;h1&gt;Awesome People&lt;/h1&gt;
