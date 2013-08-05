@@ -5,6 +5,7 @@ var swig = require('../../lib/swig'),
 
 var cases = [
   { input: '{% for a in b %}{{ a }}{% endfor %}', out: '123' },
+  { input: '{% for a in [1,2,3] %}{{ a }}{% endfor %}', out: '123' },
   { input: '{% for a in b %}{{ loop.index }}{% endfor %}', out: '123' },
   { input: '{% for a in b %}{{ loop.index0 }}{% endfor %}', out: '012' },
   { input: '{% for a in b %}{{ loop.revindex }}{% endfor %}', out: '321' },
@@ -33,4 +34,15 @@ describe('Tag: for', function () {
     });
   });
 
+  it('throws on numbers as any argument', function () {
+    expect(function () {
+      swig.render('{% for a in 32 %}{% endfor %}');
+    }).to.throwError(/Unexpected number "32" on line 1\./);
+  });
+
+  it('throws on any comparator', function () {
+    expect(function () {
+      swig.render('{% for a > 32 %}{% endfor %}');
+    }).to.throwError(/Unexpected token ">" on line 1\./);
+  });
 });
