@@ -7,6 +7,11 @@ BRANCH = gh-pages
 BIN = node_modules/.bin
 PWD = $(shell pwd | sed -e 's/[\/&]/\\&/g')
 
+all:
+	@npm install -d
+	@cp scripts/githooks/* .git/hooks/
+	@chmod -R +x .git/hooks/
+
 .SECONDARY dist/swig.js: \
 	browser/comments.js
 
@@ -28,12 +33,6 @@ PWD = $(shell pwd | sed -e 's/[\/&]/\\&/g')
 	tests/tags/set.test.js \
 	tests/tags/spaceless.test.js \
 	tests/basic.test.js
-
-all:
-	@npm install -d
-	@cp scripts/githooks/* .git/hooks/
-	@chmod -R +x .git/hooks/
-
 clean:
 	@rm -rf dist
 	@rm -rf ${TMP}
