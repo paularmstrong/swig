@@ -111,6 +111,14 @@ var n = new Swig(),
       { c: 'v|default("tacos")', v: null, e: 'tacos' },
       { c: 'v|default("tacos")', v: false, e: 'tacos' },
     ],
+    'escape': [
+      { c: 'v|escape', v: '<foo>', e: '&lt;foo&gt;' },
+      { c: 'v|e("js")', v: '"double quotes" and \'single quotes\'', e: '\\u0022double quotes\\u0022 and \\u0027single quotes\\u0027' },
+      { c: 'v|escape("js")', v: '<script>and this</script>', e: '\\u003Cscript\\u003Eand this\\u003C/script\\u003E' },
+      { c: 'v|e("js")', v: '\\ : backslashes, too', e: '\\u005C : backslashes, too' },
+      { c: 'v|e("js")', v: 'and lots of whitespace: \r\n\t\v\f\b', e: 'and lots of whitespace: \\u000D\\u000A\\u0009\\u000B\\u000C\\u0008' },
+      { c: 'v|e("js")', v: 'and "special" chars = -1;', e: 'and \\u0022special\\u0022 chars \\u003D \\u002D1\\u003B' }
+    ],
     first: [
       { v: [1, 2, 3, 4], e: '1' },
       { v: '213', e: '2' },
@@ -155,12 +163,15 @@ var n = new Swig(),
     ],
     striptags: [
       { v: '<h1>foo</h1> <div class="blah">hi</div>', e: 'foo hi' },
+      { v: ['<foo>bar</foo>', '<bar>foo'], e: 'bar,foo' }
     ],
     title: [
-      { v: 'this iS titLe case', e: 'This Is Title Case' }
+      { v: 'this iS titLe case', e: 'This Is Title Case' },
+      { v: ['foo', 'bAr'], e: 'Foo,Bar' }
     ],
     uniq: [
-      { v: [2, 1, 2, 3, 4, 4], e: '2,1,3,4' }
+      { v: [2, 1, 2, 3, 4, 4], e: '2,1,3,4' },
+      { v: 'foo', e: '' }
     ],
     upper: [
       { v: 'bar', e: 'BAR' },
