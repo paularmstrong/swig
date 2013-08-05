@@ -52,7 +52,7 @@
       "pattern": "swig/lib"
     },
     "travis-cov": {
-      "threshold": 90
+      "threshold": 95
     }
   },
   "bugs": {
