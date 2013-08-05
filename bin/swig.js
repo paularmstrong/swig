@@ -5,7 +5,8 @@ var swig = require('../index'),
   fs = require('fs'),
   path = require('path'),
   filters = require('../lib/filters'),
-  utils = require('../lib/utils');
+  utils = require('../lib/utils'),
+  uglify = require('uglify-js');
 
 var command,
   argv = optimist
@@ -18,13 +19,15 @@ var command,
       h: 'Show this help screen.',
       j: 'Variable context as a JSON file.',
       c: 'Variable context as a CommonJS-style file. Used only if option `j` is not provided.',
-      o: 'Output locaion, defaults to stdout.'
+      o: 'Output locaion, defaults to stdout.',
+      m: 'Minify compiled functions with uglify-js'
     })
     .alias('h', 'help')
     .alias('j', 'json')
     .alias('c', 'context')
     .alias('o', 'output')
     .default('o', 'stdout')
+    .alias('m', 'minify')
     .check(function (argv) {
       if (!argv._.length) {
         throw new Error('');
@@ -73,7 +76,11 @@ if (argv.o !== 'stdout') {
 switch (command) {
 case 'compile':
   fn = function (file, str) {
-    out(file, swig.precompile(str, { filename: file, locals: ctx }).tpl.toString());
+    var r = swig.precompile(str, { filename: file, locals: ctx }).tpl.toString();
+    if (argv.m) {
+      r = uglify.minify(r, { fromString: true }).code;
+    }
+    out(file, r);
   };
   break;
 

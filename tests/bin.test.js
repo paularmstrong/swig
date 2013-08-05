@@ -50,3 +50,12 @@ describe('bin/swig compile + render', function () {
     });
   });
 });
+
+describe('bin/swig compile -m', function () {
+  it('minifies output', function (done) {
+    exec(bin + ' compile ./tests/cases/extends_1.test.html -m', function (err, stdout, stderr) {
+      expect(stdout).to.equal('function anonymous(){var n="";return n+="Hi,\\n\\n",n+="This is the body.",n+="\\n\\nSincerely,\\nMe\\n"}\n');
+      done();
+    });
+  });
+});
