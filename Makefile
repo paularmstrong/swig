@@ -102,7 +102,7 @@ ifeq (${THIS_BRANCH}, master)
 endif
 
 port = 3000
-test-docs:
+test-docs: build
 	@${BIN}/still-server docs/ -p ${port} -o
 
 .PHONY: all build test test-browser browser/test/tests.js lint coverage docs test-docs

@@ -32,7 +32,7 @@
   ], true)
 
   var $sidebar = $('.sidenav'),
-    top = $sidebar.offset().top,
+    top = ($sidebar.length) ? $sidebar.offset().top : 0,
     $links = $sidebar.find('a');
 
   $(window).on('scroll', function (e) {
