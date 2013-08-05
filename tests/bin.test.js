@@ -19,11 +19,7 @@ var casefiles = fs.readdirSync(__dirname + '/cases/'),
   expectations = _.filter(casefiles, isExpectation),
   cases = _.groupBy(tests.concat(expectations), function (f) {
     return f.split('.')[0];
-  }),
-  locals = {
-    first: 'Tacos',
-    second: 'Burritos'
-  };
+  });
 
 describe('bin/swig build', function () {
   _.each(cases, function (files, c) {

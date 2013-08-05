@@ -21,7 +21,8 @@ describe('Templates', function () {
     }),
     locals = {
       first: 'Tacos',
-      second: 'Burritos'
+      second: 'Burritos',
+      includefile: "./includes.html"
     };
 
   _.each(cases, function (files, c) {
