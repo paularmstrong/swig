@@ -109,6 +109,8 @@ describe('options', function () {
 
       s.compile('b', { cache: 'memory', filename: 'b' });
       expect(s.cache.b).to.be.a(Function);
+      // hit the cache to ensure it works
+      s.compile('b', { cache: 'memory', filename: 'b' });
     });
 
     it('can accept custom "get" and "set" methods', function () {
