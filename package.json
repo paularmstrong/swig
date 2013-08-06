@@ -36,7 +36,8 @@
     "blanket": "~1.1",
     "travis-cov": "~0.2",
     "phantomjs": "1.9.1-0",
-    "browserify": "~2.25.1"
+    "browserify": "~2.25.1",
+    "file": "~0.2.1"
   },
   "main": "index",
   "engines": {
