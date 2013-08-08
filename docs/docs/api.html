@@ -1,19 +1,22 @@
 {% extends "docs/layout.html" %}
 
 {% block content %}
+<h1>Swig API</h1>
 
 {% for item in api %}
   {% if not item.isPrivate && not item.ignore %}
-  <article>
-    <h2>
-      {{ item.ctx.string|replace('^(exports|this)\.', 'swig.')|replace('\)$', '') }}
+  <section class="doc">
+    <h2><code data-language="js">
+      {{ item.ctx.string|replace(item.ctx.receiver, 'swig')|replace('\)$', '') }}
       {%- for tag in item.tags -%}
         {% if tag.type === "param" -%}
          {% if not loop.first %}, {% endif -%}{{ tag.name }}
         {%- endif -%}
       {%- endfor -%}
       )
-    </h2>
+    </code></h2>
+
+    {{ item.description.summary|raw }}
 
     {% if item.description.body !== "" %}
     {{ item.description.body|raw|replace('code>', 'code data-language="js">') }}
@@ -23,13 +26,20 @@
     <dl>
     {% for tag in item.tags %}
       {% if tag.type === "param" %}
-      <dt><var>{{ tag.name }}</var></dt>
-      <dd>{{ tag.types|join(" or ") }}</dd>
+      <dt><var data-language="js">{{ tag.name }}</var></dt>
+      <dd><samp data-language="js">{{ tag.types|join(" or ") }}</samp></dd>
       <dd>{{ tag.description }}</dd>
       {% endif %}
     {% endfor %}
     </dl>
-  </article>
+
+    <h3>Returns</h3>
+    {% for tag in item.tags %}
+      {% if tag.type === "return" %}
+
+      {% endif %}
+    {% endfor %}
+  </section>
   {% endif %}
 {% endfor %}
 
