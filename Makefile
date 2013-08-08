@@ -87,6 +87,9 @@ build-docs:
 	@echo '{"api": ' > docs/docs/api.json
 	@${BIN}/dox < lib/swig.js >> docs/docs/api.json
 	@echo '}' >> docs/docs/api.json
+	@echo '{"filters": ' > docs/docs/filters.json
+	@${BIN}/dox < lib/filters.js >> docs/docs/filters.json
+	@echo '}' >> docs/docs/filters.json
 
 docs: clean build coverage build-docs
 	@mkdir -p ${TMP}/js

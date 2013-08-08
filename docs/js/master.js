@@ -29,7 +29,7 @@
       },
       pattern: /\{\%\s*?\S+\s([^%]+)/g
     }
-  ], true)
+  ], true);
 
   var $sidebar = $('.sidenav'),
     top = ($sidebar.length) ? $sidebar.offset().top : 0,
