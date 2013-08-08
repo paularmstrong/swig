@@ -83,12 +83,18 @@ else
 	@echo
 endif
 
-docs: all clean build coverage
+build-docs:
+	@echo '{"api": ' > docs/docs/api.json
+	@${BIN}/dox < lib/swig.js >> docs/docs/api.json
+	@echo '}' >> docs/docs/api.json
+
+docs: clean build coverage build-docs
+	@mkdir -p ${TMP}/js
+	@${BIN}/dox < lib/swig.js > docs/docs/api.json
 	@mkdir -p docs/css
 	@${BIN}/lessc --yui-compress --include-path=docs/less docs/less/swig.less docs/css/swig.css
 	@${BIN}/still docs -o ${TMP} -i "layout" -i "json" -i "less"
 	@cp ${out} ${TMP}/
-	@mkdir -p ${TMP}/js
 	@cp dist/swig.* ${TMP}/js/
 	@cp node_modules/zepto/zepto.min.js ${TMP}/js/lib
 ifeq (${THIS_BRANCH}, master)
@@ -102,7 +108,7 @@ ifeq (${THIS_BRANCH}, master)
 endif
 
 port = 3000
-test-docs: build
+test-docs: build build-docs
 	@${BIN}/still-server docs/ -p ${port} -o
 
-.PHONY: all build test test-browser browser/test/tests.js lint coverage docs test-docs
+.PHONY: all build build-docs test test-browser browser/test/tests.js lint coverage docs test-docs

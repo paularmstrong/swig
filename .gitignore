@@ -11,3 +11,4 @@ docs/css/*
 browser/test/tests.js
 tests/browser.js
 tmp
+docs/docs/api.json

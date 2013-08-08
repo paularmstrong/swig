@@ -1,0 +1,36 @@
+{% extends "docs/layout.html" %}
+
+{% block content %}
+
+{% for item in api %}
+  {% if not item.isPrivate && not item.ignore %}
+  <article>
+    <h2>
+      {{ item.ctx.string|replace('^(exports|this)\.', 'swig.')|replace('\)$', '') }}
+      {%- for tag in item.tags -%}
+        {% if tag.type === "param" -%}
+         {% if not loop.first %}, {% endif -%}{{ tag.name }}
+        {%- endif -%}
+      {%- endfor -%}
+      )
+    </h2>
+
+    {% if item.description.body !== "" %}
+    {{ item.description.body|raw|replace('code>', 'code data-language="js">') }}
+    {% endif %}
+
+    <h3>Arguments</h3>
+    <dl>
+    {% for tag in item.tags %}
+      {% if tag.type === "param" %}
+      <dt><var>{{ tag.name }}</var></dt>
+      <dd>{{ tag.types|join(" or ") }}</dd>
+      <dd>{{ tag.description }}</dd>
+      {% endif %}
+    {% endfor %}
+    </dl>
+  </article>
+  {% endif %}
+{% endfor %}
+
+{% endblock %}
