@@ -1,0 +1,66 @@
+{% extends "docs/layout.html" %}
+
+{% block content %}
+<h1>Swig Tags</h1>
+
+{% for item in tags %}
+  {% if not item.isPrivate && not item.ignore %}
+  <section id="{{ item.ctx.string|replace('\.', '')|replace(item.ctx.receiver, '')|replace('\(\)$', '') }}" class="doc">
+    <h2>
+      {{ item.ctx.string|replace('\.', '')|replace(item.ctx.receiver, '')|replace('\)$', '') }}
+    </h2>
+
+    {{ item.description.summary|raw }}
+
+    {% if item.description.body !== "" %}
+    {{ item.description.body|raw|replace('code>', 'code data-language="swig">', 'g') }}
+    {% endif %}
+
+    {% if item.tags.length %}
+    <h3>Arguments</h3>
+    <dl>
+    {% for tag in item.tags %}
+      {% if tag.type === "param" %}
+      <dt><var data-language="js">{{ tag.name }}</var></dt>
+      <dd><samp data-language="js">{{ tag.types|join(" or ") }}</samp></dd>
+      <dd>{{ tag.description }}</dd>
+      {% endif %}
+    {% endfor %}
+    </dl>
+    {% endif %}
+
+    {% for tag in item.tags %}
+      {% if tag.type === "return" %}
+      {% if !header %}
+      <h3>Returns</h3>
+      <dl>
+      {% set header = true %}
+      {% endif %}
+      <dt><samp data-language="js">{{ tag.types|join(" or ") }}</samp></dt>
+      <dd>{{ tag.description }}</dd>
+      {% endif %}
+      {% if loop.last && header %}
+      </dl>
+      {% endif %}
+    {% endfor %}
+  </section>
+  {% endif %}
+{% endfor %}
+
+{% endblock %}
+
+{% block tagsubnav %}
+<ol>
+  <li>
+    <a href="#built-in">Built-In Tags</a>
+    <ol>
+    {% for f in tags %}
+      <li>
+        <a href="#{{ f.ctx.string|replace('\.', '')|replace(f.ctx.receiver, '')|replace('\(\)$', '') }}">{{ f.ctx.string|replace('\.', '')|replace(f.ctx.receiver, '')|replace('\(\)$', '') }}</a>
+      </li>
+    {% endfor %}
+    </ol>
+  </li>
+  <li><a href="#custom">Custom Tags</a></li>
+</ol>
+{% endblock %}

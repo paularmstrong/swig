@@ -90,6 +90,9 @@ build-docs:
 	@echo '{"filters": ' > docs/docs/filters.json
 	@${BIN}/dox < lib/filters.js >> docs/docs/filters.json
 	@echo '}' >> docs/docs/filters.json
+	@echo '{"tags": ' > docs/docs/tags.json
+	@${BIN}/dox < lib/tags.js >> docs/docs/tags.json
+	@echo '}' >> docs/docs/tags.json
 
 docs: clean build coverage build-docs
 	@mkdir -p ${TMP}/js
