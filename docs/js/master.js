@@ -34,10 +34,30 @@
   document.addEventListener('DOMContentLoaded', function () {
     var $sidebar = document.querySelector('.sidenav'),
       top = ($sidebar) ? $sidebar.getBoundingClientRect().top : 0,
-      $links = ($sidebar) ? $sidebar.querySelectorAll('a') : null;
+      $links = ($sidebar) ? $sidebar.querySelectorAll('a') : null,
+      $docs = document.querySelectorAll('.doc'),
+      i = 0,
+      l = $docs.length,
+      $doc,
+      id;
 
     if (!$sidebar) {
       return;
+    }
+
+    if ($docs.length) {
+      for (i; i < l; i += 1) {
+        $doc = $docs[i];
+        id = $doc.getAttribute('id');
+        if (!id || id === '') {
+          continue;
+        }
+
+        $doc.addEventListener('click', function (e) {
+          var id = this.getAttribute('id');
+          window.history.pushState({}, id, '#' + id);
+        }, false);
+      }
     }
 
     window.addEventListener('scroll', function (e) {
@@ -72,7 +92,6 @@
             break;
           }
           $link.classList.add('current');
-          window.history.pushState({}, $link.innerText, href);
           break;
         }
       }
