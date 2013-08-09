@@ -6,7 +6,7 @@
 {% for item in filters %}
   {% if not item.isPrivate && not item.ignore %}
   <section id="{{ item.ctx.string|replace('\.', '')|replace(item.ctx.receiver, '')|replace('\(\)$', '') }}" class="doc">
-    <h2><code data-language="js">
+    <h2>
       {{ item.ctx.string|replace('\.', '')|replace(item.ctx.receiver, '')|replace('\)$', '') }}
       {%- for tag in item.tags -%}
         {%- if tag.name !== 'input' -%}
@@ -16,7 +16,7 @@
         {%- endif -%}
       {%- endfor -%}
       )
-    </code></h2>
+    </h2>
 
     {{ item.description.summary|raw }}
 

@@ -52,7 +52,23 @@ td > samp {
 }
 
 .doc {
-  h2 { font-size: @fontSize; }
+  padding-bottom: @halfGutter;
+  margin-bottom: @gutter;
+  border-bottom: 1px solid @colorNeutralLight;
+  &:hover h2 {
+    &:before {
+      position: absolute;
+      left: -@gutter;
+      width: @gutter - 5px;
+      text-align: right;
+      display: block;
+      content: '➤';
+      color: @colorAccent;
+    }
+  }
+  h2 {
+    position: relative;
+  }
   dl {
     .clearfix;
     padding: 0 0 0 @quarterGutter;

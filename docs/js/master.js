@@ -31,30 +31,57 @@
     }
   ], true);
 
-  var $sidebar = $('.sidenav'),
-    top = ($sidebar.length) ? $sidebar.offset().top : 0,
-    $links = $sidebar.find('a');
+  document.addEventListener('DOMContentLoaded', function () {
+    var $sidebar = document.querySelector('.sidenav'),
+      top = ($sidebar) ? $sidebar.getBoundingClientRect().top : 0,
+      $links = ($sidebar) ? $sidebar.querySelectorAll('a') : null;
 
-  $(window).on('scroll', function (e) {
-    var scrollY = this.scrollY;
-    if (scrollY > top) {
-      $sidebar.addClass('fixed');
-    } else if (scrollY < top) {
-      $sidebar.removeClass('fixed');
+    if (!$sidebar) {
+      return;
     }
 
-    $sidebar.find('.current').removeClass('current');
-    $links.each(function () {
-      var $this = $(this),
-        $section = $($this.attr('href'));
-      if ($section.offset().top <= scrollY) {
-        $sidebar.find('.current').removeClass('current');
-        $this.addClass('current');
-      } else {
-        $this.removeClass('current');
+    window.addEventListener('scroll', function (e) {
+      var scrollY = this.scrollY,
+        $current = $sidebar.querySelector('.current'),
+        i = $links.length - 1,
+        $link,
+        href,
+        $section,
+        t;
+
+      if (scrollY > top) {
+        $sidebar.classList.add('fixed');
+      } else if (scrollY < top) {
+        $sidebar.classList.remove('fixed');
       }
-    });
-    $sidebar.find('.current').parents('li').addClass('current');
+
+      for (i; i >= 0; i -= 1) {
+        $link = $links[i];
+        href = $link.getAttribute('href');
+        if (!(/^#/).test(href)) {
+          continue;
+        }
+        $section = document.querySelector(href);
+        if (!$section) {
+          continue;
+        }
+
+        t = $section.getBoundingClientRect().top;
+        if (t <= 0) {
+          if ($link.classList.contains('current')) {
+            break;
+          }
+          $link.classList.add('current');
+          window.history.pushState({}, $link.innerText, href);
+          break;
+        }
+      }
+
+      if ($current && $current !== $link) {
+        $current.classList.remove('current');
+      }
+
+    }, false);
   });
 
 }());

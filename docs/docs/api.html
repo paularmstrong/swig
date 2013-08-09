@@ -6,7 +6,7 @@
 {% for item in api %}
   {% if not item.isPrivate && not item.ignore %}
   <section id="{{ item.ctx.string|replace('\.', '')|replace(item.ctx.receiver, '')|replace('\(\)$', '') }}" class="doc">
-    <h2><code data-language="js">
+    <h2>
       {{ item.ctx.string|replace(item.ctx.receiver, 'swig')|replace('\)$', '') }}
       {%- for tag in item.tags -%}
         {% if tag.type === "param" -%}
@@ -14,7 +14,7 @@
         {%- endif -%}
       {%- endfor -%}
       )
-    </code></h2>
+    </h2>
 
     {{ item.description.summary|raw }}
 
