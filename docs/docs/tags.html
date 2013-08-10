@@ -18,15 +18,26 @@
 
     {% if item.tags.length %}
     <h3>Arguments</h3>
-    <dl>
-    {% for tag in item.tags %}
-      {% if tag.type === "param" %}
-      <dt><var data-language="js">{{ tag.name }}</var></dt>
-      <dd><samp data-language="js">{{ tag.types|join(" or ") }}</samp></dd>
-      <dd>{{ tag.description }}</dd>
-      {% endif %}
-    {% endfor %}
-    </dl>
+    <table>
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>type</th>
+          <th>description</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for tag in item.tags %}
+        {% if tag.type === "param" %}
+        <tr>
+          <td><var data-language="js">{{ tag.name }}</var></td>
+          <td><code data-language="js">{{ tag.types|join(" or ") }}</code></td>
+          <td>{{ tag.description|raw }}</td>
+        </tr>
+        {% endif %}
+      {% endfor %}
+      </tbody>
+    </table>
     {% endif %}
 
     {% for tag in item.tags %}
@@ -46,6 +57,26 @@
   </section>
   {% endif %}
 {% endfor %}
+
+<section id="custom">
+  <h1>Custom Tags</h1>
+
+  <p>Swig can be extended to handle custom tags that will perform operations on full blocks of your templates. Use <a href="/docs/api/#addTag"><code data-language="js">swig.addTag(name, parse, compile, ends)</code></a> to add your custom tag.</p>
+
+  <p>Examples:</p>
+
+  <pre><code data-language="js">
+
+  </code></pre>
+
+  <section class="doc">
+    <h2>parse(str, line, parser, types)</h2>
+  </section>
+
+  <section class="doc">
+    <h2>compile(compiler, args, content, parent, options)</h2>
+  </section>
+</section>
 
 {% endblock %}
 

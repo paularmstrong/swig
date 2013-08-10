@@ -25,20 +25,31 @@
     {% endif %}
 
     <h3>Arguments</h3>
-    <dl>
-    {% for tag in filter.tags %}
-      {% if tag.type === "param" %}
-      <dt><var data-language="js">{{ tag.name }}</var></dt>
-      <dd><samp data-language="js">{{ tag.types|join(" or ") }}</samp></dd>
-      <dd>{{ tag.description }}</dd>
-      {% endif %}
-    {% endfor %}
-    </dl>
+    <table>
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>type</th>
+          <th>description</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for tag in filter.tags %}
+        {% if tag.type === "param" %}
+        <tr>
+          <td><var data-language="js">{{ tag.name }}</var></td>
+          <td><code data-language="js">{{ tag.types|join(" or ") }}</code></td>
+          <td>{{ tag.description|raw }}</td>
+        </tr>
+        {% endif %}
+      {% endfor %}
+      </tbody>
+    </table>
 
     <h3>Returns</h3>
     {% for tag in filter.tags %}
       {% if tag.type === "return" %}
-      <p><samp data-language="js">{{ tag.types|join(" or ") }}</samp>: {{ tag.description }}</p>
+      <p><samp data-language="js">{{ tag.types|join(" or ") }}</samp>{% if tag.description !== '' %}: {{ tag.description }}{% endif %}</p>
       {% endif %}
     {% endfor %}
   </section>

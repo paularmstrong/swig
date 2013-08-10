@@ -7,6 +7,7 @@
   {% if not item.isPrivate && not item.ignore %}
   <section id="{{ item.ctx.string|replace('\.', '')|replace(item.ctx.receiver, '')|replace('\(\)$', '') }}" class="doc">
     <h2>
+      {% if item.ctx.type == 'method' %}
       {{ item.ctx.string|replace(item.ctx.receiver, 'swig')|replace('\)$', '') }}
       {%- for tag in item.tags -%}
         {% if tag.type === "param" -%}
@@ -14,24 +15,40 @@
         {%- endif -%}
       {%- endfor -%}
       )
+      {% else if item.ctx.type == 'declaration' %}
+      {{ item.ctx.string }}
+      {% endif %}
     </h2>
 
+    {#<pre><code data-language="js">{{ item|json_encode(4) }}</code></pre>#}
+
     {{ item.description.summary|raw }}
+
+    <h3>Arguments</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>type</th>
+          <th>description</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for tag in item.tags %}
+        {% if tag.type === "param" %}
+        <tr>
+          <td><var data-language="js">{{ tag.name }}</var></td>
+          <td><code data-language="js">{{ tag.types|join(" or ") }}</code></td>
+          <td>{{ tag.description|raw }}</td>
+        </tr>
+        {% endif %}
+      {% endfor %}
+      </tbody>
+    </table>
 
     {% if item.description.body !== "" %}
     {{ item.description.body|raw|replace('code>', 'code data-language="js">') }}
     {% endif %}
-
-    <h3>Arguments</h3>
-    <dl>
-    {% for tag in item.tags %}
-      {% if tag.type === "param" %}
-      <dt><var data-language="js">{{ tag.name }}</var></dt>
-      <dd><samp data-language="js">{{ tag.types|join(" or ") }}</samp></dd>
-      {% if tag.description !== '' %}<dd>{{ tag.description }}</dd>{% endif %}
-      {% endif %}
-    {% endfor %}
-    </dl>
 
     <h3>Returns</h3>
     {% for tag in item.tags %}
