@@ -1,13 +1,12 @@
 
-Swig [![Build Status](https://secure.travis-ci.org/paularmstrong/swig.png?branch=master)](http://travis-ci.org/paularmstrong/swig) [![Dependency Status](https://gemnasium.com/paularmstrong/swig.png)](https://gemnasium.com/paularmstrong/swig) [![NPM version](https://badge.fury.io/js/swig.png)](http://badge.fury.io/js/swig)
+Swig [![Build Status](https://secure.travis-ci.org/paularmstrong/swig.png?branch=next)](http://travis-ci.org/paularmstrong/swig) [![Dependency Status](https://gemnasium.com/paularmstrong/swig.png)](https://gemnasium.com/paularmstrong/swig) [![NPM version](https://badge.fury.io/js/swig.png)](http://badge.fury.io/js/swig)
 ====
 
-[Swig](http://paularmstrong.github.com/swig/) is a fast, Django-like template engine for node.js.
+[Swig](http://paularmstrong.github.io/swig/) is an awesome, Django/Jinja-like template engine for node.js.
 
 Features
 --------
 
-* Incredibly [fast][1]!
 * Available for node.js **and** major web browsers!
 * [Express](http://expressjs.com/) compatible.
 * Object-Oriented template inheritance.
@@ -15,7 +14,7 @@ Features
 * Automatically escapes all output.
 * Lots of iteration and conditionals supported.
 * Extendable and customizable.
-* Great [code coverage](http://paularmstrong.github.io/swig/)
+* Great [code coverage](http://paularmstrong.github.io/swig/coverage.html)
 
 Installation
 ------------
@@ -25,7 +24,7 @@ Installation
 Documentation
 -------------
 
-All documentation can be viewed online on the [Swig Website](http://paularmstrong.github.com/swig/).
+All documentation can be viewed online on the [Swig Website](http://paularmstrong.github.io/swig/).
 
 Basic Example
 -------------
@@ -43,9 +42,9 @@ Basic Example
 
 ### node.js code
 
-    var template  = require('swig');
-    var tmpl = template.compileFile('/path/to/template.html');
-    tmpl.render({
+    var swig  = require('swig');
+    var tpl = template.compileFile('/absolute/path/to/template.html');
+    tpl({
         pagename: 'awesome people',
         authors: ['Paul', 'Jim', 'Jane']
     });
@@ -62,7 +61,7 @@ Basic Example
 How it works
 ------------
 
-Swig reads template files and translates them into cached javascript functions. When we later render a template we call the evaluated function, passing a context object as an argument. This makes the rendering [_very fast_][1].
+Swig reads template files and translates them into cached javascript functions. When we later render a template we call the evaluated function, passing a context object as an argument.
 
 License
 -------
@@ -74,5 +73,3 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-[1]: http://paularmstrong.github.com/node-templates/
