@@ -1,71 +1,116 @@
 {% extends "docs/layout.html" %}
 
 {% block content %}
-<h1>Documentation</h1>
+<h1>Getting Started</h1>
 
-<section>
-  <h1 id="basics">Basics</h1>
+<section id="install" class="doc">
+  <h2>Installation</h2>
 
-  <section id="variables">
-    <h2>Variables</h2>
+  <p>Via NPM:</p>
 
-    <p>Variables that are passed to templates can be output using double-curly-brackets: <code data-language="swig">{{ foo }}</code>.</p>
-
-    <p>Accessing properties of objects can be done using either dot-notation or bracket-notation. The following examples are equivalent:</p>
-
-    <ul>
-      <li><code data-language="swig">{% raw %}{{ foo.bar }}{% endraw %}</code></li>
-      <li><code data-language="swig">{% raw %}{{ foo['bar'] }}{% endraw %}</code></li>
-    </ul>
-
-    <p>If a variable is not defined, don't worry, your template won't explode. Instead, an empty-string will be output in its place.</p>
-
-    <p>Variables can be modified using using special, chainable control structures called <a href="#filters">Filters</a>:</p>
-
-    <pre><code data-language="swig">{% raw %}{{ name|title }} was born on {{ birthday|date('F jS, Y') }}{% endraw %}</code></pre>
-
-    <samp>Jane was born on July 6th, 1985</samp>
-  </section>
-
-  <section id="logic">
-    <h2>Logic Tags</h2>
-
-    <p>Swig includes some basic operational blocks, called <a href="#tags">Tags</a>, for helping you control output on a larger scale than variables. Tags are written using curly-percent syntax: <code data-language="swig">{% if foo %}bar{% endif %}</code>.</p>
-
-    <p>View the <a href="#tags">Tags documentation</a> for a full list of tags and usage instructions.</p>
-  </section>
-
-  <section id="comments">
-    <h2>Comments</h2>
-
-    <p>Comment tags are simply ignored by the parser. They will removed before your templates are rendered so that no one can see them unless they have access to your source code. Comments are written using the curly-hash syntax:</p>
-
-    <pre><code data-language="swig">{% raw %}{# this is a comment #}{% endraw %}</code></pre>
-  </section>
-
-  <section id="whitespace">
-    <h2>Whitespace Control</h2>
-
-    <p>Any whitespace in your templates is left in your final output templates. However, you can control the whitespace around logic tags by using whitespace controls.</p>
-
-    <p>To remove whitespace, simply put a dash (<code data-language="swig">-</code>) at the beginning or end of your tag to remove the preceding or following whitespace, respectively.</p>
-
-    <pre><code data-language="swig">{% raw %}{% for item in seq -%}
-  {{ item }}
-{%- endfor %}{% endraw %}</code></pre>
-
-  <p>If <code data-language="swig">seq</code> is an array of numbers, <samp>1</samp> through <samp>5</samp>, the output of the above example will be void of whitespace: <samp>12345</samp>.</p>
-  </section>
+  <pre><code data-language="sh">$ npm install swig --save</code></pre>
 </section>
 
-<hr>
+<section id="usage" class="doc">
+  <h2>Basic Usage</h2>
 
-<section>
-  <h1 id="inheritance">Template Inheritance</h1>
+  <p>Swig has multiple ways to compile and render templates. Check the <a href="/docs/api/">API documentation</a> for more detailed information and usage.</p>
+
+  <pre><code data-language="js">{% raw %}var swig = require('swig');
+
+// Compile a file and store it, rendering it later
+var tpl = swig.compileFile('/path/to/template.html');
+console.log(tpl({ article: { title: 'Swig is fun!' }}));
+
+// Immediately render a Swig template from a string
+console.log(swig.render('{% if foo %}Hooray!{% endif %}', { locals: { foo: true }}));
+{% endraw %}</code></pre>
+</section>
+
+<section id="variables" class="doc">
+  <h2>Variables</h2>
+
+  <p>Variables that are passed to templates can be output using double-curly-brackets: <code data-language="swig">{{ foo }}</code>.</p>
+
+  <h3>Notation</h3>
+  <p>Accessing properties of objects can be done using either dot-notation or bracket-notation. The following examples are equivalent:</p>
+
+  <pre><code data-language="swig">{% raw %}{{ foo.bar }}
+// is equivalent to
+{{ foo['bar'] }}{% endraw %}</code></pre>
+
+  <p>However, notation style follows the same rules as JavaScript. If a key includes non-alpha-numeric characters, it must be accessed using bracket-notation, not dot-notation.</p>
+
+  <h4>Bad!</h4>
+  <pre><code data-language="swig">{% raw %}{{ foo.chicken-tacos }}{% endraw %}</code></pre>
+  <p>The above would be the same as attempting to subract <var>tacos</var> from <var>foo.chicken</var>:
+<code data-language="swig">{% raw %}{{ foo.chicken - tacos }}{% endraw %}</code></p>
+
+  <h4>Good!</h4>
+  <pre><code data-language="swig">{% raw %}{{ foo['chicken-tacos'] }}{% endraw %}</code></pre>
+
+  <h3>Undefined and Falsy Values</h3>
+  <p>If a variable is not defined, don't worry, your template won't explode. Instead, an empty-string will be output in its place. However, falsy values like <code data-language="js">null, false, 0</code> will be rendered as they are.</p>
+
+  <h3>Filters</h3>
+  <p>Variables can be modified using using special, chainable control structures called <a href="#filters">Filters</a>:</p>
+
+  <pre><code data-language="swig">{% raw %}{{ name|title }} was born on {{ birthday|date('F jS, Y') }}{% endraw %}</code>
+// => <samp>Jane was born on July 6th, 1985</samp></pre>
+</section>
+
+<section id="tags" class="doc">
+  <h2>Logic Tags</h2>
+
+  <p>Swig includes some basic operational blocks, called <a href="#tags">Tags</a>, for helping you control output on a larger scale than variables. Tags are written using curly-percent syntax: .</p>
+
+  <pre><code data-language="swig">{% raw %}{% if foo %}bar{% endif %}
+
+// Create a list of people, only if there are items in the people array
+{% for person in people %}
+  {% if loop.first %}<ol>{% endif %}
+  <li>{{ person.name }}</li>
+  {% if loop.last %}</ol>{% endif %}
+{% endfor %}
+{% endraw %}</code></pre>
+
+  <p>View the <a href="#tags">Tags documentation</a> for a full list of tags and usage instructions.</p>
+</section>
+
+<section id="comments" class="doc">
+  <h2>Comments</h2>
+
+  <p>Comment tags are simply ignored by the parser. They will removed before your templates are rendered so that no one can see them unless they have access to your source code. Comments are written using the curly-hash syntax:</p>
+
+  <pre><code data-language="swig">{% raw %}{#
+This is a comment.
+It will be fully stripped and ignored during parsing.
+#}{% endraw %}</code></pre>
+</section>
+
+<section id="whitespace" class="doc">
+  <h2>Whitespace Control</h2>
+
+  <p>Any whitespace in your templates is left in your final output templates. However, you can control the whitespace around logic tags by using whitespace controls.</p>
+
+  <p>To remove whitespace, simply put a dash (<code data-language="swig">-</code>) at the beginning or end of your tag to remove the preceding or following whitespace, respectively.</p>
+
+  <pre><code data-language="swig">{% raw %}// seq = [1, 2, 3, 4, 5]
+{% for item in seq -%}
+  {{ item }}
+{%- endfor %}{% endraw %}</code>
+// => <samp>12345</samp></pre>
+
+  <p><em>Note: there must <strong>not</strong> be any space between the tag open/close mark and the dash.</em></p>
+
+</section>
+
+<section id="inheritance" class="doc">
+  <h2>Template Inheritance</h2>
 
   <p>Swig uses <code data-language="swig">extends</code> &amp; <code data-language="swig">block</code> for template inheritance.</p>
 
-  <h2>layout.html</h2>
+  <h3>layout.html</h3>
   <pre><code data-language="swig">{% raw %}&lt;!doctype html&gt;
 &lt;html&gt;
 &lt;head&gt;
@@ -81,7 +126,7 @@
 &lt;/body&gt;
 &lt;/html&gt;{% endraw %}</code></pre>
 
-  <h2>index.html</h2>
+  <h3>index.html</h3>
   <pre><code data-language="swig">{% raw %}{% extends 'layout.html' %}
 
 {% block title %}My Page{% endblock %}
@@ -96,6 +141,44 @@
 {% endblock %}{% endraw %}</code></pre>
 </section>
 
-<hr>
+<section id="express" class="doc">
+  <h2>Using Swig with Express.js</h2>
 
+  <p>Swig is easily compatible with <a href="http://expressjs.com">Express</a>, the simple web application framework for node. The following is a basic example of integrating Swig with Express:</p>
+
+  <pre><code data-language="js">var app = require('express')(),
+  swig = require('swig'),
+  people;
+
+// This is where all the magic happens!
+app.engine('html', swig.renderFile);
+
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
+// Swig will cache templates for you, but you can disable
+// that and use Express's caching instead, if you like.
+app.set('view cache', false);
+
+app.get('/', function (req, res) {
+  res.render('index', { /* template locals context */ });
+});
+
+app.listen(1337);
+console.log('Application Started on http://localhost:1337/');
+</code></pre>
+
+</section>
+
+{% endblock %}
+
+{% block indexsubnav %}
+<ol>
+  <li><a href="#install">Installation</a></li>
+  <li><a href="#variables">Variables</a></li>
+  <li><a href="#tags">Logic Tags</a></li>
+  <li><a href="#comments">Comments</a></li>
+  <li><a href="#whitespace">Whitespace Control</a></li>
+  <li><a href="#inheritance">Template Interhitance</a></li>
+  <li><a href="#express">Express.js</a></li>
+</ol>
 {% endblock %}
