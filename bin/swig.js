@@ -12,11 +12,11 @@ var command,
   argv = optimist
     .usage('\n Usage:\n' +
       '    $0 compile [files] [options]\n' +
-      '    $0 render [files] [options]\n' +
-      '    $0 build [files] [options]\n'
+      '    $0 run [files] [options]\n' +
+      '    $0 render [files] [options]\n'
       )
     .describe({
-      o: 'Output locaion, defaults to stdout.',
+      o: 'Output location.',
       h: 'Show this help screen.',
       j: 'Variable context as a JSON file.',
       c: 'Variable context as a CommonJS-style file. Used only if option `j` is not provided.',
@@ -34,7 +34,7 @@ var command,
       }
 
       command = argv._.shift();
-      if (command !== 'compile' && command !== 'render' && command !== 'build') {
+      if (command !== 'compile' && command !== 'render' && command !== 'run') {
         throw new Error('Unrecognized command "' + command + '". Use -h for help.');
       }
     })
@@ -84,7 +84,7 @@ case 'compile':
   };
   break;
 
-case 'render':
+case 'run':
   fn = function (file, str) {
     (function () {
       eval(str);
@@ -93,7 +93,7 @@ case 'render':
   };
   break;
 
-case 'build':
+case 'render':
   fn = function (file, str) {
     out(file, swig.render(str, { filename: file, locals: ctx }));
   };

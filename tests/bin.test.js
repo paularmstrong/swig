@@ -21,13 +21,13 @@ var casefiles = fs.readdirSync(__dirname + '/cases/'),
     return f.split('.')[0];
   });
 
-describe('bin/swig build', function () {
+describe('bin/swig render', function () {
   _.each(cases, function (files, c) {
     var test = _.find(files, isTest),
       expectation = fs.readFileSync(__dirname + '/cases/' + _.find(files, isExpectation), 'utf8');
 
     it(c, function (done) {
-      exec(bin + ' build ./tests/cases/' + test + ' -j ' + __dirname + '/bin.locals.json', function (err, stdout, stderr) {
+      exec(bin + ' render ./tests/cases/' + test + ' -j ' + __dirname + '/bin.locals.json', function (err, stdout, stderr) {
         expect(stdout.replace(/\n$/, '')).to.equal(expectation);
         done();
       });
@@ -35,14 +35,14 @@ describe('bin/swig build', function () {
   });
 });
 
-describe('bin/swig compile + render', function () {
+describe('bin/swig compile + run', function () {
   _.each(cases, function (files, c) {
     var test = _.find(files, isTest),
       expectation = fs.readFileSync(__dirname + '/cases/' + _.find(files, isExpectation), 'utf8');
 
     it(c, function (done) {
       exec(bin + ' compile ./tests/cases/' + test + ' -j ' + __dirname + '/bin.locals.json -o ../tmp', function (err, stdout, stderr) {
-        exec(bin + ' render ../tmp/' + test + ' -c ' + __dirname + '/bin.locals.js', function (err, stdout, stdrr) {
+        exec(bin + ' run ../tmp/' + test + ' -c ' + __dirname + '/bin.locals.js', function (err, stdout, stdrr) {
           expect(stdout.replace(/\n$/, '')).to.equal(expectation);
           done();
         });
