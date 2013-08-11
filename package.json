@@ -36,6 +36,7 @@
     "file": "~0.2.1",
     "jsdoc": "~3.2.0"
   },
+  "license": "MIT",
   "main": "index",
   "engines": {
     "node": ">=0.6.0"
