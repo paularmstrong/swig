@@ -15,6 +15,11 @@ describe('Tag: raw', function () {
       .to.equal('{% foo %}');
   });
 
+  it('{% raw %}\n{% if true %}\nstuff\n{% endif %}\n{% endraw %}', function () {
+    expect(swig.render('{% raw %}\n{% if true %}\nstuff\n{% endif %}\n{% endraw %}'))
+      .to.equal('\n{% if true %}\nstuff\n{% endif %}\n');
+  });
+
   it('{% raw %}{# foo #}{% endraw %}', function () {
     expect(swig.render('{% raw %}{# foo #}{% endraw %}'))
       .to.equal('{# foo #}');
