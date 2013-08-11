@@ -15,9 +15,6 @@
     "url": "http://github.com/paularmstrong/swig.git"
   },
   "author": "Paul Armstrong <paul@paularmstrongdesigns.com>",
-  "contributors": [
-    "Dusko Jordanovski <jordanovskid@gmail.com>"
-  ],
   "dependencies": {
     "optimist": "~0.6.0"
   },
