@@ -1,7 +1,9 @@
 {% extends "docs/layout.html" %}
 
+{% block title %}{% parent %} &raquo; Tags{% endblock %}
+
 {% block content %}
-<h1>Swig Tags</h1>
+<h1>Tags</h1>
 
 {% for fn in functions %}
   {% if fn.access !== "private" %}
