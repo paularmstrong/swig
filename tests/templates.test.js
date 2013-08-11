@@ -47,11 +47,12 @@ describe('Templates', function () {
   });
 
   describe('renderFile', function () {
-    var expectation = fs.readFileSync(__dirname + '/cases/extends_1.expectation.html', 'utf8'),
+    var extends_expectation = fs.readFileSync(__dirname + '/cases/extends_1.expectation.html', 'utf8'),
+      include_expectation = fs.readFileSync(__dirname + '/cases/include.expectation.html', 'utf8'),
       opts = { locals: locals };
 
     it('renders files immediately', function () {
-      expect(swig.renderFile(__dirname + '/cases/extends_1.test.html', opts)).to.equal(expectation);
+      expect(swig.renderFile(__dirname + '/cases/extends_1.test.html', opts)).to.equal(extends_expectation);
     });
 
     it('throws immediately with no callback', function () {
@@ -61,8 +62,8 @@ describe('Templates', function () {
     });
 
     it('can use callbacks', function (done) {
-      swig.renderFile(__dirname + '/cases/extends_1.test.html', opts, function (err, out) {
-        expect(out).to.equal(expectation);
+      swig.renderFile(__dirname + '/cases/include.test.html', locals, function (err, out) {
+        expect(out).to.equal(include_expectation);
         done();
       });
     });
