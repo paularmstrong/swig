@@ -88,8 +88,9 @@ build-docs:
 	@${BIN}/jsdoc lib/swig.js ${JSDOCOPTS} > docs/docs/api.json
 	@${BIN}/jsdoc lib/filters.js ${JSDOCOPTS} > docs/docs/filters.json
 	@${BIN}/jsdoc lib/tags/ ${JSDOCOPTS} > docs/docs/tags.json
+	@make coverage out=docs/coverage.html
 
-docs: clean build coverage build-docs
+docs: clean build build-docs
 	@mkdir -p ${TMP}/js
 	@${BIN}/dox < lib/swig.js > docs/docs/api.json
 	@mkdir -p docs/css
