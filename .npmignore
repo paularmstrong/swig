@@ -1,9 +1,10 @@
 .DS_Store
 *.html
-**.test.js
-dist/**
+browser/**
 docs/**
 examples/**
 Makefile
 scripts/**
 tests/**
+.travis.yml
+CONTRIBUTING.md
