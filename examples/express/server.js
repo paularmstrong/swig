@@ -27,10 +27,6 @@ app.get('/people/:id', function (req, res) {
   res.render('person', { person: people[req.params.id] });
 });
 
-app.get('/variable', function (req, res) {
-  res.render('variable', { extendFile : 'outer.html' });
-});
-
 app.get('/*', function (req, res) {
   res.render(req.params[0], {});
 });
