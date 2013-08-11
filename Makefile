@@ -83,16 +83,11 @@ else
 	@echo
 endif
 
+JSDOCOPTS=-t node_modules/jsdoc/templates/haruki/ -d console
 build-docs:
-	@echo '{"api": ' > docs/docs/api.json
-	@${BIN}/dox < lib/swig.js >> docs/docs/api.json
-	@echo '}' >> docs/docs/api.json
-	@echo '{"filters": ' > docs/docs/filters.json
-	@${BIN}/dox < lib/filters.js >> docs/docs/filters.json
-	@echo '}' >> docs/docs/filters.json
-	@echo '{"tags": ' > docs/docs/tags.json
-	@${BIN}/dox < lib/tags.js >> docs/docs/tags.json
-	@echo '}' >> docs/docs/tags.json
+	@${BIN}/jsdoc lib/swig.js ${JSDOCOPTS} > docs/docs/api.json
+	@${BIN}/jsdoc lib/filters.js ${JSDOCOPTS} > docs/docs/filters.json
+	@${BIN}/jsdoc lib/tags/ ${JSDOCOPTS} > docs/docs/tags.json
 
 docs: clean build coverage build-docs
 	@mkdir -p ${TMP}/js

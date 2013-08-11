@@ -3,57 +3,50 @@
 {% block content %}
 <h1>Swig Tags</h1>
 
-{% for item in tags %}
-  {% if not item.isPrivate && not item.ignore %}
-  <section id="{{ item.ctx.string|replace('\.', '')|replace(item.ctx.receiver, '')|replace('\(\)$', '') }}" class="doc">
-    <h2>
-      {{ item.ctx.string|replace('\.', '')|replace(item.ctx.receiver, '')|replace('\)$', '') }}
-    </h2>
+{% for fn in functions %}
+  {% if fn.access !== "private" %}
+  <section id="{{ fn.name }}" class="doc">
+    <h2>{{ fn.name }}</h2>
 
-    {{ item.description.summary|raw }}
+    <p>{{ fn.description|replace('\n', '</p><p>')|raw }}</p>
 
-    {% if item.description.body !== "" %}
-    {{ item.description.body|raw|replace('code>', 'code data-language="swig">', 'g') }}
-    {% endif %}
-
-    {% if item.tags.length %}
-    <h3>Arguments</h3>
+    {% if fn.parameters %}
+    <h3>Parameters</h3>
     <table>
       <thead>
         <tr>
-          <th>name</th>
-          <th>type</th>
-          <th>description</th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
         </tr>
       </thead>
       <tbody>
-      {% for tag in item.tags %}
-        {% if tag.type === "param" %}
+      {% for param in fn.parameters %}
         <tr>
-          <td><var data-language="js">{{ tag.name }}</var></td>
-          <td><code data-language="js">{{ tag.types|join(" or ") }}</code></td>
-          <td>{{ tag.description|raw }}</td>
+          <td><var data-language="js">{{ param.name }}</var></td>
+          <td><code data-language="js">{{ param.type|join(" or ") }}</code></td>
+          <td>{% if param.optional %}✔{% endif %}</td>
+          <td><code data-language="js">{{ param.default }}</code></td>
+          <td>{{ param.description|raw }}</td>
         </tr>
-        {% endif %}
       {% endfor %}
       </tbody>
     </table>
     {% endif %}
 
-    {% for tag in item.tags %}
-      {% if tag.type === "return" %}
-      {% if !header %}
-      <h3>Returns</h3>
-      <dl>
-      {% set header = true %}
-      {% endif %}
-      <dt><samp data-language="js">{{ tag.types|join(" or ") }}</samp></dt>
-      <dd>{{ tag.description }}</dd>
-      {% endif %}
-      {% if loop.last && header %}
-      </dl>
-      {% endif %}
+    {% if fn.returns %}
+    <h3>Returns</h3>
+      <p><samp data-language="js">{{ fn.returns.type }}</samp>: {{ fn.returns.description|raw }}</p>
+    {% endif %}
+
+    {% if fn.examples.length %}
+    <h3>Examples</h3>
+    {% for example in fn.examples %}
+    <pre><code data-language="swig">{{ example }}</code></pre>
     {% endfor %}
+    {% endif %}
   </section>
   {% endif %}
 {% endfor %}
@@ -82,16 +75,12 @@
 
 {% block tagsubnav %}
 <ol>
+{% for fn in functions %}
+  {% if fn.access !== "private" %}
   <li>
-    <a href="#built-in">Built-In Tags</a>
-    <ol>
-    {% for f in tags %}
-      <li>
-        <a href="#{{ f.ctx.string|replace('\.', '')|replace(f.ctx.receiver, '')|replace('\(\)$', '') }}">{{ f.ctx.string|replace('\.', '')|replace(f.ctx.receiver, '')|replace('\(\)$', '') }}</a>
-      </li>
-    {% endfor %}
-    </ol>
+    <a href="#{{ fn.name }}">{{ fn.name }}</a>
   </li>
-  <li><a href="#custom">Custom Tags</a></li>
+  {% endif %}
+{% endfor %}
 </ol>
 {% endblock %}

@@ -3,59 +3,57 @@
 {% block content %}
 <h1>Swig API</h1>
 
-{% for item in api %}
-  {% if not item.isPrivate && not item.ignore %}
-  <section id="{{ item.ctx.string|replace('\.', '')|replace(item.ctx.receiver, '')|replace('\(\)$', '') }}" class="doc">
+{% for fn in functions %}
+  {% if fn.access !== "private" %}
+  <section id="{{ fn.name }}" class="doc">
     <h2>
-      {% if item.ctx.type == 'method' %}
-      {{ item.ctx.string|replace(item.ctx.receiver, 'swig')|replace('\)$', '') }}
-      {%- for tag in item.tags -%}
-        {% if tag.type === "param" -%}
-         {% if not loop.first %}, {% endif -%}{{ tag.name }}
-        {%- endif -%}
+      swig.{{ fn.name }}(
+      {%- for p in fn.parameters -%}
+      {{ p.name }}
+      {%- if not loop.last %}, {% endif -%}
       {%- endfor -%}
       )
-      {% else if item.ctx.type == 'declaration' %}
-      {{ item.ctx.string }}
-      {% endif %}
     </h2>
 
-    {#<pre><code data-language="js">{{ item|json_encode(4) }}</code></pre>#}
+    <p>{{ fn.description|replace('\n', '</p><p>')|raw }}</p>
 
-    {{ item.description.summary|raw }}
-
-    <h3>Arguments</h3>
+    {% if fn.parameters %}
+    <h3>Parameters</h3>
     <table>
       <thead>
         <tr>
-          <th>name</th>
-          <th>type</th>
-          <th>description</th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
         </tr>
       </thead>
       <tbody>
-      {% for tag in item.tags %}
-        {% if tag.type === "param" %}
+      {% for param in fn.parameters %}
         <tr>
-          <td><var data-language="js">{{ tag.name }}</var></td>
-          <td><code data-language="js">{{ tag.types|join(" or ") }}</code></td>
-          <td>{{ tag.description|raw }}</td>
+          <td><var data-language="js">{{ param.name }}</var></td>
+          <td><code data-language="js">{{ param.type|join(" or ") }}</code></td>
+          <td>{% if param.optional %}✔{% endif %}</td>
+          <td><code data-language="js">{{ param.default }}</code></td>
+          <td>{{ param.description|raw }}</td>
         </tr>
-        {% endif %}
       {% endfor %}
       </tbody>
     </table>
-
-    {% if item.description.body !== "" %}
-    {{ item.description.body|raw|replace('code>', 'code data-language="js">') }}
     {% endif %}
 
+    {% if fn.returns %}
     <h3>Returns</h3>
-    {% for tag in item.tags %}
-      {% if tag.type === "return" %}
-      <p><samp data-language="js">{{ tag.types|join(" or ") }}</samp>: {{ tag.description }}</p>
-      {% endif %}
+      <p><samp data-language="js">{{ fn.returns.type }}</samp>: {{ fn.returns.description|raw }}</p>
+    {% endif %}
+
+    {% if fn.examples.length %}
+    <h3>Examples</h3>
+    {% for example in fn.examples %}
+    <pre><code data-language="js">{{ example }}</code></pre>
     {% endfor %}
+    {% endif %}
   </section>
   {% endif %}
 {% endfor %}
@@ -64,10 +62,10 @@
 
 {% block apisubnav %}
 <ol>
-{% for item in api %}
-  {% if not item.isPrivate && not item.ignore %}
+{% for fn in functions %}
+  {% if fn.access !== "private" %}
   <li>
-    <a href="#{{ item.ctx.string|replace('\.', '')|replace(item.ctx.receiver, '')|replace('\(\)$', '') }}">{{ item.ctx.string|replace(item.ctx.receiver, 'swig')|replace('\(\)$', '') }}</a>
+    <a href="#{{ fn.name }}">swig.{{ fn.name }}</a>
   </li>
   {% endif %}
 {% endfor %}
