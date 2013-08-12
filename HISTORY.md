@@ -1,6 +1,26 @@
 
+[1.0.0-pre1](https://github.com/paularmstrong/swig/tree/v1.0.0-pre1) / 2013-08-11
+-----------------------------------------------------------------------------
+
+* **Changed** There is no more `swig.init` method.
+* **Changed** `extends`, `import`, and `include` now reference files with relative paths from the current file.
+* **Changed** Custom filters can be added using `swig.addFilter`
+* **Changed** Custom tags can be added using `swig.addTag`
+* **Changed** Writing custom tags uses an entirely new, simplified format
+* **Changed** Removed the underscore/lodash dependency
+* **Changed** Template parsing has been completely rewritten
+* **Changed** `swig.compileFile` returns a function that renders templates, not an object
+* **Changed** Express-compatible using `swig.renderFile`
+* **Changed** `extends` may no longer accept variables
+* **Changed** `else if` tag is now `elseif` or `elif`
+* **Changed** Removed `only` argument from `include`
+* **Changed** allow `_`, `$` to start var names
+* **Added** Variable/string concatenation [gh-135](https://github.com/paularmstrong/swig/issues/135)
+* **Added** Binary application for `compile`, `run`, and `render`
+* **Fixed** Lots.
+
 [0.14.0](https://github.com/paularmstrong/swig/tree/v0.14.0) / 2013-06-08
-==================
+-------------------------------------------------------------------------
 
 * **Added** Allow executing functions from within templates [gh-182](https://github.com/paularmstrong/swig/pull/182)
 * **Added** New `spaceless` tag [gh-193](https://github.com/paularmstrong/swig/pull/193)
