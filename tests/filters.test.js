@@ -196,13 +196,21 @@ describe('Filters:', function () {
   beforeEach(resetOptions);
   afterEach(resetOptions);
 
-  it('can be added', function () {
-    swig.addFilter('foo', function () { return 3; });
-    expect(swig.render('{{ b|foo() }}')).to.equal('3');
+  describe('can be set', function () {
+    it('and used in templates', function () {
+      swig.setFilter('foo', function () { return 3; });
+      expect(swig.render('{{ b|foo() }}')).to.equal('3');
+    });
+
+    it('and throw when you don\'t pass a function', function () {
+      expect(function () {
+        swig.setFilter('blah', 'not a function');
+      }).to.throwError(/Filter "blah" is not a valid function\./);
+    });
   });
 
   it('can accept params', function () {
-    swig.addFilter('foo', function (inp, arg) { return arg; });
+    swig.setFilter('foo', function (inp, arg) { return arg; });
     expect(swig.render('{{ b|foo(3) }}')).to.equal('3');
   });
 
