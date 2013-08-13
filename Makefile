@@ -48,7 +48,7 @@ dist/swig.js:
 	@${BIN}/browserify browser/index.js >> $@
 
 dist/swig.min.js:
-	@${BIN}/uglifyjs $^ --comments -c -m > $@
+	@${BIN}/uglifyjs $^ --comments -c warnings=false -m --source-map dist/swig.js.map > $@
 
 browser/test/tests.js:
 	@cat $^ > tests/browser.js
