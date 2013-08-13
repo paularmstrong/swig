@@ -16,7 +16,7 @@ describe('Tags', function () {
     }).to.throwError(/Unexpected end of tag "foo" on line 4\./);
   });
 
-  it('can be added', function () {
+  describe('can be set', function () {
     function parse(str, line, parser, types) {
       return true;
     }
@@ -24,8 +24,20 @@ describe('Tags', function () {
       return compiler(content) + '\n' +
         '_output += " tortilla!"';
     }
-    swig.addTag('tortilla', parse, compile, true);
-    expect(swig.render('{% tortilla %}flour{% endtortilla %}'))
-      .to.equal('flour tortilla!');
+    it('and used in templates', function () {
+      swig.setTag('tortilla', parse, compile, true);
+      expect(swig.render('{% tortilla %}flour{% endtortilla %}'))
+        .to.equal('flour tortilla!');
+    });
+
+    it('and throw if are not written correctly', function () {
+      expect(function () {
+        swig.setTag('tacos', null, compile);
+      }).to.throwError(/Tag "tacos" parse method is not a valid function\./);
+
+      expect(function () {
+        swig.setTag('tacos', parse);
+      }).to.throwError(/Tag "tacos" compile method is not a valid function\./);
+    });
   });
 });
