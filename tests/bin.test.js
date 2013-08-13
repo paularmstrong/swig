@@ -54,8 +54,22 @@ describe('bin/swig compile + run', function () {
 describe('bin/swig compile -m', function () {
   it('minifies output', function (done) {
     exec(bin + ' compile ./tests/cases/extends_1.test.html -m', function (err, stdout, stderr) {
-      expect(stdout).to.equal('function anonymous(){var n="";return n+="Hi,\\n\\n",n+="This is the body.",n+="\\n\\nSincerely,\\nMe\\n"}\n');
+      expect(stdout).to.equal('var tpl=function(){var n="";return n+="Hi,\\n\\n",n+="This is the body.",n+="\\n\\nSincerely,\\nMe\\n"};\n');
       done();
+    });
+  });
+});
+
+describe('bin/swig compile & run from swig', function () {
+  it('can be run', function (done) {
+    var expectation = fs.readFileSync(__dirname + '/cases/extends_1.expectation.html', 'utf8');
+    exec(bin + ' compile ./tests/cases/extends_1.test.html -o ../tmp --wrap-start="var foo = "', function (err, stdout, stderr) {
+      fs.readFile(__dirname + '/../../tmp/extends_1.test.html', 'utf8', function (err, stdout) {
+        var foo;
+        eval(stdout);
+        expect(swig.run(foo)).to.equal(expectation);
+        done();
+      });
     });
   });
 });

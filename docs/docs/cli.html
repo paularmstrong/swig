@@ -26,7 +26,9 @@ $ swig run [file...] [options]</code></pre>
 -j, --json     Variable context as a JSON file.
 -c, --context  Variable context as a CommonJS-style file. Used only if option `j` is not provided.
 -m, --minify   Minify compiled functions with uglify-js
-</pre>
+--wrap-start   Template wrapper beginning for "compile". [default: "var tpl = "]
+--wrap-end     Template wrapper end for "compile". [default: ";"]
+--method-name  Method name to execute during "run". See "--wrap-start" for defining this. [default: "tpl"]</pre>
 </section>
 
 <section id="examples" class="doc">
@@ -43,6 +45,9 @@ $ swig run [file...] [options]</code></pre>
 
   <p>Import a JSON file as the variable context for rendering a template:</p>
   <pre><code data-language="sh">$ swig render ./index.html -j ./index.json</code></pre>
+
+  <p>Make your template an AMD module:</p>
+  <pre><code data-language="sh">$ swig compile ./index.html --wrap-start="define(function () { return " --wrap-end="; });"</code></pre>
 </section>
 {% endblock %}
 

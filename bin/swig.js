@@ -20,7 +20,10 @@ var command,
       h: 'Show this help screen.',
       j: 'Variable context as a JSON file.',
       c: 'Variable context as a CommonJS-style file. Used only if option `j` is not provided.',
-      m: 'Minify compiled functions with uglify-js'
+      m: 'Minify compiled functions with uglify-js',
+      'wrap-start': 'Template wrapper beginning for "compile".',
+      'wrap-end': 'Template wrapper end for "compile".',
+      'method-name': 'Method name to execute during "run". See "--wrap-start" for defining this.'
     })
     .alias('o', 'output')
     .default('o', 'stdout')
@@ -28,6 +31,9 @@ var command,
     .alias('j', 'json')
     .alias('c', 'context')
     .alias('m', 'minify')
+    .default('wrap-start', 'var tpl = ')
+    .default('wrap-end', ';')
+    .default('method-name', 'tpl')
     .check(function (argv) {
       if (!argv._.length) {
         throw new Error('');
@@ -76,10 +82,14 @@ if (argv.o !== 'stdout') {
 switch (command) {
 case 'compile':
   fn = function (file, str) {
-    var r = swig.precompile(str, { filename: file, locals: ctx }).tpl.toString();
+    var r = swig.precompile(str, { filename: file, locals: ctx }).tpl.toString().replace('anonymous', '');
+
+    r = argv['wrap-start'] + r + argv['wrap-end'];
+
     if (argv.m) {
       r = uglify.minify(r, { fromString: true }).code;
     }
+
     out(file, r);
   };
   break;
@@ -88,7 +98,8 @@ case 'run':
   fn = function (file, str) {
     (function () {
       eval(str);
-      out(file, anonymous(swig, ctx, filters, utils, efn));
+      var __tpl = eval(argv['method-name']);
+      out(file, __tpl(swig, ctx, filters, utils, efn));
     }());
   };
   break;
