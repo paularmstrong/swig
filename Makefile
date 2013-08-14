@@ -128,13 +128,11 @@ build-docs: FORCE
 
 docs: clean build build-docs
 	@mkdir -p ${TMP}/js
-	@${BIN}/dox < lib/swig.js > docs/docs/api.json
 	@mkdir -p docs/css
 	@${BIN}/lessc --yui-compress --include-path=docs/less docs/less/swig.less docs/css/swig.css
 	@${BIN}/still docs -o ${TMP} -i "layout" -i "json" -i "less"
 	@cp ${out} ${TMP}/
 	@cp dist/swig.* ${TMP}/js/
-	@cp node_modules/zepto/zepto.min.js ${TMP}/js/lib
 ifeq (${THIS_BRANCH}, master)
 	@git checkout ${BRANCH}
 	@cp -r ${TMP}/* ./
