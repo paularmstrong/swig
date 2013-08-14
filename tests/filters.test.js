@@ -209,6 +209,14 @@ describe('Filters:', function () {
     });
   });
 
+  it('defaultTZOffset affects date filter', function () {
+    swig.setDefaultTZOffset(240);
+    var d = makeDate(240, 2011, 8, 23);
+    expect(swig.render('{{ v|date("H:i a") }}', { locals: { v: d }}))
+      .to.equal('21:00 pm');
+    swig.setDefaultTZOffset(0);
+  });
+
   it('can accept params', function () {
     swig.setFilter('foo', function (inp, arg) { return arg; });
     expect(swig.render('{{ b|foo(3) }}')).to.equal('3');
