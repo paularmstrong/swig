@@ -10,7 +10,7 @@
 
 <p>For the following contexts, assume:</p>
 
-<pre><code data-language="javascript">some_html_output = '&lt;p&gt;Hello "you" &amp; \'them\'&lt;/p&gt;';
+<pre><code data-language="javascript">some_html_output = '&lt;p&gt;Hello "you" &amp; 'them'&lt;/p&gt;';
 </code></pre>
 
 <p>So the following:</p>
@@ -34,8 +34,9 @@
 
 &amp;lt;p&amp;gt;Hello &amp;quot;you&amp;quot; &amp;amp; &amp;#39;them&amp;#39; &amp;lt;/p&amp;gt;
 
-\u003Cp\u003EHello \u0022you\u0022 &amp; \u0027them\u0027\u003C\u005Cp\u003E
+<p>Hello "you" &amp; 'them'<\p>
 </code></pre>
 
 <p>For more information on how the autoescape tag filters variable output, see the <a href="#filters-escape">escape filter documentation</a>.</p>
+
 

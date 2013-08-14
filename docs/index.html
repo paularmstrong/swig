@@ -1,5 +1,5 @@
 
- 
+  
 <!doctype html>
 <html>
 <head>
@@ -8,11 +8,12 @@
   <!--[if IE]>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <![endif]-->
-  <title>Swig » Documentation</title>
+  <title> » Documentation » Documentation</title>
   
- 
 
- 
+  
+
+  
 
 <link rel="stylesheet" href="/swig/css/swig.css">
 
@@ -22,6 +23,7 @@
 <body class="">
 
   
+
 
 <header class="header">
   <div class="content row">
@@ -43,6 +45,7 @@
     <p class="warning">This documentation is for a pre-release version and may be missing information.</p>
   </div>
 </header>
+
 
 
 <div class="content row guttered">
@@ -143,8 +146,7 @@ It will be fully stripped and ignored during parsing.
   <p>To remove whitespace, simply put a dash (<code data-language="swig">-</code>) at the beginning or end of your tag to remove the preceding or following whitespace, respectively.</p>
 
   <pre><code data-language="swig">// seq = [1, 2, 3, 4, 5]
-{% for item in seq -%}
-  {{ item }}
+{% for item in seq -%}{{ item }}
 {%- endfor %}</code>
 // => <samp>12345</samp></pre>
 
@@ -260,7 +262,8 @@ console.log('Application Started on http://localhost:1337/');
 
 <a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
 
- 
+
+  
 <script src="/swig/js/lib/rainbow.min.js"></script>
 <script src="/swig/js/master.js"></script>
 
