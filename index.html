@@ -21,7 +21,7 @@
 
 
 </head>
-<body class="home">
+<body class="">
 
   
 
@@ -40,6 +40,10 @@
     </nav>
   
   </div>
+
+  <div class="content">
+    <p class="warning">This documentation is for a pre-release version and may be missing information.</p>
+  </div>
 </header>
 
 
@@ -47,6 +51,8 @@
 <section class="content">
   <h1>Swig</h1>
   <p>A Node.js and Browser-based JavaScript Template Engine</p>
+
+  <p>Current Version: v1.0.0-pre1</p>
 
   <hr class="small">
 
@@ -56,13 +62,13 @@
       <h2>Get Started</h2>
 
       <h3>Install Swig</h3>
-      <pre><code>npm install swig</code></pre>
+      <pre><code>npm install swig --save</code></pre>
 
       <h3>Create Your Template</h3>
       <pre><code data-language="swig">&lt;h1&gt;{{ pagename|title }}&lt;/h1&gt;
 &lt;ul&gt;
 {% for author in authors %}
-  &lt;li{% if loop.first%} class="first"{% endif %}&gt;
+  &lt;li{% if loop.first %} class="first"{% endif %}&gt;
     {{ author }}
   &lt;/li&gt;
 {% else %}
@@ -71,9 +77,8 @@
 &lt;/ul&gt;</code></pre>
 
       <h3>Render Your Template</h3>
-      <pre><code data-language="javascript">var template  = require('swig');
-var tmpl = template.compileFile('/path/to/template.html');
-tmpl.render({
+      <pre><code data-language="javascript">var swig  = require('swig');
+swig.renderFile('/path/to/template.html', {
     pagename: 'awesome people',
     authors: ['Paul', 'Jim', 'Jane']
 });</code></pre>
@@ -90,21 +95,37 @@ tmpl.render({
     <section class="span6">
       <h2>Features</h2>
       <ul>
-        <li>Incredibly fast!</li>
-        <li>Available for node.js and major web browsers!</li>
-        <li>Extendable and customizable.</li>
-        <li>Express compatible.</li>
+        <li>Available for node.js <em>and</em> major web browsers!</li>
+        <li><a href="http://expressjs.com/">Express</a> compatible.</li>
         <li>Object-Oriented template inheritance.</li>
         <li>Apply filters and transformations to output in your templates.</li>
-        <li>Automatically escapes all output.</li>
+        <li>Automatically escapes all output for safe HTML rendering.</li>
         <li>Lots of iteration and conditionals supported.</li>
+        <li>Robust without the bloat.</li>
+        <li>Extendable and customizable.</li>
+        <li>Great <a href="/swig/coverage.html">code coverage</a>.</li>
       </ul>
 
       <hr class="small">
 
       <h2>Download For the Browser</h2>
       <p>Swig also works in all major browsers. Just download the following file and follow the <a href="/swig/docs/#browser">Documentation</a>.</p>
-      <p class="download"><a href="/swig/js/swig.pack.min.js" class="btn">Download</a></p>
+      <p class="download">
+        <a href="/swig/js/swig.min.js" class="btn">Download v1.0.0-pre1</a><br><br>
+        <a href="/swig/js/swig.js">Development</a> | <a href="/swig/js/swig.min.js">Production</a>
+      </p>
+
+      <hr class="small">
+
+      <h2>Resources</h2>
+
+       <ul>
+         <li><a href="https://groups.google.com/forum/#!forum/swig-templates">Mailing List</a></li>
+         <li><a href="https://travis-ci.org/paularmstrong/swig/builds">Travis CI Build History</a></li>
+         <li><a href="https://github.com/paularmstrong/swig/issues">Bug Reports</a></li>
+         <li><a href="http://stackoverflow.com/questions/tagged/swig-template">Stack Overflow Questions</a></li>
+       </ul>
+
     </section>
 
   </div>
@@ -114,9 +135,7 @@ tmpl.render({
 <a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
 
  
-<script src="/swig/js/lib/zepto.min.js"></script>
 <script src="/swig/js/lib/rainbow.min.js"></script>
-<script src="/swig/js/swig.pack.min.js"></script>
 <script src="/swig/js/master.js"></script>
 
 </body>

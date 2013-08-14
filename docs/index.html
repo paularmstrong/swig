@@ -19,7 +19,7 @@
 
 
 </head>
-<body class="docs">
+<body class="">
 
   
 
@@ -38,77 +38,126 @@
     </nav>
   
   </div>
+
+  <div class="content">
+    <p class="warning">This documentation is for a pre-release version and may be missing information.</p>
+  </div>
 </header>
 
 
 <div class="content row guttered">
   <div class="span9">
   
-<h1>Documentation</h1>
+<h1>Getting Started</h1>
 
-<section>
-  <h1 id="basics">Basics</h1>
+<section id="install" class="doc">
+  <h2>Installation</h2>
 
-  <section id="variables">
-    <h2>Variables</h2>
+  <p>Via NPM:</p>
 
-    <p>Variables that are passed to templates can be output using double-curly-brackets: <code data-language="swig"></code>.</p>
-
-    <p>Accessing properties of objects can be done using either dot-notation or bracket-notation. The following examples are equivalent:</p>
-
-    <ul>
-      <li><code data-language="swig">{{ foo.bar }}</code></li>
-      <li><code data-language="swig">{{ foo['bar'] }}</code></li>
-    </ul>
-
-    <p>If a variable is not defined, don't worry, your template won't explode. Instead, an empty-string will be output in its place.</p>
-
-    <p>Variables can be modified using using special, chainable control structures called <a href="#filters">Filters</a>:</p>
-
-    <pre><code data-language="swig">{{ name|title }} was born on {{ birthday|date('F jS, Y') }}</code></pre>
-
-    <samp>Jane was born on July 6th, 1985</samp>
-  </section>
-
-  <section id="logic">
-    <h2>Logic Tags</h2>
-
-    <p>Swig includes some basic operational blocks, called <a href="#tags">Tags</a>, for helping you control output on a larger scale than variables. Tags are written using curly-percent syntax: <code data-language="swig"></code>.</p>
-
-    <p>View the <a href="#tags">Tags documentation</a> for a full list of tags and usage instructions.</p>
-  </section>
-
-  <section id="comments">
-    <h2>Comments</h2>
-
-    <p>Comment tags are simply ignored by the parser. They will removed before your templates are rendered so that no one can see them unless they have access to your source code. Comments are written using the curly-hash syntax:</p>
-
-    <pre><code data-language="swig">{# this is a comment #}</code></pre>
-  </section>
-
-  <section id="whitespace">
-    <h2>Whitespace Control</h2>
-
-    <p>Any whitespace in your templates is left in your final output templates. However, you can control the whitespace around logic tags by using whitespace controls.</p>
-
-    <p>To remove whitespace, simply put a dash (<code data-language="swig">-</code>) at the beginning or end of your tag to remove the preceding or following whitespace, respectively.</p>
-
-    <pre><code data-language="swig">{% for item in seq -%}
-  {{ item }}
-{%- endfor %}</code></pre>
-
-  <p>If <code data-language="swig">seq</code> is an array of numbers, <samp>1</samp> through <samp>5</samp>, the output of the above example will be void of whitespace: <samp>12345</samp>.</p>
-  </section>
+  <pre><code data-language="sh">$ npm install swig --save</code></pre>
 </section>
 
-<hr>
+<section id="usage" class="doc">
+  <h2>Basic Usage</h2>
 
-<section>
-  <h1 id="inheritance">Template Inheritance</h1>
+  <p>Swig has multiple ways to compile and render templates. Check the <a href="/docs/api/">API documentation</a> for more detailed information and usage.</p>
+
+  <pre><code data-language="js">var swig = require('swig');
+
+// Compile a file and store it, rendering it later
+var tpl = swig.compileFile('/path/to/template.html');
+console.log(tpl({ article: { title: 'Swig is fun!' }}));
+
+// Immediately render a Swig template from a string
+console.log(swig.render('{% if foo %}Hooray!{% endif %}', { locals: { foo: true }}));
+</code></pre>
+</section>
+
+<section id="variables" class="doc">
+  <h2>Variables</h2>
+
+  <p>Variables that are passed to templates can be output using double-curly-brackets: <code data-language="swig"></code>.</p>
+
+  <h3>Notation</h3>
+  <p>Accessing properties of objects can be done using either dot-notation or bracket-notation. The following examples are equivalent:</p>
+
+  <pre><code data-language="swig">{{ foo.bar }}
+// is equivalent to
+{{ foo['bar'] }}</code></pre>
+
+  <p>However, notation style follows the same rules as JavaScript. If a key includes non-alpha-numeric characters, it must be accessed using bracket-notation, not dot-notation.</p>
+
+  <h4>Bad!</h4>
+  <pre><code data-language="swig">{{ foo.chicken-tacos }}</code></pre>
+  <p>The above would be the same as attempting to subract <var>tacos</var> from <var>foo.chicken</var>:
+<code data-language="swig">{{ foo.chicken - tacos }}</code></p>
+
+  <h4>Good!</h4>
+  <pre><code data-language="swig">{{ foo['chicken-tacos'] }}</code></pre>
+
+  <h3>Undefined and Falsy Values</h3>
+  <p>If a variable is not defined, don't worry, your template won't explode. Instead, an empty-string will be output in its place. However, falsy values like <code data-language="js">null, false, 0</code> will be rendered as they are.</p>
+
+  <h3>Filters</h3>
+  <p>Variables can be modified using using special, chainable control structures called <a href="#filters">Filters</a>:</p>
+
+  <pre><code data-language="swig">{{ name|title }} was born on {{ birthday|date('F jS, Y') }}</code>
+// => <samp>Jane was born on July 6th, 1985</samp></pre>
+</section>
+
+<section id="tags" class="doc">
+  <h2>Logic Tags</h2>
+
+  <p>Swig includes some basic operational blocks, called <a href="#tags">Tags</a>, for helping you control output on a larger scale than variables. Tags are written using curly-percent syntax: .</p>
+
+  <pre><code data-language="swig">{% if foo %}bar{% endif %}
+
+// Create a list of people, only if there are items in the people array
+{% for person in people %}
+  {% if loop.first %}<ol>{% endif %}
+  <li>{{ person.name }}</li>
+  {% if loop.last %}</ol>{% endif %}
+{% endfor %}
+</code></pre>
+
+  <p>View the <a href="#tags">Tags documentation</a> for a full list of tags and usage instructions.</p>
+</section>
+
+<section id="comments" class="doc">
+  <h2>Comments</h2>
+
+  <p>Comment tags are simply ignored by the parser. They will removed before your templates are rendered so that no one can see them unless they have access to your source code. Comments are written using the curly-hash syntax:</p>
+
+  <pre><code data-language="swig">{#
+This is a comment.
+It will be fully stripped and ignored during parsing.
+#}</code></pre>
+</section>
+
+<section id="whitespace" class="doc">
+  <h2>Whitespace Control</h2>
+
+  <p>Any whitespace in your templates is left in your final output templates. However, you can control the whitespace around logic tags by using whitespace controls.</p>
+
+  <p>To remove whitespace, simply put a dash (<code data-language="swig">-</code>) at the beginning or end of your tag to remove the preceding or following whitespace, respectively.</p>
+
+  <pre><code data-language="swig">// seq = [1, 2, 3, 4, 5]
+{% for item in seq -%}
+  {{ item }}
+{%- endfor %}</code>
+// => <samp>12345</samp></pre>
+
+  <p><em>Note: there must <strong>not</strong> be any space between the tag open/close mark and the dash.</em></p>
+
+</section>
+
+<section id="inheritance" class="doc">
+  <h2>Template Inheritance</h2>
 
   <p>Swig uses <code data-language="swig">extends</code> &amp; <code data-language="swig">block</code> for template inheritance.</p>
 
-  <h2>layout.html</h2>
+  <h3>layout.html</h3>
   <pre><code data-language="swig">&lt;!doctype html&gt;
 &lt;html&gt;
 &lt;head&gt;
@@ -124,7 +173,7 @@
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
 
-  <h2>index.html</h2>
+  <h3>index.html</h3>
   <pre><code data-language="swig">{% extends 'layout.html' %}
 
 {% block title %}My Page{% endblock %}
@@ -139,1453 +188,34 @@
 {% endblock %}</code></pre>
 </section>
 
-<hr>
+<section id="express" class="doc">
+  <h2>Using Swig with Express.js</h2>
 
-<section>
-  <h1 id="api">Swig API</h1>
+  <p>Swig is easily compatible with <a href="http://expressjs.com">Express</a>, the simple web application framework for node. The following is a basic example of integrating Swig with Express:</p>
 
-  <p id="api-init">In order to start using Swig, you should initialize it. Swig can be configured using the following:</p>
-
-  <pre><code data-language="javascript">swig.init({
-&nbsp;&nbsp;allowErrors: false,
-&nbsp;&nbsp;autoescape: true,
-&nbsp;&nbsp;cache: true,
-&nbsp;&nbsp;encoding: &#39;utf8&#39;,
-&nbsp;&nbsp;filters: {},
-&nbsp;&nbsp;root: /,
-&nbsp;&nbsp;tags: {},
-&nbsp;&nbsp;extensions: {},
-&nbsp;&nbsp;tzOffset: 0
-});
-</code></pre>
-
-  <p>This step, and all options are <em>optional</em> (unless you are using Express), however it is recommended to at least set the <code>root</code> key when running Swig from node.js.</p>
-
-  <h3 id="api-options">Options</h3>
-
-  
-  <article id="api-allowErrors" class="doc">
-    <h1><var>allowErrors</var></h1>
-    <p>Default is <code>false</code>. Keeping this off will render all template parsing and compiling errors straight to the template output. If <code>true</code>, errors will be thrown straight to the Node.js process, potentially crashing your application.</p>
-    
-  </article>
-  
-  <article id="api-autoescape" class="doc">
-    <h1><var>autoescape</var></h1>
-    <p>Automatically escape all variable output. This is the default behavior and it is highly recommended to leave this on. For character conversion tables, see the <a href="#filters-escape">escape filter</a>.</p>
-    
-    <h2>Possible Values</h2>
-    <dl>
-      
-      <dt><code data-language="javascript">true</code></dt>
-      <dd>Will escape output safe for HTML.</dd>
-      
-      <dt><code data-language="javascript">false</code></dt>
-      <dd>Will not escape any output unless forced via the escape filter or autoescape tag.</dd>
-      
-      <dt><code data-language="javascript">&#39;js&#39;</code></dt>
-      <dd>Will escape output safe for JavaScript.</dd>
-      
-    </dl>
-    
-  </article>
-  
-  <article id="api-cache" class="doc">
-    <h1><var>cache</var></h1>
-    <p>Changing this to <code>false</code> will re-compile the template files for each request. It is recommended to leave this as <code>true</code> for production use.</p>
-    
-  </article>
-  
-  <article id="api-encoding" class="doc">
-    <h1><var>encoding</var></h1>
-    <p>The character encoding for template files.</p>
-    
-  </article>
-  
-  <article id="api-filters" class="doc">
-    <h1><var>filters</var></h1>
-    <p>Use this to set any custom filters and/or override any of the built-in filters. For more information on writing your own filters, see the <a href="#filters-custom">custom filters guide</a>.</p>
-    
-  </article>
-  
-  <article id="api-root" class="doc">
-    <h1><var>root</var></h1>
-    <p>The directory to search for templates. If a template passed to <code data-language="javascript">swig.compileFile</code> is an absolute path (starts with /), Swig will not look in the template root. If passed an <code data-language="javascript">array</code>, templates will be used by first-match per array index order.</p>
-    
-  </article>
-  
-  <article id="api-tags" class="doc">
-    <h1><var>tags</var></h1>
-    <p>Use this to set any custom tags and/or override any of the built-in tags. For more information on writing your own tags, see the <a href="#tags-custom">custom tags guide</a>.</p>
-    
-  </article>
-  
-  <article id="api-extensions" class="doc">
-    <h1><var>extensions</var></h1>
-    <p>Add library extensions that will be available to compiled templates. For more information, see the <a href="#tags-custom">custom tags guide</a> on third party extensions.</p>
-    
-  </article>
-  
-  <article id="api-tzOffset" class="doc">
-    <h1><var>tzOffset</var></h1>
-    <p>Sets a default timezone offset, in minutes from GMT. Setting this will make the <a href="#filters-date">date filter</a> automatically convert dates parsed through the date filter to the appropriate timezone offset.</p>
-    
-  </article>
-  
-
-  <section>
-    <h1 id="api-parse">Parsing a Template</h1>
-    <p>There are 2 methods for creating a template object:</p>
-
-    <pre><code data-language="javascript">swig.compileFile("path/to/template/file.html");
-swig.compile("Template string here", { filename: 'templateKey' });</code></pre>
-  </section>
-
-  <section>
-    <h1 id="api-render">Rendering a Template</h1>
-    <p>Both of these methods will give you a template object on which you call the render method passing it a map of context values.</p>
-
-    <p>If you know the path to the file:</p>
-
-    <pre><code data-language="javascript">var tpl = swig.compileFile("path/to/template/file.html");
-var renderedHtml = tpl.render({ vars: 'to be inserted in template' });</code></pre>
-
-    <p><em>OR</em>, if your file has already been read and you have the template in the form of a string:</p>
-
-   <pre><code data-language="javascript">var tpl = swig.compile("Template string here");
-var renderedHtml = tpl({ vars: 'to be inserted in template' });</code></pre>
-  </section>
-
-  <section>
-    <h1 id="api-express">Using Swig with Express.js</h1>
-
-    <p>Swig is compatible with <a href="http://expressjs.com/">Express</a>! It's very easy to set up your Express-based node project to use Swig as its template renderer. Here's how:</p>
-
-    <p>First, get Express and Consolidate.js</p>
-
-    <pre><code data-language="shell">npm install express
-npm install consolidate</code></pre>
-
-    <p>Require <code>express</code>, <code>consolidate</code>, <code>Swig</code>, and create the express server.</p>
-    <pre><code data-language="javascript">var express = require('express'),
-  cons = require('consolidate'),
+  <pre><code data-language="js">var app = require('express')(),
   swig = require('swig'),
-  app = express.createServer();</code></pre>
+  people;
 
-    <p>Register Swig as the template renderer.</p>
+// This is where all the magic happens!
+app.engine('html', swig.renderFile);
 
-    <pre><code data-language="javascript">app.engine('.html', cons.swig);
-app.set('view engine', 'html');</code></pre>
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
+// Swig will cache templates for you, but you can disable
+// that and use Express's caching instead, if you like.
+app.set('view cache', false);
 
-    <p>Set up your views directory. <strong>This is extremely important</strong></p>
-
-    <pre><code data-language="javascript">// NOTE: Swig requires some extra setup
-// This helps it know where to look for includes and parent templates
-swig.init({
-    root: '/path/to/views/directory/',
-    allowErrors: true // allows errors to be thrown and caught by express instead of suppressed by Swig
+app.get('/', function (req, res) {
+  res.render('index', { /* template locals context */ });
 });
-app.set('views', '/path/to/views/directory/');</code></pre>
 
-    <p><strong>Important!</strong> Don't allow express to automatically pipe your template into a layout.html file. Setting this to false allows you to properly use <code data-language="swig">{% extends %}</code> and <code data-language="swig">{% block %}</code> tags!</p>
-
-    <p>Render your <code>index.html</code> page!</p>
-
-  <pre><code data-language="javascript">app.get('/', function (req, res) {
-    res.render('index.html', { foo: 'bar' });
-});</code></pre>
-  </section>
+app.listen(1337);
+console.log('Application Started on http://localhost:1337/');
+</code></pre>
 
 </section>
 
-<hr>
-
-<section>
-  <h1 id="filters">Variable Filters</h1>
-
-  <p>Used to modify variables. Filters are added directly after variable names, separated by the pipe (<code data-language="swig">|</code>) character. You can chain multiple filters together, applying one after the other in succession.</p>
-
-  <h2>Example</h2>
-
-  <pre><code data-language="swig">{{ name|title }} was born on {{ birthday|date('F jS, Y') }}
-and has {{ bikes|length|default("zero") }} bikes.</code></pre>
-
-  <p>Filters can also be applied to blocks of content directly with the <a href="#tags-filter">filter tag</a>.</p>
-
-  <pre><code data-language="swig">{% filter upper %}oh hi, paul{% endfilter %}</code></pre>
-
-  <h2 id="filters-built-in">Built-In Filters</h2>
-  
-  <article class="doc">
-    <h1 id="filters-add"><code data-language="swig">add(value)</code></h1>
-    <p>Adds the value to the variable. Strings that can be converted to integers will be summed, not concatenated.</p>
-    
-    <h2>Arguments</h2>
-    <dl>
-      
-      <dt><var>value</var></dt>
-      <dd><code data-language="swig">mixed</code></dd>
-      
-      <dd>The value to add to the variable before printing it to the page. Accepts any <code>array</code>, <code>object</code>, <code>number</code>, and <code>string</code>.</dd>
-      
-    </dl>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-addslashes"><code data-language="swig">addslashes</code></h1>
-    <p>Returns a string with backslashes in front of characters that need to be quoted for database queries, etc.</p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-capitalize"><code data-language="swig">capitalize</code></h1>
-    <p>Capitalize the first character in the string.</p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-date"><code data-language="swig">date(format[, tzOffset])</code></h1>
-    <p>Convert a valid date into a format as specified. Mostly conforms to <a href="http://php.net/date">php.net's date formatting</a>.</p>
-    
-    <h2>Arguments</h2>
-    <dl>
-      
-      <dt><var>format</var></dt>
-      <dd><code data-language="swig">string</code></dd>
-      
-      <dd>The format to convert the date to. See the date formatting table for formatting options.</dd>
-      
-      <dt><var>tzOffset</var></dt>
-      <dd><code data-language="swig">number</code></dd>
-      <dd><i>optional</i></dd>
-      <dd>The timezone offset in minutes from GMT to display the date in.</dd>
-      
-    </dl>
-    
- 
- <table>
-  <caption>Date formatting character information from <a href="http://php.net/date">php.net/date</a>.</caption>
-  <thead>
-    <tr>
-      <th>Format Character</th>
-      <th>Description</th>
-      <th>Example Output</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="col" colspan="3">Day</th>
-    </tr>
-    <tr>
-      <th scope="row"><code>d</code></th>
-      <td>Day of the month, 2 digits with leading zeros</td>
-      <td><samp>01</samp> - <samp>31</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>D</code></th>
-      <td>A textual representation of a day, three letters</td>
-      <td><samp>Mon</samp> - <samp>Sun</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>j</code></th>
-      <td>Day of the month without leading zeros</td>
-      <td><samp>1</samp> - <samp>31</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>l</code></th>
-      <td>A full textual representation of the day of the week</td>
-      <td><samp>Monday</samp> - <samp>Sunday</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>N</code></th>
-      <td>ISO-8601 numeric representation of the day of the week</td>
-      <td><samp>1</samp> - <samp>7</samp> (Monday - Sunday)</td>
-    </tr>
-    <tr>
-      <th scope="row"><code>S</code></th>
-      <td>English ordinal suffix for the day of the month, 2 characters</td>
-      <td><samp>st</samp>, <samp>nd</samp>, <samp>rd</samp>, or <samp>th</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>w</code></th>
-      <td>Numeric representation of the day of the week</td>
-      <td><samp>0</samp> - <samp>6</samp> (Sunday - Saturday)</td>
-    </tr>
-    <tr>
-      <th scope="row"><code>z</code></th>
-      <td>The day of the year starting from 0</td>
-      <td><samp>0</samp> - <samp>365</samp> (January 1st - December 31st [only on leap year])</td>
-    </tr>
-    <tr>
-      <th scope="col" colspan="3">Week</th>
-    </tr>
-    <tr>
-      <th scope="row"><code>W</code></th>
-      <td>ISO-8601 week number of the year</td>
-      <td><samp>42</samp></td>
-    </tr>
-    <tr>
-      <th scope="col" colspan="3">Month</th>
-    </tr>
-    <tr>
-      <th scope="row"><code>F</code></th>
-      <td>A full textual representation of a month, such as January or March</td>
-      <td><samp>January</samp> - <samp>December</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>m</code></th>
-      <td>Numeric representation of a month, with leading zeros</td>
-      <td><samp>12</samp> - <samp>01</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>M</code></th>
-      <td>A short textual representation of a month, three letters</td>
-      <td><samp>Jan</samp> - <samp>Dec</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>n</code></th>
-      <td>Numeric representation of a month, without leading zeros</td>
-      <td><samp>1</samp> - <samp>12</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>t</code></th>
-      <td>Number of days in the given month</td>
-      <td><samp>28</samp> - <samp>31</samp></td>
-    </tr>
-    <tr>
-      <th scope="col" colspan="3">Year</th>
-    </tr>
-    <tr>
-      <th scope="row"><code>L</code></th>
-      <td>Whether or not the given year is a leap year.</td>
-      <td><samp>true</samp> or <samp>false</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>o</code></th>
-      <td>ISO-8601 year number. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead.</td>
-      <td><samp>1999</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>Y</code></th>
-      <td>A full numeric representation of a year, 4 digits</td>
-      <td><samp>1999</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>y</code></th>
-      <td>A two digit representation of a year</td>
-      <td><samp>99</samp></td>
-    </tr>
-    <tr>
-      <th scope="col" colspan="3">Time</th>
-    </tr>
-    <tr>
-      <th scope="row"><code>a</code></th>
-      <td>Lowercase Ante meridiem and Post meridiem</td>
-      <td><samp>am</samp> or <samp>pm</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>A</code></th>
-      <td>Uppercase Ante meridiem and Post meridiem</td>
-      <td><samp>AM</samp> or <samp>PM</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>B</code></th>
-      <td><a href="http://en.wikipedia.org/wiki/Swatch_Internet_Time">Swatch Internet Time</a></td>
-      <td><samp>000</samp> - <samp>999</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>g</code></th>
-      <td>12-hour format of an hour without leading zeros</td>
-      <td><samp>1</samp> - <samp>12</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>G</code></th>
-      <td>24-hour format of an hour without leading zeros</td>
-      <td><samp>0</samp> - <samp>23</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>h</code></th>
-      <td>12-hour format of an hour with leading zeros</td>
-      <td><samp>01</samp> - <samp>12</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>H</code></th>
-      <td>24-hour format of an hour with leading zeros</td>
-      <td><samp>00</samp> - <samp>23</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>i</code></th>
-      <td>Minutes with leading zeros</td>
-      <td><samp>00</samp> - <samp>59</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>s</code></th>
-      <td>Seconds, with leading zeros</td>
-      <td><samp>00</samp> - <samp>59</samp></td>
-    </tr>
-    <tr>
-      <th scope="col" colspan="3">Timezone</th>
-    </tr>
-    <tr>
-      <th scope="row"><code>O</code></th>
-      <td>Difference to Greenwich time (GMT) in hours</td>
-      <td><samp>+0200</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>Z</code></th>
-      <td>Timezone offset in seconds. The offset for timezones west of UTC is always negative, and for those east of UTC is always positive.</td>
-      <td><samp>-43200</samp> - <samp>50400</samp></td>
-    </tr>
-    <tr>
-      <th scope="col" colspan="3">Full Date &amp; Time</th>
-    </tr>
-    <tr>
-      <th scope="row"><code>c</code></th>
-      <td>ISO 8601 formatted date</td>
-      <td><samp>2011-09-06T16:05:02.000Z</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>r</code></th>
-      <td><a href="http://www.faqs.org/rfcs/rfc2822">RFC 2822</a> formatted date</td>
-      <td><samp>Tue, 06 Sep 2011 16:05:02 GMT</samp></td>
-    </tr>
-    <tr>
-      <th scope="row"><code>U</code></th>
-      <td>Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)</td>
-      <td><samp>1315690513</samp></td>
-    </tr>
-  </tbody>
-</table>
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-default"><code data-language="swig">default(value)</code></h1>
-    <p>If the variable is <code>undefined</code>, <code>null</code>, or <code>false</code>, a default return value can be specified.</p>
-    
-    <h2>Arguments</h2>
-    <dl>
-      
-      <dt><var>value</var></dt>
-      <dd><code data-language="swig">mixed</code></dd>
-      
-      <dd>Fallback value if the variable is falsy.</dd>
-      
-    </dl>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-e"><code data-language="swig">e</code></h1>
-    <p>Shortcut for <a href="#filters-escape">escape</a></p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-escape"><code data-language="swig">escape([type])</code></h1>
-    <p>Force escape the output of the variable. Optionally use <code>e</code> as a shortcut filter name. This filter will be applied by default if <var>autoescape</var> is turned on.</p>
-    
-    <h2>Arguments</h2>
-    <dl>
-      
-      <dt><var>type</var></dt>
-      <dd><code data-language="swig">string</code></dd>
-      <dd><i>optional</i></dd>
-      <dd>If you pass the string <samp>js</samp> in as the type, output will be escaped so that it is safe for JavaScript execution.</dd>
-      
-    </dl>
-    
- 
- <h2>Default Escaping</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>Character</th>
-      <th>Replacement</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><kbd>&amp;</kbd></td>
-      <td><samp>&amp;amp;</samp></td>
-    </tr>
-    <tr>
-      <td><kbd>&lt;</kbd></td>
-      <td><samp>&amp;lt;</samp></td>
-    </tr>
-    <tr>
-      <td><kbd>&gt;</kbd></td>
-      <td><samp>&amp;gt;</samp></td>
-    </tr>
-    <tr>
-      <td><kbd>"</kbd></td>
-      <td><samp>&amp;quot;</samp></td>
-    </tr>
-    <tr>
-      <td><kbd>&#39;</kbd></td>
-      <td><samp>&amp;#39;</samp></td>
-    </tr>
-  </tbody>
-</table>
-
-<h2>JavaScript Variable Replacements</h2>
-
-<p>Pass <code>js</code> as the type to your escape filter to toggle escaping as JavaScript.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Character</th>
-      <th>Replacement</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>ASCII charCodes less than 32<br /><kbd>ESC</kbd>, <kbd>TAB</kbd>, <kbd>SPACE,</kbd> etc&hellip;</td>
-      <td><samp>\u0001</samp> - <samp>\u001F</samp></td>
-    </tr>
-    <tr>
-      <td><kbd>&amp;</kbd></td>
-      <td><samp>\u0026</samp></td>
-    </tr>
-    <tr>
-      <td><samp>&lt;</samp></td>
-      <td><samp>\u003C</samp></td>
-    </tr>
-    <tr>
-      <td><kbd>&gt;</kbd></td>
-      <td><samp>\u003E</samp></td>
-    </tr>
-    <tr>
-      <td><kbd>'</kbd></td>
-      <td><samp>\u0027</samp></td>
-    </tr>
-    <tr>
-      <td><kbd>"</kbd></td>
-      <td><samp>\u0022</samp></td>
-    </tr>
-    <tr>
-      <td><kbd>=</kbd></td>
-      <td><samp>\u003D</samp></td>
-    </tr>
-    <tr>
-      <td><kbd>-</kbd></td>
-      <td><samp>\u002D</samp></td>
-    </tr>
-    <tr>
-      <td><kbd>;</kbd></td>
-      <td><samp>\u003B</samp></td>
-    </tr>
-  </tbody>
-</table>
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-first"><code data-language="swig">first</code></h1>
-    <p>Returns the first element of an array.</p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-join"><code data-language="swig">join(glue)</code></h1>
-    <p>If the value is an Array, you can join each value with a delimiter and return it as a string.</p>
-    
-    <h2>Arguments</h2>
-    <dl>
-      
-      <dt><var>glue</var></dt>
-      <dd><code data-language="swig">string</code></dd>
-      
-      <dd>Concatenation string to join each item in the array with.</dd>
-      
-    </dl>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-json_encode"><code data-language="swig">json_encode([indent])</code></h1>
-    <p>Return a json-encoded string of the input.</p>
-    
-    <h2>Arguments</h2>
-    <dl>
-      
-      <dt><var>indent</var></dt>
-      <dd><code data-language="swig">number</code></dd>
-      <dd><i>optional</i></dd>
-      <dd>If greater than zero, the JSON will be pretty-printed using the number of spaces specified by the</dd>
-      
-    </dl>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-last"><code data-language="swig">last</code></h1>
-    <p>Returns the last element of an array.</p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-length"><code data-language="swig">length</code></h1>
-    <p>Return the <code>length</code> property of the input. If the input is an <code>object</code>, returns the number of keys on the object.</p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-lower"><code data-language="swig">lower</code></h1>
-    <p>Return the input in all lowercase letters.</p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-raw"><code data-language="swig">raw</code></h1>
-    <p>Forces the input to not be auto-escaped.</p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-replace"><code data-language="swig">replace(search, replace[, flags])</code></h1>
-    <p>Uses built-in JavaScript replace method. Provide a regular-expression or a string and a replacement string.</p>
-    
-    <h2>Arguments</h2>
-    <dl>
-      
-      <dt><var>search</var></dt>
-      <dd><code data-language="swig">string</code></dd>
-      
-      <dd>string or regular expression to find</dd>
-      
-      <dt><var>replace</var></dt>
-      <dd><code data-language="swig">string</code></dd>
-      
-      <dd>string that will replace the matched parts from <var>search</var></dd>
-      
-      <dt><var>flags</var></dt>
-      <dd><code data-language="swig">string</code></dd>
-      <dd><i>optional</i></dd>
-      <dd>Regular expression flags. <a href="https://developer.mozilla.org/en/JavaScript/Guide/Regular_Expressions#Advanced_Searching_With_Flags">[reference]</a></dd>
-      
-    </dl>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-reverse"><code data-language="swig">reverse</code></h1>
-    <p>If the input value is an Array, this filter will reverse all items in the array.</p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-striptags"><code data-language="swig">striptags</code></h1>
-    <p>Strip all HTML/XML tags.</p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-title"><code data-language="swig">title</code></h1>
-    <p>Change the output to title-case: the first letter of every word will be uppercase, while all the rest will be lowercase.</p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-uniq"><code data-language="swig">uniq</code></h1>
-    <p>Produces a duplicate-free version of an input array.</p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-upper"><code data-language="swig">upper</code></h1>
-    <p>Change the output to all uppercase letters.</p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-url_encode"><code data-language="swig">url_encode</code></h1>
-    <p>Encode the ouput as a URI component.</p>
-    
- 
-  </article>
-  
-  <article class="doc">
-    <h1 id="filters-url_decode"><code data-language="swig">url_decode</code></h1>
-    <p>Decode the ouput as a URI component.</p>
-    
- 
-  </article>
-  
-
-  <article>
-    <h1 id="filters-custom">Custom Filters</h1>
-
-    <p>Custom filters are very easy to write for your own project that uses Swig.</p>
-
-    <p>Create a file called <code>myfilters.js</code> and include it in the Swig init function:</p>
-
-    <pre><code data-language="javascript">swig.init({ filters: require('myfilters') });</code></pre>
-
-    <p>In your <code>myfilters.js</code> file, each filter method is just a simple javascript method. For example, here's a filter to reverse the order of characters in a variable:</p>
-
-    <pre><code data-language="javascript">exports.myfilter = function (input) {
-  return input.toString().split('').reverse().join('');
-};</code></pre>
-
-    <p>Once your filter has been imported, you can use it like any other, as a direct variable filter, or a tag-level filter:</p>
-
-    <pre><code data-language="swig">{{ name|myfilter }}</code></pre>
-
-    <pre><code data-language="swig">{% filter myfilter %}I shall be filtered{% endfilter %}</code></pre>
-
-    <p>You can pass arguments to your custom filters as well:</p>
-
-    <pre><code data-language="javascript">exports.prefix = function(input, prefix) {
-  return prefix.toString() + input.toString();
-};</code></pre>
-
-    <pre><code data-language="swig">{{ name|prefix('my prefix') }}</code></pre>
-
-    <pre><code data-language="swig">{% filter prefix 'my prefix' %}I will be prefixed with "my prefix".{% endfilter %}
-{% filter prefix foo %}I will be prefixed with the value stored to `foo`.{% endfilter %}</code></pre>
-
-  </article>
-</section>
-
-<hr>
-
-<section>
-<h1 id="tags">Tags</h1>
-
-  <section>
-    <h1 id="tags-built-in">Built-in Tags</h1>
-
-    
-    <article class="doc">
-      <h1 id="tags-extends"><code data-language="swig">extends</code></h1>
-
-      <p>Makes the current template extend a parent template. This tag must be the first item in your template.</p>
-
-      
-      <h2>Arguments</h2>
-      <dl>
-        
-        <dt><var>file</var></dt>
-        <dd><code>string, var</code></dd>
-        
-        <dd>The path, relative to the template root, to use as the parent layout for the current file. Must be the first token of this file.<br><br>See <a href="#inheritance">Template inheritance</a> for more information.</dd>
-        
- 
-      </dl>
-      
- 
-    </article>
-    
-    <article class="doc">
-      <h1 id="tags-block"><code data-language="swig">block</code></h1>
-
-      <p>Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.<br><br>See <a href="#inheritance">Template inheritance</a> for more information.</p>
-
-      
-      <h2>Arguments</h2>
-      <dl>
-        
-        <dt><var>name</var></dt>
-        <dd><code>token</code></dd>
-        
-        <dd>Name for the current block context. Must start with a letter and only include letters, numbers, and underscores.</dd>
-        
- 
-      </dl>
-      
- 
-    </article>
-    
-    <article class="doc">
-      <h1 id="tags-parent"><code data-language="swig">parent</code></h1>
-
-      <p>Inject the content from the parent template's block of the same name into the current block.<br><br>See <a href="#inheritance">Template inheritance</a> for more information.</p>
-
-      
-      <p><em>Accepts no arguments.</em></p>
-      
- 
-    </article>
-    
-    <article class="doc">
-      <h1 id="tags-include"><code data-language="swig">include</code></h1>
-
-      <p>Includes a template in its place. The template is rendered within the current context.</p>
-
-      
-      <h2>Arguments</h2>
-      <dl>
-        
-        <dt><var>file</var></dt>
-        <dd><code>string, var</code></dd>
-        
-        <dd>The path, relative to the template root, to render into the current context.</dd>
-        
- 
-        <dt><var>ignore missing</var></dt>
-        <dd><code></code></dd>
-        <dd><i>optional</i></dd>
-        <dd>Do not error if the file does not exist.</dd>
-        
- 
-        <dt><var>with <var>x</var></var></dt>
-        <dd><code>var</code></dd>
-        <dd><i>optional</i></dd>
-        <dd>Set <var>x</var> to the root context object to pass to the rendering of the template. This should always be a key:value object.</dd>
-        
- 
-        <dt><var>only</var></dt>
-        <dd><code></code></dd>
-        <dd><i>optional</i></dd>
-        <dd>Restrict the context of the template to those explicitly defined the the <var>with x</var> argument</dd>
-        
- 
-      </dl>
-      
- 
- 
-
-<h3>Usage Instructions</h3>
-<pre><code data-language="swig">{% include template_path %}
-{% include "path/to/template.js" %}</code></pre>
-
-<p>You can mark an include to <code>ignore missing</code> so that if the template does not exist, it will be ignored and no error will be thrown.</p>
-
-<pre><code data-language="swig">{% include "foobar.html" ignore missing %}</code></pre>
-
-<p>Locally declared context variables are _not_ passed to the included template by default. For example, in the following situations, your <code>inc.html</code> will not know about the variables <code>foo</code> nor <code>bar</code>:</p>
-
-<pre><code data-language="swig">{% set foo = "bar" %}
-{% include "inc.html" %}
-
-{% for bar in thing %}
-    {% include "inc.html" %}
-{% endfor %}</code></pre>
-
-<p>In order to have your included template get these locally declared variables, you can use the <code>with</code> argument, followed by an object that will create the context of the included template:</p>
-
-<pre><code data-language="swig">{% set foo = { bar: "baz" } %}
-{% include "inc.html" with foo %}
-
-{% for bar in thing %}
-    {% include "inc.html" with bar %}
-{% endfor %}</code></pre>
-
-<p>You can also use the <code>only</code> argument to restrict the context to the variables that you explicitly define.</p>
-
-<p>Assume that your current context has variables <code>bar</code> and <code>foo</code> available. In the following situation, only <code>foo</code> will be defined in your <code>inc.html</code>:</p>
-
-<pre><code data-language="swig">{% include "inc.html" with foo only %}</code></pre>
-
-<p>The <code>only</code> argument <em>must</em> be passed as the last argument in the tag. Any other placement will not work.</p>
-
- 
-    </article>
-    
-    <article class="doc">
-      <h1 id="tags-raw"><code data-language="swig">raw</code></h1>
-
-      <p>Stop token parsing within this tag. All content will be output as-is.</p>
-
-      
-      <p><em>Accepts no arguments.</em></p>
-      
- 
- 
-<p>Wrap any section in <code>{&#37; raw &#37;}...{&#37; endraw &#37;}</code> to stop the token parser from modifying any of the internal content. Also useful for putting swig templates into JavaScript for swig in the browser. Attempting to do the following without this tag will cause a parsing error and your template will not be displayed.</p>
-
-<pre><code data-language="html">You can output any content, including swig tag modifiers like {% raw %}&lt;code&gt;{{&lt;/code&gt; and &lt;code&gt;{%&lt;/code&gt; without having them parsed and errors thrown.</code></pre>
-false
- 
-    </article>
-    
-    <article class="doc">
-      <h1 id="tags-for"><code data-language="swig">for</code></h1>
-
-      <p>Loop over objects and arrays.</p>
-
-      
-      <h2>Arguments</h2>
-      <dl>
-        
-        <dt><var>x</var></dt>
-        <dd><code>token</code></dd>
-        
-        <dd>Loop-accessible name for the current loop iteration's value.</dd>
-        
- 
-        <dt><var>in</var></dt>
-        <dd><code>token</code></dd>
-        
-        <dd>The literal token 'in' is a required token.</dd>
-        
- 
-        <dt><var>y</var></dt>
-        <dd><code>var</code></dd>
-        
-        <dd>Iterable object. Can be modified with filters as desired.</dd>
-        
- 
-      </dl>
-      
- 
- 
-<p>For loops have 4 special context variables accessible inside of the loop:</p>
-
-<pre><code data-language="swig">{% for x in y %}
-  {% if loop.first %}&lt;ul&gt;{% endif %}
-  &lt;li&gt;{{ loop.index }} - {{ loop.key }}: {{ x }}&lt;/li&gt;
-  {% if loop.last %}&lt;/ul&gt;{% endif %}
-{% endfor %}
-</code></pre>
-
-<h3>Special Loop Variables</h3>
-<dl>
-  <dt><code>loop.index</code></dt>
-  <dd>the current iteration of the loop (1-indexed)</dd>
-  <dt><code>loop.index0</code></dt>
-  <dd>the current iteration of the loop (0-indexed)</dd>
-  <dt><code>loop.revindex</code></dt>
-  <dd>the number of iterations from the end of the loop (1-indexed)</dd>
-  <dt><code>loop.revindex0</code></dt>
-  <dd>the number of iterations from the end of the loop (0-indexed)</dd>
-  <dt><code>loop.key</code></dt>
-  <dd>if the iterator is an object, this will be the key of the current item, otherwise it will be the same as the <code>loop.index</code>.</dd>
-  <dt><code>loop.first</code></dt>
-  <dd><code>true</code> if the current object is the first in the object or array.</dd>
-  <dt><code>loop.last</code></dt>
-  <dd><code>true</code> if the current object is the last in the  object or array.</dd>
-  <dt><code>loop.cycle</code></dt>
-  <dd>a helper function to cycle between a the given arguments</dd>
-</dl>
-
-<p>The <code>loop.cycle</code> helper function can take any number of arguments and will cycle through them during each iteration of the loop. A common use-case may look like this:</p>
-
-<pre><code data-language="swig">{% for item in items %}
-  &lt;li class="{{ loop.cycle('odd', 'even') }}"&gt;{{ item }}&lt;/li&gt;
-{% endfor %}
-</code></pre>
-
-<p>You can also apply filters to the object that you are iterating over.</p>
-
-<pre><code data-language="swig">{% for x in y|reverse %}
-  The array `y` will first be reversed before looping over it.
-{% endfor %}
-</code></pre>
-
-<h2><code>else</code> in <code>for</code> tags</h2>
-<p>For loops have a special tag available to them called <code>{% else %}</code>.</p>
-
-<p>If the loop object is empty or <code>length === 0</code>, the content following the <code>else</code> tag will be rendered.</p>
-
-<pre><code data-language="swig">{% for person in people %}
-  {{ person }}
-{% else %}
-  There are no people yet!
-{% endfor %}
-</code></pre>
-
- 
-    </article>
-    
-    <article class="doc">
-      <h1 id="tags-if"><code data-language="swig">if</code></h1>
-
-      <p>Conditional statements</p>
-
-      
-      <h2>Arguments</h2>
-      <dl>
-        
-        <dt><var>...</var></dt>
-        <dd><code>mixed</code></dd>
-        
-        <dd>Accepts any valid JavaScript conditional statement, as well as some other human readable syntaxes.</dd>
-        
- 
-      </dl>
-      
- 
- 
-<p>All normal JavaScript-valid if statements are supported, including some extra helpful syntaxes:</p>
-
-<pre><code data-language="swig">{% if x %}{% endif %}
-{% if !x %}{% endif %}
-{% if not x %}{% endif %}
-
-{% if x and y %}{% endif %}
-{% if x &amp;&amp; y %}{% endif %}
-{% if x or y %}{% endif %}
-{% if x || y %}{% endif %}
-{% if x || (y &amp;&amp; z) %}{% endif %}
-
-{% if x [operator] y %}
-  Operators: ==, !=, &lt;, &lt;=, &gt;, &gt;=, ===, !==
-{% endif %}
-
-{% if x == 'five' %}
-  The operands can be also be string or number literals
-{% endif %}
-
-{% if x|length === 3 %}
-  You can use filters on any operand in the statement.
-{% endif %}
-
-{% if x in y %}
-  If x is a value that is present in y, this will return true.
-{% endif %}
-</code></pre>
-
-<h3><code>else</code> and <code>else if</code></h3>
-
-<p>The <code>{% else %}</code> and <code>{% else if ... %}</code> tags are allowed within an if-block. Using <code>{% else [if ...] %}</code> anywhere outside an immediate parent if-block will throw an exception.</p>
-
-<pre><code data-language="swig">{% if foo %}
-  Some content.
-{% else if "foo" in bar %}
-  Content if the array `bar` has "foo" in it.
-{% else %}
-  Fallback content.
-{% endif %}
-</code></pre>
-
-
- 
-    </article>
-    
-    <article class="doc">
-      <h1 id="tags-autoescape"><code data-language="swig">autoescape</code></h1>
-
-      <p>Change the current behavior of variable auto-escaping.</p>
-
-      
-      <h2>Arguments</h2>
-      <dl>
-        
-        <dt><var>on</var></dt>
-        <dd><code>token</code></dd>
-        
-        <dd>Whether the content should be escaped (<samp>true</samp>) or not (<samp>false</samp>).</dd>
-        
- 
-        <dt><var>type</var></dt>
-        <dd><code>string</code></dd>
-        <dd><i>optional</i></dd>
-        <dd>Escape type. One of <samp>html</samp> or <samp>js</samp>.</dd>
-        <dd>Defaults to <code data-language="swig">html</code></dd>
- 
-      </dl>
-      
- 
- 
-<p>The <code>autoescape</code> tag accepts two controls:</p>
-
-<dl>
-  <dt><code>true</code> or <code>false</code></dt>
-  <dd>(default is <code>true</code> if not provided) These either turn variable auto-escaping on or off for the contents of the tag, regardless of the global setting.</dd>
-  <dt>escape-type</dt>
-  <dd>optionally include <code>"js"</code> to escape variables safe for JavaScript</dd>
-</dl>
-
-<p>For the following contexts, assume:</p>
-
-<pre><code data-language="javascript">some_html_output = '&lt;p&gt;Hello "you" &amp; \'them\'&lt;/p&gt;';
-</code></pre>
-
-<p>So the following:</p>
-
-<pre><code data-language="swig">{% autoescape false %}
-  {{ some_html_output }}
-{% endautoescape %}
-
-{% autoescape true %}
-  {{ some_html_output }}
-{% endautoescape %}
-
-{% autoescape true "js" %}
-  {{ some_html_output }}
-{% endautoescape %}
-</code></pre>
-
-<p>Will output:</p>
-
-<pre><code data-language="html">&lt;p&gt;Hello "you" &amp; 'them'&lt;/p&gt;
-
-&amp;lt;p&amp;gt;Hello &amp;quot;you&amp;quot; &amp;amp; &amp;#39;them&amp;#39; &amp;lt;/p&amp;gt;
-
-\u003Cp\u003EHello \u0022you\u0022 &amp; \u0027them\u0027\u003C\u005Cp\u003E
-</code></pre>
-
-<p>For more information on how the autoescape tag filters variable output, see the <a href="#filters-escape">escape filter documentation</a>.</p>
-
-
- 
-    </article>
-    
-    <article class="doc">
-      <h1 id="tags-set"><code data-language="swig">set</code></h1>
-
-      <p>Set a variable for re-use in the current context.</p>
-
-      
-      <h2>Arguments</h2>
-      <dl>
-        
-        <dt><var>name</var></dt>
-        <dd><code>token</code></dd>
-        
-        <dd>Variable name to assign the value to.</dd>
-        
- 
-        <dt><var>=</var></dt>
-        <dd><code>token</code></dd>
-        
-        <dd>The literal equals sign is a required token.</dd>
-        
- 
-        <dt><var>value</var></dt>
-        <dd><code>mixed</code></dd>
-        
-        <dd>Value to apply to <var>name</var>.</dd>
-        
- 
-      </dl>
-      
- 
- 
-<pre><code data-language="swig">{% set foo = [0, 1, 2, 3, 4, 5] %}
-{% for num in foo %}
-  &lt;li&gt;{{ num }}&lt;/li&gt;
-{% endfor %}
-</code></pre>
-
- 
-    </article>
-    
-    <article class="doc">
-      <h1 id="tags-macro"><code data-language="swig">macro</code></h1>
-
-      <p>Create custom, reusable snippets within your templates.</p>
-
-      
-      <h2>Arguments</h2>
-      <dl>
-        
-        <dt><var>...</var></dt>
-        <dd><code>token</code></dd>
-        
-        <dd>User defined.</dd>
-        
- 
-      </dl>
-      
- 
- 
-<p>One of the most common use-case for macros is form inputs. To start, define your <code>input</code> macro somewhere in your template scope (the top of a template, or an included template is a good spot):</p>
-
-<pre><code data-language="swig">{% macro input type name id label value error %}
-  &lt;label for="{{ name }}"&gt;{{ label }}&lt;/label&gt;
-  &lt;input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}"{% if error %} class="error"{% endif %}&gt;
-{% endmacro %}
-</code></pre>
-
-<p>Somewhere later in your template, invoke the macro using a variable:</p>
-
-<pre><code data-language="swig">&lt;div&gt;{{ input("text", "fname", "fname", "First Name", fname.value, fname.errors) }}&lt;/div&gt;
-&lt;div&gt;{{ input("text", "lname", "lname", "Last Name", lname.value, lname.errors) }}&lt;/div&gt;
-</code></pre>
-
-<p>Your output may look like this:</p>
-
-<pre><code data-language="swig">&lt;div&gt;
-  &lt;label for="fname"&gt;First Name&lt;/label&gt;
-  &lt;input type="text" name="fname" id="fname" value="Paul"&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;label for="lname"&gt;Last Name&lt;/label&gt;
-  &lt;input type="text" name="lname" id="lname" value="" class="error"&gt;
-&lt;/div&gt;
-</code></pre>
-
- 
-    </article>
-    
-    <article class="doc">
-      <h1 id="tags-import"><code data-language="swig">import</code></h1>
-
-      <p>Allows you to import macros from another file directly into your current context.</p>
-
-      
-      <h2>Arguments</h2>
-      <dl>
-        
-        <dt><var>file</var></dt>
-        <dd><code>var, string</code></dd>
-        
-        <dd>The path, relative to the template root, to import macros from.</dd>
-        
- 
-        <dt><var>as</var></dt>
-        <dd><code>token</code></dd>
-        
-        <dd>The literal token 'as' is a required token.</dd>
-        
- 
-        <dt><var>var</var></dt>
-        <dd><code>token</code></dd>
-        
-        <dd>Context-accessible object name to assign the macros to.</dd>
-        
- 
-      </dl>
-      
- 
- 
-<p>The <code>import</code> tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.</p>
-
-<p>Note that <code>import</code> is context-sensitive. If you import a macro in a <code>for</code> loop, the imported macro will only be available within that loop. It's best to import macros from your parent template, if possible, otherwise import at the beginning of the block you'll be using it.</p>
-
-<p>Assuming the macro <code>input</code> exists in <code>formmacros.html</code>, you can run the macro by using <code data-language="swig">{{ form.input }}</code> as follows:</p>
-
-<pre><code data-language="swig">{% import 'formmacros.html' as form %}
-
-{# this will run the input macro #}
-{{ form.input("text", "name") }}
-
-{# this, however, will NOT output anything because the macro is scoped to the "form" object: #}
-{{ input("text", "name") }}
-</code></pre>
-
-
- 
-    </article>
-    
-    <article class="doc">
-      <h1 id="tags-filter"><code data-language="swig">filter</code></h1>
-
-      <p>Apply a filter to an entire block of template.</p>
-
-      
-      <h2>Arguments</h2>
-      <dl>
-        
-        <dt><var>filter_name</var></dt>
-        <dd><code>token</code></dd>
-        
-        <dd>Name of the filter to use.</dd>
-        
- 
-        <dt><var>...</var></dt>
-        <dd><code>mixed</code></dd>
-        
-        <dd>Accepts any number of arguments, will be passed to the filter.</dd>
-        
- 
-      </dl>
-      
- 
- 
-<pre><code data-language="swig">{% filter uppercase %}oh hi, {{ name }}{% endfilter %}
-{% filter replace "." "!" "g" %}Hi. My name is Paul.{% endfilter %}</code></pre>
-
-<p>Will output the following:</p>
-
-<pre><code>OH HI, PAUL
-Hi! My name is Paul!
-</code></pre>
-
- 
-    </article>
-    
-    <article class="doc">
-      <h1 id="tags-spaceless"><code data-language="swig">spaceless</code></h1>
-
-      <p>Attempts to remove whitespace between HTML tags. Use at your own risk.</p>
-
-      
-      <p><em>Accepts no arguments.</em></p>
-      
- 
- 
-<pre><code data-language="swig">{% spaceless %}
-{% for num in foo %}
-  &lt;li&gt;{{ loop.index }}&lt;/li&gt;
-{% endfor %}
-{% endspaceless %}
-</code></pre>
-
-
-<pre><code data-language="html">
-&lt;li&gt;1&lt;/li&gt;&lt;li&gt;2&lt;/li&gt;&lt;li&gt;3&lt;/li&gt;
-</code></pre>
- 
-    </article>
-    
-  </section>
-
-  <hr>
-
-  <article id="tags-custom">
-    <h1>Custom Tags</h1>
-
-<p>Swig makes it easy to write custom tags specific for your project.</p>
-
-<p>First, make sure to include your node.js file that declares your tags in the swig init:</p>
-
-<pre><code data-language="javascript">swig.init({ tags: require('mytags') });</code></pre>
-
-<h2>Requirements</h2>
-
-<p>First, include the helpers.</p>
-
-<pre><code data-language="javascript">var helpers = require('swig/lib/helpers');</code></pre>
-
-<p>Define your tag and whether or not it requires an "end" tag:</p>
-
-<pre><code data-language="javascript">exports.mytag = function (indent, parser) {
-    return 'output';
-};
-exports.mytag.ends = true;
-</code></pre>
-
-<h2>A Really Simple Tag</h2>
-
-<p>To parse a swig variable with or without filters into a variable token, eg. <code>bar</code> or <code>foo|lowercase</code></p>
-
-<pre><code data-language="javascript">exports.mytag = function (indent, parser) {
-    var myArg = parser.parseVariable(this.args[0]);
-    return 'output';
-};
-exports.mytag.ends = true;</code></pre>
-
-<p>Use a parsed variable token with <code>helpers.setVar()</code> to bind a variable in your current scope into the templates scope. The <code>setVar</code> method cleans up variable output, applies filters and escaping for clean output:</p>
-
-<pre><code data-language="javascript">exports.mytag = function (indent, parser) {
-    var myArg = parser.parseVariable(this.args[0]),
-        output = '';
-    output += helpers.setVar(name, myArg);
-    return output;
-};
-exports.mytag.ends = true;</code></pre>
-
-<p>To parse the inner content of a tag for outputting, use <code>parser.compile.apply(this, [indent, parentBlock])</code>:</p>
-
-<pre><code data-language="javascript">exports.mytag = function (indent, parser) {
-    var myArg = parser.parseVariable(this.args[0]),
-        output = [];
-
-    output.push(helpers.setVar('__myArg', myArg));
-
-    output.push('_output += "&lt;h1&gt;";');
-    output.push('_output += __myArg;');
-    output.push('_output += "&lt;/h1&gt;";');
-    output.push('_output += "&lt;p&gt;";');
-    output.push(parser.compile.call(this, indent + '    '));
-    output.push('_output += "&lt;/p&gt;";');
-
-    return output.join('');
-};
-exports.mytag.ends = true;</code></pre>
-
-<p>When using your tag, it might have the following effect (assume <code>blah</code> is equal to "Scrumdiddlyumptious"):</p>
-
-<p>Template:</p>
-
-<pre><code data-language="swig">{% mytag blah %}Tacos{% endmytag %}</code></pre>
-
-<p>Output:</p>
-
-<pre><code data-language="html">&lt;h1&gt;Scrumdiddlyumptious&lt;/h1&gt;
-&lt;p&gt;Tacos&lt;/p&gt;
-</code></pre>
-
-<h2>Third-Party Extensions</h2>
-
-<p>To access a third-party library or method that is defined outside of your templates, you can add it to swig as an extention. For example, if you are using the i18next node module, add it as an extension when you initialize swig:</p>
-
-<pre><code data-language="javascript">var i18next = require('i18next');
-swig.init({
-    extensions: {
-        i18next: i18next
-    }
-});</code></pre>
-
-<p>Once you've added it, your custom tag can reference the <code>i18next</code> extension via the <code>_ext</code> object:</p>
-
-<pre><code data-language="javascript">exports.trans = function (indent, parser) {
-    var myArg = parser.parseVariable(this.args[0]),
-    output = [];
-    output.push(helpers.setVar('__myArg', myArg));
-
-    output.push('_output += _ext.i18next.t(__myArg);');
-
-    return output.join('');
-};</code></pre>
-
-<h2>Write Your Own</h2>
-
-<p>To best understand how to write your own tag, reference <a href="https://github.com/paularmstrong/swig/tree/master/lib/tags"><code>swig/lib/tags/</code></a> to see how the internal tags are written. These will give you a pretty clear indication of how to write your own.</p>
-  </article>
-</section>
-
-<hr>
-
-<section>
-  <h1 id="browser">In The Browser</h1>
-
-  <p>Swig's API in the browser is the same as its API for node.js, with the only difference being that you cannot use the swig.compileFile method, since browsers do not have a filesystem.</p>
-
-  <p>Instead, you must always use <code data-language="javascript">swig.compile</code> and pre-parse all templates.</p>
-
-  <p>In order to use <code>extends</code>, <code>import</code>, and <code>include</code> correctly, another argument is available on <code data-language="javascript">swig.compile</code>: <var>templateKey</var></p>
-
-  <pre><code data-language="javascript">swig.compile(templateString, { filename: templateKey });</code></pre>
-
-  <p>This is the key that will be used to lookup a template. For instance:</p>
-
-  <pre><code data-language="javascript">var template = swig.compile('<p>{% block content %}{% endblock %}</p>', { filename: 'main' });
-var mypage = swig.compile('{% extends "main" %}{% block content %}Oh hey there!{% endblock %}', { filename: 'mypage' });</code></pre>
-
-  <p>When you render mypage, <code data-language="javascript">mypage.render({});</code>, you will see</p>
-
-  <pre><code data-language="html">&lt;p&gt;Oh hey there!&lt;/p&gt;</code></pre>
-
-  <h2 id="browser-issues">Known Issues</h2>
-
-  <ul>
-    <li>Opera and Internet Explorer fail to comply with the date filter format <code>r</code>.</li>
-    <li>Internet Explorer 9.0 in <em>compatibility mode</em> and IE 6 through 8:
-      <ul>
-        <li>Is unable to compute the ISO date time for date filter format <code>c</code>  .</li>
-        <li>Does not handle unicode properly and so it fails to escape output for <code>  'js'</code>.</li>
-      </ul>
-    </li>
-  </ul>
-</section>
-
-<hr>
 
   </div>
 
@@ -1593,126 +223,34 @@ var mypage = swig.compile('{% extends "main" %}{% block content %}Oh hey there!{
 <nav>
   <ol class="sidenav">
     <li>
-      <a href="#basics">Basics</a>
-      <ol>
-        <li><a href="#variables">Variables</a></li>
-        <li><a href="#logic">Logic Tags</a></li>
-        <li><a href="#comments">Comments</a></li>
-        <li><a href="#whitespace">Whitespace Control</a></li>
-      </ol>
+      <a href="/docs/">Getting Started</a>
+      
+<ol>
+  <li><a href="#install">Installation</a></li>
+  <li><a href="#variables">Variables</a></li>
+  <li><a href="#tags">Logic Tags</a></li>
+  <li><a href="#comments">Comments</a></li>
+  <li><a href="#whitespace">Whitespace Control</a></li>
+  <li><a href="#inheritance">Template Interhitance</a></li>
+  <li><a href="#express">Express.js</a></li>
+</ol>
+
     </li>
     <li>
-      <a href="#inheritance">Template Inheritance</a>
+      <a href="/docs/api/">Swig API</a>
       
     </li>
     <li>
-      <a href="#api">Swig API</a>
-      <ol>
-        <li><a href="#api-init">Initialization</a></li>
-        <li><a href="#api-parse">Parsing</a></li>
-        <li><a href="#api-render">Rendering</a></li>
-        <li><a href="#api-express">Express.js</a></li>
-      </ol>
+      <a href="/docs/filters/">Filters</a>
+      
     </li>
     <li>
-      <a href="#filters">Filters</a>
-      <ol>
-        <li>
-          <a href="#filters-built-in">Built-In Filters</a>
-          <ol>
-          
-            <li><a href="#filters-add">add</a></li>
-          
-            <li><a href="#filters-addslashes">addslashes</a></li>
-          
-            <li><a href="#filters-capitalize">capitalize</a></li>
-          
-            <li><a href="#filters-date">date</a></li>
-          
-            <li><a href="#filters-default">default</a></li>
-          
-            <li><a href="#filters-e">e</a></li>
-          
-            <li><a href="#filters-escape">escape</a></li>
-          
-            <li><a href="#filters-first">first</a></li>
-          
-            <li><a href="#filters-join">join</a></li>
-          
-            <li><a href="#filters-json_encode">json_encode</a></li>
-          
-            <li><a href="#filters-last">last</a></li>
-          
-            <li><a href="#filters-length">length</a></li>
-          
-            <li><a href="#filters-lower">lower</a></li>
-          
-            <li><a href="#filters-raw">raw</a></li>
-          
-            <li><a href="#filters-replace">replace</a></li>
-          
-            <li><a href="#filters-reverse">reverse</a></li>
-          
-            <li><a href="#filters-striptags">striptags</a></li>
-          
-            <li><a href="#filters-title">title</a></li>
-          
-            <li><a href="#filters-uniq">uniq</a></li>
-          
-            <li><a href="#filters-upper">upper</a></li>
-          
-            <li><a href="#filters-url_encode">url_encode</a></li>
-          
-            <li><a href="#filters-url_decode">url_decode</a></li>
-          
-          </ol>
-        </li>
-        <li><a href="#filters-custom">Custom Filters</a></li>
-      </ol>
+      <a href="/docs/tags/">Tags</a>
+      
     </li>
     <li>
-      <a href="#tags">Tags</a>
-      <ol>
-        <li>
-          <a href="#tags-built-in">Built-In Tags</a>
-          <ol>
-          
-            <li><a href="#tags-extends">extends</a></li>
-          
-            <li><a href="#tags-block">block</a></li>
-          
-            <li><a href="#tags-parent">parent</a></li>
-          
-            <li><a href="#tags-include">include</a></li>
-          
-            <li><a href="#tags-raw">raw</a></li>
-          
-            <li><a href="#tags-for">for</a></li>
-          
-            <li><a href="#tags-if">if</a></li>
-          
-            <li><a href="#tags-autoescape">autoescape</a></li>
-          
-            <li><a href="#tags-set">set</a></li>
-          
-            <li><a href="#tags-macro">macro</a></li>
-          
-            <li><a href="#tags-import">import</a></li>
-          
-            <li><a href="#tags-filter">filter</a></li>
-          
-            <li><a href="#tags-spaceless">spaceless</a></li>
-          
-          </ol>
-        </li>
-        <li><a href="#tags-custom">Custom Tags</a></li>
-      </ol>
-    </li>
-    <li>
-      <a href="#browser">In The Browser</a>
-      <ol>
-        <li><a href="#browser-issues">Known Issues</a></li>
-      </ol>
+      <a href="/docs/cli/">Command-Line</a>
+      
     </li>
   </ol>
 </nav>
@@ -1723,9 +261,7 @@ var mypage = swig.compile('{% extends "main" %}{% block content %}Oh hey there!{
 <a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
 
  
-<script src="/swig/js/lib/zepto.min.js"></script>
 <script src="/swig/js/lib/rainbow.min.js"></script>
-<script src="/swig/js/swig.pack.min.js"></script>
 <script src="/swig/js/master.js"></script>
 
 </body>

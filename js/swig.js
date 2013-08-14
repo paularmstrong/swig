@@ -1,774 +1,18 @@
-/*! Swig https://paularmstrong.github.com/swig | https://github.com/paularmstrong/swig/blob/master/LICENSE */
-/*! Cross-Browser Split 1.0.1 (c) Steven Levithan <stevenlevithan.com>; MIT License An ECMA-compliant, uniform cross-browser split method */
-/*! Underscore.js (c) 2011 Jeremy Ashkenas | https://github.com/documentcloud/underscore/blob/master/LICENSE */
-/*! DateZ (c) 2011 Tomo Universalis | https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */(function () {
-  var str = '{{ a }}',
-    splitter;
-  if (str.split(/(\{\{.*?\}\})/).length === 0) {
+/*! Swig v1.0.0-pre1 | https://paularmstrong.github.com/swig | https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! DateZ (c) 2011 Tomo Universalis | https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
+;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
+var swig = require('../lib/swig');
 
-    /** Repurposed from Steven Levithan's
-     *  Cross-Browser Split 1.0.1 (c) Steven Levithan <stevenlevithan.com>; MIT License An ECMA-compliant, uniform cross-browser split method
-     */
-    splitter = function (str, separator, limit) {
-      if (Object.prototype.toString.call(separator) !== '[object RegExp]') {
-        return splitter._nativeSplit.call(str, separator, limit);
-      }
-
-      var output = [],
-        lastLastIndex = 0,
-        flags = (separator.ignoreCase ? 'i' : '') + (separator.multiline ? 'm' : '') + (separator.sticky ? 'y' : ''),
-        separator2,
-        match,
-        lastIndex,
-        lastLength;
-
-      separator = RegExp(separator.source, flags + 'g');
-
-      str = str.toString();
-      if (!splitter._compliantExecNpcg) {
-        separator2 = RegExp('^' + separator.source + '$(?!\\s)', flags);
-      }
-
-      if (limit === undefined || limit < 0) {
-        limit = Infinity;
-      } else {
-        limit = Math.floor(+limit);
-        if (!limit) {
-          return [];
-        }
-      }
-
-      function fixExec() {
-        var i = 1;
-        for (i; i < arguments.length - 2; i += 1) {
-          if (arguments[i] === undefined) {
-            match[i] = undefined;
-          }
-        }
-      }
-
-      match = separator.exec(str);
-      while (match) {
-        lastIndex = match.index + match[0].length;
-
-        if (lastIndex > lastLastIndex) {
-          output.push(str.slice(lastLastIndex, match.index));
-
-          if (!splitter._compliantExecNpcg && match.length > 1) {
-            match[0].replace(separator2, fixExec);
-          }
-
-          if (match.length > 1 && match.index < str.length) {
-            Array.prototype.push.apply(output, match.slice(1));
-          }
-
-          lastLength = match[0].length;
-          lastLastIndex = lastIndex;
-
-          if (output.length >= limit) {
-            break;
-          }
-        }
-
-        if (separator.lastIndex === match.index) {
-          separator.lastIndex += 1; // avoid an infinite loop
-        }
-        match = separator.exec(str);
-      }
-
-      if (lastLastIndex === str.length) {
-        if (lastLength || !separator.test('')) {
-          output.push('');
-        }
-      } else {
-        output.push(str.slice(lastLastIndex));
-      }
-
-      return output.length > limit ? output.slice(0, limit) : output;
-    };
-
-    splitter._compliantExecNpcg = /()??/.exec('')[1] === undefined;
-    splitter._nativeSplit = String.prototype.split;
-
-    String.prototype.split = function (separator, limit) {
-      return splitter(this, separator, limit);
-    };
-  }
-}());
-swig = (function () {
-var swig = {},
-dateformat = {},
-filters = {},
-helpers = {},
-parser = {},
-tags = {};
-(function (exports) {
-
-
-
-var config = {
-    allowErrors: false,
-    autoescape: true,
-    cache: true,
-    encoding: 'utf8',
-    filters: filters,
-    root: '/',
-    tags: tags,
-    extensions: {},
-    tzOffset: 0
-  },
-  _config = _.extend({}, config),
-  CACHE = {};
-
-// Call this before using the templates
-exports.init = function (options) {
-  CACHE = {};
-  _config = _.extend({}, config, options);
-  _config.filters = _.extend(filters, options.filters);
-  _config.tags = _.extend(tags, options.tags);
-
-  dateformat.defaultTZOffset = _config.tzOffset;
-};
-
-function TemplateError(error) {
-  return { render: function () {
-    return '<pre>' + error.stack + '</pre>';
-  }};
-}
-
-function createRenderFunc(code) {
-  // The compiled render function - this is all we need
-  return new Function('_context', '_parents', '_filters', '_', '_ext', [
-    '_parents = _parents ? _parents.slice() : [];',
-    '_context = _context || {};',
-    // Prevents circular includes (which will crash node without warning)
-    'var j = _parents.length,',
-    '  _output = "",',
-    '  _this = this;',
-    // Note: this loop averages much faster than indexOf across all cases
-    'while (j--) {',
-    '   if (_parents[j] === this.id) {',
-    '     return "Circular import of template " + this.id + " in " + _parents[_parents.length-1];',
-    '   }',
-    '}',
-    // Add this template as a parent to all includes in its scope
-    '_parents.push(this.id);',
-    code,
-    'return _output;'
-  ].join(''));
-}
-
-function createTemplate(data, id) {
-  var template = {
-      // Allows us to include templates from the compiled code
-      compileFile: exports.compileFile,
-      // These are the blocks inside the template
-      blocks: {},
-      // Distinguish from other tokens
-      type: parser.TEMPLATE,
-      // The template ID (path relative to template dir)
-      id: id
-    },
-    tokens,
-    code,
-    render;
-
-  // The template token tree before compiled into javascript
-  if (_config.allowErrors) {
-    tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
-  } else {
-    try {
-      tokens = parser.parse.call(template, data, _config.tags, _config.autoescape);
-    } catch (e) {
-      return new TemplateError(e);
-    }
-  }
-
-  template.tokens = tokens;
-
-  // The raw template code
-  code = parser.compile.call(template);
-
-  if (code !== false) {
-    render = createRenderFunc(code);
-  } else {
-    render = function (_context, _parents, _filters, _, _ext) {
-      template.tokens = tokens;
-      code = parser.compile.call(template, '', _context);
-      var fn = createRenderFunc(code);
-      return fn.call(this, _context, _parents, _filters, _, _ext);
-    };
-  }
-
-  template.render = function (context, parents) {
-    if (_config.allowErrors) {
-      return render.call(this, context, parents, _config.filters, _, _config.extensions);
-    }
-    try {
-      return render.call(this, context, parents, _config.filters, _, _config.extensions);
-    } catch (e) {
-      return new TemplateError(e);
-    }
-  };
-
-  return template;
-}
-
-function getTemplate(source, options) {
-  var key = options.filename || source;
-  if (_config.cache || options.cache) {
-    if (!CACHE.hasOwnProperty(key)) {
-      CACHE[key] = createTemplate(source, key);
-    }
-
-    return CACHE[key];
-  }
-
-  return createTemplate(source, key);
-}
-
-exports.compileFile = function (filepath, forceAllowErrors) {
-  var tpl, get;
-
-  if (_config.cache && CACHE.hasOwnProperty(filepath)) {
-    return CACHE[filepath];
-  }
-
-  if (typeof window !== 'undefined') {
-    throw new TemplateError({ stack: 'You must pre-compile all templates in-browser. Use `swig.compile(template);`.' });
-  }
-
-  get = function () {
-    var excp,
-      getSingle,
-      c;
-    getSingle = function (prefix) {
-      var file = ((/^\//).test(filepath) || (/^.:/).test(filepath)) ? filepath : prefix + '/' + filepath,
-        data;
-      try {
-        data = fs.readFileSync(file, config.encoding);
-        tpl = getTemplate(data, { filename: filepath });
-      } catch (e) {
-        excp = e;
-      }
-    };
-    if (typeof _config.root === "string") {
-      getSingle(_config.root);
-    }
-    if (_config.root instanceof Array) {
-      c = 0;
-      while (tpl === undefined && c < _config.root.length) {
-        getSingle(_config.root[c]);
-        c = c + 1;
-      }
-    }
-    if (tpl === undefined) {
-      throw excp;
-    }
-  };
-
-  if (_config.allowErrors || forceAllowErrors) {
-    get();
-  } else {
-    try {
-      get();
-    } catch (error) {
-      tpl = new TemplateError(error);
-    }
-  }
-  return tpl;
-};
-
-exports.compile = function (source, options) {
-  var tmpl = getTemplate(source, options || {});
-
-  return function (source, options) {
-    return tmpl.render(source, options);
-  };
-};
-})(swig);
-(function (exports) {
-
-// Javascript keywords can't be a name: 'for.is_invalid' as well as 'for' but not 'for_' or '_for'
-var KEYWORDS = /^(Array|ArrayBuffer|Boolean|Date|Error|eval|EvalError|Function|Infinity|Iterator|JSON|Math|Namespace|NaN|Number|Object|QName|RangeError|ReferenceError|RegExp|StopIteration|String|SyntaxError|TypeError|undefined|uneval|URIError|XML|XMLList|break|case|catch|continue|debugger|default|delete|do|else|finally|for|function|if|in|instanceof|new|return|switch|this|throw|try|typeof|var|void|while|with)(?=(\.|$))/;
-
-// Returns TRUE if the passed string is a valid javascript string literal
-exports.isStringLiteral = function (string) {
-  if (typeof string !== 'string') {
-    return false;
-  }
-
-  var first = string.substring(0, 1),
-    last = string.charAt(string.length - 1, 1),
-    teststr;
-
-  if ((first === last) && (first === "'" || first === '"')) {
-    teststr = string.substr(1, string.length - 2).split('').reverse().join('');
-
-    if ((first === "'" && (/'(?!\\)/).test(teststr)) || (last === '"' && (/"(?!\\)/).test(teststr))) {
-      throw new Error('Invalid string literal. Unescaped quote (' + string[0] + ') found.');
-    }
-
-    return true;
-  }
-
-  return false;
-};
-
-// Returns TRUE if the passed string is a valid javascript number or string literal
-exports.isLiteral = function (string) {
-  var literal = false;
-
-  // Check if it's a number literal
-  if ((/^\d+([.]\d+)?$/).test(string)) {
-    literal = true;
-  } else if (exports.isStringLiteral(string)) {
-    literal = true;
-  }
-
-  return literal;
-};
-
-// Variable names starting with __ are reserved.
-exports.isValidName = function (string) {
-  return ((typeof string === 'string')
-    && string.substr(0, 2) !== '__'
-    && (/^([$A-Za-z_]+[$A-Za-z_0-9]*)(\.?([$A-Za-z_]+[$A-Za-z_0-9]*))*$/).test(string)
-    && !KEYWORDS.test(string));
-};
-
-// Variable names starting with __ are reserved.
-exports.isValidShortName = function (string) {
-  return string.substr(0, 2) !== '__' && (/^[$A-Za-z_]+[$A-Za-z_0-9]*$/).test(string) && !KEYWORDS.test(string);
-};
-
-// Checks if a name is a vlaid block name
-exports.isValidBlockName = function (string) {
-  return (/^[A-Za-z]+[A-Za-z_0-9]*$/).test(string);
-};
-
-function stripWhitespace(input) {
-  return input.replace(/^\s+|\s+$/g, '');
-}
-exports.stripWhitespace = stripWhitespace;
-
-// the varname is split on (/(\.|\[|\])/) but it may contain keys with dots,
-// e.g. obj['hello.there']
-// this function searches for these and preserves the literal parts
-function filterVariablePath(props) {
-
-	var filtered = [],
-		literal = '',
-		i = 0;
-	for (i; i < props.length; i += 1) {
-		if (props[i] && props[i].charAt(0) !== props[i].charAt(props[i].length - 1) &&
-				(props[i].indexOf('"') === 0 || props[i].indexOf("'") === 0)) {
-			literal = props[i];
-			continue;
-		}
-		if (props[i] === '.' && literal) {
-			literal += '.';
-			continue;
-		}
-		if (props[i].indexOf('"') === props[i].length - 1 || props[i].indexOf("'") === props[i].length - 1) {
-			literal += props[i];
-			filtered.push(literal);
-			literal = '';
-		} else {
-			filtered.push(props[i]);
-		}
-	}
-	return _.compact(filtered);
-}
-
-/**
-* Returns a valid javascript code that will
-* check if a variable (or property chain) exists
-* in the evaled context. For example:
-*  check('foo.bar.baz')
-* will return the following string:
-*  typeof foo !== 'undefined' && typeof foo.bar !== 'undefined' && typeof foo.bar.baz !== 'undefined'
-*/
-function check(variable, context) {
-  if (_.isArray(variable)) {
-    return '(true)';
-  }
-
-  variable = variable.replace(/^this/, '_this.__currentContext');
-
-  if (exports.isLiteral(variable)) {
-    return '(true)';
-  }
-
-  var props = variable.split(/(\.|\[|\])/),
-    chain = '',
-    output = [],
-    inArr = false,
-    prevDot = false;
-
-  if (typeof context === 'string' && context.length) {
-    props.unshift(context);
-  }
-
-  props = _.reject(props, function (val) {
-    return val === '';
+if (typeof window.define === 'function' && typeof window.define.amd === 'object') {
+  window.define('swig', [], function () {
+    return swig;
   });
-
-  props = filterVariablePath(props);
-
-  _.each(props, function (prop) {
-    if (prop === '.') {
-      prevDot = true;
-      return;
-    }
-
-    if (prop === '[') {
-      inArr = true;
-      return;
-    }
-
-    if (prop === ']') {
-      inArr = false;
-      return;
-    }
-
-    if (!chain) {
-      chain = prop;
-    } else if (inArr) {
-      if (!exports.isStringLiteral(prop)) {
-        if (prevDot) {
-          output[output.length - 1] = _.last(output).replace(/\] !== "undefined"$/, '_' + prop + '] !== "undefined"');
-          chain = chain.replace(/\]$/, '_' + prop + ']');
-          return;
-        }
-        chain += '[___' + prop + ']';
-      } else {
-        chain += '[' + prop + ']';
-      }
-    } else {
-      chain += '.' + prop;
-    }
-    prevDot = false;
-    output.push('typeof ' + chain + ' !== "undefined"');
-  });
-
-  return '(' + output.join(' && ') + ')';
+} else {
+  window.swig = swig;
 }
-exports.check = check;
 
-/**
-* Returns an escaped string (safe for evaling). If context is passed
-* then returns a concatenation of context and the escaped variable name.
-*/
-exports.escapeVarName = function (variable, context, args) {
-  if (variable === '') {
-    return '';
-  }
-  if (_.isArray(variable)) {
-    _.each(variable, function (val, key) {
-      variable[key] = exports.escapeVarName(val, context);
-    });
-    return variable;
-  }
-
-  variable = variable.replace(/^this/, '_this.__currentContext');
-
-  if (exports.isLiteral(variable)) {
-    return variable;
-  }
-  if (typeof context === 'string' && context.length) {
-    variable = context + '.' + variable;
-  }
-
-  var chain = '',
-    props = variable.split(/(\.|\[|\])/),
-    inArr = false,
-    prevDot = false;
-
-  props = _.reject(props, function (val) {
-    return val === '';
-  });
-
-  props = filterVariablePath(props);
-
-  _.each(props, function (prop) {
-    if (prop === '.') {
-      prevDot = true;
-      return;
-    }
-
-    if (prop === '[') {
-      inArr = true;
-      return;
-    }
-
-    if (prop === ']') {
-      inArr = false;
-      return;
-    }
-
-    if (!chain) {
-      chain = prop;
-    } else if (inArr) {
-      if (!exports.isStringLiteral(prop)) {
-        if (prevDot) {
-          chain = chain.replace(/\]$/, '_' + prop + ']');
-        } else {
-          chain += '[___' + prop + ']';
-        }
-      } else {
-        chain += '[' + prop + ']';
-      }
-    } else {
-      chain += '.' + prop;
-    }
-    prevDot = false;
-  });
-
-  return '(typeof ' + chain + ' === \'function\') ? ' + chain + '(' + args + ') : ' + chain;
-};
-
-exports.wrapArgs = function (args) {
-  if (!args) {
-    return { declarations: '', args: ''};
-  }
-  var declarations = '';
-  args = _.map(args.split(','), function (value) {
-    var varname,
-      stripped = value.replace(/^\s+|\s+$/g, '');
-
-    try {
-      varname = '__' + parser.parseVariable(stripped).name.replace(/\W/g, '_');
-    } catch (e) {
-      return value;
-    }
-
-    if (exports.isValidName(stripped)) {
-      declarations += exports.setVar(varname, parser.parseVariable(stripped));
-      return varname;
-    }
-
-    return value;
-  });
-
-  return { declarations: declarations, args: (args && args.length) ? args.join(',') : '""' };
-};
-
-exports.wrapMethod = function (variable, filter, context) {
-  var output = '(function () {\n',
-    args,
-    wrappedArgs;
-
-  variable = variable || '""';
-
-  if (!filter) {
-    return variable;
-  }
-
-  wrappedArgs = exports.wrapArgs(filter.args, output);
-
-  output += wrappedArgs.declarations;
-
-  output += 'return ';
-  output += (context) ? context + '["' : '';
-  output += filter.name;
-  output += (context) ? '"]' : '';
-  output += '(';
-  output += wrappedArgs.args;
-  output += ');\n';
-
-  return output + '})()';
-};
-
-exports.wrapFilter = function (variable, filter) {
-  var output = '',
-    args = '';
-
-  variable = variable || '""';
-
-  if (!filter) {
-    return variable;
-  }
-
-  if (filters.hasOwnProperty(filter.name)) {
-    args = (filter.args) ? variable + ', ' + filter.args : variable;
-    output += exports.wrapMethod(variable, { name: filter.name, args: args }, '_filters');
-  } else {
-    throw new Error('Filter "' + filter.name + '" not found');
-  }
-
-  return output;
-};
-
-exports.wrapFilters = function (variable, filters, context, escape, args) {
-  var output = exports.escapeVarName(variable, context, args);
-
-  if (filters && filters.length > 0) {
-    _.each(filters, function (filter) {
-      switch (filter.name) {
-      case 'raw':
-        escape = false;
-        return;
-      case 'e':
-      case 'escape':
-        escape = filter.args || escape;
-        return;
-      default:
-        output = exports.wrapFilter(output, filter, '_filters');
-        break;
-      }
-    });
-  }
-
-  output = output || '""';
-  if (escape) {
-    output = '_filters.escape.call(this, ' + output + ', ' + escape + ')';
-  }
-
-  return output;
-};
-
-exports.setVar = function (varName, argument, args) {
-  var out = '',
-    props,
-    output,
-    inArr,
-    wrappedArgs;
-  if ((/\[/).test(argument.name)) {
-    props = argument.name.split(/(\[|\])/);
-    output = [];
-    inArr = false;
-
-    _.each(props, function (prop) {
-      if (prop === '') {
-        return;
-      }
-
-      if (prop === '[') {
-        inArr = true;
-        return;
-      }
-
-      if (prop === ']') {
-        inArr = false;
-        return;
-      }
-
-      if (inArr && !exports.isStringLiteral(prop)) {
-        out += exports.setVar('___' + prop.replace(/\W/g, '_'), { name: prop, filters: [], escape: true });
-      }
-    });
-  }
-
-  wrappedArgs = exports.wrapArgs(args);
-  out += wrappedArgs.declarations;
-  out += 'var ' + varName + ' = "";\n' +
-    'if (' + check(argument.name, '_context') + ') {\n' +
-    '  ' + varName + ' = ' + exports.wrapFilters(argument.name, argument.filters, '_context', argument.escape, wrappedArgs.args) + ';\n' +
-    '} else if (' + check(argument.name) + ') {\n' +
-    '  ' + varName + ' = ' + exports.wrapFilters(argument.name, argument.filters, null, argument.escape, wrappedArgs.args)  + ';\n' +
-    '}\n';
-
-  if (argument.filters.length) {
-    out += ' else if (true) {\n';
-    out += '  ' + varName + ' = ' + exports.wrapFilters('', argument.filters, null, argument.escape, wrappedArgs.args) + ';\n';
-    out += '}\n';
-  }
-
-  return out;
-};
-
-exports.parseIfArgs = function (args, parser) {
-  var operators = ['==', '<', '>', '!=', '<=', '>=', '===', '!==', '&&', '||', 'in', 'and', 'or', 'mod', '%'],
-    errorString = 'Bad if-syntax in `{% if ' + args.join(' ') + ' %}...',
-    startParen = /^\(+/,
-    endParen = /\)+$/,
-    tokens = [],
-    prevType,
-    last,
-    closing = 0;
-
-  _.each(args, function (value, index) {
-    var endsep = 0,
-      startsep = 0,
-      operand;
-
-    if (startParen.test(value)) {
-      startsep = value.match(startParen)[0].length;
-      closing += startsep;
-      value = value.replace(startParen, '');
-
-      while (startsep) {
-        startsep -= 1;
-        tokens.push({ type: 'separator', value: '(' });
-      }
-    }
-
-    if ((/^\![^=]/).test(value) || (value === 'not')) {
-      if (value === 'not') {
-        value = '';
-      } else {
-        value = value.substr(1);
-      }
-      tokens.push({ type: 'operator', value: '!' });
-    }
-
-    if (endParen.test(value) && value.indexOf('(') === -1) {
-      if (!closing) {
-        throw new Error(errorString);
-      }
-      endsep = value.match(endParen)[0].length;
-      value = value.replace(endParen, '');
-      closing -= endsep;
-    }
-
-    if (value === 'in') {
-      last = tokens.pop();
-      prevType = 'inindex';
-    } else if (_.indexOf(operators, value) !== -1) {
-      if (prevType === 'operator') {
-        throw new Error(errorString);
-      }
-      value = value.replace('and', '&&').replace('or', '||').replace('mod', '%');
-      tokens.push({
-        value: value
-      });
-      prevType = 'operator';
-    } else if (value !== '') {
-      if (prevType === 'value') {
-        throw new Error(errorString);
-      }
-      operand = parser.parseVariable(value);
-
-      if (prevType === 'inindex') {
-        tokens.push({
-          preout: last.preout + exports.setVar('__op' + index, operand),
-          value: '(((_.isArray(__op' + index + ') || typeof __op' + index + ' === "string") && _.indexOf(__op' + index + ', ' + last.value + ') !== -1) || (typeof __op' + index + ' === "object" && ' + last.value + ' in __op' + index + '))'
-        });
-        last = null;
-      } else {
-        tokens.push({
-          preout: exports.setVar('__op' + index, operand),
-          value: '__op' + index
-        });
-      }
-      prevType = 'value';
-    }
-
-    while (endsep) {
-      endsep -= 1;
-      tokens.push({ type: 'separator', value: ')' });
-    }
-  });
-
-  if (closing > 0) {
-    throw new Error(errorString);
-  }
-
-  return tokens;
-};
-})(helpers);
-(function (exports) {
+},{"../lib/swig":6}],2:[function(require,module,exports){
+var utils = require('./utils');
 
 var _months = {
     full: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
@@ -791,79 +35,33 @@ exports.defaultTZOffset = 0;
 exports.DateZ = function () {
   var members = {
       'default': ['getUTCDate', 'getUTCDay', 'getUTCFullYear', 'getUTCHours', 'getUTCMilliseconds', 'getUTCMinutes', 'getUTCMonth', 'getUTCSeconds', 'toISOString', 'toGMTString', 'toUTCString', 'valueOf', 'getTime'],
-      z: ['getDate', 'getDay', 'getFullYear', 'getHours', 'getMilliseconds', 'getMinutes', 'getMonth', 'getSeconds', 'getYear', 'toDateString', 'toLocaleDateString', 'toLocaleTimeString'],
-      'string': ['toLocaleString', 'toString', 'toTimeString'],
-      zSet: ['setDate', 'setFullYear', 'setHours', 'setMilliseconds', 'setMinutes', 'setMonth', 'setSeconds', 'setTime', 'setYear'],
-      set: ['setUTCDate', 'setUTCFullYear', 'setUTCHours', 'setUTCMilliseconds', 'setUTCMinutes', 'setUTCMonth', 'setUTCSeconds'],
-      'static': ['UTC', 'parse']
+      z: ['getDate', 'getDay', 'getFullYear', 'getHours', 'getMilliseconds', 'getMinutes', 'getMonth', 'getSeconds', 'getYear', 'toDateString', 'toLocaleDateString', 'toLocaleTimeString']
     },
-    d = this,
-    i;
+    d = this;
 
   d.date = d.dateZ = (arguments.length > 1) ? new Date(Date.UTC.apply(Date, arguments) + ((new Date()).getTimezoneOffset() * 60000)) : (arguments.length === 1) ? new Date(new Date(arguments['0'])) : new Date();
 
   d.timezoneOffset = d.dateZ.getTimezoneOffset();
 
-  function zeroPad(i) {
-    return (i < 10) ? '0' + i : i;
-  }
-  function _toTZString() {
-    var hours = zeroPad(Math.floor(Math.abs(d.timezoneOffset) / 60)),
-      minutes = zeroPad(Math.abs(d.timezoneOffset) - hours * 60),
-      prefix = (d.timezoneOffset < 0) ? '+' : '-',
-      abbr = (d.tzAbbreviation === undefined) ? '' : ' (' + d.tzAbbreviation + ')';
-
-    return 'GMT' + prefix + hours + minutes + abbr;
-  }
-
-  _.each(members.z, function (name) {
+  utils.each(members.z, function (name) {
     d[name] = function () {
       return d.dateZ[name]();
     };
   });
-  _.each(members.string, function (name) {
-    d[name] = function () {
-      return d.dateZ[name].apply(d.dateZ, []).replace(/GMT[+\-]\\d{4} \\(([a-zA-Z]{3,4})\\)/, _toTZString());
-    };
-  });
-  _.each(members['default'], function (name) {
+  utils.each(members['default'], function (name) {
     d[name] = function () {
       return d.date[name]();
     };
   });
-  _.each(members['static'], function (name) {
-    d[name] = function () {
-      return Date[name].apply(Date, arguments);
-    };
-  });
-  _.each(members.zSet, function (name) {
-    d[name] = function () {
-      d.dateZ[name].apply(d.dateZ, arguments);
-      d.date = new Date(d.dateZ.getTime() - d.dateZ.getTimezoneOffset() * 60000 + d.timezoneOffset * 60000);
-      return d;
-    };
-  });
-  _.each(members.set, function (name) {
-    d[name] = function () {
-      d.date[name].apply(d.date, arguments);
-      d.dateZ = new Date(d.date.getTime() + d.date.getTimezoneOffset() * 60000 - d.timezoneOffset * 60000);
-      return d;
-    };
-  });
 
-  if (exports.defaultTZOffset) {
-    this.setTimezoneOffset(exports.defaultTZOffset);
-  }
+  this.setTimezoneOffset(exports.defaultTZOffset);
 };
 exports.DateZ.prototype = {
   getTimezoneOffset: function () {
     return this.timezoneOffset;
   },
-  setTimezoneOffset: function (offset, abbr) {
+  setTimezoneOffset: function (offset) {
     this.timezoneOffset = offset;
-    if (abbr) {
-      this.tzAbbreviation = abbr;
-    }
     this.dateZ = new Date(this.date.getTime() + this.date.getTimezoneOffset() * 60000 - this.timezoneOffset * 60000);
     return this;
   }
@@ -1012,28 +210,24 @@ exports.r = function (input) {
 exports.U = function (input) {
   return input.getTime() / 1000;
 };
-})(dateformat);
-(function (exports) {
 
-exports.add = function (input, addend) {
-  if (_.isArray(input) && _.isArray(addend)) {
-    return input.concat(addend);
-  }
+},{"./utils":23}],3:[function(require,module,exports){
+var utils = require('./utils'),
+  dateFormatter = require('./dateformatter');
 
-  if (typeof input === 'object' && typeof addend === 'object') {
-    return _.extend(input, addend);
-  }
-
-  if (_.isNumber(input) && _.isNumber(addend)) {
-    return input + addend;
-  }
-
-  return input + addend;
-};
-
+/**
+ * Backslash-escape characters that need to be escaped.
+ *
+ * @example
+ * {{ "\"quoted string\""|addslashes }}
+ * // => \"quoted string\"
+ *
+ * @param  {*}  input
+ * @return {*}        Backslash-escaped string.
+ */
 exports.addslashes = function (input) {
   if (typeof input === 'object') {
-    _.each(input, function (value, key) {
+    utils.each(input, function (value, key) {
       input[key] = exports.addslashes(value);
     });
     return input;
@@ -1041,9 +235,19 @@ exports.addslashes = function (input) {
   return input.replace(/\\/g, '\\\\').replace(/\'/g, "\\'").replace(/\"/g, '\\"');
 };
 
+/**
+ * Upper-case the first letter of the input and lower-case the rest.
+ *
+ * @example
+ * {{ "i like Burritos"|capitalize }}
+ * // => I like burritos
+ *
+ * @param  {*} input  If given an array or object, each string member will be run through the filter individually.
+ * @return {*}        Returns the same type as the input.
+ */
 exports.capitalize = function (input) {
   if (typeof input === 'object') {
-    _.each(input, function (value, key) {
+    utils.each(input, function (value, key) {
       input[key] = exports.capitalize(value);
     });
     return input;
@@ -1051,9 +255,23 @@ exports.capitalize = function (input) {
   return input.toString().charAt(0).toUpperCase() + input.toString().substr(1).toLowerCase();
 };
 
+/**
+ * Format a date or Date-compatible string.
+ *
+ * @example
+ * // now = new Date();
+ * {{ now|date('Y-m-d') }}
+ * // => 2013-08-14
+ *
+ * @param  {?(string|date)} input
+ * @param  {string} format  PHP-style date format compatible string.
+ * @param  {number=} offset Timezone offset from GMT in minutes.
+ * @param  {string=} abbr   Timezone abbreviation. Used for output only.
+ * @return {string}         Formatted date string.
+ */
 exports.date = function (input, format, offset, abbr) {
   var l = format.length,
-    date = new dateformat.DateZ(input),
+    date = new dateFormatter.DateZ(input),
     cur,
     i = 0,
     out = '';
@@ -1064,8 +282,8 @@ exports.date = function (input, format, offset, abbr) {
 
   for (i; i < l; i += 1) {
     cur = format.charAt(i);
-    if (dateformat.hasOwnProperty(cur)) {
-      out += dateformat[cur](date, offset, abbr);
+    if (dateFormatter.hasOwnProperty(cur)) {
+      out += dateFormatter[cur](date, offset, abbr);
     } else {
       out += cur;
     }
@@ -1073,51 +291,99 @@ exports.date = function (input, format, offset, abbr) {
   return out;
 };
 
-exports['default'] = function (input, def) {
+/**
+ * If the input is `undefined`, `null`, or `false`, a default return value can be specified.
+ *
+ * @example
+ * {{ null_value|default('Tacos') }}
+ * // => Tacos
+ *
+ * @example
+ * {{ "Burritos"|default("Tacos") }}
+ * // => Burritos
+ *
+ * @param  {*}  input
+ * @param  {*}  def     Value to return if `input` is `undefined`, `null`, or `false`.
+ * @return {*}          `input` or `def` value.
+ */
+exports.default = function (input, def) {
   return (typeof input !== 'undefined' && (input || typeof input === 'number')) ? input : def;
 };
 
-exports.escape = exports.e = function (input, type) {
-  type = type || 'html';
-  if (typeof input === 'string') {
-    if (type === 'js') {
-      var i = 0,
-        code,
-        out = '';
+/**
+ * Force escape the output of the variable. Optionally use `e` as a shortcut filter name. This filter will be applied by default if autoescape is turned on.
+ *
+ * @example
+ * {{ "<blah>"|escape }}
+ * // => &lt;blah&gt;
+ *
+ * @example
+ * {{ "<blah>"|e("js") }}
+ * // => \u003Cblah\u003E
+ *
+ * @param  {?string} input
+ * @param  {string} [type='html']   If you pass the string js in as the type, output will be escaped so that it is safe for JavaScript execution.
+ * @return {string}         Escaped string.
+ */
+exports.escape = function (input, type) {
+  if (typeof input !== 'string') {
+    return input;
+  }
 
-      input = input.replace(/\\/g, '\\u005C');
+  var i = 0,
+    out = '',
+    code;
 
-      for (i; i < input.length; i += 1) {
-        code = input.charCodeAt(i);
-        if (code < 32) {
-          code = code.toString(16).toUpperCase();
-          code = (code.length < 2) ? '0' + code : code;
-          out += '\\u00' + code;
-        } else {
-          out += input[i];
-        }
+  switch (type) {
+  case 'js':
+    input = input.replace(/\\/g, '\\u005C');
+    for (i; i < input.length; i += 1) {
+      code = input.charCodeAt(i);
+      if (code < 32) {
+        code = code.toString(16).toUpperCase();
+        code = (code.length < 2) ? '0' + code : code;
+        out += '\\u00' + code;
+      } else {
+        out += input[i];
       }
-
-      return out.replace(/&/g, '\\u0026')
-        .replace(/</g, '\\u003C')
-        .replace(/>/g, '\\u003E')
-        .replace(/\'/g, '\\u0027')
-        .replace(/"/g, '\\u0022')
-        .replace(/\=/g, '\\u003D')
-        .replace(/-/g, '\\u002D')
-        .replace(/;/g, '\\u003B');
     }
+    return out.replace(/&/g, '\\u0026')
+      .replace(/</g, '\\u003C')
+      .replace(/>/g, '\\u003E')
+      .replace(/\'/g, '\\u0027')
+      .replace(/"/g, '\\u0022')
+      .replace(/\=/g, '\\u003D')
+      .replace(/-/g, '\\u002D')
+      .replace(/;/g, '\\u003B');
+
+  default:
     return input.replace(/&(?!amp;|lt;|gt;|quot;|#39;)/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
   }
-  return input;
 };
+exports.e = exports.escape;
 
+/**
+ * Get the first item in an array or character in a string.
+ *
+ * @example
+ * // my_arr = ['a', 'b', 'c']
+ * {{ my_arr|first }}
+ * // => a
+ *
+ * @example
+ * // my_val = 'Tacos'
+ * {{ my_val|first }}
+ * // T
+ *
+ * @param  {(string|array)} input
+ * @return {*}                  The first item of the array or first character of the string input.
+ */
 exports.first = function (input) {
-  if (typeof input === 'object' && !_.isArray(input)) {
+  if (typeof input === 'object' && !utils.isArray(input)) {
     return '';
   }
 
@@ -1125,30 +391,85 @@ exports.first = function (input) {
     return input.substr(0, 1);
   }
 
-  return _.first(input);
+  return input[0];
 };
 
-exports.join = function (input, separator) {
-  if (_.isArray(input)) {
-    return input.join(separator);
+/**
+ * Join the input with a string.
+ *
+ * @example
+ * // my_array = ['foo', 'bar', 'baz']
+ * {{ my_array|join(', ') }}
+ * // => foo, bar, baz
+ *
+ * @example
+ * // my_key_object = { a: 'foo', b: 'bar', c: 'baz' }
+ * {{ my_key_object|join(' and ') }}
+ * // => foo and bar and baz
+ *
+ * @param  {*}  input
+ * @param  {string} glue    String value to join items together.
+ * @return {string}
+ */
+exports.join = function (input, glue) {
+  if (utils.isArray(input)) {
+    return input.join(glue);
   }
 
   if (typeof input === 'object') {
     var out = [];
-    _.each(input, function (value, key) {
+    utils.each(input, function (value) {
       out.push(value);
     });
-    return out.join(separator);
+    return out.join(glue);
   }
   return input;
 };
 
-exports.json_encode = function (input, indent) {
+/**
+ * Return a string representation of an JavaScript object.
+ *
+ * Backwards compatible with swig@0.x.x using `json_encode`.
+ *
+ * @example
+ * // val = { a: 'b' }
+ * {{ val|json }}
+ * // => {"a":"b"}
+ *
+ * @example
+ * // val = { a: 'b' }
+ * {{ val|json(4) }}
+ * // => {
+ * //        "a": "b"
+ * //    }
+ *
+ * @param  {*}    input
+ * @param  {number}  [indent]  Number of spaces to indent for pretty-formatting.
+ * @return {string}           A valid JSON string.
+ */
+exports.json = function (input, indent) {
   return JSON.stringify(input, null, indent || 0);
 };
+exports.json_encode = exports.json;
 
+/**
+ * Get the last item in an array or character in a string.
+ *
+ * @example
+ * // my_arr = ['a', 'b', 'c']
+ * {{ my_arr|last }}
+ * // => c
+ *
+ * @example
+ * // my_val = 'Tacos'
+ * {{ my_val|last }}
+ * // s
+ *
+ * @param  {(string|array)} input
+ * @return {*}                  The last item of the array or last character of the string.input.
+ */
 exports.last = function (input) {
-  if (typeof input === 'object' && !_.isArray(input)) {
+  if (typeof input === 'object' && !utils.isArray(input)) {
     return '';
   }
 
@@ -1156,19 +477,27 @@ exports.last = function (input) {
     return input.charAt(input.length - 1);
   }
 
-  return _.last(input);
+  return input[input.length - 1];
 };
 
-exports.length = function (input) {
-  if (typeof input === 'object') {
-    return _.keys(input).length;
-  }
-  return input.length;
-};
-
+/**
+ * Return the input in all lowercase letters.
+ *
+ * @example
+ * {{ "FOOBAR"|lower }}
+ * // => foobar
+ *
+ * @example
+ * // myObj = { a: 'FOO', b: 'BAR' }
+ * {{ myObj|lower|join('') }}
+ * // => foobar
+ *
+ * @param  {*}  input
+ * @return {*}          Returns the same type as the input.
+ */
 exports.lower = function (input) {
   if (typeof input === 'object') {
-    _.each(input, function (value, key) {
+    utils.each(input, function (value, key) {
       input[key] = exports.lower(value);
     });
     return input;
@@ -1176,21 +505,83 @@ exports.lower = function (input) {
   return input.toString().toLowerCase();
 };
 
+/**
+ * Forces the input to not be auto-escaped. Use this only on content that you know is safe to be rendered on your page.
+ *
+ * @example
+ * // my_var = "<p>Stuff</p>";
+ * {{ my_var|raw }}
+ * // => <p>Stuff</p>
+ *
+ * @param  {*}  input
+ * @return {*}          Raw, un-escaped output.
+ */
+exports.raw = function (input) {
+  // This is a magic filter. Its logic is hard-coded into Swig's parser.
+  return input;
+};
+
+/**
+ * Returns a new string with the matched search pattern replaced by the given replacement string. Uses JavaScript's built-in String.replace() method.
+ *
+ * @example
+ * // my_var = 'foobar';
+ * {{ my_var|replace('o', 'e', 'g') }}
+ * // => feebar
+ *
+ * @example
+ * // my_var = "farfegnugen";
+ * {{ my_var|replace('^f', 'p') }}
+ * // => parfegnugen
+ *
+ * @example
+ * // my_var = 'a1b2c3';
+ * {{ my_var|replace('\w', '0', 'g') }}
+ * // => 010203
+ *
+ * @param  {string} input
+ * @param  {string} search      String or pattern to replace from the input.
+ * @param  {string} replacement String to replace matched pattern.
+ * @param  {string} [flags]      Regular Expression flags. 'g': global match, 'i': ignore case, 'm': match over multiple lines
+ * @return {string}             Replaced string.
+ */
 exports.replace = function (input, search, replacement, flags) {
   var r = new RegExp(search, flags);
   return input.replace(r, replacement);
 };
 
+/**
+ * Reverse an array.
+ *
+ * @example
+ * // val = [1, 2, 3];
+ * {{ val|reverse }}
+ * // => 3,2,1
+ *
+ * @param  {array}  input
+ * @return {array}        Reversed array. The original input object is returned if it was not an array.
+ */
 exports.reverse = function (input) {
-  if (_.isArray(input)) {
+  if (utils.isArray(input)) {
     return input.reverse();
   }
   return input;
 };
 
+/**
+ * Strip HTML tags.
+ *
+ * @example
+ * // stuff = '<p>foobar</p>';
+ * {{ stuff|striptags }}
+ * // => foobar
+ *
+ * @param  {*}  input
+ * @return {*}        Returns the same object as the input, but with all string values stripped of tags.
+ */
 exports.striptags = function (input) {
   if (typeof input === 'object') {
-    _.each(input, function (value, key) {
+    utils.each(input, function (value, key) {
       input[key] = exports.striptags(value);
     });
     return input;
@@ -1198,9 +589,25 @@ exports.striptags = function (input) {
   return input.toString().replace(/(<([^>]+)>)/ig, '');
 };
 
+/**
+ * Capitalizes every word given and lower-cases all other letters.
+ *
+ * @example
+ * // my_str = 'this is soMe text';
+ * {{ my_str|title }}
+ * // => This Is Some Text
+ *
+ * @example
+ * // my_arr = ['hi', 'this', 'is', 'an', 'array'];
+ * {{ my_arr|title|join(' ') }}
+ * // => Hi This Is An Array
+ *
+ * @param  {*}  input
+ * @return {*}        Returns the same object as the input, but with all words in strings title-cased.
+ */
 exports.title = function (input) {
   if (typeof input === 'object') {
-    _.each(input, function (value, key) {
+    utils.each(input, function (value, key) {
       input[key] = exports.title(value);
     });
     return input;
@@ -1210,13 +617,52 @@ exports.title = function (input) {
   });
 };
 
+/**
+ * Remove all duplicate items from an array.
+ *
+ * @example
+ * // my_arr = [1, 2, 3, 4, 4, 3, 2, 1];
+ * {{ my_arr|uniq|join(',') }}
+ * // => 1,2,3,4
+ *
+ * @param  {array}  input
+ * @return {array}        Array with unique items. If input was not an array, the original item is returned untouched.
+ */
 exports.uniq = function (input) {
-  return _.uniq(input);
+  var result;
+
+  if (!input || !utils.isArray(input)) {
+    return '';
+  }
+
+  result = [];
+  utils.each(input, function (v) {
+    if (result.indexOf(v) === -1) {
+      result.push(v);
+    }
+  });
+  return result;
 };
 
+/**
+ * Convert the input to all uppercase letters.
+ *
+ * @example
+ * // my_str = 'tacos';
+ * {{ my_str|upper }}
+ * // => TACOS
+ *
+ * @example
+ * // my_arr = ['tacos', 'burritos'];
+ * {{ my_arr|upper|join(' & ') }}
+ * // => TACOS & BURRITOS
+ *
+ * @param  {*}  input
+ * @return {*}        Returns the same type as the input, with all strings upper-cased.
+ */
 exports.upper = function (input) {
   if (typeof input === 'object') {
-    _.each(input, function (value, key) {
+    utils.each(input, function (value, key) {
       input[key] = exports.upper(value);
     });
     return input;
@@ -1224,930 +670,2676 @@ exports.upper = function (input) {
   return input.toString().toUpperCase();
 };
 
+/**
+ * URL-encode a string.
+ *
+ * @example
+ * // my_str = 'param=1&anotherParam=2';
+ * {{ my_str|url_encode }}
+ * // => param%3D1%26anotherParam%3D2
+ *
+ * @param  {string} input
+ * @return {string}       URL-encoded string.
+ */
 exports.url_encode = function (input) {
   return encodeURIComponent(input);
 };
 
+/**
+ * URL-decode a string.
+ *
+ * @example
+ * // my_str = 'param%3D1%26anotherParam%3D2';
+ * {{ my_str|url_decode }}
+ * // => param=1&anotherParam=2
+ *
+ * @param  {string} input
+ * @return {string}       URL-decoded string.
+ */
 exports.url_decode = function (input) {
   return decodeURIComponent(input);
 };
-})(filters);
-(function (exports) {
 
-var variableRegexp  = /^\{\{[^\r]*?\}\}$/,
-  logicRegexp   = /^\{%[^\r]*?%\}$/,
-  commentRegexp   = /^\{#[^\r]*?#\}$/,
+},{"./dateformatter":2,"./utils":23}],4:[function(require,module,exports){
+var utils = require('./utils');
 
-  TEMPLATE = exports.TEMPLATE = 0,
-  LOGIC_TOKEN = 1,
-  VAR_TOKEN   = 2;
+/**
+ * A lexer token.
+ * @typedef {object} LexerToken
+ * @property {string} match  The string that was matched.
+ * @property {number} type   Lexer type enum.
+ * @property {number} length Length of the original string processed.
+ */
 
-exports.TOKEN_TYPES = {
-  TEMPLATE: TEMPLATE,
-  LOGIC: LOGIC_TOKEN,
-  VAR: VAR_TOKEN
-};
-
-function getMethod(input) {
-  return helpers.stripWhitespace(input).match(/^[\w\.]+/)[0];
-}
-
-function doubleEscape(input) {
-  return input.replace(/\\/g, '\\\\');
-}
-
-function getArgs(input) {
-  return doubleEscape(helpers.stripWhitespace(input).replace(/^[\w\.]+\(|\)$/g, ''));
-}
-
-function getContextVar(varName, context) {
-  var a = varName.split(".");
-  while (a.length) {
-    context = context[a.splice(0, 1)[0]];
-  }
-  return context;
-}
-
-function getTokenArgs(token, parts) {
-  parts = _.map(parts, doubleEscape);
-
-  var i = 0,
-    l = parts.length,
-    arg,
-    ender,
-    out = [];
-
-  function concat(from, ending) {
-    var end = new RegExp('\\' + ending + '$'),
-      i = from,
-      out = '';
-
-    while (!(end).test(out) && i < parts.length) {
-      out += ' ' + parts[i];
-      parts[i] = null;
-      i += 1;
-    }
-
-    if (!end.test(out)) {
-      throw new Error('Malformed arguments ' + out + ' sent to tag.');
-    }
-
-    return out.replace(/^ /, '');
-  }
-
-  for (i; i < l; i += 1) {
-    arg = parts[i];
-    if (arg === null || (/^\s+$/).test(arg)) {
-      continue;
-    }
-
-    if (
-      ((/^\"/).test(arg) && !(/\"[\]\}]?$/).test(arg))
-        || ((/^\'/).test(arg) && !(/\'[\]\}]?$/).test(arg))
-        || ((/^\{/).test(arg) && !(/\}$/).test(arg))
-        || ((/^\[/).test(arg) && !(/\]$/).test(arg))
-    ) {
-      switch (arg.substr(0, 1)) {
-      case "'":
-        ender = "'";
-        break;
-      case '"':
-        ender = '"';
-        break;
-      case '[':
-        ender = ']';
-        break;
-      case '{':
-        ender = '}';
-        break;
+/**
+ * Enum for token types.
+ * @readonly
+ * @enum {number}
+ */
+var TYPES = exports.types = {
+    /** Whitespace */
+    WHITESPACE: 0,
+    /** Plain string */
+    STRING: 1,
+    /** Variable filter */
+    FILTER: 2,
+    /** Empty variable filter */
+    FILTEREMPTY: 3,
+    /** Function */
+    FUNCTION: 4,
+    /** Open parenthesis */
+    PARENOPEN: 5,
+    /** Close parenthesis */
+    PARENCLOSE: 6,
+    /** Comma */
+    COMMA: 7,
+    /** Variable */
+    VAR: 8,
+    /** Number */
+    NUMBER: 9,
+    /** Math operator */
+    OPERATOR: 10,
+    /** Open square bracket */
+    BRACKETOPEN: 11,
+    /** Close square bracket */
+    BRACKETCLOSE: 12,
+    /** Key on an object using dot-notation */
+    DOTKEY: 13,
+    /** Start of an array */
+    ARRAYOPEN: 14,
+    /** End of an array */
+    ARRAYCLOSE: 15,
+    /** Open curly brace */
+    CURLYOPEN: 16,
+    /** Close curly brace */
+    CURLYCLOSE: 17,
+    /** Colon (:) */
+    COLON: 18,
+    /** JavaScript-valid comparator */
+    COMPARATOR: 19,
+    /** Boolean logic */
+    LOGIC: 20,
+    /** Boolean logic "not" */
+    NOT: 21,
+    /** true or false */
+    BOOL: 22,
+    /** Variable assignment */
+    ASSIGNMENT: 23,
+    /** Unknown type */
+    UNKNOWN: 100
+  },
+  rules = [
+    {
+      type: TYPES.WHITESPACE,
+      regex: [
+        /^\s+/
+      ]
+    },
+    {
+      type: TYPES.STRING,
+      regex: [
+        /^""/,
+        /^".*?[^\\]"/,
+        /^''/,
+        /^'.*?[^\\]'/
+      ]
+    },
+    {
+      type: TYPES.FILTER,
+      regex: [
+        /^\|\s*(\w+)\(/
+      ],
+      idx: 1
+    },
+    {
+      type: TYPES.FILTEREMPTY,
+      regex: [
+        /^\|\s*(\w+)/
+      ],
+      idx: 1
+    },
+    {
+      type: TYPES.FUNCTION,
+      regex: [
+        /^\s*(\w+)\(/
+      ],
+      idx: 1
+    },
+    {
+      type: TYPES.PARENOPEN,
+      regex: [
+        /^\(/
+      ]
+    },
+    {
+      type: TYPES.PARENCLOSE,
+      regex: [
+        /^\)/
+      ]
+    },
+    {
+      type: TYPES.COMMA,
+      regex: [
+        /^,/
+      ]
+    },
+    {
+      type: TYPES.LOGIC,
+      regex: [
+        /^(&&|\|\||and|or)\s*/
+      ],
+      idx: 1,
+      replace: {
+        'and': '&&',
+        'or': '||'
       }
-      out.push(concat(i, ender));
-      continue;
+    },
+    {
+      type: TYPES.COMPARATOR,
+      regex: [
+        /^(===|==|\!==|\!=|<=|<|>=|>|in\s|gte\s|gt\s|lte\s|lt\s)\s*/
+      ],
+      idx: 1,
+      replace: {
+        'gte': '>=',
+        'gt': '>',
+        'lte': '<=',
+        'lt': '<'
+      }
+    },
+    {
+      type: TYPES.ASSIGNMENT,
+      regex: [
+        /^(=|\+=|-=|\*=|\/=)/
+      ]
+    },
+    {
+      type: TYPES.NOT,
+      regex: [
+        /^(not|\!)\s*/
+      ],
+      idx: 1,
+      replace: {
+        'not': '!'
+      }
+    },
+    {
+      type: TYPES.BOOL,
+      regex: [
+        /^(true|false)/
+      ]
+    },
+    {
+      type: TYPES.VAR,
+      regex: [
+        /^[a-zA-Z_$]\w*((\.\w*)+)?/,
+        /^[a-zA-Z_$]\w*/
+      ]
+    },
+    {
+      type: TYPES.BRACKETOPEN,
+      regex: [
+        /^\[/
+      ]
+    },
+    {
+      type: TYPES.BRACKETCLOSE,
+      regex: [
+        /^\]/
+      ]
+    },
+    {
+      type: TYPES.CURLYOPEN,
+      regex: [
+        /^\{/
+      ]
+    },
+    {
+      type: TYPES.COLON,
+      regex: [
+        /^\:/
+      ]
+    },
+    {
+      type: TYPES.CURLYCLOSE,
+      regex: [
+        /^\}/
+      ]
+    },
+    {
+      type: TYPES.DOTKEY,
+      regex: [
+        /^\.(\w+)/,
+      ],
+      idx: 1
+    },
+    {
+      type: TYPES.NUMBER,
+      regex: [
+        /^[+\-]?\d+(\.\d+)?/
+      ]
+    },
+    {
+      type: TYPES.OPERATOR,
+      regex: [
+        /^(\+|\-|\/|\*|%)/
+      ]
     }
+  ];
 
-    out.push(arg);
-  }
+/**
+ * Return the token type object for a single chunk of a string.
+ * @param  {string} str String chunk.
+ * @return {LexerToken}     Defined type, potentially stripped or replaced with more suitable content.
+ * @private
+ */
+function reader(str) {
+  var matched;
 
-  return out;
-}
+  utils.some(rules, function (rule) {
+    return utils.some(rule.regex, function (regex) {
+      var match = str.match(regex),
+        normalized;
 
-function findSubBlocks(topToken, blocks) {
-  _.each(topToken.tokens, function (token, index) {
-    if (token.name === 'block') {
-      blocks[token.args[0]] = token;
-      findSubBlocks(token, blocks);
-    }
+      if (!match) {
+        return;
+      }
+
+      normalized = match[rule.idx || 0].replace(/\s*$/, '');
+      normalized = (rule.hasOwnProperty('replace') && rule.replace.hasOwnProperty(normalized)) ? rule.replace[normalized] : normalized;
+
+      matched = {
+        match: normalized,
+        type: rule.type,
+        length: match[0].length
+      };
+      return true;
+    });
   });
-}
 
-function getParentBlock(token) {
-  var block;
-
-  if (token.parentBlock) {
-    block = token.parentBlock;
-  } else if (token.parent) {
-    block = getParentBlock(_.last(token.parent));
-  }
-
-  return block;
-}
-
-exports.parseVariable = function (token, escape) {
-  if (!token) {
-    return {
-      type: null,
-      name: '',
-      filters: [],
-      escape: escape
+  if (!matched) {
+    matched = {
+      match: str,
+      type: TYPES.UNKNOWN,
+      length: str.length
     };
   }
 
-  var filters = [],
-    parts = token.replace(/^\{\{\s*|\s*\}\}$/g, '').split('|'),
-    varname = parts.shift(),
-    args = null,
-    part;
+  return matched;
+}
 
-  if ((/\(/).test(varname)) {
-    args = getArgs(varname.replace(/^\w+\./, ''));
-    varname = getMethod(varname);
+/**
+ * Read a string and break it into separate token types.
+ * @param  {string} str
+ * @return {Array.LexerToken}     Array of defined types, potentially stripped or replaced with more suitable content.
+ */
+exports.read = function (str) {
+  var offset = 0,
+    tokens = [],
+    substr,
+    match;
+  while (offset < str.length) {
+    substr = str.substring(offset);
+    match = reader(substr);
+    offset += match.length;
+    tokens.push(match);
+  }
+  return tokens;
+};
+
+},{"./utils":23}],5:[function(require,module,exports){
+var utils = require('./utils'),
+  lexer = require('./lexer');
+
+var _t = lexer.types;
+
+/*!
+ * Makes a string safe for a regular expression.
+ * @param  {string} str
+ * @return {string}
+ * @private
+ */
+function escapeRegExp(str) {
+  return str.replace(/[\-\/\\\^$*+?.()|\[\]{}]/g, '\\$&');
+}
+
+/**
+ * Parse strings of variables and tags into tokens for future compilation.
+ * @class
+ * @param {array}  tokens  Pre-split tokens read by the Lexer.
+ * @param {object} filters Keyed object of filters that may be applied to variables.
+ * @param {number} line    Beginning line number for the first token.
+ * @private
+ */
+function TokenParser(tokens, filters, line) {
+  this.out = [];
+  this.state = [];
+  this.filterApplyIdx = [];
+  this._parsers = {};
+  this.line = line;
+  this.filters = filters;
+
+  this.parse = function () {
+    var self = this;
+
+    utils.each(tokens, function (token, i) {
+      var prevToken = tokens[i - 1];
+      self.isLast = (i === tokens.length - 1);
+      if (prevToken) {
+        while (prevToken.type === _t.WHITESPACE) {
+          i -= 1;
+          prevToken = tokens[i - 1];
+        }
+      }
+      self.prevToken = prevToken;
+      self.parseToken(token);
+    });
+
+    return self.out;
+  };
+}
+
+TokenParser.prototype = {
+  /**
+   * Set a custom method to be called when a token type is found.
+   *
+   * @example
+   *
+   * parser.on(types.STRING, function (token) {
+   *   this.out.push(token.match);
+   * });
+   *
+   * @param  {number}   type Token type ID. Found in the Lexer.
+   * @param  {Function} fn   Callback function. Return true to continue executing the default parsing function.
+   * @return {undefined}
+   */
+  on: function (type, fn) {
+    this._parsers[type] = fn;
+  },
+
+  /**
+   * Parse a single token.
+   * @param  {{match: string, type: number, line: number}} token Lexer token object.
+   * @return {undefined}
+   * @private
+   */
+  parseToken: function (token) {
+    var self = this,
+      fn = self._parsers[token.type] || self._parsers['*'],
+      match = token.match,
+      prevToken = self.prevToken,
+      lastState = (self.state.length) ? self.state[self.state.length - 1] : null,
+      temp;
+
+    if (fn && typeof fn === 'function') {
+      if (!fn.call(this, token)) {
+        return;
+      }
+    }
+
+    if (lastState &&
+        lastState === _t.FILTER &&
+        prevToken.type === _t.FILTER &&
+        token.type !== _t.PARENCLOSE &&
+        token.type !== _t.COMMA &&
+        token.type !== _t.OPERATOR &&
+        token.type !== _t.FILTER &&
+        token.type !== _t.FILTEREMPTY) {
+      self.out.push(', ');
+    }
+
+    switch (token.type) {
+    case _t.WHITESPACE:
+      break;
+
+    case _t.STRING:
+      self.out.push(match.replace(/\\/g, '\\\\'));
+      self.filterApplyIdx.push(self.out.length - 1);
+      break;
+
+    case _t.NUMBER:
+      self.out.push(match);
+      self.filterApplyIdx.push(self.out.length - 1);
+      break;
+
+    case _t.FILTER:
+      if (!self.filters.hasOwnProperty(match) || typeof self.filters[match] !== "function") {
+        throw new Error('Invalid filter "' + match + '" found on line ' + self.line + '.');
+      }
+      self.out.splice(self.filterApplyIdx[self.filterApplyIdx.length - 1], 0, '_filters["' + match + '"](');
+      self.state.push(token.type);
+      break;
+
+    case _t.FILTEREMPTY:
+      if (!self.filters.hasOwnProperty(match) || typeof self.filters[match] !== "function") {
+        throw new Error('Invalid filter "' + match + '" found on line ' + self.line + '.');
+      }
+      self.out.splice(self.filterApplyIdx[self.filterApplyIdx.length - 1], 0, '_filters["' + match + '"](');
+      self.out.push(')');
+      break;
+
+    case _t.FUNCTION:
+      self.state.push(token.type);
+      self.out.push('((typeof ' + match + ' !== "undefined") ? ' + match +
+        ' : ((typeof _ctx.' + match + ' !== "undefined") ? _ctx.' + match +
+        ' : _fn))(');
+      self.filterApplyIdx.push(self.out.length - 1);
+      break;
+
+    case _t.PARENOPEN:
+      if (self.filterApplyIdx.length) {
+        self.out.splice(self.filterApplyIdx[self.filterApplyIdx.length - 1], 0, '(');
+        self.out.push(' || _fn)(');
+      } else {
+        self.out.push('(');
+      }
+      self.state.push(token.type);
+      self.filterApplyIdx.push(self.out.length - 1);
+      break;
+
+    case _t.PARENCLOSE:
+      temp = self.state.pop();
+      if (temp !== _t.PARENOPEN && temp !== _t.FUNCTION && temp !== _t.FILTER) {
+        throw new Error('Mismatched nesting state on line ' + self.line + '.');
+      }
+      self.out.push(')');
+      self.filterApplyIdx.pop();
+      break;
+
+    case _t.COMMA:
+      if (lastState !== _t.FUNCTION &&
+          lastState !== _t.FILTER &&
+          lastState !== _t.ARRAYOPEN &&
+          lastState !== _t.CURLYOPEN &&
+          lastState !== _t.PARENOPEN) {
+        throw new Error('Unexpected comma on line ' + self.line + '.');
+      }
+      self.out.push(', ');
+      self.filterApplyIdx.pop();
+      break;
+
+    case _t.VAR:
+      self.parseVar(token, match, lastState, prevToken);
+      break;
+
+    case _t.BRACKETOPEN:
+      if (!prevToken ||
+          (prevToken.type !== _t.VAR &&
+            prevToken.type !== _t.BRACKETCLOSE &&
+            prevToken.type !== _t.PARENCLOSE)) {
+        self.state.push(_t.ARRAYOPEN);
+        self.filterApplyIdx.push(self.out.length);
+      } else {
+        self.state.push(token.type);
+      }
+      self.out.push('[');
+      break;
+
+    case _t.BRACKETCLOSE:
+      temp = self.state.pop();
+      if (temp !== _t.BRACKETOPEN && temp !== _t.ARRAYOPEN) {
+        throw new Error('Unexpected closing square bracket on line ' + self.line + '.');
+      }
+      self.out.push(']');
+      self.filterApplyIdx.pop();
+      break;
+
+    case _t.CURLYOPEN:
+      self.state.push(token.type);
+      self.out.push('{');
+      self.filterApplyIdx.push(self.out.length - 1);
+      break;
+
+    case _t.COLON:
+      if (lastState !== _t.CURLYOPEN) {
+        throw new Error('Unexpected colon on line ' + self.line + '.');
+      }
+      self.out.push(':');
+      self.filterApplyIdx.pop();
+      break;
+
+    case _t.CURLYCLOSE:
+      if (self.state.pop() !== _t.CURLYOPEN) {
+        throw new Error('Unexpected closing curly brace on line ' + self.line + '.');
+      }
+      self.out.push('}');
+
+      self.filterApplyIdx.pop();
+      break;
+
+    case _t.DOTKEY:
+      if (prevToken.type !== _t.VAR && prevToken.type !== _t.BRACKETCLOSE && prevToken.type !== _t.DOTKEY) {
+        throw new Error('Unexpected key "' + match + '" on line ' + self.line + '.');
+      }
+      self.out.push('.' + match);
+      break;
+
+    case _t.OPERATOR:
+      self.out.push(' ' + match + ' ');
+      self.filterApplyIdx.pop();
+      break;
+    }
+  },
+
+  /**
+   * Parse variable token
+   * @param  {{match: string, type: number, line: number}} token      Lexer token object.
+   * @param  {string} match       Shortcut for token.match
+   * @param  {number} lastState   Lexer token type state.
+   * @param  {{match: string, type: number, line: number}} prevToken  Lexer token object.
+   * @return {undefined}
+   * @private
+   */
+  parseVar: function (token, match, lastState, prevToken) {
+    var self = this,
+      temp;
+
+    match = match.split('.');
+    self.filterApplyIdx.push(self.out.length);
+    if (lastState === _t.CURLYOPEN) {
+      if (match.length > 1) {
+        throw new Error('Unexpected dot on line ' + self.line + '.');
+      }
+      self.out.push(match[0]);
+      return;
+    }
+    temp = match[0];
+
+    function checkDot(ctx) {
+      var c = ctx + temp,
+        m = match,
+        build = '';
+
+      build = '(typeof ' + c + ' !== "undefined"';
+      utils.each(m, function (v, i) {
+        if (i === 0) {
+          return;
+        }
+        build += ' && ' + c + '.hasOwnProperty("' + v + '")';
+        c += '.' + v;
+      });
+      build += ')';
+
+      return build;
+    }
+
+    function buildDot(ctx) {
+      return '(' + checkDot(ctx) + ' ? ' + ctx + match.join('.') + ' : "")';
+    }
+
+    self.out.push('(' + checkDot('') + ' ? ' + buildDot('') + ' : ' + buildDot('_ctx.') + ')');
+  }
+};
+
+/**
+ * Parse a source string into tokens that are ready for compilation.
+ *
+ * @example
+ *
+ * exports.parse('{{ tacos }}', {}, tags, filters);
+ * // => [{ compile: [Function], ... }]
+ *
+ * @param  {string} source  Swig template source.
+ * @param  {object} opts    Swig options object.
+ * @param  {object} tags    Keyed object of tags that can be parsed and compiled.
+ * @param  {object} filters Keyed object of filters that may be applied to variables.
+ * @return {array}          List of tokens ready for compilation.
+ */
+exports.parse = function (source, opts, tags, filters) {
+  source = source.replace(/\r\n/g, '\n');
+  var escape = opts.autoescape,
+    tagOpen = opts.tagControls[0],
+    tagClose = opts.tagControls[1],
+    varOpen = opts.varControls[0],
+    varClose = opts.varControls[1],
+    escapedTagOpen = escapeRegExp(tagOpen),
+    escapedTagClose = escapeRegExp(tagClose),
+    escapedVarOpen = escapeRegExp(varOpen),
+    escapedVarClose = escapeRegExp(varClose),
+    tagStrip = new RegExp('^' + escapedTagOpen + '-?\\s*-?|-?\\s*-?' + escapedTagClose + '$', 'g'),
+    tagStripBefore = new RegExp('^' + escapedTagOpen + '-'),
+    tagStripAfter = new RegExp('-' + escapedTagClose + '$'),
+    varStrip = new RegExp('^' + escapedVarOpen + '-?\\s*-?|-?\\s*-?' + escapedVarClose + '$', 'g'),
+    varStripBefore = new RegExp('^' + escapedVarOpen + '-'),
+    varStripAfter = new RegExp('-' + escapedVarClose + '$'),
+    cmtOpen = opts.cmtControls[0],
+    cmtClose = opts.cmtControls[1],
+    // Split the template source based on variable, tag, and comment blocks
+    // /(\{\{.*?\}\}|\{\%.*?\%\}|\{\#[^.*?\#\})/
+    splitter = new RegExp(
+      '(' +
+        escapedTagOpen + '.*?' + escapedTagClose + '|' +
+        escapedVarOpen + '.*?' + escapedVarClose + '|' +
+        escapeRegExp(cmtOpen) + '.*?' + escapeRegExp(cmtClose) +
+        ')'
+    ),
+    line = 1,
+    stack = [],
+    parent = null,
+    tokens = [],
+    blocks = {},
+    inRaw = false,
+    stripNext;
+
+  /**
+   * Parse a variable.
+   * @param  {string} str  String contents of the variable, between <i>{{</i> and <i>}}</i>
+   * @param  {number} line The line number that this variable starts on.
+   * @return {{compile: Function}}      Parsed token object.
+   * @private
+   */
+  function parseVariable(str, line) {
+    var tokens = lexer.read(utils.strip(str)),
+      parser,
+      addescape,
+      out;
+
+    addescape = escape && !(utils.some(tokens, function (token) {
+      return (token.type === _t.FILTEREMPTY || token.type === _t.FILTER) && token.match === 'raw';
+    }));
+
+    if (addescape) {
+      tokens.unshift({ type: _t.PARENOPEN, match: '(' });
+      tokens.push({ type: _t.PARENCLOSE, match: ')' });
+      if (typeof escape === 'string') {
+        tokens = tokens.concat([
+          { type: _t.FILTER, match: 'e' },
+          { type: _t.STRING, match: String(escape) },
+          { type: _t.PARENCLOSE, match: ')'}
+        ]);
+      } else {
+        tokens.push({ type: _t.FILTEREMPTY, match: 'e' });
+      }
+    }
+
+    parser = new TokenParser(tokens, filters, line);
+    out = parser.parse().join('');
+
+    if (parser.state.length) {
+      throw new Error('Unable to parse "' + str + '" on line ' + line + '.');
+    }
+
+    return {
+      compile: function () {
+        return '_output += ' + out + ';\n';
+      }
+    };
+  }
+  exports.parseVariable = parseVariable;
+
+  /**
+   * Parse a tag.
+   * @param  {string} str  String contents of the tag, between <i>{%</i> and <i>%}</i>
+   * @param  {number} line The line number that this tag starts on.
+   * @return {{compile: Function, args: Array, content: object, ends: boolean, name: string}}      Parsed token object.
+   * @private
+   */
+  function parseTag(str, line) {
+    var tokens, parser, chunks, tagName, tag, args, last;
+
+    if (utils.startsWith(str, 'end')) {
+      last = stack[stack.length - 1];
+      if (last.name === str.replace(/^end/, '') && last.ends) {
+        switch (last.name) {
+        case 'autoescape':
+          escape = opts.autoescape;
+          break;
+        case 'raw':
+          inRaw = false;
+          break;
+        }
+        stack.pop();
+        return;
+      }
+
+      if (!inRaw) {
+        throw new Error('Unexpected end of tag "' + str.replace(/^end/, '') + '" on line ' + line + '. of ' + opts.filename);
+      }
+    }
+
+    if (inRaw) {
+      return;
+    }
+
+    chunks = str.split(/\s+(.+)?/);
+    tagName = chunks.shift();
+
+    if (!tags.hasOwnProperty(tagName)) {
+      throw new Error('Unexpected tag "' + str + '" on line ' + line + '.');
+    }
+
+    tokens = lexer.read(utils.strip(chunks.join(' ')));
+    parser = new TokenParser(tokens, filters, line);
+    tag = tags[tagName];
+
+    if (!tag.parse(chunks[1], line, parser, _t, stack)) {
+      throw new Error('Unexpected tag "' + tagName + '" on line ' + line + '.');
+    }
+
+    parser.parse();
+    args = parser.out;
+
+    switch (tagName) {
+    case 'autoescape':
+      escape = (args[0] !== 'false') ? args[0] : false;
+      break;
+    case 'raw':
+      inRaw = true;
+      break;
+    }
+
+    return {
+      compile: tag.compile,
+      args: args,
+      content: [],
+      ends: tag.ends,
+      name: tagName
+    };
   }
 
-  _.each(parts, function (part, i) {
-    if (part && ((/^[\w\.]+\(/).test(part) || (/\)$/).test(part)) && !(/^[\w\.]+\([^\)]*\)$/).test(part)) {
-      parts[i] += ((parts[i + 1]) ? '|' + parts[i + 1] : '');
-      parts[i + 1] = false;
+  /**
+   * Strip the whitespace from the previous token, if it is a string.
+   * @param  {object} token Parsed token.
+   * @return {object}       If the token was a string, trailing whitespace will be stripped.
+   */
+  function stripPrevToken(token) {
+    if (typeof token === 'string') {
+      token = token.replace(/\s*$/, '');
     }
-  });
-  parts = _.without(parts, false);
+    return token;
+  }
 
-  _.each(parts, function (part) {
-    var filter_name = getMethod(part);
-    if ((/\(/).test(part)) {
-      filters.push({
-        name: filter_name,
-        args: getArgs(part)
-      });
-    } else {
-      filters.push({ name: filter_name, args: '' });
+  /*!
+   * Loop over the source, split via the tag/var/comment regular expression splitter.
+   * Send each chunk to the appropriate parser.
+   */
+  utils.each(source.split(splitter), function (chunk) {
+    var token, lines, stripPrev, prevToken, prevChildToken;
+
+    if (!chunk) {
+      return;
     }
+
+    // Is a variable?
+    if (!inRaw && utils.startsWith(chunk, varOpen) && utils.endsWith(chunk, varClose)) {
+      stripPrev = varStripBefore.test(chunk);
+      stripNext = varStripAfter.test(chunk);
+      token = parseVariable(chunk.replace(varStrip, ''), line);
+    // Is a tag?
+    } else if (utils.startsWith(chunk, tagOpen) && utils.endsWith(chunk, tagClose)) {
+      stripPrev = tagStripBefore.test(chunk);
+      stripNext = tagStripAfter.test(chunk);
+      token = parseTag(chunk.replace(tagStrip, ''), line);
+      if (token) {
+        switch (token.name) {
+        case 'extends':
+          parent = token.args.join('').replace(/^\'|\'$/g, '').replace(/^\"|\"$/g, '');
+          break;
+        case 'block':
+          blocks[token.args.join('')] = token;
+          break;
+        }
+      }
+      if (inRaw && !token) {
+        token = chunk;
+      }
+    // Is a content string?
+    } else if (inRaw || (!utils.startsWith(chunk, cmtOpen) && !utils.endsWith(chunk, cmtClose))) {
+      token = (stripNext) ? chunk.replace(/^\s*/, '') : chunk;
+      stripNext = false;
+    }
+
+    // Did this tag ask to strip previous whitespace? <code>{%- ... %}</code> or <code>{{- ... }}</code>
+    if (stripPrev && tokens.length) {
+      prevToken = tokens.pop();
+      if (typeof prevToken === 'string') {
+        prevToken = stripPrevToken(prevToken);
+      } else if (prevToken.content && prevToken.content.length) {
+        prevChildToken = stripPrevToken(prevToken.content.pop());
+        prevToken.content.push(prevChildToken);
+      }
+      tokens.push(prevToken);
+    }
+
+    // This was a comment, so let's just keep going.
+    if (!token) {
+      return;
+    }
+
+    // If there's an open item in the stack, add this to its content.
+    if (stack.length) {
+      stack[stack.length - 1].content.push(token);
+    } else {
+      tokens.push(token);
+    }
+
+    // If the token is a tag that requires an end tag, open it on the stack.
+    if (token.name && token.ends) {
+      stack.push(token);
+    }
+
+    lines = chunk.match(/\n/g);
+    line += (lines) ? lines.length : 0;
   });
 
   return {
-    type: VAR_TOKEN,
-    name: varname,
-    args: args,
-    filters: filters,
-    escape: escape
+    name: opts.filename,
+    parent: parent,
+    tokens: tokens,
+    blocks: blocks
   };
 };
 
-exports.parse = function (data, tags, autoescape) {
-  var rawtokens = helpers.stripWhitespace(data).split(/(\{%[^\r]*?%\}|\{\{.*?\}\}|\{#[^\r]*?#\})/),
-    escape = !!autoescape,
-    last_escape = escape,
-    stack = [[]],
-    index = 0,
-    i = 0,
-    j = rawtokens.length,
-    token,
-    parts,
-    tagname,
-    lines = 1,
-    curline = 1,
-    newlines = null,
-    lastToken,
-    rawStart = /^\{\% *raw *\%\}/,
-    rawEnd = /\{\% *endraw *\%\}$/,
-    inRaw = false,
-    stripAfter = false,
-    stripBefore = false,
-    stripStart = false,
-    stripEnd = false;
+exports.compile = function (template, parent, options, blockName) {
+  var out = '',
+    tokens = utils.isArray(template) ? template : template.tokens;
 
-  for (i; i < j; i += 1) {
-    token = rawtokens[i];
-    curline = lines;
-    newlines = token.match(/\n/g);
-    stripAfter = false;
-    stripBefore = false;
-    stripStart = false;
-    stripEnd = false;
-
-    if (newlines) {
-      lines += newlines.length;
+  utils.each(tokens, function (token, index) {
+    if (typeof token === 'string') {
+      out += '_output += "' + token.replace(/\n|\r/g, '\\n').replace(/"/g, '\\"') + '";\n';
+      return;
     }
 
-    if (inRaw !== false && !rawEnd.test(token)) {
-      inRaw += token;
-      continue;
-    }
+    out += token.compile(exports.compile, token.args, token.content, parent, options, blockName);
+  });
 
-    // Ignore empty strings and comments
-    if (token.length === 0 || commentRegexp.test(token)) {
-      continue;
-    } else if (/^\s+$/.test(token)) {
-      token = token.replace(/ +/, ' ').replace(/\n+/, '\n');
-    } else if (variableRegexp.test(token)) {
-      token = exports.parseVariable(token, escape);
-    } else if (logicRegexp.test(token)) {
-      if (rawEnd.test(token)) {
-        // Don't care about the content in a raw tag, so end tag may not start correctly
-        token = inRaw + token.replace(rawEnd, '');
-        inRaw = false;
-        stack[index].push(token);
-        continue;
-      }
-
-      if (rawStart.test(token)) {
-        // Have to check the whole token directly, not just parts, as the tag may not end correctly while in raw
-        inRaw = token.replace(rawStart, '');
-        continue;
-      }
-
-      parts = token.replace(/^\{%\s*|\s*%\}$/g, '').split(' ');
-      if (parts[0] === '-') {
-        stripBefore = true;
-        parts.shift();
-      }
-      tagname = parts.shift();
-      if (_.last(parts) === '-') {
-        stripAfter = true;
-        parts.pop();
-      }
-
-      if (index > 0 && (/^end/).test(tagname)) {
-        lastToken = _.last(stack[stack.length - 2]);
-        if ('end' + lastToken.name === tagname) {
-          if (lastToken.name === 'autoescape') {
-            escape = last_escape;
-          }
-          lastToken.strip.end = stripBefore;
-          lastToken.strip.after = stripAfter;
-          stack.pop();
-          index -= 1;
-          continue;
-        }
-
-        throw new Error('Expected end tag for "' + lastToken.name + '", but found "' + tagname + '" at line ' + lines + '.');
-      }
-
-      if (!tags.hasOwnProperty(tagname)) {
-        throw new Error('Unknown logic tag at line ' + lines + ': "' + tagname + '".');
-      }
-
-      if (tagname === 'autoescape') {
-        last_escape = escape;
-        escape = (!parts.length || parts[0] === 'true') ? ((parts.length >= 2) ? parts[1] : true) : false;
-      }
-
-      token = {
-        type: LOGIC_TOKEN,
-        line: curline,
-        name: tagname,
-        compile: tags[tagname],
-        parent: _.uniq(stack[stack.length - 2] || []),
-        strip: {
-          before: stripBefore,
-          after: stripAfter,
-          start: false,
-          end: false
-        }
-      };
-      token.args = getTokenArgs(token, parts);
-
-      if (tags[tagname].ends) {
-        token.strip.after = false;
-        token.strip.start = stripAfter;
-        stack[index].push(token);
-        stack.push(token.tokens = []);
-        index += 1;
-        continue;
-      }
-    }
-
-    // Everything else is treated as a string
-    stack[index].push(token);
-  }
-
-  if (inRaw !== false) {
-    throw new Error('Missing expected end tag for "raw" on line ' + curline + '.');
-  }
-
-  if (index !== 0) {
-    lastToken = _.last(stack[stack.length - 2]);
-    throw new Error('Missing end tag for "' + lastToken.name + '" that was opened on line ' + lastToken.line + '.');
-  }
-
-  return stack[index];
+  return out;
 };
 
-function precompile(indent, context) {
-  var filepath,
-    extendsHasVar,
-    preservedTokens = [];
+},{"./lexer":4,"./utils":23}],6:[function(require,module,exports){
+var fs = require('fs'),
+  path = require('path'),
+  utils = require('./utils'),
+  _tags = require('./tags'),
+  _filters = require('./filters'),
+  parser = require('./parser'),
+  dateformatter = require('./dateformatter');
 
-  // Precompile - extract blocks and create hierarchy based on 'extends' tags
-  // TODO: make block and extends tags accept context variables
+/**
+ * Swig Options Object.
+ * @typedef {Object} SwigOpts
+ * @property {boolean} autoescape  Controls whether or not variable output will automatically be escaped for safe HTML output. Defaults to <code data-language="js">true</code>.
+ * @property {array}   varControls Open and close controls for variables. Defaults to <code data-language="js">['{{', '}}']</code>.
+ * @property {array}   tagControls Open and close controls for tags. Defaults to <code data-language="js">['{%', '%}']</code>.
+ * @property {array}   cmtControls Open and close controls for comments. Defaults to <code data-language="js">['{#', '#}']</code>.
+ * @property {object}  locals      Default variable context to be passed to <strong>all</strong> templates.
+ * @property {(boolean|string|{get: Function, set: Function})} cache Cache control for templates. Defaults to saving in <code data-language="js">'memory'</code>. Send <code data-language="js">false</code> to disable. Send an object with <code data-language="js">get</code> and <code data-language="js">set</code> functions to customize.
+ */
+var defaultOptions = {
+    autoescape: true,
+    varControls: ['{{', '}}'],
+    tagControls: ['{%', '%}'],
+    cmtControls: ['{#', '#}'],
+    locals: {},
+    cache: 'memory'
+  },
+  defaultInstance;
 
-  // Only precompile at the template level
-  if (this.type === TEMPLATE) {
+/**
+ * Empty function, used in templates.
+ * @return {string} Empty string
+ * @private
+ */
+function efn() { return ''; }
 
-    _.each(this.tokens, function (token, index) {
+/**
+ * Validate the Swig options object.
+ * @param  {?SwigOpts} options Swig options object.
+ * @return {undefined}      This method will throw errors if anything is wrong.
+ * @private
+ */
+function validateOptions(options) {
+  if (!options) {
+    return;
+  }
 
-      if (!extendsHasVar) {
-        // Load the parent template
-        if (token.name === 'extends') {
-          filepath = token.args[0];
-
-          if (!helpers.isStringLiteral(filepath)) {
-
-            if (!context) {
-              extendsHasVar = true;
-              return;
-            }
-            filepath = "\"" + getContextVar(filepath, context) + "\"";
-          }
-
-          if (!helpers.isStringLiteral(filepath) || token.args.length > 1) {
-            throw new Error('Extends tag on line ' + token.line + ' accepts exactly one string literal as an argument.');
-          }
-          if (index > 0) {
-            throw new Error('Extends tag must be the first tag in the template, but "extends" found on line ' + token.line + '.');
-          }
-          token.template = this.compileFile(filepath.replace(/['"]/g, ''), true);
-          this.parent = token.template;
-
-          // inherit tokens/blocks from parent.
-          this.blocks = _.extend({}, this.parent.blocks, this.blocks);
-
-        } else if (token.name === 'block') { // Make a list of blocks
-          var blockname = token.args[0],
-            parentBlockIndex;
-
-          if (!helpers.isValidBlockName(blockname) || token.args.length !== 1) {
-            throw new Error('Invalid block tag name "' + blockname + '" on line ' + token.line + '.');
-          }
-
-          // store blocks as flat reference list on top-level
-          // template object
-          this.blocks[blockname] = token;
-
-          // child tokens may contain more blocks at this template
-          // level - apply to flat this.blocks object
-          findSubBlocks(token, this.blocks);
-
-          // search parent list for a matching block, replacing the
-          // parent template block tokens with the derived token.
-          if (this.parent) {
-
-            // Store parent token object on a derived block
-            token.parentBlock = this.parent.blocks[blockname];
-
-            // this will return -1 for a nested block
-            parentBlockIndex = _.indexOf(this.parent.tokens,
-                this.parent.blocks[blockname]);
-            if (parentBlockIndex >= 0) {
-              this.parent.tokens[parentBlockIndex] = token;
-            }
-
-          }
-        } else if (token.type === LOGIC_TOKEN) {
-          // Preserve any template logic from the extended template.
-          preservedTokens.push(token);
-        }
-        // else, discard any tokens that are not under a LOGIC_TOKEN
-        // or VAR_TOKEN (for example, static strings).
-
-      }
-    }, this);
-
-
-    // If extendsHasVar == true, then we know {% extends %} is not using a string literal, thus we can't
-    // compile until render is called, so we return false.
-    if (extendsHasVar) {
-      return false;
+  utils.each(['varControls', 'tagControls', 'cmtControls'], function (key) {
+    if (!options.hasOwnProperty(key)) {
+      return;
     }
+    if (!utils.isArray(options[key]) || options[key].length !== 2) {
+      throw new Error('Option "' + key + '" must be an array containing 2 different control strings.');
+    }
+    if (options[key][0] === options[key][1]) {
+      throw new Error('Option "' + key + '" open and close controls must not be the same.');
+    }
+    utils.each(options[key], function (a, i) {
+      if (a.length < 2) {
+        throw new Error('Option "' + key + '" ' + ((i) ? 'open ' : 'close ') + 'control must be at least 2 characters. Saw "' + a + '" instead.');
+      }
+    });
+  });
 
-    if (this.parent && this.parent.tokens) {
-      this.tokens = preservedTokens.concat(this.parent.tokens);
+  if (options.hasOwnProperty('cache')) {
+    if (options.cache && options.cache !== 'memory') {
+      if (!options.cache.get || !options.cache.set) {
+        throw new Error('Invalid cache option ' + JSON.stringify(options.cache) + ' found. Expected "memory" or { get: function (key) { ... }, set: function (key, value) { ... } }.');
+      }
     }
   }
 }
 
-exports.compile = function compile(indent, context, template) {
-  var code = '',
-    wrappedInMethod,
-    blockname,
-    parentBlock;
+/**
+ * Set defaults for the base and all new Swig environments.
+ * @param  {SwigOpts} [options={}] Swig options object.
+ * @return {undefined}
+ */
+exports.setDefaults = function (options) {
+  validateOptions(options);
 
-  indent = indent || '';
+  var locals = utils.extend({}, defaultOptions.locals, options.locals || {});
 
-  // Template parameter is optional (not used at the top-level), initialize
-  if (this.type === TEMPLATE) {
-    template = this;
-  }
+  utils.extend(defaultOptions, options);
+  defaultOptions.locals = locals;
 
-  // Initialize blocks
-  if (!this.blocks) {
-    this.blocks = {};
-  }
-
-  // Precompile step - process block inheritence into true token hierarchy
-  if (precompile.call(this, indent, context) === false) {
-    return false;
-  }
-
-  // If this is not a template then just iterate through its tokens
-  _.each(this.tokens, function (token, index) {
-    var name, key, args, prev, next;
-    if (typeof token === 'string') {
-      prev = this.tokens[index - 1];
-      next = this.tokens[index + 1];
-      if (prev && prev.strip && prev.strip.after) {
-        token = token.replace(/^\s+/, '');
-      }
-      if (next && next.strip && next.strip.before) {
-        token = token.replace(/\s+$/, '');
-      }
-      code += '_output += "' + doubleEscape(token).replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/"/g, '\\"') + '";\n';
-      return code;
-    }
-
-    if (typeof token !== 'object') {
-      return; // Tokens can be either strings or objects
-    }
-
-    if (token.type === VAR_TOKEN) {
-      name = token.name.replace(/\W/g, '_');
-      key = (helpers.isLiteral(name)) ? '["' + name + '"]' : '.' + name;
-      args = (token.args && token.args.length) ? token.args : '';
-
-      code += 'if (typeof _context !== "undefined" && typeof _context' + key + ' === "function") {\n';
-      wrappedInMethod = helpers.wrapMethod('', { name: name, args: args }, '_context');
-      code += '  _output = (typeof _output === "undefined") ? ' + wrappedInMethod + ': _output + ' + wrappedInMethod + ';\n';
-      if (helpers.isValidName(name)) {
-        code += '} else if (typeof ' + name + ' === "function") {\n';
-        wrappedInMethod = helpers.wrapMethod('', { name: name, args: args });
-        code += '  _output = (typeof _output === "undefined") ? ' + wrappedInMethod + ': _output + ' + wrappedInMethod + ';\n';
-      }
-      code += '} else {\n';
-      code += helpers.setVar('__' + name, token, args);
-      code += '  _output = (typeof _output === "undefined") ? __' + name + ': _output + __' + name + ';\n';
-      code += '}\n';
-    }
-
-    if (token.type !== LOGIC_TOKEN) {
-      return; // Tokens can be either VAR_TOKEN or LOGIC_TOKEN
-    }
-
-    if (token.name === 'block') {
-      blockname = token.args[0];
-
-      // Sanity check - the template should be in the flat block list.
-      if (!template.blocks.hasOwnProperty(blockname)) {
-        throw new Error('Unrecognized nested block.  Block \"' + blockname +
-                '\" at line ' + token.line + ' of \"' + template.id +
-                '\" is not in template block list.');
-      }
-
-      code += compile.call(template.blocks[token.args[0]], indent + '  ', context, template);
-    } else if (token.name === 'parent') {
-      parentBlock = getParentBlock(token);
-      if (!parentBlock) {
-        throw new Error('No parent block found for parent tag at line ' +
-                token.line + '.');
-      }
-
-      code += compile.call(parentBlock, indent + '  ', context);
-    } else if (token.hasOwnProperty("compile")) {
-      if (token.strip.start && token.tokens.length && typeof token.tokens[0] === 'string') {
-        token.tokens[0] = token.tokens[0].replace(/^\s+/, '');
-      }
-      if (token.strip.end && token.tokens.length && typeof _.last(token.tokens) === 'string') {
-        token.tokens[token.tokens.length - 1] = _.last(token.tokens).replace(/\s+$/, '');
-      }
-      code += token.compile(indent + '  ', exports);
-    } else {
-      code += compile.call(token, indent + '  ', context);
-    }
-
-  }, this);
-
-  return code;
+  defaultInstance.options = utils.extend(defaultInstance.options, options);
 };
 
-})(parser);
-tags['autoescape'] = (function () {
-module = {};
 /**
- * autoescape
- * Special handling hardcoded into the parser to determine whether variable output should be escaped or not
+ * Set the default TimeZone offset for date formatting via the date filter. This is a global setting and will affect all Swig environments, old or new.
+ * @param  {number} offset Offset from GMT, in minutes.
+ * @return {undefined}
  */
-module.exports = function (indent, parser) {
-  return parser.compile.apply(this, [indent]);
+exports.setDefaultTZOffset = function (offset) {
+  dateformatter.tzOffset = offset;
 };
-module.exports.ends = true;
-return module.exports;
-})();
-tags['block'] = (function () {
-module = {};
-/**
- * block
- */
-module.exports = { ends: true };
-return module.exports;
-})();
-tags['else'] = (function () {
-module = {};
 
 /**
- * else
+ * Create a new, separate Swig compile/render environment.
+ *
+ * @example
+ * var swig = require('swig');
+ * var myswig = new swig.Swig({varControls: ['<%=', '%>']});
+ * myswig.render('Tacos are <%= tacos =>!', { locals: { tacos: 'delicious' }});
+ * // => Tacos are delicious!
+ * swig.render('Tacos are <%= tacos =>!', { locals: { tacos: 'delicious' }});
+ * // => 'Tacos are <%= tacos =>!'
+ *
+ * @param  {SwigOpts} [opts={}] Swig options object.
+ * @return {object}      New Swig environment.
  */
-module.exports = function (indent, parser) {
-  var last = _.last(this.parent).name,
-    thisArgs = _.clone(this.args),
-    ifarg,
-    args,
-    out;
+exports.Swig = function (opts) {
+  validateOptions(opts);
+  this.options = utils.extend({}, defaultOptions, opts || {});
+  this.cache = {};
+  this.extensions = {};
+  var self = this,
+    tags = _tags,
+    filters = _filters;
 
-  if (last === 'for') {
-    if (thisArgs.length) {
-      throw new Error('"else" tag cannot accept arguments in the "for" context.');
+  /**
+   * Get combined locals context.
+   * @param  {?SwigOpts} [options] Swig options object.
+   * @return {object}         Locals context.
+   * @private
+   */
+  function getLocals(options) {
+    if (!options || !options.locals) {
+      return self.options.locals;
     }
-    return '} if (__loopLength === 0) {\n';
+
+    return utils.extend({}, self.options.locals, options.locals);
   }
 
-  if (last !== 'if') {
-    throw new Error('Cannot call else tag outside of "if" or "for" context.');
+  /**
+   * Get compiled template from the cache.
+   * @param  {string} key           Name of template.
+   * @return {object|undefined}     Template function and tokens.
+   * @private
+   */
+  function cacheGet(key) {
+    if (!self.options.cache) {
+      return;
+    }
+
+    if (self.options.cache === 'memory') {
+      return self.cache[key];
+    }
+
+    return self.options.cache.get(key);
   }
 
-  ifarg = thisArgs.shift();
-  args = (helpers.parseIfArgs(thisArgs, parser));
-  out = '';
+  /**
+   * Store a template in the cache.
+   * @param  {string} key Name of template.
+   * @param  {object} val Template function and tokens.
+   * @return {undefined}
+   * @private
+   */
+  function cacheSet(key, val) {
+    if (!self.options.cache) {
+      return;
+    }
 
-  if (ifarg) {
-    out += '} else if (\n';
-    out += '  (function () {\n';
+    if (self.options.cache === 'memory') {
+      self.cache[key] = val;
+      return;
+    }
 
-    _.each(args, function (token) {
-      if (token.hasOwnProperty('preout') && token.preout) {
-        out += token.preout + '\n';
+    self.options.cache.set(key, val);
+  }
+
+  /**
+   * Clears the in-memory template cache.
+   *
+   * @example
+   * swig.invalidateCache();
+   *
+   * @return {undefined}
+   */
+  this.invalidateCache = function () {
+    if (self.options.cache === 'memory') {
+      self.cache = {};
+    }
+  };
+
+  /**
+   * Add a custom filter for swig variables.
+   *
+   * @example
+   * function replaceMs(input) { return input.replace(/m/g, 'f'); }
+   * swig.setFilter('replaceMs', replaceMs);
+   * // => {{ "onomatopoeia"|replaceMs }}
+   * // => onofatopeia
+   *
+   * @param {string}    name    Name of filter, used in templates. <strong>Will</strong> overwrite previously defined filters, if using the same name.
+   * @param {function}  method  Function that acts against the input. See <a href="/docs/filters/#custom">Custom Filters</a> for more information.
+   * @return {undefined}
+   */
+  this.setFilter = function (name, method) {
+    if (typeof method !== "function") {
+      throw new Error('Filter "' + name + '" is not a valid function.');
+    }
+    filters[name] = method;
+  };
+
+  /**
+   * Add a custom tag. To expose your own extensions to compiled template code, see <code data-language="js">swig.setExtension</code>.
+   *
+   * @example
+   * var tacotag = require('./tacotag');
+   * swig.setTag('tacos', tacotag.parse, tacotag.compile, tacotag.ends);
+   * // => {% tacos %}Make this be tacos.{% endtacos %}
+   * // => Tacos tacos tacos tacos.
+   *
+   * @param  {string} name      Tag name.
+   * @param  {function} parse   Method for parsing tokens.
+   * @param  {function} compile Method for compiling renderable output.
+   * @param  {boolean} [ends=false]     Whether or not this tag requires an <i>end</i> tag.
+   * @return {undefined}
+   */
+  this.setTag = function (name, parse, compile, ends) {
+    if (typeof parse !== 'function') {
+      throw new Error('Tag "' + name + '" parse method is not a valid function.');
+    }
+
+    if (typeof compile !== 'function') {
+      throw new Error('Tag "' + name + '" compile method is not a valid function.');
+    }
+
+    tags[name] = {
+      parse: parse,
+      compile: compile,
+      ends: ends || false
+    };
+  };
+
+  /**
+   * Add extensions for custom tags. This allows any custom tag to access a globally available methods via a special globally available object, <var>_ext</var>, in templates.
+   *
+   * @example
+   * swig.setExtension('trans', function (v) { return translate(v); });
+   * function compileTrans(compiler, args, content, parent, options) {
+   *   return '_output += _ext.trans(' + args[0] + ');'
+   * };
+   * swig.setTag('trans', parseTrans, compileTrans, true);
+   *
+   * @param  {string} name   Key name of the extension. Accessed via <code data-language="js">_ext[name]</code>.
+   * @param  {*}      object The method, value, or object that should be available via the given name.
+   * @return {undefined}
+   */
+  this.setExtension = function (name, object) {
+    self.extensions[name] = object;
+  };
+
+  /**
+   * Parse a given source string into tokens.
+   *
+   * @param  {string} source  Swig template source.
+   * @param  {SwigOpts} [options={}] Swig options object.
+   * @return {object} parsed  Template tokens object.
+   * @private
+   */
+  this.parse = function (source, options) {
+    validateOptions(options);
+
+    var locals = getLocals(options),
+      opts = {},
+      k;
+
+    for (k in options) {
+      if (options.hasOwnProperty(k) && k !== 'locals') {
+        opts[k] = options[k];
       }
+    }
+
+    options = utils.extend({}, self.options, opts);
+    options.locals = locals;
+
+    return parser.parse(source, options, tags, filters);
+  };
+
+  /**
+   * Parse a given file into tokens.
+   *
+   * @param  {string} pathname  Full path to file to parse.
+   * @param  {SwigOpts} [options={}]   Swig options object.
+   * @return {object} parsed    Template tokens object.
+   * @private
+   */
+  this.parseFile = function (pathname, options) {
+    var src;
+
+    if (!options) {
+      options = {};
+    }
+
+    pathname = (options.resolveFrom) ? path.resolve(path.dirname(options.resolveFrom), pathname) : pathname;
+    src = fs.readFileSync(pathname, 'utf8');
+
+    if (!options.filename) {
+      options.filename = pathname;
+    }
+
+    return self.parse(src, options);
+  };
+
+  /**
+   * Re-Map blocks within a list of tokens to the template's block objects.
+   * @param  {array}  tokens   List of tokens for the parent object.
+   * @param  {object} template Current template that needs to be mapped to the  parent's block and token list.
+   * @return {array}
+   * @private
+   */
+  function remapBlocks(blocks, tokens) {
+    return utils.map(tokens, function (token) {
+      var args = token.args ? token.args.join('') : '';
+      if (token.name === 'block' && blocks[args]) {
+        token = blocks[args];
+      }
+      if (token.content && token.content.length) {
+        token.content = remapBlocks(blocks, token.content);
+      }
+      return token;
     });
+  }
 
-    out += 'return (\n';
-    _.each(args, function (token) {
-      out += token.value + ' ';
-    });
-    out += ');\n';
+  /**
+   * Recursively compile and get parents of given parsed token object.
+   *
+   * @param  {object} tokens    Parsed tokens from template.
+   * @param  {SwigOpts} [options={}]   Swig options object.
+   * @return {object}           Parsed tokens from parent templates.
+   * @private
+   */
+  function getParents(tokens, options) {
+    var blocks = {},
+      parentName = tokens.parent,
+      parentFile,
+      parent;
 
-    out += '  })()\n';
-    out += ') {\n';
+    while (parentName) {
+      if (!options || !options.filename) {
+        throw new Error('Cannot extend "' + parentName + '" because current template has no filename.');
+      }
 
+      parentFile = parentFile || options.filename;
+      parentFile = path.resolve(path.dirname(parentFile), parentName);
+      parent = self.compileFile(parentFile, utils.extend({}, options, { filename: parentFile }));
+      blocks = utils.extend({}, parent.blocks, blocks);
+      parent.tokens = remapBlocks(blocks, parent.tokens);
+      parentName = parent.parent;
+    }
+
+
+    if (parent) {
+      parent.blocks = blocks;
+    }
+
+    return parent;
+  }
+
+  /**
+   * Pre-compile a source string into a cache-able template function.
+   *
+   * @example
+   * swig.precompile('{{ tacos }}');
+   * // => {
+   * //      tpl: function (locals, filters, utils, efn) { ... },
+   * //      tokens: {
+   * //        name: undefined,
+   * //        parent: null,
+   * //        tokens: [...],
+   * //        blocks: {}
+   * //      }
+   * //    }
+   *
+   * In order to render a pre-compiled template, you must have access to filters and utils from Swig. <var>efn</var> is simply an empty function that does nothing.
+   *
+   * @param  {string} source  Swig template source string.
+   * @param  {SwigOpts} [options={}] Swig options object.
+   * @return {object}         Renderable function and tokens object.
+   */
+  this.precompile = function (source, options) {
+    var tokens,
+      tpl,
+      parent;
+
+    tokens = self.parse(source, options);
+    parent = getParents(tokens, options);
+
+    if (parent) {
+      tokens.tokens = remapBlocks(tokens.blocks, parent.tokens);
+    }
+
+    tpl = new Function('_swig', '_ctx', '_filters', 'utils', '_fn', [
+      '  var _ext = _swig.extensions,\n',
+      '    _output = "";',
+      parser.compile(tokens, parent, options),
+      '  return _output;',
+    ].join('\n  '));
+
+    return { tpl: tpl, tokens: tokens };
+  };
+
+  /**
+   * Compile and render a template string for final output.
+   *
+   * @example
+   * swig.render('{{ tacos }}', { locals: { tacos: 'Tacos!!!!' }});
+   * // => Tacos!!!!
+   *
+   * When rendering a source string, a file path should be specified in the options object in order for <var>extends</var>, <var>include</var>, and <var>import</var> to work properly. Do this by adding <code data-language="js">{ filename: '/absolute/path/to/mytpl.html' }</code> to the options argument.
+   *
+   * @param  {string} source    Swig template source string.
+   * @param  {SwigOpts} [options={}] Swig options object.
+   * @return {string}           Rendered output.
+   */
+  this.render = function (source, options) {
+    return exports.compile(source, options)();
+  };
+
+  /**
+   * Compile and render a template file for final output. This is most useful for libraries like Express.js.
+   *
+   * @example
+   * swig.renderFile('./template.html', {}, function (err, output) {
+   *   if (err) {
+   *     throw err;
+   *   }
+   *   console.log(output);
+   * });
+   *
+   * @example
+   * swig.renderFile('./template.html', {});
+   * // => output
+   *
+   * @param  {string}   pathName    File location.
+   * @param  {object}   [locals={}] Template variable context.
+   * @param  {Function} [fn]      Optional callback function.
+   * @return {string}             Rendered output.
+   */
+  this.renderFile = function (pathName, locals, fn) {
+    var out;
+    try {
+      out = exports.compileFile(pathName)(locals);
+      if (fn) {
+        fn(null, out);
+        return;
+      }
+    } catch (e) {
+      if (fn) {
+        fn(e);
+        return;
+      }
+      throw e;
+    }
     return out;
-  }
+  };
 
-  return indent + '\n} else {\n';
-};
-return module.exports;
-})();
-tags['extends'] = (function () {
-module = {};
-/**
- * extends
- */
-module.exports = {};
-return module.exports;
-})();
-tags['filter'] = (function () {
-module = {};
+  /**
+   * Compile string source into a renderable template function.
+   *
+   * @example
+   * var tpl = swig.compile('{{ tacos }}');
+   * // => {
+   * //      [Function: compiled]
+   * //      parent: null,
+   * //      tokens: [{ compile: [Function] }],
+   * //      blocks: {}
+   * //    }
+   * tpl({ tacos: 'Tacos!!!!' });
+   * // => Tacos!!!!
+   *
+   * When compiling a source string, a file path should be specified in the options object in order for <var>extends</var>, <var>include</var>, and <var>import</var> to work properly. Do this by adding <code data-language="js">{ filename: '/absolute/path/to/mytpl.html' }</code> to the options argument.
+   *
+   * @param  {string} source    Swig template source string.
+   * @param  {SwigOpts} [options={}] Swig options object.
+   * @return {function}         Renderable function with keys for parent, blocks, and tokens.
+   */
+  this.compile = function (source, options) {
+    var key = options ? options.filename : null,
+      cached = key ? cacheGet(key) : null,
+      context,
+      pre,
+      tpl;
 
-/**
- * filter
- */
-module.exports = function (indent, parser) {
-  var thisArgs = _.clone(this.args),
-    name = thisArgs.shift(),
-    args = (thisArgs.length) ? thisArgs.join(', ') : '',
-    value = '(function () {\n';
-  value += '  var _output = "";\n';
-  value += parser.compile.apply(this, [indent + '  ']) + '\n';
-  value += '  return _output;\n';
-  value += '})()\n';
-
-  return '_output += ' + helpers.wrapFilter(value.replace(/\n/g, ''), { name: name, args: args }) + ';\n';
-};
-module.exports.ends = true;
-return module.exports;
-})();
-tags['for'] = (function () {
-module = {};
-
-/**
-* for
-*/
-module.exports = function (indent, parser) {
-  var thisArgs = _.clone(this.args),
-    operand1 = thisArgs[0],
-    operator = thisArgs[1],
-    operand2 = parser.parseVariable(thisArgs[2]),
-    out = '',
-    loopShared;
-
-  indent = indent || '';
-
-  if (typeof operator !== 'undefined' && operator !== 'in') {
-    throw new Error('Invalid syntax in "for" tag');
-  }
-
-  if (!helpers.isValidShortName(operand1)) {
-    throw new Error('Invalid arguments (' + operand1 + ') passed to "for" tag');
-  }
-
-  loopShared = 'loop.index = __loopIndex + 1;\n' +
-    'loop.index0 = __loopIndex;\n' +
-    'loop.revindex = __loopLength - loop.index0;\n' +
-    'loop.revindex0 = loop.revindex - 1;\n' +
-    'loop.first = (__loopIndex === 0);\n' +
-    'loop.last = (__loopIndex === __loopLength - 1);\n' +
-    '_context["' + operand1 + '"] = __loopIter[loop.key];\n' +
-    parser.compile.apply(this, [indent + '   ']);
-
-  out = '(function () {\n' +
-    '  var loop = {}, __loopKey, __loopIndex = 0, __loopLength = 0, __keys = [],' +
-    '    __ctx_operand = _context["' + operand1 + '"],\n' +
-    '    loop_cycle = function() {\n' +
-    '      var args = _.toArray(arguments), i = loop.index0 % args.length;\n' +
-    '      return args[i];\n' +
-    '    };\n' +
-    helpers.setVar('__loopIter', operand2) +
-    '  else {\n' +
-    '    return;\n' +
-    '  }\n' +
-    // Basic for loops are MUCH faster than for...in. Prefer this arrays.
-    '  if (_.isArray(__loopIter)) {\n' +
-    '    __loopIndex = 0; __loopLength = __loopIter.length;\n' +
-    '    for (; __loopIndex < __loopLength; __loopIndex += 1) {\n' +
-    '       loop.key = __loopIndex;\n' +
-    loopShared +
-    '    }\n' +
-    '  } else if (typeof __loopIter === "object") {\n' +
-    '    __keys = _.keys(__loopIter);\n' +
-    '    __loopLength = __keys.length;\n' +
-    '    __loopIndex = 0;\n' +
-    '    for (; __loopIndex < __loopLength; __loopIndex += 1) {\n' +
-    '       loop.key = __keys[__loopIndex];\n' +
-    loopShared +
-    '    }\n' +
-    '  }\n' +
-    '  _context["' + operand1 + '"] = __ctx_operand;\n' +
-    '})();\n';
-
-  return out;
-};
-module.exports.ends = true;
-return module.exports;
-})();
-tags['if'] = (function () {
-module = {};
-
-/**
- * if
- */
-module.exports = function (indent, parser) {
-  var thisArgs = _.clone(this.args),
-    args = (helpers.parseIfArgs(thisArgs, parser)),
-    out = '(function () {\n';
-
-  _.each(args, function (token) {
-    if (token.hasOwnProperty('preout') && token.preout) {
-      out += token.preout + '\n';
+    if (cached) {
+      return cached;
     }
+
+    context = getLocals(options);
+    pre = this.precompile(source, options);
+
+    function compiled(locals) {
+      return pre.tpl(self, utils.extend({}, context, locals || {}), filters, utils, efn);
+    }
+
+    utils.extend(compiled, pre.tokens);
+
+    if (key) {
+      cacheSet(key, compiled);
+    }
+
+    return compiled;
+  };
+
+  /**
+   * Compile a source file into a renderable template function.
+   *
+   * @example
+   * var tpl = swig.compileFile('./mytpl.html');
+   * // => {
+   * //      [Function: compiled]
+   * //      parent: null,
+   * //      tokens: [{ compile: [Function] }],
+   * //      blocks: {}
+   * //    }
+   * tpl({ tacos: 'Tacos!!!!' });
+   * // => Tacos!!!!
+   *
+   * @param  {string} pathname  File location.
+   * @param  {SwigOpts} [options={}] Swig options object.
+   * @return {function}         Renderable function with keys for parent, blocks, and tokens.
+   */
+  this.compileFile = function (pathname, options) {
+    var src, cached;
+
+    if (!options) {
+      options = {};
+    }
+
+    pathname = (options.resolveFrom) ? path.resolve(path.dirname(options.resolveFrom), pathname) : pathname;
+    if (!options.filename) {
+      options.filename = pathname;
+    }
+    cached = cacheGet(pathname);
+
+    if (cached) {
+      return cached;
+    }
+
+    src = fs.readFileSync(pathname, 'utf8');
+
+    return self.compile(src, options);
+  };
+
+  /**
+   * Run a pre-compiled template function. This is most useful in the browser when you've pre-compiled your templates with the Swig command-line tool.
+   *
+   * @example
+   * $ swig compile ./mytpl.html --wrap-start="var mytpl = " > mytpl.js
+   * @example
+   * <script src="mytpl.js"></script>
+   * <script>
+   *   swig.run(mytpl, {});
+   *   // => "rendered template..."
+   * </script>
+   *
+   * @param  {function} tpl       Pre-compiled Swig template function. Use the Swig CLI to compile your templates.
+   * @param  {object} [locals={}] Template variable context.
+   * @param  {string} [pathName]  Path of the file. Used for relative include lookups.
+   * @return {string}             Rendered output.
+   */
+  this.run = function (tpl, locals, pathName) {
+    var context = getLocals({ locals: locals });
+    return tpl(self, context, filters, utils, efn);
+  };
+};
+
+/*!
+ * Export methods publicly
+ */
+defaultInstance = new exports.Swig();
+exports.setFilter = defaultInstance.setFilter;
+exports.setTag = defaultInstance.setTag;
+exports.setExtension = defaultInstance.setExtension;
+exports.parseFile = defaultInstance.parseFile;
+exports.precompile = defaultInstance.precompile;
+exports.compile = defaultInstance.compile;
+exports.compileFile = defaultInstance.compileFile;
+exports.render = defaultInstance.render;
+exports.renderFile = defaultInstance.renderFile;
+exports.run = defaultInstance.run;
+exports.invalidateCache = defaultInstance.invalidateCache;
+
+},{"./dateformatter":2,"./filters":3,"./parser":5,"./tags":7,"./utils":23,"fs":24,"path":25}],7:[function(require,module,exports){
+exports.autoescape = require('./tags/autoescape');
+exports.block = require('./tags/block');
+exports.else = require('./tags/else');
+exports.elseif = require('./tags/elseif');
+exports.elif = exports.elseif;
+exports.extends = require('./tags/extends');
+exports.filter = require('./tags/filter');
+exports.for = require('./tags/for');
+exports.if = require('./tags/if');
+exports.import = require('./tags/import');
+exports.include = require('./tags/include');
+exports.macro = require('./tags/macro');
+exports.parent = require('./tags/parent');
+exports.raw = require('./tags/raw');
+exports.set = require('./tags/set');
+exports.spaceless = require('./tags/spaceless');
+
+},{"./tags/autoescape":8,"./tags/block":9,"./tags/else":10,"./tags/elseif":11,"./tags/extends":12,"./tags/filter":13,"./tags/for":14,"./tags/if":15,"./tags/import":16,"./tags/include":17,"./tags/macro":18,"./tags/parent":19,"./tags/raw":20,"./tags/set":21,"./tags/spaceless":22}],8:[function(require,module,exports){
+var bools = ['false', 'true'],
+  strings = ['html', 'js'];
+
+/**
+ * Control auto-escaping of variable output from within your templates.
+ *
+ * @alias autoescape
+ *
+ * @example
+ * // myvar = '<foo>';
+ * {% autoescape true %}{{ myvar }}{% endautoescape %}
+ * // => &lt;foo&gt;
+ * {% autoescape false %}{{ myvar }}{% endautoescape %}
+ * // => <foo>
+ *
+ * @param {boolean|string} control One of `true`, `false`, `"js"` or `"html"`.
+ */
+exports.compile = function (compiler, args, content) {
+  return compiler(content);
+};
+exports.parse = function (str, line, parser, types, stack) {
+  var matched;
+  parser.on('*', function (token) {
+    if (token.type === types.WHITESPACE) {
+      return;
+    }
+    if (!matched &&
+        (token.type === types.BOOL ||
+          (token.type === types.STRING && strings.indexOf(token.match) === -1))
+        ) {
+      this.out.push(token.match);
+      matched = true;
+      return;
+    }
+    throw new Error('Unexpected token "' + token.match + '" in autoescape tag on line ' + line + '.');
   });
 
-  out += '\nif (\n';
-  _.each(args, function (token) {
-    out += token.value + ' ';
+  return true;
+};
+exports.ends = true;
+
+},{}],9:[function(require,module,exports){
+/**
+ * Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.
+ *
+ * See <a href="#inheritance">Template Inheritance</a> for more information.
+ *
+ * @alias block
+ *
+ * @example
+ * {% block body %}...{% endblock %}
+ *
+ * @param {literal}  name   Name of the block for use in parent and extended templates.
+ */
+exports.compile = function (compiler, args, content, parent, options) {
+  return compiler(content, parent, options, args.join(''));
+};
+
+exports.parse = function (str, line, parser, types) {
+  parser.on('*', function (token) {
+    this.out.push(token.match);
   });
-  out += ') {\n';
-  out += parser.compile.apply(this, [indent + '  ']);
-  out += '\n}\n';
+  return true;
+};
+
+exports.ends = true;
+
+},{}],10:[function(require,module,exports){
+/**
+ * Used within an <code data-language="swig">{% if %}</code> tag, the code block following this tag up until <code data-language="swig">{% endif %}</code> will be rendered if the <i>if</i> statement returns false.
+ *
+ * @alias else
+ *
+ * @example
+ * {% if false %}
+ *   statement1
+ * {% else %}
+ *   statement2
+ * {% endif %}
+ * // => statement2
+ *
+ */
+exports.compile = function (compiler, args, content) {
+  return '} else {\n';
+};
+
+exports.parse = function (str, line, parser, types, stack) {
+  parser.on('*', function (token) {
+    throw new Error('"else" tag does not accept any tokens. Found "' + token.match + '" on line ' + line + '.');
+  });
+
+  return (stack.length && stack[stack.length - 1].name === 'if');
+};
+
+},{}],11:[function(require,module,exports){
+var ifparser = require('./if').parse;
+
+/**
+ * Like <code data-language="swig">{% else %}</code>, except this tag can take more conditional statements.
+ *
+ * @alias elseif
+ * @alias elif
+ *
+ * @example
+ * {% if false %}
+ *   Tacos
+ * {% elseif true %}
+ *   Burritos
+ * {% else %}
+ *   Churros
+ * {% endif %}
+ * // => Burritos
+ *
+ * @param {...mixed} conditional  Conditional statement that returns a truthy or falsy value.
+ */
+exports.compile = function (compiler, args, content) {
+  return '} else if (' + args.join(' ') + ') {\n';
+};
+
+exports.parse = function (str, line, parser, types, stack) {
+  var okay = ifparser(str, line, parser, types, stack);
+  return okay && (stack.length && stack[stack.length - 1].name === 'if');
+};
+
+},{"./if":15}],12:[function(require,module,exports){
+/**
+ * Makes the current template extend a parent template. This tag must be the first item in your template.
+ *
+ * See <a href="#inheritance">Template Inheritance</a> for more information.
+ *
+ * @alias extends
+ *
+ * @example
+ * {% extends "./layout.html" %}
+ *
+ * @param {string} parentFile  Relative path to the file that this template extends.
+ */
+exports.compile = function () {};
+
+exports.parse = function () {
+  return true;
+};
+
+exports.ends = false;
+
+},{}],13:[function(require,module,exports){
+var filters = require('../filters');
+
+/**
+ * Apply a filter to an entire block of template.
+ *
+ * @alias filter
+ *
+ * @example
+ * {% filter uppercase %}oh hi, {{ name }}{% endfilter %}
+ * // => OH HI, PAUL
+ *
+ * @example
+ * {% filter replace(".", "!", "g") %}Hi. My name is Paul.{% endfilter %}
+ * // => Hi! My name is Paul!
+ *
+ * @param {function} filter  The filter that should be applied to the contents of the tag.
+ */
+
+exports.compile = function (compiler, args, content, parent, options) {
+  var filter = args.shift().replace(/\($/, ''),
+    val = '(function () {\n' +
+      '  var _output = "";\n' +
+      compiler(content, parent, options) +
+      '  return _output;\n' +
+      '})()';
+
+  if (args[args.length - 1] === ')') {
+    args.pop();
+  }
+
+  args = (args.length) ? ', ' + args.join('') : '';
+  return '_output += _filters["' + filter + '"](' + val + args + ');\n';
+};
+
+exports.parse = function (str, line, parser, types) {
+  var filter;
+
+  function check(filter) {
+    if (!filters.hasOwnProperty(filter)) {
+      throw new Error('Filter "' + filter + '" does not exist on line ' + line + '.');
+    }
+  }
+
+  parser.on(types.FUNCTION, function (token) {
+    if (!filter) {
+      filter = token.match.replace(/\($/, '');
+      check(filter);
+      this.out.push(token.match);
+      this.state.push(token.type);
+      return;
+    }
+    return true;
+  });
+
+  parser.on(types.VAR, function (token) {
+    if (!filter) {
+      filter = token.match;
+      check(filter);
+      this.out.push(filter);
+      return;
+    }
+    return true;
+  });
+
+  return true;
+};
+
+exports.ends = true;
+
+},{"../filters":3}],14:[function(require,module,exports){
+/**
+ * Loop over objects and arrays.
+ *
+ * @alias for
+ *
+ * @example
+ * // obj = { one: 'hi', two: 'bye' };
+ * {% for x in obj %}
+ *   {% if loop.first %}<ul>{% endif %}
+ *   <li>{{ loop.index }} - {{ loop.key }}: {{ x }}</li>
+ *   {% if loop.last %}</ul>{% endif %}
+ * {% endfor %}
+ * // => <ul>
+ * //    <li>1 - one: hi</li>
+ * //    <li>2 - two: bye</li>
+ * //    </ul>
+ *
+ * @example
+ * // arr = [1, 2, 3]
+ * // Reverse the array, shortcut the key/index to `key`
+ * {% for key, val in arr|reverse %}
+ * {{ key }} -- {{ val }}
+ * {% endfor %}
+ * // => 0 -- 3
+ * //    1 -- 2
+ * //    2 -- 1
+ *
+ * @param {literal} [key]     A shortcut to the index of the array or current key accessor.
+ * @param {literal} variable  The current value will be assigned to this variable name temporarily. The variable will be reset upon ending the for tag.
+ * @param {literal} in        Literally, "in". This token is required.
+ * @param {object}  object    An enumerable object that will be iterated over.
+ *
+ * @return {loop.index} The current iteration of the loop (1-indexed)
+ * @return {loop.index0} The current iteration of the loop (0-indexed)
+ * @return {loop.revindex} The number of iterations from the end of the loop (1-indexed)
+ * @return {loop.revindex0} The number of iterations from the end of the loop (0-indexed)
+ * @return {loop.key} If the iterator is an object, this will be the key of the current item, otherwise it will be the same as the loop.index.
+ * @return {loop.first} True if the current object is the first in the object or array.
+ * @return {loop.last} True if the current object is the last in the object or array.
+ */
+exports.compile = function (compiler, args, content) {
+  var val = args.shift(),
+    key = '__k',
+    last;
+
+  if (args[0] && args[0] === ',') {
+    args.shift();
+    key = args.shift();
+  }
+
+  last = args.join('');
+
+  return [
+    '(function () {\n',
+    '  var __l = ' + last + ';\n',
+    '  if (!__l) { return; }\n',
+    '  var loop = { first: false, index: 1, index0: 0, revindex: __l.length, revindex0: __l.length - 1, length: __l.length, last: false };\n',
+    '  utils.each(__l, function (' + val + ', ' + key + ') {\n',
+    '    loop.key = ' + key + ';\n',
+    '    loop.first = (loop.index0 === 0);\n',
+    '    loop.last = (loop.revindex0 === 0);\n',
+    '    ' + compiler(content),
+    '    loop.index += 1; loop.index0 += 1; loop.revindex -= 1; loop.revindex0 -= 1;\n',
+    '  });\n',
+    '})();\n'
+  ].join('');
+};
+
+exports.parse = function (str, line, parser, types, stack) {
+  var firstVar, ready;
+
+  parser.on(types.NUMBER, function (token) {
+    var lastState = this.state.length ? this.state[this.state.length - 1] : null;
+    if (!ready ||
+        (lastState !== types.ARRAYOPEN &&
+          lastState !== types.CURLYOPEN &&
+          lastState !== types.CURLYCLOSE &&
+          lastState !== types.FUNCTION &&
+          lastState !== types.FILTER)
+        ) {
+      throw new Error('Unexpected number "' + token.match + '" on line ' + line + '.');
+    }
+    return true;
+  });
+
+  parser.on(types.VAR, function (token) {
+    if (ready && firstVar) {
+      return true;
+    }
+
+    if (!this.out.length) {
+      firstVar = true;
+    }
+
+    this.out.push(token.match);
+  });
+
+  parser.on(types.COMMA, function (token) {
+    if (firstVar && this.prevToken.type === types.VAR) {
+      this.out.push(token.match);
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.COMPARATOR, function (token) {
+    if (token.match !== 'in' || !firstVar) {
+      throw new Error('Unexpected token "' + token.match + '" on line ' + line + '.');
+    }
+    ready = true;
+  });
+
+  return true;
+};
+
+exports.ends = true;
+
+},{}],15:[function(require,module,exports){
+/**
+ * Used to create conditional statements in templates. Accepts most JavaScript valid comparisons.
+ *
+ * Can be used in conjunction with <a href="#elseif"><code data-language="swig">{% elseif ... %}</code></a> and <a href="#else"><code data-language="swig">{% else %}</code></a> tags.
+ *
+ * @alias if
+ *
+ * @example
+ * {% if x %}{% endif %}
+ * {% if !x %}{% endif %}
+ * {% if not x %}{% endif %}
+ *
+ * @example
+ * {% if x and y %}{% endif %}
+ * {% if x && y %}{% endif %}
+ * {% if x or y %}{% endif %}
+ * {% if x || y %}{% endif %}
+ * {% if x || (y && z) %}{% endif %}
+ *
+ * @example
+ * {% if x [operator] y %}
+ *   Operators: ==, !=, <, <=, >, >=, ===, !==
+ * {% endif %}
+ *
+ * @example
+ * {% if x == 'five' %}
+ *   The operands can be also be string or number literals
+ * {% endif %}
+ *
+ * @example
+ * {% if x|lower === 'tacos' %}
+ *   You can use filters on any operand in the statement.
+ * {% endif %}
+ *
+ * @example
+ * {% if x in y %}
+ *   If x is a value that is present in y, this will return true.
+ * {% endif %}
+ *
+ * @param {...mixed} conditional Conditional statement that returns a truthy or falsy value.
+ */
+exports.compile = function (compiler, args, content) {
+  return 'if (' + args.join(' ') + ') { \n' +
+    compiler(content) + '\n' +
+    '}';
+};
+
+exports.parse = function (str, line, parser, types) {
+  parser.on(types.COMPARATOR, function (token) {
+    if (this.isLast) {
+      throw new Error('Unexpected logic "' + token.match + '" on line ' + line + '.');
+    }
+    if (this.prevToken.type === types.NOT) {
+      throw new Error('Attempted logic "not ' + token.match + '" on line ' + line + '. Use !(foo ' + token.match + ') instead.');
+    }
+    this.out.push(token.match);
+  });
+
+  parser.on(types.NOT, function (token) {
+    if (this.isLast) {
+      throw new Error('Unexpected logic "' + token.match + '" on line ' + line + '.');
+    }
+    this.out.push(token.match);
+  });
+
+  parser.on(types.BOOL, function (token) {
+    this.out.push(token.match);
+  });
+
+  parser.on(types.LOGIC, function (token) {
+    if (!this.out.length || this.isLast) {
+      throw new Error('Unexpected logic "' + token.match + '" on line ' + line + '.');
+    }
+    this.out.push(token.match);
+    this.filterApplyIdx.pop();
+  });
+
+  return true;
+};
+
+exports.ends = true;
+
+},{}],16:[function(require,module,exports){
+var utils = require('../utils');
+
+/**
+ * Allows you to import macros from another file directly into your current context.
+ *
+ * The import tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.
+ *
+ * @alias import
+ *
+ * @example
+ * {% import './formmacros.html' as forms %}
+ * {{ form.input("text", "name") }}
+ * // => <input type="text" name="name">
+ *
+ * @example
+ * {% import "../shared/tags.html" as tags %}
+ * {{ tags.stylesheet('global') }}
+ * // => <link rel="stylesheet" href="/global.css">
+ *
+ * @param {string|var}  file      Relative path from the current template file to the file to import macros from.
+ * @param {literal}     as        Literally, "as".
+ * @param {literal}     varname   Local-accessible object name to assign the macros to.
+ */
+exports.compile = function (compiler, args, content, parent, options) {
+  var parseFile = require('../swig').parseFile,
+    file = args.shift(),
+    ctx = args.shift(),
+    out = 'var ' + ctx + ' = {};\n' +
+      '(function () {\n' +
+      '  var _output = "";\n',
+    tokens;
+
+  tokens = parseFile(file.replace(/^("|')|("|')$/g, ''), { resolveFrom: options.filename }).tokens;
+  utils.each(tokens, function (token) {
+    var fn;
+    if (!token || token.name !== 'macro' || !token.compile) {
+      return;
+    }
+    out += ctx + '.' + token.args[0] + ' = ' + token.compile(compiler, token.args, token.content, parent, options);
+  });
+
   out += '})();\n';
 
   return out;
 };
-module.exports.ends = true;
-return module.exports;
-})();
-tags['import'] = (function () {
-module = {};
 
-/**
- * import
- */
-module.exports = function (indent, parser) {
-  if (this.args.length !== 3) {
-  }
+exports.parse = function (str, line, parser, types) {
+  var file, ctx;
+  parser.on(types.STRING, function (token) {
+    if (!file) {
+      file = token.match;
+      this.out.push(file);
+      return;
+    }
 
-  var thisArgs = _.clone(this.args),
-    file = thisArgs[0],
-    as = thisArgs[1],
-    name = thisArgs[2],
-    out = '';
+    throw new Error('Unexpected string ' + token.match + ' on line ' + line + '.');
+  });
 
-  if (!helpers.isLiteral(file) && !helpers.isValidName(file)) {
-    throw new Error('Invalid attempt to import "' + file  + '".');
-  }
+  parser.on(types.VAR, function (token) {
+    if (!file || ctx) {
+      throw new Error('Unexpected variable "' + token.match + '" on line ' + line + '.');
+    }
 
-  if (as !== 'as') {
-    throw new Error('Invalid syntax {% import "' + file + '" ' + as + ' ' + name + ' %}');
-  }
+    if (token.match === 'as') {
+      return;
+    }
 
-  out += '_.extend(_context, (function () {\n';
+    ctx = token.match;
+    this.out.push(ctx);
 
-  out += 'var _context = {}, __ctx = {}, _output = "";\n' +
-    helpers.setVar('__template', parser.parseVariable(file)) +
-    '_this.compileFile(__template).render(__ctx, _parents);\n' +
-    '_.each(__ctx, function (item, key) {\n' +
-    '  if (typeof item === "function") {\n' +
-    '    _context["' + name + '_" + key] = item;\n' +
-    '  }\n' +
-    '});\n' +
-    'return _context;\n';
+    return false;
+  });
 
-  out += '})());\n';
-
-  return out;
+  return true;
 };
-return module.exports;
-})();
-tags['include'] = (function () {
-module = {};
+
+
+},{"../swig":6,"../utils":23}],17:[function(require,module,exports){
+var ignore = 'ignore',
+  missing = 'missing';
 
 /**
- * include
+ * Includes a template partial in place. The template is rendered within the current locals variable context.
+ *
+ * @alias include
+ *
+ * @example
+ * // food = 'burritos';
+ * // drink = 'lemonade';
+ * {% include "./partial.html" %}
+ * // => I like burritos and lemonade.
+ *
+ * @example
+ * // my_obj = { food: 'tacos', drink: 'horchata' };
+ * {% include "./partial.html" with my_obj %}
+ * // => I like tacos and horchata.
+ *
+ * @example
+ * {% include "/this/file/does/not/exist" ignore missing %}
+ * // => (Nothing! empty string)
+ *
+ * @param {string|var}  file      The path, relative to the template root, to render into the current context.
+ * @param {literal}     [with]    Literally, "with".
+ * @param {object}      [context] Restrict the local variable context in the file to this key-value object.
+ * @param {literal} [ignore missing] Will output empty string if not found instead of throwing an error.
  */
-module.exports = function (indent, parser) {
-  var args = _.clone(this.args),
-    template = args.shift(),
-    context = '_context',
-    ignore = false,
-    out = '',
-    ctx;
+exports.compile = function (compiler, args, content, parent, options) {
+  var file = args.shift(),
+    ignore = args[args.length - 1] === missing ? (args.pop()) : false,
+    w = args.join('');
 
-  indent = indent || '';
+  return '(function () {\n' +
+    (ignore ? '  try {\n' : '') +
+    '    _output += _swig.compileFile(' + file + ', {' +
+    'resolveFrom: "' + options.filename + '"' +
+    '})(' + (w || '_ctx') + ');\n' +
+    (ignore ? '} catch (e) {}\n' : '') +
+    '})();\n';
+};
 
-  if (!helpers.isLiteral(template) && !helpers.isValidName(template)) {
-    throw new Error('Invalid arguments passed to \'include\' tag.');
+exports.parse = function (str, line, parser, types) {
+  var file, w;
+  parser.on(types.STRING, function (token) {
+    if (!file) {
+      file = token.match;
+      this.out.push(file);
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.VAR, function (token) {
+    if (!file) {
+      file = token.match;
+      return true;
+    }
+
+    if (!w && token.match === 'with') {
+      w = true;
+      return;
+    }
+
+    if (token.match === ignore) {
+      return false;
+    }
+
+    if (token.match === missing) {
+      if (this.prevToken.match !== ignore) {
+        throw new Error('Unexpected token "' + missing + '" on line ' + line + '.');
+      }
+      this.out.push(token.match);
+      return false;
+    }
+
+    if (this.prevToken.match === ignore) {
+      throw new Error('Expected "' + missing + '" on line ' + line + ' but found "' + token.match + '".');
+    }
+
+    return true;
+  });
+
+  return true;
+};
+
+},{}],18:[function(require,module,exports){
+/**
+ * Create custom, reusable snippets within your templates.
+ *
+ * Can be imported from one template to another using the <a href="#import"><code data-language="swig">{% import ... %}</code></a> tag.
+ *
+ * @alias macro
+ *
+ * @example
+ * {% macro input type name id label value error %}
+ *   <label for="{{ name }}">{{ label }}</label>
+ *   <input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}"{% if error %} class="error"{% endif %}>
+ * {% endmacro %}
+ *
+ * {{ input("text", "fname", "fname", "First Name", fname.value, fname.errors) }}
+ * // => <label for="fname">First Name</label>
+ * //    <input type="text" name="fname" id="fname" value="">
+ *
+ * @param {...arguments} arguments  User-defined arguments.
+ */
+exports.compile = function (compiler, args, content) {
+  var fnName = args.shift();
+
+  return 'function ' + fnName + '(' + args.join('') + ') {\n' +
+    '  var _output = "";\n' +
+    compiler(content) + '\n' +
+    '  return _output;\n' +
+    '}\n';
+};
+
+exports.parse = function (str, line, parser, types, stack) {
+  var name;
+
+  parser.on(types.VAR, function (token) {
+    if (token.match.indexOf('.') !== -1) {
+      throw new Error('Unexpected dot in macro argument "' + token.match + '" on line ' + line + '.');
+    }
+    this.out.push(token.match);
+  });
+
+  parser.on(types.FUNCTION, function (token) {
+    if (!name) {
+      name = token.match;
+      this.out.push(name);
+      this.state.push(types.FUNCTION);
+    }
+  });
+
+  parser.on(types.PARENCLOSE, function (token) {
+    if (this.isLast) {
+      return;
+    }
+    throw new Error('Unexpected parenthesis close on line ' + line + '.');
+  });
+
+  parser.on(types.COMMA, function (token) {
+    return true;
+  });
+
+  parser.on('*', function (token) {
+    return;
+  });
+
+  return true;
+};
+
+exports.ends = true;
+
+},{}],19:[function(require,module,exports){
+/**
+ * Inject the content from the parent template's block of the same name into the current block.
+ *
+ * See <a href="#inheritance">Template Inheritance</a> for more information.
+ *
+ * @alias parent
+ *
+ * @example
+ * {% extends "./foo.html" %}
+ * {% block content %}
+ *   My content.
+ *   {% parent %}
+ * {% endblock %}
+ *
+ */
+exports.compile = function (compiler, args, content, parent, options, blockName) {
+  if (!parent || !parent.blocks || !parent.blocks.hasOwnProperty(blockName)) {
+    return '';
   }
 
-  if (args.length) {
-    if (_.last(args) === 'only') {
-      context = '{}';
-      args.pop();
+  var block = parent.blocks[blockName];
+  return block.compile(compiler, [], block.content, null, options) + '\n';
+};
+
+exports.parse = function (str, line, parser, types) {
+  parser.on('*', function (token) {
+    throw new Error('Unexpected argument "' + token.match + '" on line ' + line + '.');
+  });
+  return true;
+};
+
+},{}],20:[function(require,module,exports){
+// Magic tag, hardcoded into parser
+
+/**
+ * Forces the content to not be auto-escaped. All swig instructions will be ignored and the content will be rendered exactly as it was given.
+ *
+ * @alias raw
+ *
+ * @example
+ * // foobar = '<p>'
+ * {% raw %}{{ foobar }}{% endraw %}
+ * // => {{ foobar }}
+ *
+ */
+exports.compile = function (compiler, args, content) {
+  return compiler(content);
+};
+exports.parse = function (str, line, parser, types, stack) {
+  parser.on('*', function (token) {
+    throw new Error('Unexpected token "' + token.match + '" in raw tag on line ' + line + '.');
+  });
+  return true;
+};
+exports.ends = true;
+
+},{}],21:[function(require,module,exports){
+/**
+ * Set a variable for re-use in the current context.
+ *
+ * @alias set
+ *
+ * @example
+ * {% set foo = "anything!" %}
+ * {{ foo }}
+ * // => anything!
+ *
+ * @example
+ * // index = 2;
+ * {% set bar = 1 %}
+ * {% set bar += index|default(3) %}
+ * // => 3
+ *
+ * @param {literal} varname   The variable name to assign the value to.
+ * @param {literal} assignement   Any valid JavaScript assignement. <code data-language="js">=, +=, *=, /=, -=</code>
+ * @param {*}   value     Valid variable output.
+ */
+exports.compile = function (compiler, args, content) {
+  return args.join(' ') + ';\n';
+};
+
+exports.parse = function (str, line, parser, types, stack) {
+  var nameSet;
+  parser.on(types.VAR, function (token) {
+    if (!this.out.length) {
+      nameSet = token.match;
+      this.out.push(
+        // Prevent the set from spilling into global scope
+        'var ' + nameSet + ' = _ctx.' + nameSet + ';\n' + nameSet
+      );
+      return;
     }
 
-    if (args.length > 1 && args[0] === 'ignore' & args[1] === 'missing') {
-      args.shift();
-      args.shift();
-      ignore = true;
+    return true;
+  });
+
+  parser.on(types.ASSIGNMENT, function (token) {
+    if (this.out.length !== 1 || !nameSet) {
+      throw new Error('Unexpected assignment "' + token.match + '" on line ' + line + '.');
     }
 
-    if (args.length && args[0] !== 'with') {
-      throw new Error('Invalid arguments passed to \'include\' tag.');
-    }
+    this.out.push(token.match);
+  });
 
-    if (args[0] === 'with') {
-      args.shift();
-      if (!args.length) {
-        throw new Error('Context for \'include\' tag not provided, but expected after \'with\' token.');
+  return true;
+};
+
+},{}],22:[function(require,module,exports){
+var utils = require('../utils');
+
+/**
+ * Attempts to remove whitespace between HTML tags. Use at your own risk.
+ *
+ * @alias spaceless
+ *
+ * @example
+ * {% spaceless %}
+ *   {% for num in foo %}
+ *   <li>{{ loop.index }}</li>
+ *   {% endfor %}
+ * {% endspaceless %}
+ * // => <li>1</li><li>2</li><li>3</li>
+ *
+ */
+exports.compile = function (compiler, args, content, parent, options) {
+  function stripWhitespace(tokens) {
+    return utils.map(tokens, function (token) {
+      if (token.content) {
+        token.content = stripWhitespace(token.content);
+        return token;
       }
 
-      ctx = args.shift();
+      return token.replace(/^\s+/, '')
+        .replace(/>\s+</g, '><')
+        .replace(/\s+$/, '');
+    });
+  }
 
-      context = '_context["' + ctx + '"] || ' + ctx;
+  return compiler(stripWhitespace(content), parent, options);
+};
+
+exports.parse = function (str, line, parser, types) {
+  parser.on('*', function (token) {
+    throw new Error('Unexpected token "' + token.match + '" on line ' + line + '.');
+  });
+
+  return true;
+};
+
+exports.ends = true;
+
+},{"../utils":23}],23:[function(require,module,exports){
+var isArray;
+
+/**
+ * Strip leading and trailing whitespace from a string.
+ * @param  {string} input
+ * @return {string}       Stripped input.
+ */
+exports.strip = function (input) {
+  return input.replace(/^\s+|\s+$/g, '');
+};
+
+/**
+ * Test if a string starts with a given prefix.
+ * @param  {string} str    String to test against.
+ * @param  {string} prefix Prefix to check for.
+ * @return {boolean}
+ */
+exports.startsWith = function (str, prefix) {
+  return str.indexOf(prefix) === 0;
+};
+
+/**
+ * Test if a string ends with a given suffix.
+ * @param  {string} str    String to test against.
+ * @param  {string} suffix Suffix to check for.
+ * @return {boolean}
+ */
+exports.endsWith = function (str, suffix) {
+  return str.indexOf(suffix, str.length - suffix.length) !== -1;
+};
+
+/**
+ * Iterate over an array or object.
+ * @param  {array|object} obj Enumerable object.
+ * @param  {Function}     fn  Callback function executed for each item.
+ * @return {array|object}     The original input object.
+ */
+exports.each = function (obj, fn) {
+  var i, l;
+
+  if (isArray(obj)) {
+    i = 0;
+    l = obj.length;
+    for (i; i < l; i += 1) {
+      if (fn(obj[i], i, obj) === false) {
+        break;
+      }
+    }
+  } else {
+    for (i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        if (fn(obj[i], i, obj) === false) {
+          break;
+        }
+      }
     }
   }
 
-  out = '(function () {\n' +
-    helpers.setVar('__template', parser.parseVariable(template)) + '\n' +
-    '  var includeContext = ' + context + ';\n';
-
-  if (ignore) {
-    out += 'try {\n';
-  }
-
-  out += '  if (typeof __template === "string") {\n';
-  out += '    _output += _this.compileFile(__template).render(includeContext, _parents);\n';
-  out += '  }\n';
-
-  if (ignore) {
-    out += '} catch (e) {}\n';
-  }
-  out += '})();\n';
-
-  return out;
-};
-return module.exports;
-})();
-tags['macro'] = (function () {
-module = {};
-
-/**
- * macro
- */
-module.exports = function (indent, parser) {
-  var thisArgs = _.clone(this.args),
-    macro = thisArgs.shift(),
-    args = '',
-    out = '';
-
-  if (thisArgs.length) {
-    args = JSON.stringify(thisArgs).replace(/^\[|\'|\"|\]$/g, '');
-  }
-
-  out += '_context.' + macro + ' = function (' + args + ') {\n';
-  out += '  var _output = "";\n';
-  out += parser.compile.apply(this, [indent + '  ']);
-  out += '  return _output;\n';
-  out += '};\n';
-
-  return out;
-};
-module.exports.ends = true;
-return module.exports;
-})();
-tags['parent'] = (function () {
-module = {};
-/**
-* parent
-*/
-module.exports = {};
-
-return module.exports;
-})();
-tags['raw'] = (function () {
-module = {};
-/**
- * raw
- */
-module.exports = { ends: true };
-return module.exports;
-})();
-tags['set'] = (function () {
-module = {};
-
-/**
- * set
- */
-module.exports = function (indent, parser) {
-  var thisArgs = _.clone(this.args),
-    varname = helpers.escapeVarName(thisArgs.shift(), '_context'),
-    value;
-
-  // remove '='
-  if (thisArgs.shift() !== '=') {
-    throw new Error('Invalid token "' + thisArgs[1] + '" in {% set ' + thisArgs[0] + ' %}. Missing "=".');
-  }
-
-  value = thisArgs[0];
-  if (helpers.isLiteral(value) || (/^\{|^\[/).test(value) || value === 'true' || value === 'false') {
-    return ' ' + varname + ' = ' + value + ';';
-  }
-
-  value = parser.parseVariable(value);
-  return ' ' + varname + ' = ' +
-    '(function () {\n' +
-    '  var _output;\n' +
-    parser.compile.apply({ tokens: [value] }, [indent]) + '\n' +
-    '  return _output;\n' +
-    '})();\n';
-};
-return module.exports;
-})();
-tags['spaceless'] = (function () {
-module = {};
-/**
- * spaceless
- */
-module.exports = function (indent, parser) {
-	var output = [],
-		i = this.tokens.length - 1;
-
-	for (i; i >= 0; i -= 1) {
-		this.tokens[i] = this.tokens[i]
-			.replace(/^\s+/gi, "") // trim leading white-space
-			.replace(/>\s+</gi,  "><") // trim white-space between tags
-			.replace(/\s+$/gi, ""); // trim trailing white-space
-	}
-
-	output.push(parser.compile.call(this, indent + '    '));
-	return output.join('');
+  return obj;
 };
 
-module.exports.ends = true;
-return module.exports;
+/**
+ * Test if an object is an Array.
+ * @param {object} obj
+ * @return {boolean}
+ */
+exports.isArray = isArray = (Array.hasOwnProperty('isArray')) ? Array.isArray : function (obj) {
+  return (obj) ? (typeof obj === 'object' && Object.prototype.toString.call(obj).indexOf() !== -1) : false;
+};
+
+/**
+ * Test if an item in an enumerable matches your conditions.
+ * @param  {array|object}   obj   Enumerable object.
+ * @param  {Function}       fn    Executed for each item. Return true if your condition is met.
+ * @return {boolean}
+ */
+exports.some = function (obj, fn) {
+  var i = 0,
+    result,
+    l;
+  if (isArray(obj)) {
+    l = obj.length;
+
+    for (i; i < l; i += 1) {
+      result = fn(obj[i], i, obj);
+      if (result) {
+        break;
+      }
+    }
+  } else {
+    exports.each(obj, function (value, index, collection) {
+      result = fn(value, index, obj);
+      return !(result);
+    });
+  }
+  return !!result;
+};
+
+/**
+ * Return a new enumerable, mapped by a given iteration function.
+ * @param  {object}   obj Enumerable object.
+ * @param  {Function} fn  Executed for each item. Return the item to replace the original item with.
+ * @return {object}       New mapped object.
+ */
+exports.map = function (obj, fn) {
+  var i = 0,
+    result = [],
+    l;
+
+  if (isArray(obj)) {
+    l = obj.length;
+    for (i; i < l; i += 1) {
+      result[i] = fn(obj[i], i);
+    }
+  } else {
+    for (i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        result[i] = fn(obj[i], i);
+      }
+    }
+  }
+  return result;
+};
+
+/**
+ * Copy all of the properties in the source objects over to the destination object, and return the destination object. It's in-order, so the last source will override properties of the same name in previous arguments.
+ * @param {...object} arguments
+ * @return {object}
+ */
+exports.extend = function () {
+  var args = arguments,
+    target = args[0],
+    objs = (args.length > 1) ? Array.prototype.slice.call(args, 1) : [],
+    i = 0,
+    l = objs.length,
+    key,
+    obj;
+
+  for (i; i < l; i += 1) {
+    obj = objs[i] || {};
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        target[key] = obj[key];
+      }
+    }
+  }
+  return target;
+};
+
+},{}],24:[function(require,module,exports){
+// nothing to see here... no file methods for the browser
+
+},{}],25:[function(require,module,exports){
+var process=require("__browserify_process");function filter (xs, fn) {
+    var res = [];
+    for (var i = 0; i < xs.length; i++) {
+        if (fn(xs[i], i, xs)) res.push(xs[i]);
+    }
+    return res;
+}
+
+// resolves . and .. elements in a path array with directory names there
+// must be no slashes, empty elements, or device names (c:\) in the array
+// (so also no leading and trailing slashes - it does not distinguish
+// relative and absolute paths)
+function normalizeArray(parts, allowAboveRoot) {
+  // if the path tries to go above the root, `up` ends up > 0
+  var up = 0;
+  for (var i = parts.length; i >= 0; i--) {
+    var last = parts[i];
+    if (last == '.') {
+      parts.splice(i, 1);
+    } else if (last === '..') {
+      parts.splice(i, 1);
+      up++;
+    } else if (up) {
+      parts.splice(i, 1);
+      up--;
+    }
+  }
+
+  // if the path is allowed to go above the root, restore leading ..s
+  if (allowAboveRoot) {
+    for (; up--; up) {
+      parts.unshift('..');
+    }
+  }
+
+  return parts;
+}
+
+// Regex to split a filename into [*, dir, basename, ext]
+// posix version
+var splitPathRe = /^(.+\/(?!$)|\/)?((?:.+?)?(\.[^.]*)?)$/;
+
+// path.resolve([from ...], to)
+// posix version
+exports.resolve = function() {
+var resolvedPath = '',
+    resolvedAbsolute = false;
+
+for (var i = arguments.length; i >= -1 && !resolvedAbsolute; i--) {
+  var path = (i >= 0)
+      ? arguments[i]
+      : process.cwd();
+
+  // Skip empty and invalid entries
+  if (typeof path !== 'string' || !path) {
+    continue;
+  }
+
+  resolvedPath = path + '/' + resolvedPath;
+  resolvedAbsolute = path.charAt(0) === '/';
+}
+
+// At this point the path should be resolved to a full absolute path, but
+// handle relative paths to be safe (might happen when process.cwd() fails)
+
+// Normalize the path
+resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
+    return !!p;
+  }), !resolvedAbsolute).join('/');
+
+  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
+};
+
+// path.normalize(path)
+// posix version
+exports.normalize = function(path) {
+var isAbsolute = path.charAt(0) === '/',
+    trailingSlash = path.slice(-1) === '/';
+
+// Normalize the path
+path = normalizeArray(filter(path.split('/'), function(p) {
+    return !!p;
+  }), !isAbsolute).join('/');
+
+  if (!path && !isAbsolute) {
+    path = '.';
+  }
+  if (path && trailingSlash) {
+    path += '/';
+  }
+  
+  return (isAbsolute ? '/' : '') + path;
+};
+
+
+// posix version
+exports.join = function() {
+  var paths = Array.prototype.slice.call(arguments, 0);
+  return exports.normalize(filter(paths, function(p, index) {
+    return p && typeof p === 'string';
+  }).join('/'));
+};
+
+
+exports.dirname = function(path) {
+  var dir = splitPathRe.exec(path)[1] || '';
+  var isWindows = false;
+  if (!dir) {
+    // No dirname
+    return '.';
+  } else if (dir.length === 1 ||
+      (isWindows && dir.length <= 3 && dir.charAt(1) === ':')) {
+    // It is just a slash or a drive letter with a slash
+    return dir;
+  } else {
+    // It is a full dirname, strip trailing slash
+    return dir.substring(0, dir.length - 1);
+  }
+};
+
+
+exports.basename = function(path, ext) {
+  var f = splitPathRe.exec(path)[2] || '';
+  // TODO: make this comparison case-insensitive on windows?
+  if (ext && f.substr(-1 * ext.length) === ext) {
+    f = f.substr(0, f.length - ext.length);
+  }
+  return f;
+};
+
+
+exports.extname = function(path) {
+  return splitPathRe.exec(path)[3] || '';
+};
+
+exports.relative = function(from, to) {
+  from = exports.resolve(from).substr(1);
+  to = exports.resolve(to).substr(1);
+
+  function trim(arr) {
+    var start = 0;
+    for (; start < arr.length; start++) {
+      if (arr[start] !== '') break;
+    }
+
+    var end = arr.length - 1;
+    for (; end >= 0; end--) {
+      if (arr[end] !== '') break;
+    }
+
+    if (start > end) return [];
+    return arr.slice(start, end - start + 1);
+  }
+
+  var fromParts = trim(from.split('/'));
+  var toParts = trim(to.split('/'));
+
+  var length = Math.min(fromParts.length, toParts.length);
+  var samePartsLength = length;
+  for (var i = 0; i < length; i++) {
+    if (fromParts[i] !== toParts[i]) {
+      samePartsLength = i;
+      break;
+    }
+  }
+
+  var outputParts = [];
+  for (var i = samePartsLength; i < fromParts.length; i++) {
+    outputParts.push('..');
+  }
+
+  outputParts = outputParts.concat(toParts.slice(samePartsLength));
+
+  return outputParts.join('/');
+};
+
+exports.sep = '/';
+
+},{"__browserify_process":26}],26:[function(require,module,exports){
+// shim for using process in browser
+
+var process = module.exports = {};
+
+process.nextTick = (function () {
+    var canSetImmediate = typeof window !== 'undefined'
+    && window.setImmediate;
+    var canPost = typeof window !== 'undefined'
+    && window.postMessage && window.addEventListener
+    ;
+
+    if (canSetImmediate) {
+        return function (f) { return window.setImmediate(f) };
+    }
+
+    if (canPost) {
+        var queue = [];
+        window.addEventListener('message', function (ev) {
+            if (ev.source === window && ev.data === 'process-tick') {
+                ev.stopPropagation();
+                if (queue.length > 0) {
+                    var fn = queue.shift();
+                    fn();
+                }
+            }
+        }, true);
+
+        return function nextTick(fn) {
+            queue.push(fn);
+            window.postMessage('process-tick', '*');
+        };
+    }
+
+    return function nextTick(fn) {
+        setTimeout(fn, 0);
+    };
 })();
-return swig;
-})();
+
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+}
+
+// TODO(shtylman)
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+
+},{}]},{},[1])
+;
