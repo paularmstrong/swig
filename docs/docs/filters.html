@@ -1,0 +1,93 @@
+{% extends "docs/layout.html" %}
+
+{% block title %}{% parent %} &raquo; Filters{% endblock %}
+
+{% block content %}
+<h1 id="built-in">Filters</h1>
+
+<p>The rendering of variables can be modified by filters. Filters are special functions that are applied after any object token in a variable block using the pipe character, for example: <code data-language>{% raw %}{{ names|join(', ') }}{% endraw %}</code>.</p>
+
+<p>Filters can also be chained together, one after another. In this case, we have a list of names in HTML tags that we want to remove, output together, and make title-cased:</p>
+
+<pre><code data-language="swig">// names = ['<p>paul</p>', '<p>jim</p>'];
+{% raw %}{{ names|striptags|join(', ')|title }}{% endraw %}
+// => Paul, Jim</code></pre>
+
+<p>Swig comes pre-loaded with a set of useful filters:</p>
+
+{% for fn in functions %}
+  {% if fn.access !== "private" %}
+  <section id="{{ fn.name }}" class="doc">
+    <h2>
+      {{ fn.name }}
+      {%- for p in fn.parameters -%}
+      {% if loop.index === 2 %}({% endif -%}
+      {% if loop.index > 1 -%}
+        {{ p.name }}
+        {%- if not loop.last %}, {% else -%}){% endif %}
+      {% endif %}
+      {%- endfor -%}
+    </h2>
+
+    <p>{{ fn.description|replace('\n', '</p><p>')|raw }}</p>
+
+    {% if fn.parameters.length > 1 %}
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for param in fn.parameters %}
+        {% if param.name !== 'input' %}
+        <tr>
+          <td><var data-language="js">{{ param.name }}</var></td>
+          <td><code data-language="js">{{ param.type|join(" or ") }}</code></td>
+          <td>{% if param.optional %}✔{% endif %}</td>
+          <td><code data-language="js">{{ param.default }}</code></td>
+          <td>{{ param.description|raw }}</td>
+        </tr>
+        {% endif %}
+      {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+
+    {% if fn.returns %}
+    <h3>Returns</h3>
+      <p><samp data-language="js">{{ fn.returns.type }}</samp>: {{ fn.returns.description|raw }}</p>
+    {% endif %}
+
+    {% if fn.examples.length %}
+    <h3>Examples</h3>
+    {% for example in fn.examples %}
+    <pre><code data-language="swig">{{ example }}</code></pre>
+    {% endfor %}
+    {% endif %}
+  </section>
+  {% endif %}
+{% endfor %}
+
+{% endblock %}
+
+{% block filtersubnav %}
+<ol>
+  <li>
+    <a href="#built-in">Built-In Filters</a>
+    <ol>
+    {% for fn in functions %}
+      <li>
+        <a href="#{{ fn.name }}">{{ fn.name }}</a>
+      </li>
+    {% endfor %}
+    </ol>
+  </li>
+  <li><a href="#custom">Custom Filters</a></li>
+</ol>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "docs/layout.html" %}
+
+{% block title %}{% parent %} &raquo; API{% endblock %}
+
+{% block content %}
+<h1>Swig API</h1>
+
+{% for fn in functions %}
+  {% if fn.access !== "private" %}
+  <section id="{{ fn.name }}" class="doc">
+    <h2>
+      swig.{{ fn.name }}(
+      {%- for p in fn.parameters -%}
+      {{ p.name }}
+      {%- if not loop.last %}, {% endif -%}
+      {%- endfor -%}
+      )
+    </h2>
+
+    <p>{{ fn.description|replace('\n', '</p><p>')|raw }}</p>
+
+    {% if fn.parameters.length %}
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for param in fn.parameters %}
+        <tr>
+          <td><var data-language="js">{{ param.name }}</var></td>
+          <td><code data-language="js">{{ param.type|join(" or ") }}</code></td>
+          <td>{% if param.optional %}✔{% endif %}</td>
+          <td><code data-language="js">{{ param.default }}</code></td>
+          <td>{{ param.description|raw }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+
+    {% if fn.returns %}
+    <h3>Returns</h3>
+      <p><samp data-language="js">{{ fn.returns.type }}</samp>: {{ fn.returns.description|raw }}</p>
+    {% endif %}
+
+    {% if fn.examples.length %}
+    <h3>Examples</h3>
+    {% for example in fn.examples %}
+    <pre><code data-language="js">{{ example }}</code></pre>
+    {% endfor %}
+    {% endif %}
+  </section>
+  {% endif %}
+{% endfor %}
+
+{% endblock %}
+
+{% block apisubnav %}
+<ol>
+{% for fn in functions %}
+  {% if fn.access !== "private" %}
+  <li>
+    <a href="#{{ fn.name }}">swig.{{ fn.name }}</a>
+  </li>
+  {% endif %}
+{% endfor %}
+</ol>
+{% endblock %}

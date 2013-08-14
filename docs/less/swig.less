@@ -11,6 +11,7 @@
 table {
   margin-left: @quarterGutter;
   margin-right: @quarterGutter;
+  width: 100%;
   td,
   th {
     padding: 5px;
@@ -52,7 +53,23 @@ td > samp {
 }
 
 .doc {
-  h2 { font-size: @fontSize; }
+  padding-bottom: @gutter;
+  margin-bottom: @gutter * 1.6;
+  border-bottom: 1px solid @colorNeutralLight;
+  &:hover h2 {
+    &:before {
+      position: absolute;
+      left: -@gutter;
+      width: @gutter - 5px;
+      text-align: right;
+      display: block;
+      content: '➤';
+      color: @colorAccent;
+    }
+  }
+  h2 {
+    position: relative;
+  }
   dl {
     .clearfix;
     padding: 0 0 0 @quarterGutter;
@@ -84,4 +101,20 @@ td > samp {
 
 .download {
   text-align: center;
+  .btn {
+    line-height: @lineHeight * 2;
+  }
+}
+
+.warning {
+  text-align: center;
+  margin: @quarterGutter;
+  padding: @quarterGutter;
+  border: 1px solid lighten(@colorAccentSecond, 40%);
+  background: lighten(@colorAccent, 40%);
+  color: @colorAccentSecond;
+  font-weight: bold;
+  .border-radius(4px);
+  @shadow: 0 1px 3px fade(@colorAccentDark, 20%), inset 0 -1px 3px fade(@colorLight, 40%);
+  .box-shadow(@shadow);
 }

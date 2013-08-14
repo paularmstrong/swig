@@ -8,3 +8,8 @@ tests/coverage.html
 dist/*
 tmp_build/*
 docs/css/*
+browser/test/tests.js
+tests/browser.js
+tmp
+docs/docs/*.json
+docs/coverage.html

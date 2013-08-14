@@ -1,0 +1,7 @@
+{% extends "./extends_1.test.html" %}
+
+{% block body %}Foobar
+{% parent %}
+{% endblock %}
+
+{% block nonexistent %}hi{% parent %}{% endblock %}

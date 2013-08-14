@@ -1,0 +1,60 @@
+{% extends "docs/layout.html" %}
+
+{% block title %}{% parent %} &raquo; CLI{% endblock %}
+
+{% block content %}
+<h1>Command-Line Interface</h1>
+
+<section id="install" class="doc">
+  <h2>Installation</h2>
+
+  <p>Via NPM:</p>
+  <pre><code data-language="sh">$ npm install swig --global</code></pre>
+</section>
+
+<section id="usage" class="doc">
+  <h2>Usage</h2>
+
+  <pre><code data-language="sh">$ swig compile [file...] [options]
+$ swig render [file...] [options]
+$ swig run [file...] [options]</code></pre>
+
+  <h3>Options</h3>
+  <pre>
+-o, --output   Output location. [default: "stdout"]
+-h, --help     Show this help screen.
+-j, --json     Variable context as a JSON file.
+-c, --context  Variable context as a CommonJS-style file. Used only if option `j` is not provided.
+-m, --minify   Minify compiled functions with uglify-js
+--wrap-start   Template wrapper beginning for "compile". [default: "var tpl = "]
+--wrap-end     Template wrapper end for "compile". [default: ";"]
+--method-name  Method name to execute during "run". See "--wrap-start" for defining this. [default: "tpl"]</pre>
+</section>
+
+<section id="examples" class="doc">
+  <h2>Examples</h2>
+
+  <p>Render a single file:</p>
+  <pre><code data-language="sh">$ swig render ./index.html</code></pre>
+
+  <p>Compile and cache a template into a renderable function and minify the output with uglify-js:</p>
+  <pre><code data-language="sh">$ swig compile ./index.html -m > ./cache/index.js</code></pre>
+
+  <p>Run and build the previously cached template:</p>
+  <pre><code data-language="sh">$ swig run ./cache/index.js</code></pre>
+
+  <p>Import a JSON file as the variable context for rendering a template:</p>
+  <pre><code data-language="sh">$ swig render ./index.html -j ./index.json</code></pre>
+
+  <p>Make your template an AMD module:</p>
+  <pre><code data-language="sh">$ swig compile ./index.html --wrap-start="define(function () { return " --wrap-end="; });"</code></pre>
+</section>
+{% endblock %}
+
+{% block clisubnav %}
+<ol>
+  <li><a href="#install">Installation</a></li>
+  <li><a href="#usage">Usage</a></li>
+  <li><a href="#examples">Examples</a></li>
+</ol>
+{% endblock %}
