@@ -105,3 +105,16 @@ td > samp {
     line-height: @lineHeight * 2;
   }
 }
+
+.warning {
+  text-align: center;
+  margin: @quarterGutter;
+  padding: @quarterGutter;
+  border: 1px solid lighten(@colorAccentSecond, 40%);
+  background: lighten(@colorAccent, 40%);
+  color: @colorAccentSecond;
+  font-weight: bold;
+  .border-radius(4px);
+  @shadow: 0 1px 3px fade(@colorAccentDark, 20%), inset 0 -1px 3px fade(@colorLight, 40%);
+  .box-shadow(@shadow);
+}
