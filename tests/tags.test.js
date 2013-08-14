@@ -30,6 +30,14 @@ describe('Tags', function () {
         .to.equal('flour tortilla!');
     });
 
+    it('and use custom extensions', function () {
+      swig.setExtension('tacos', function () { return 'Tacos!'; });
+      swig.setTag('tacotag', parse, function (compiler, args, content) {
+        return '_output += _ext.tacos();\n';
+      });
+      expect(swig.render('{% tacotag %}')).to.equal('Tacos!');
+    });
+
     it('and throw if are not written correctly', function () {
       expect(function () {
         swig.setTag('tacos', null, compile);

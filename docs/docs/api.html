@@ -19,7 +19,7 @@
 
     <p>{{ fn.description|replace('\n', '</p><p>')|raw }}</p>
 
-    {% if fn.parameters %}
+    {% if fn.parameters.length %}
     <h3>Parameters</h3>
     <table>
       <thead>

@@ -54,7 +54,7 @@ describe('bin/swig compile + run', function () {
 describe('bin/swig compile -m', function () {
   it('minifies output', function (done) {
     exec(bin + ' compile ./tests/cases/extends_1.test.html -m', function (err, stdout, stderr) {
-      expect(stdout).to.equal('var tpl=function(){var n="";return n+="Hi,\\n\\n",n+="This is the body.",n+="\\n\\nSincerely,\\nMe\\n"};\n');
+      expect(stdout).to.equal('var tpl=function(n){var e=(n.extensions,"");return e+="Hi,\\n\\n",e+="This is the body.",e+="\\n\\nSincerely,\\nMe\\n"};\n');
       done();
     });
   });
