@@ -3,7 +3,17 @@
 {% block title %}{% parent %} &raquo; Filters{% endblock %}
 
 {% block content %}
-<h1>Filters</h1>
+<h1 id="built-in">Filters</h1>
+
+<p>The rendering of variables can be modified by filters. Filters are special functions that are applied after any object token in a variable block using the pipe character, for example: <code data-language>{% raw %}{{ names|join(', ') }}{% endraw %}</code>.</p>
+
+<p>Filters can also be chained together, one after another. In this case, we have a list of names in HTML tags that we want to remove, output together, and make title-cased:</p>
+
+<pre><code data-language="swig">// names = ['<p>paul</p>', '<p>jim</p>'];
+{% raw %}{{ names|striptags|join(', ')|title }}{% endraw %}
+// => Paul, Jim</code></pre>
+
+<p>Swig comes pre-loaded with a set of useful filters:</p>
 
 {% for fn in functions %}
   {% if fn.access !== "private" %}
