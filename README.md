@@ -1,5 +1,5 @@
 
-Swig [![Build Status](https://secure.travis-ci.org/paularmstrong/swig.png?branch=next)](http://travis-ci.org/paularmstrong/swig) [![Dependency Status](https://gemnasium.com/paularmstrong/swig.png)](https://gemnasium.com/paularmstrong/swig) [![NPM version](https://badge.fury.io/js/swig.png)](http://badge.fury.io/js/swig)
+Swig [![Build Status](https://secure.travis-ci.org/paularmstrong/swig.png?branch=master)](http://travis-ci.org/paularmstrong/swig) [![Dependency Status](https://gemnasium.com/paularmstrong/swig.png)](https://gemnasium.com/paularmstrong/swig) [![NPM version](https://badge.fury.io/js/swig.png)](http://badge.fury.io/js/swig)
 ====
 
 [Swig](http://paularmstrong.github.io/swig/) is an awesome, Django/Jinja-like template engine for node.js.
@@ -11,10 +11,11 @@ Features
 * [Express](http://expressjs.com/) compatible.
 * Object-Oriented template inheritance.
 * Apply filters and transformations to output in your templates.
-* Automatically escapes all output.
+* Automatically escapes all output for safe HTML rendering.
 * Lots of iteration and conditionals supported.
+* Robust without the bloat.
 * Extendable and customizable.
-* Great [code coverage](http://paularmstrong.github.io/swig/coverage.html)
+* Great [code coverage](http://paularmstrong.github.io/swig/coverage.html).
 
 Installation
 ------------
@@ -34,7 +35,7 @@ Basic Example
     <h1>{{ pagename|title }}</h1>
     <ul>
     {% for author in authors %}
-        <li{% if loop.index <= 0 %} class="first"{% endif %}>{{ author }}</li>
+        <li{% if loop.first %} class="first"{% endif %}>{{ author }}</li>
     {% else %}
         <li>There are no authors.</li>
     {% endfor %}
