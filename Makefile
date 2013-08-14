@@ -1,5 +1,7 @@
 SHA := $(shell git rev-parse HEAD)
 THIS_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+VERSION_REGEX = [0-9]*\.[0-9]*\.[0-9]*[^\" ]*
+VERSION := $(shell npm ls | grep "swig@" |  grep -Eo "${VERSION_REGEX}" -m 1)
 
 TMP = 'tmp_build'
 REMOTE = origin
@@ -11,6 +13,10 @@ all:
 	@npm install -d
 	@cp scripts/githooks/* .git/hooks/
 	@chmod -R +x .git/hooks/
+
+browser/comments.js: FORCE
+	@sed -i.bak 's/v${VERSION_REGEX}/v${VERSION}/' $@
+	@rm $@.bak
 
 .SECONDARY dist/swig.js: \
 	browser/comments.js
@@ -33,7 +39,8 @@ all:
 	tests/tags/set.test.js \
 	tests/tags/spaceless.test.js \
 	tests/basic.test.js
-clean:
+
+clean: FORCE
 	@rm -rf dist
 	@rm -rf ${TMP}
 
@@ -44,13 +51,16 @@ dist:
 	@mkdir -p $@
 
 dist/swig.js:
+	@echo "Building $@..."
 	@cat $^ > $@
 	@${BIN}/browserify browser/index.js >> $@
 
 dist/swig.min.js:
+	@echo "Building $@..."
 	@${BIN}/uglifyjs $^ --comments -c warnings=false -m --source-map dist/swig.js.map > $@
 
 browser/test/tests.js:
+	@echo "Building $@..."
 	@cat $^ > tests/browser.js
 	@perl -pi -e 's/\.\.\/\.\.\/lib/\.\.\/lib/g' tests/browser.js
 	@${BIN}/browserify tests/browser.js > $@
@@ -62,7 +72,7 @@ opts =
 test:
 	@${BIN}/mocha --reporter ${reporter} ${opts} ${tests}
 
-test-browser: clean browser/test/tests.js
+test-browser: FORCE clean browser/test/tests.js
 	@${BIN}/mocha-phantomjs browser/test/index.html --reporter ${reporter}
 
 files := $(shell find . -name '*.js' ! -path "./node_modules/*" ! -path "./dist/*" ! -path "./browser*" ! -path "./docs*")
@@ -84,11 +94,37 @@ else
 endif
 
 JSDOCOPTS=-t node_modules/jsdoc/templates/haruki/ -d console
-build-docs:
-	@${BIN}/jsdoc lib/swig.js ${JSDOCOPTS} > docs/docs/api.json
-	@${BIN}/jsdoc lib/filters.js ${JSDOCOPTS} > docs/docs/filters.json
-	@${BIN}/jsdoc lib/tags/ ${JSDOCOPTS} > docs/docs/tags.json
-	@make coverage out=docs/coverage.html
+docs/index.json: FORCE
+	@echo "Building $@..."
+	@sed -i.bak 's/v${VERSION_REGEX}/v${VERSION}/' $@
+	@rm $@.bak
+
+docs/coverage.html: FORCE
+	@echo "Building $@..."
+	@make coverage out=$@
+
+docs/docs/api.json: FORCE
+	@echo "Building $@..."
+	@${BIN}/jsdoc lib/swig.js ${JSDOCOPTS} > $@
+
+docs/docs/filters.json: FORCE
+	@echo "Building $@..."
+	@${BIN}/jsdoc lib/filters.js ${JSDOCOPTS} > $@
+
+docs/docs/tags.json: FORCE
+	@echo "Building $@..."
+	@${BIN}/jsdoc lib/tags/ ${JSDOCOPTS} > $@
+
+.SECONDARY build-docs: \
+	docs/index.json
+
+.INTERMDIATE build-docs: \
+	docs/docs/api.json \
+	docs/docs/filters.json \
+	docs/docs/tags.json
+
+build-docs: FORCE
+	@echo "Documentation built."
 
 docs: clean build build-docs
 	@mkdir -p ${TMP}/js
@@ -113,4 +149,9 @@ port = 3000
 test-docs: build build-docs
 	@${BIN}/still-server docs/ -p ${port} -o
 
-.PHONY: all build build-docs test test-browser browser/test/tests.js lint coverage docs test-docs
+FORCE:
+
+.PHONY: all \
+	build build-docs \
+	test test-browser lint coverage \
+	docs/index.json docs test-docs
