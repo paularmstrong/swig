@@ -1,22 +1,25 @@
 
-[1.0.0-pre1](https://github.com/paularmstrong/swig/tree/v1.0.0-pre1) / 2013-08-11
------------------------------------------------------------------------------
+[1.0.0-pre1](https://github.com/paularmstrong/swig/tree/v1.0.0-pre1) / 2013-08-14
+---------------------------------------------------------------------------------
 
+* **Changed** Completely rewritting parsing engine supports many more syntaxes and is much easier to extend.
 * **Changed** There is no more `swig.init` method.
-* **Changed** `extends`, `import`, and `include` now reference files with relative paths from the current file.
 * **Changed** Custom filters can be added using `swig.addFilter`
 * **Changed** Custom tags can be added using `swig.addTag`
 * **Changed** Writing custom tags uses an entirely new, simplified format
 * **Changed** Removed the underscore/lodash dependency
 * **Changed** Template parsing has been completely rewritten
 * **Changed** `swig.compileFile` returns a function that renders templates, not an object
-* **Changed** Express-compatible using `swig.renderFile`
-* **Changed** `extends` may no longer accept variables
-* **Changed** `else if` tag is now `elseif` or `elif`
-* **Changed** Removed `only` argument from `include`
-* **Changed** allow `_`, `$` to start var names
-* **Added** Variable/string concatenation [gh-135](https://github.com/paularmstrong/swig/issues/135)
-* **Added** Binary application for `compile`, `run`, and `render`
+* **Changed** Express-compatible using `swig.renderFile`.
+* **Changed** `extends`, `import`, and `include` now reference files with relative paths from the current file ([info](https://github.com/paularmstrong/swig/wiki/Migrating-from-v0.x.x-to-v1.0.0#extends-include-import-changes)).
+* **Changed** `extends` may no longer accept variables ([info](https://github.com/paularmstrong/swig/wiki/Migrating-from-v0.x.x-to-v1.0.0#extends-include-import-changes)).
+* **Changed** `else if` tag is now `elseif` or `elif`.
+* **Changed** Removed `only` argument from `include`.
+* **Changed** allow `_`, `$` to start var names in templates.
+* **Changed** Documentation is auto-generated from jsdoc comments in-files.
+* **Added** Ability to set custom var/tag/comment controls (`{{`, `}}`, etc, can be customized).
+* **Added** Variable/string concatenation [gh-135](https://github.com/paularmstrong/swig/issues/135).
+* **Added** Binary application for `compile`, `run`, and `render` (Lets you pre-compile templates into JS functions for client-side delivery).
 * **Fixed** Lots.
 
 [0.14.0](https://github.com/paularmstrong/swig/tree/v0.14.0) / 2013-06-08
