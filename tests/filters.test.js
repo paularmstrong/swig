@@ -213,7 +213,7 @@ describe('Filters:', function () {
     swig.setDefaultTZOffset(240);
     var d = makeDate(240, 2011, 8, 23);
     expect(swig.render('{{ v|date("H:i a") }}', { locals: { v: d }}))
-      .to.equal('21:00 pm');
+      .to.equal('04:00 am');
     swig.setDefaultTZOffset(0);
   });
 
