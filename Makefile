@@ -126,7 +126,7 @@ docs/docs/tags.json: FORCE
 build-docs: FORCE
 	@echo "Documentation built."
 
-docs: clean build build-docs
+gh-pages: clean build build-docs
 	@mkdir -p ${TMP}/js
 	@mkdir -p docs/css
 	@rm -f docs/coverage.html
@@ -147,7 +147,7 @@ ifeq (${THIS_BRANCH}, master)
 endif
 
 port = 3000
-test-docs: build build-docs
+docs: build build-docs
 	@${BIN}/still-server docs/ -p ${port} -o
 
 FORCE:
@@ -155,4 +155,4 @@ FORCE:
 .PHONY: all \
 	build build-docs \
 	test test-browser lint coverage \
-	docs/index.json docs test-docs
+	docs/index.json docs gh-pages
