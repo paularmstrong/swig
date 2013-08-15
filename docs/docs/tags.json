@@ -1,0 +1,357 @@
+{
+    "functions": [
+        {
+            "name": "autoescape",
+            "access": "",
+            "virtual": false,
+            "description": "Control auto-escaping of variable output from within your templates.",
+            "parameters": [
+                {
+                    "name": "control",
+                    "type": [
+                        "boolean",
+                        "string"
+                    ],
+                    "description": "One of `true`, `false`, `\"js\"` or `\"html\"`.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// myvar = '<foo>';\n{% autoescape true %}{{ myvar }}{% endautoescape %}\n// => &lt;foo&gt;\n{% autoescape false %}{{ myvar }}{% endautoescape %}\n// => <foo>"
+            ]
+        },
+        {
+            "name": "block",
+            "access": "",
+            "virtual": false,
+            "description": "Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.\n\nSee <a href=\"#inheritance\">Template Inheritance</a> for more information.",
+            "parameters": [
+                {
+                    "name": "name",
+                    "type": "literal",
+                    "description": "Name of the block for use in parent and extended templates.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "{% block body %}...{% endblock %}"
+            ]
+        },
+        {
+            "name": "else",
+            "access": "",
+            "virtual": false,
+            "description": "Used within an <code data-language=\"swig\">{% if %}</code> tag, the code block following this tag up until <code data-language=\"swig\">{% endif %}</code> will be rendered if the <i>if</i> statement returns false.",
+            "parameters": [],
+            "examples": [
+                "{% if false %}\n  statement1\n{% else %}\n  statement2\n{% endif %}\n// => statement2"
+            ]
+        },
+        {
+            "name": "elif",
+            "access": "",
+            "virtual": false,
+            "description": "Like <code data-language=\"swig\">{% else %}</code>, except this tag can take more conditional statements.",
+            "parameters": [
+                {
+                    "name": "conditional",
+                    "type": "mixed",
+                    "description": "Conditional statement that returns a truthy or falsy value.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "{% if false %}\n  Tacos\n{% elseif true %}\n  Burritos\n{% else %}\n  Churros\n{% endif %}\n// => Burritos"
+            ]
+        },
+        {
+            "name": "extends",
+            "access": "",
+            "virtual": false,
+            "description": "Makes the current template extend a parent template. This tag must be the first item in your template.\n\nSee <a href=\"#inheritance\">Template Inheritance</a> for more information.",
+            "parameters": [
+                {
+                    "name": "parentFile",
+                    "type": "string",
+                    "description": "Relative path to the file that this template extends.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "{% extends \"./layout.html\" %}"
+            ]
+        },
+        {
+            "name": "filter",
+            "access": "",
+            "virtual": false,
+            "description": "Apply a filter to an entire block of template.",
+            "parameters": [
+                {
+                    "name": "filter",
+                    "type": "function",
+                    "description": "The filter that should be applied to the contents of the tag.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "{% filter uppercase %}oh hi, {{ name }}{% endfilter %}\n// => OH HI, PAUL",
+                "{% filter replace(\".\", \"!\", \"g\") %}Hi. My name is Paul.{% endfilter %}\n// => Hi! My name is Paul!"
+            ]
+        },
+        {
+            "name": "for",
+            "access": "",
+            "virtual": false,
+            "description": "Loop over objects and arrays.",
+            "parameters": [
+                {
+                    "name": "key",
+                    "type": "literal",
+                    "description": "A shortcut to the index of the array or current key accessor.",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "variable",
+                    "type": "literal",
+                    "description": "The current value will be assigned to this variable name temporarily. The variable will be reset upon ending the for tag.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "in",
+                    "type": "literal",
+                    "description": "Literally, \"in\". This token is required.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "object",
+                    "type": "object",
+                    "description": "An enumerable object that will be iterated over.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// obj = { one: 'hi', two: 'bye' };\n{% for x in obj %}\n  {% if loop.first %}<ul>{% endif %}\n  <li>{{ loop.index }} - {{ loop.key }}: {{ x }}</li>\n  {% if loop.last %}</ul>{% endif %}\n{% endfor %}\n// => <ul>\n//    <li>1 - one: hi</li>\n//    <li>2 - two: bye</li>\n//    </ul>",
+                "// arr = [1, 2, 3]\n// Reverse the array, shortcut the key/index to `key`\n{% for key, val in arr|reverse %}\n{{ key }} -- {{ val }}\n{% endfor %}\n// => 0 -- 3\n//    1 -- 2\n//    2 -- 1"
+            ],
+            "returns": {
+                "type": "loop.index",
+                "description": "The current iteration of the loop (1-indexed)"
+            }
+        },
+        {
+            "name": "if",
+            "access": "",
+            "virtual": false,
+            "description": "Used to create conditional statements in templates. Accepts most JavaScript valid comparisons.\n\nCan be used in conjunction with <a href=\"#elseif\"><code data-language=\"swig\">{% elseif ... %}</code></a> and <a href=\"#else\"><code data-language=\"swig\">{% else %}</code></a> tags.",
+            "parameters": [
+                {
+                    "name": "conditional",
+                    "type": "mixed",
+                    "description": "Conditional statement that returns a truthy or falsy value.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "{% if x %}{% endif %}\n{% if !x %}{% endif %}\n{% if not x %}{% endif %}",
+                "{% if x and y %}{% endif %}\n{% if x && y %}{% endif %}\n{% if x or y %}{% endif %}\n{% if x || y %}{% endif %}\n{% if x || (y && z) %}{% endif %}",
+                "{% if x [operator] y %}\n  Operators: ==, !=, <, <=, >, >=, ===, !==\n{% endif %}",
+                "{% if x == 'five' %}\n  The operands can be also be string or number literals\n{% endif %}",
+                "{% if x|lower === 'tacos' %}\n  You can use filters on any operand in the statement.\n{% endif %}",
+                "{% if x in y %}\n  If x is a value that is present in y, this will return true.\n{% endif %}"
+            ]
+        },
+        {
+            "name": "import",
+            "access": "",
+            "virtual": false,
+            "description": "Allows you to import macros from another file directly into your current context.\n\nThe import tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.",
+            "parameters": [
+                {
+                    "name": "file",
+                    "type": [
+                        "string",
+                        "var"
+                    ],
+                    "description": "Relative path from the current template file to the file to import macros from.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "as",
+                    "type": "literal",
+                    "description": "Literally, \"as\".",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "varname",
+                    "type": "literal",
+                    "description": "Local-accessible object name to assign the macros to.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "{% import './formmacros.html' as forms %}\n{{ form.input(\"text\", \"name\") }}\n// => <input type=\"text\" name=\"name\">",
+                "{% import \"../shared/tags.html\" as tags %}\n{{ tags.stylesheet('global') }}\n// => <link rel=\"stylesheet\" href=\"/global.css\">"
+            ]
+        },
+        {
+            "name": "include",
+            "access": "",
+            "virtual": false,
+            "description": "Includes a template partial in place. The template is rendered within the current locals variable context.",
+            "parameters": [
+                {
+                    "name": "file",
+                    "type": [
+                        "string",
+                        "var"
+                    ],
+                    "description": "The path, relative to the template root, to render into the current context.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "with",
+                    "type": "literal",
+                    "description": "Literally, \"with\".",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "context",
+                    "type": "object",
+                    "description": "Restrict the local variable context in the file to this key-value object.",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "ignore missing",
+                    "type": "literal",
+                    "description": "Will output empty string if not found instead of throwing an error.",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// food = 'burritos';\n// drink = 'lemonade';\n{% include \"./partial.html\" %}\n// => I like burritos and lemonade.",
+                "// my_obj = { food: 'tacos', drink: 'horchata' };\n{% include \"./partial.html\" with my_obj %}\n// => I like tacos and horchata.",
+                "{% include \"/this/file/does/not/exist\" ignore missing %}\n// => (Nothing! empty string)"
+            ]
+        },
+        {
+            "name": "macro",
+            "access": "",
+            "virtual": false,
+            "description": "Create custom, reusable snippets within your templates.\n\nCan be imported from one template to another using the <a href=\"#import\"><code data-language=\"swig\">{% import ... %}</code></a> tag.",
+            "parameters": [
+                {
+                    "name": "arguments",
+                    "type": "arguments",
+                    "description": "User-defined arguments.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "{% macro input type name id label value error %}\n  <label for=\"{{ name }}\">{{ label }}</label>\n  <input type=\"{{ type }}\" name=\"{{ name }}\" id=\"{{ id }}\" value=\"{{ value }}\"{% if error %} class=\"error\"{% endif %}>\n{% endmacro %}\n\n{{ input(\"text\", \"fname\", \"fname\", \"First Name\", fname.value, fname.errors) }}\n// => <label for=\"fname\">First Name</label>\n//    <input type=\"text\" name=\"fname\" id=\"fname\" value=\"\">"
+            ]
+        },
+        {
+            "name": "parent",
+            "access": "",
+            "virtual": false,
+            "description": "Inject the content from the parent template's block of the same name into the current block.\n\nSee <a href=\"#inheritance\">Template Inheritance</a> for more information.",
+            "parameters": [],
+            "examples": [
+                "{% extends \"./foo.html\" %}\n{% block content %}\n  My content.\n  {% parent %}\n{% endblock %}"
+            ]
+        },
+        {
+            "name": "raw",
+            "access": "",
+            "virtual": false,
+            "description": "Forces the content to not be auto-escaped. All swig instructions will be ignored and the content will be rendered exactly as it was given.",
+            "parameters": [],
+            "examples": [
+                "// foobar = '<p>'\n{% raw %}{{ foobar }}{% endraw %}\n// => {{ foobar }}"
+            ]
+        },
+        {
+            "name": "set",
+            "access": "",
+            "virtual": false,
+            "description": "Set a variable for re-use in the current context.",
+            "parameters": [
+                {
+                    "name": "varname",
+                    "type": "literal",
+                    "description": "The variable name to assign the value to.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "assignement",
+                    "type": "literal",
+                    "description": "Any valid JavaScript assignement. <code data-language=\"js\">=, +=, *=, /=, -=</code>",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "value",
+                    "type": "*",
+                    "description": "Valid variable output.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "{% set foo = \"anything!\" %}\n{{ foo }}\n// => anything!",
+                "// index = 2;\n{% set bar = 1 %}\n{% set bar += index|default(3) %}\n// => 3"
+            ]
+        },
+        {
+            "name": "spaceless",
+            "access": "",
+            "virtual": false,
+            "description": "Attempts to remove whitespace between HTML tags. Use at your own risk.",
+            "parameters": [],
+            "examples": [
+                "{% spaceless %}\n  {% for num in foo %}\n  <li>{{ loop.index }}</li>\n  {% endfor %}\n{% endspaceless %}\n// => <li>1</li><li>2</li><li>3</li>"
+            ]
+        }
+    ]
+}

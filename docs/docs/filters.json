@@ -1,0 +1,541 @@
+{
+    "functions": [
+        {
+            "name": "addslashes",
+            "access": "",
+            "virtual": false,
+            "description": "Backslash-escape characters that need to be escaped.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "*",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "{{ \"\\\"quoted string\\\"\"|addslashes }}\n// => \\\"quoted string\\\""
+            ],
+            "returns": {
+                "type": "*",
+                "description": "Backslash-escaped string."
+            }
+        },
+        {
+            "name": "capitalize",
+            "access": "",
+            "virtual": false,
+            "description": "Upper-case the first letter of the input and lower-case the rest.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "*",
+                    "description": "If given an array or object, each string member will be run through the filter individually.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "{{ \"i like Burritos\"|capitalize }}\n// => I like burritos"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "Returns the same type as the input."
+            }
+        },
+        {
+            "name": "date",
+            "access": "",
+            "virtual": false,
+            "description": "Format a date or Date-compatible string.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": [
+                        "string",
+                        "date"
+                    ],
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": true
+                },
+                {
+                    "name": "format",
+                    "type": "string",
+                    "description": "PHP-style date format compatible string.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "offset",
+                    "type": "number",
+                    "description": "Timezone offset from GMT in minutes.",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "abbr",
+                    "type": "string",
+                    "description": "Timezone abbreviation. Used for output only.",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// now = new Date();\n{{ now|date('Y-m-d') }}\n// => 2013-08-14"
+            ],
+            "returns": {
+                "type": "string",
+                "description": "Formatted date string."
+            }
+        },
+        {
+            "name": "default",
+            "access": "",
+            "virtual": false,
+            "description": "If the input is `undefined`, `null`, or `false`, a default return value can be specified.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "*",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "def",
+                    "type": "*",
+                    "description": "Value to return if `input` is `undefined`, `null`, or `false`.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "{{ null_value|default('Tacos') }}\n// => Tacos",
+                "{{ \"Burritos\"|default(\"Tacos\") }}\n// => Burritos"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "`input` or `def` value."
+            }
+        },
+        {
+            "name": "escape",
+            "access": "",
+            "virtual": false,
+            "description": "Force escape the output of the variable. Optionally use `e` as a shortcut filter name. This filter will be applied by default if autoescape is turned on.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "string",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": true
+                },
+                {
+                    "name": "type",
+                    "type": "string",
+                    "description": "If you pass the string js in as the type, output will be escaped so that it is safe for JavaScript execution.",
+                    "default": "'html'",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "{{ \"<blah>\"|escape }}\n// => &lt;blah&gt;",
+                "{{ \"<blah>\"|e(\"js\") }}\n// => \\u003Cblah\\u003E"
+            ],
+            "returns": {
+                "type": "string",
+                "description": "Escaped string."
+            }
+        },
+        {
+            "name": "first",
+            "access": "",
+            "virtual": false,
+            "description": "Get the first item in an array or character in a string.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": [
+                        "string",
+                        "array"
+                    ],
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// my_arr = ['a', 'b', 'c']\n{{ my_arr|first }}\n// => a",
+                "// my_val = 'Tacos'\n{{ my_val|first }}\n// T"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "The first item of the array or first character of the string input."
+            }
+        },
+        {
+            "name": "join",
+            "access": "",
+            "virtual": false,
+            "description": "Join the input with a string.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "*",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "glue",
+                    "type": "string",
+                    "description": "String value to join items together.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// my_array = ['foo', 'bar', 'baz']\n{{ my_array|join(', ') }}\n// => foo, bar, baz",
+                "// my_key_object = { a: 'foo', b: 'bar', c: 'baz' }\n{{ my_key_object|join(' and ') }}\n// => foo and bar and baz"
+            ],
+            "returns": {
+                "type": "string",
+                "description": ""
+            }
+        },
+        {
+            "name": "json",
+            "access": "",
+            "virtual": false,
+            "description": "Return a string representation of an JavaScript object.\n\nBackwards compatible with swig@0.x.x using `json_encode`.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "*",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "indent",
+                    "type": "number",
+                    "description": "Number of spaces to indent for pretty-formatting.",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// val = { a: 'b' }\n{{ val|json }}\n// => {\"a\":\"b\"}",
+                "// val = { a: 'b' }\n{{ val|json(4) }}\n// => {\n//        \"a\": \"b\"\n//    }"
+            ],
+            "returns": {
+                "type": "string",
+                "description": "A valid JSON string."
+            }
+        },
+        {
+            "name": "last",
+            "access": "",
+            "virtual": false,
+            "description": "Get the last item in an array or character in a string.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": [
+                        "string",
+                        "array"
+                    ],
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// my_arr = ['a', 'b', 'c']\n{{ my_arr|last }}\n// => c",
+                "// my_val = 'Tacos'\n{{ my_val|last }}\n// s"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "The last item of the array or last character of the string.input."
+            }
+        },
+        {
+            "name": "lower",
+            "access": "",
+            "virtual": false,
+            "description": "Return the input in all lowercase letters.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "*",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "{{ \"FOOBAR\"|lower }}\n// => foobar",
+                "// myObj = { a: 'FOO', b: 'BAR' }\n{{ myObj|lower|join('') }}\n// => foobar"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "Returns the same type as the input."
+            }
+        },
+        {
+            "name": "raw",
+            "access": "",
+            "virtual": false,
+            "description": "Forces the input to not be auto-escaped. Use this only on content that you know is safe to be rendered on your page.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "*",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// my_var = \"<p>Stuff</p>\";\n{{ my_var|raw }}\n// => <p>Stuff</p>"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "Raw, un-escaped output."
+            }
+        },
+        {
+            "name": "replace",
+            "access": "",
+            "virtual": false,
+            "description": "Returns a new string with the matched search pattern replaced by the given replacement string. Uses JavaScript's built-in String.replace() method.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "string",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "search",
+                    "type": "string",
+                    "description": "String or pattern to replace from the input.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "replacement",
+                    "type": "string",
+                    "description": "String to replace matched pattern.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "flags",
+                    "type": "string",
+                    "description": "Regular Expression flags. 'g': global match, 'i': ignore case, 'm': match over multiple lines",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// my_var = 'foobar';\n{{ my_var|replace('o', 'e', 'g') }}\n// => feebar",
+                "// my_var = \"farfegnugen\";\n{{ my_var|replace('^f', 'p') }}\n// => parfegnugen",
+                "// my_var = 'a1b2c3';\n{{ my_var|replace('\\w', '0', 'g') }}\n// => 010203"
+            ],
+            "returns": {
+                "type": "string",
+                "description": "Replaced string."
+            }
+        },
+        {
+            "name": "reverse",
+            "access": "",
+            "virtual": false,
+            "description": "Reverse an array.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "array",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// val = [1, 2, 3];\n{{ val|reverse }}\n// => 3,2,1"
+            ],
+            "returns": {
+                "type": "array",
+                "description": "Reversed array. The original input object is returned if it was not an array."
+            }
+        },
+        {
+            "name": "striptags",
+            "access": "",
+            "virtual": false,
+            "description": "Strip HTML tags.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "*",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// stuff = '<p>foobar</p>';\n{{ stuff|striptags }}\n// => foobar"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "Returns the same object as the input, but with all string values stripped of tags."
+            }
+        },
+        {
+            "name": "title",
+            "access": "",
+            "virtual": false,
+            "description": "Capitalizes every word given and lower-cases all other letters.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "*",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// my_str = 'this is soMe text';\n{{ my_str|title }}\n// => This Is Some Text",
+                "// my_arr = ['hi', 'this', 'is', 'an', 'array'];\n{{ my_arr|title|join(' ') }}\n// => Hi This Is An Array"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "Returns the same object as the input, but with all words in strings title-cased."
+            }
+        },
+        {
+            "name": "uniq",
+            "access": "",
+            "virtual": false,
+            "description": "Remove all duplicate items from an array.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "array",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// my_arr = [1, 2, 3, 4, 4, 3, 2, 1];\n{{ my_arr|uniq|join(',') }}\n// => 1,2,3,4"
+            ],
+            "returns": {
+                "type": "array",
+                "description": "Array with unique items. If input was not an array, the original item is returned untouched."
+            }
+        },
+        {
+            "name": "upper",
+            "access": "",
+            "virtual": false,
+            "description": "Convert the input to all uppercase letters.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "*",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// my_str = 'tacos';\n{{ my_str|upper }}\n// => TACOS",
+                "// my_arr = ['tacos', 'burritos'];\n{{ my_arr|upper|join(' & ') }}\n// => TACOS & BURRITOS"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "Returns the same type as the input, with all strings upper-cased."
+            }
+        },
+        {
+            "name": "url_encode",
+            "access": "",
+            "virtual": false,
+            "description": "URL-encode a string.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "string",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// my_str = 'param=1&anotherParam=2';\n{{ my_str|url_encode }}\n// => param%3D1%26anotherParam%3D2"
+            ],
+            "returns": {
+                "type": "string",
+                "description": "URL-encoded string."
+            }
+        },
+        {
+            "name": "url_decode",
+            "access": "",
+            "virtual": false,
+            "description": "URL-decode a string.",
+            "parameters": [
+                {
+                    "name": "input",
+                    "type": "string",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// my_str = 'param%3D1%26anotherParam%3D2';\n{{ my_str|url_decode }}\n// => param=1&anotherParam=2"
+            ],
+            "returns": {
+                "type": "string",
+                "description": "URL-decoded string."
+            }
+        }
+    ]
+}

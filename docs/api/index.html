@@ -1,0 +1,989 @@
+
+  
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <!--[if IE]>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <![endif]-->
+  <title> » Documentation &raquo; API</title>
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="/swig/css/swig.css">
+
+
+
+</head>
+<body class="">
+
+  
+
+
+<header class="header">
+  <div class="content row">
+    <hgroup class="span7">
+      <h1><a href="/swig/">Swig</a></h1>
+      <h2>A Node.js and Browser-based JavaScript Template Engine</h2>
+    </hgroup>
+    
+    <nav class="span5">
+      <ul class="mainNav">
+        <li><a href="/swig/docs/">Documentation</a></li>
+        <li><a href="https://github.com/paularmstrong/swig/">Code</a></li>
+      </ul>
+    </nav>
+  
+  </div>
+
+  <div class="content">
+    <p class="warning">This documentation is for a pre-release version and may be missing information.</p>
+  </div>
+</header>
+
+
+
+<div class="content row guttered">
+  <div class="span9">
+  
+<h1>Swig API</h1>
+
+
+  
+
+  
+
+  
+  <section id="setDefaults" class="doc">
+    <h2>
+      swig.setDefaults(
+      options
+      )
+    </h2>
+
+    <p>Set defaults for the base and all new Swig environments.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">options</var></td>
+          <td><code data-language="js">SwigOpts</code></td>
+          <td>✔</td>
+          <td><code data-language="js">{}</code></td>
+          <td>Swig options object.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">undefined</samp>: </p>
+    
+
+    
+  </section>
+  
+
+  
+  <section id="setDefaultTZOffset" class="doc">
+    <h2>
+      swig.setDefaultTZOffset(
+      offset
+      )
+    </h2>
+
+    <p>Set the default TimeZone offset for date formatting via the date filter. This is a global setting and will affect all Swig environments, old or new.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">offset</var></td>
+          <td><code data-language="js">number</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Offset from GMT, in minutes.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">undefined</samp>: </p>
+    
+
+    
+  </section>
+  
+
+  
+  <section id="Swig" class="doc">
+    <h2>
+      swig.Swig(
+      opts
+      )
+    </h2>
+
+    <p>Create a new, separate Swig compile/render environment.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">opts</var></td>
+          <td><code data-language="js">SwigOpts</code></td>
+          <td>✔</td>
+          <td><code data-language="js">{}</code></td>
+          <td>Swig options object.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">object</samp>: New Swig environment.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">var swig = require(&#39;swig&#39;);
+var myswig = new swig.Swig({varControls: [&#39;&lt;%=&#39;, &#39;%&gt;&#39;]});
+myswig.render(&#39;Tacos are &lt;%= tacos =&gt;!&#39;, { locals: { tacos: &#39;delicious&#39; }});
+// =&gt; Tacos are delicious!
+swig.render(&#39;Tacos are &lt;%= tacos =&gt;!&#39;, { locals: { tacos: &#39;delicious&#39; }});
+// =&gt; &#39;Tacos are &lt;%= tacos =&gt;!&#39;</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="invalidateCache" class="doc">
+    <h2>
+      swig.invalidateCache(
+      )
+    </h2>
+
+    <p>Clears the in-memory template cache.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">undefined</samp>: </p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">swig.invalidateCache();</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="setFilter" class="doc">
+    <h2>
+      swig.setFilter(
+      name
+      , method
+      )
+    </h2>
+
+    <p>Add a custom filter for swig variables.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">name</var></td>
+          <td><code data-language="js">string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Name of filter, used in templates. <strong>Will</strong> overwrite previously defined filters, if using the same name.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">method</var></td>
+          <td><code data-language="js">function</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Function that acts against the input. See <a href="/docs/filters/#custom">Custom Filters</a> for more information.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">undefined</samp>: </p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">function replaceMs(input) { return input.replace(/m/g, &#39;f&#39;); }
+swig.setFilter(&#39;replaceMs&#39;, replaceMs);
+// =&gt; {{ &quot;onomatopoeia&quot;|replaceMs }}
+// =&gt; onofatopeia</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="setTag" class="doc">
+    <h2>
+      swig.setTag(
+      name
+      , parse
+      , compile
+      , ends
+      )
+    </h2>
+
+    <p>Add a custom tag. To expose your own extensions to compiled template code, see <code data-language="js">swig.setExtension</code>.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">name</var></td>
+          <td><code data-language="js">string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Tag name.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">parse</var></td>
+          <td><code data-language="js">function</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Method for parsing tokens.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">compile</var></td>
+          <td><code data-language="js">function</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Method for compiling renderable output.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">ends</var></td>
+          <td><code data-language="js">boolean</code></td>
+          <td>✔</td>
+          <td><code data-language="js">false</code></td>
+          <td>Whether or not this tag requires an <i>end</i> tag.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">undefined</samp>: </p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">var tacotag = require(&#39;./tacotag&#39;);
+swig.setTag(&#39;tacos&#39;, tacotag.parse, tacotag.compile, tacotag.ends);
+// =&gt; {% tacos %}Make this be tacos.{% endtacos %}
+// =&gt; Tacos tacos tacos tacos.</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="setExtension" class="doc">
+    <h2>
+      swig.setExtension(
+      name
+      , object
+      )
+    </h2>
+
+    <p>Add extensions for custom tags. This allows any custom tag to access a globally available methods via a special globally available object, <var>_ext</var>, in templates.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">name</var></td>
+          <td><code data-language="js">string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Key name of the extension. Accessed via <code data-language="js">_ext[name]</code>.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">object</var></td>
+          <td><code data-language="js">*</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>The method, value, or object that should be available via the given name.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">undefined</samp>: </p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">swig.setExtension(&#39;trans&#39;, function (v) { return translate(v); });
+function compileTrans(compiler, args, content, parent, options) {
+  return &#39;_output += _ext.trans(&#39; + args[0] + &#39;);&#39;
+};
+swig.setTag(&#39;trans&#39;, parseTrans, compileTrans, true);</code></pre>
+    
+    
+  </section>
+  
+
+  
+
+  
+
+  
+  <section id="precompile" class="doc">
+    <h2>
+      swig.precompile(
+      source
+      , options
+      )
+    </h2>
+
+    <p>Pre-compile a source string into a cache-able template function.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">source</var></td>
+          <td><code data-language="js">string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Swig template source string.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">options</var></td>
+          <td><code data-language="js">SwigOpts</code></td>
+          <td>✔</td>
+          <td><code data-language="js">{}</code></td>
+          <td>Swig options object.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">object</samp>: Renderable function and tokens object.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">swig.precompile(&#39;{{ tacos }}&#39;);
+// =&gt; {
+//      tpl: function (locals, filters, utils, efn) { ... },
+//      tokens: {
+//        name: undefined,
+//        parent: null,
+//        tokens: [...],
+//        blocks: {}
+//      }
+//    }
+
+In order to render a pre-compiled template, you must have access to filters and utils from Swig. &lt;var&gt;efn&lt;/var&gt; is simply an empty function that does nothing.</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="render" class="doc">
+    <h2>
+      swig.render(
+      source
+      , options
+      )
+    </h2>
+
+    <p>Compile and render a template string for final output.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">source</var></td>
+          <td><code data-language="js">string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Swig template source string.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">options</var></td>
+          <td><code data-language="js">SwigOpts</code></td>
+          <td>✔</td>
+          <td><code data-language="js">{}</code></td>
+          <td>Swig options object.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">string</samp>: Rendered output.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">swig.render(&#39;{{ tacos }}&#39;, { locals: { tacos: &#39;Tacos!!!!&#39; }});
+// =&gt; Tacos!!!!
+
+When rendering a source string, a file path should be specified in the options object in order for &lt;var&gt;extends&lt;/var&gt;, &lt;var&gt;include&lt;/var&gt;, and &lt;var&gt;import&lt;/var&gt; to work properly. Do this by adding &lt;code data-language=&quot;js&quot;&gt;{ filename: &#39;/absolute/path/to/mytpl.html&#39; }&lt;/code&gt; to the options argument.</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="renderFile" class="doc">
+    <h2>
+      swig.renderFile(
+      pathName
+      , locals
+      , fn
+      )
+    </h2>
+
+    <p>Compile and render a template file for final output. This is most useful for libraries like Express.js.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">pathName</var></td>
+          <td><code data-language="js">string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>File location.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">locals</var></td>
+          <td><code data-language="js">object</code></td>
+          <td>✔</td>
+          <td><code data-language="js">{}</code></td>
+          <td>Template variable context.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">fn</var></td>
+          <td><code data-language="js">Function</code></td>
+          <td>✔</td>
+          <td><code data-language="js"></code></td>
+          <td>Optional callback function.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">string</samp>: Rendered output.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">swig.renderFile(&#39;./template.html&#39;, {}, function (err, output) {
+  if (err) {
+    throw err;
+  }
+  console.log(output);
+});</code></pre>
+    
+    <pre><code data-language="js">swig.renderFile(&#39;./template.html&#39;, {});
+// =&gt; output</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="compile" class="doc">
+    <h2>
+      swig.compile(
+      source
+      , options
+      )
+    </h2>
+
+    <p>Compile string source into a renderable template function.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">source</var></td>
+          <td><code data-language="js">string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Swig template source string.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">options</var></td>
+          <td><code data-language="js">SwigOpts</code></td>
+          <td>✔</td>
+          <td><code data-language="js">{}</code></td>
+          <td>Swig options object.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">function</samp>: Renderable function with keys for parent, blocks, and tokens.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">var tpl = swig.compile(&#39;{{ tacos }}&#39;);
+// =&gt; {
+//      [Function: compiled]
+//      parent: null,
+//      tokens: [{ compile: [Function] }],
+//      blocks: {}
+//    }
+tpl({ tacos: &#39;Tacos!!!!&#39; });
+// =&gt; Tacos!!!!
+
+When compiling a source string, a file path should be specified in the options object in order for &lt;var&gt;extends&lt;/var&gt;, &lt;var&gt;include&lt;/var&gt;, and &lt;var&gt;import&lt;/var&gt; to work properly. Do this by adding &lt;code data-language=&quot;js&quot;&gt;{ filename: &#39;/absolute/path/to/mytpl.html&#39; }&lt;/code&gt; to the options argument.</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="compileFile" class="doc">
+    <h2>
+      swig.compileFile(
+      pathname
+      , options
+      )
+    </h2>
+
+    <p>Compile a source file into a renderable template function.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">pathname</var></td>
+          <td><code data-language="js">string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>File location.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">options</var></td>
+          <td><code data-language="js">SwigOpts</code></td>
+          <td>✔</td>
+          <td><code data-language="js">{}</code></td>
+          <td>Swig options object.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">function</samp>: Renderable function with keys for parent, blocks, and tokens.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">var tpl = swig.compileFile(&#39;./mytpl.html&#39;);
+// =&gt; {
+//      [Function: compiled]
+//      parent: null,
+//      tokens: [{ compile: [Function] }],
+//      blocks: {}
+//    }
+tpl({ tacos: &#39;Tacos!!!!&#39; });
+// =&gt; Tacos!!!!</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="run" class="doc">
+    <h2>
+      swig.run(
+      tpl
+      , locals
+      , pathName
+      )
+    </h2>
+
+    <p>Run a pre-compiled template function. This is most useful in the browser when you've pre-compiled your templates with the Swig command-line tool.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">tpl</var></td>
+          <td><code data-language="js">function</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Pre-compiled Swig template function. Use the Swig CLI to compile your templates.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">locals</var></td>
+          <td><code data-language="js">object</code></td>
+          <td>✔</td>
+          <td><code data-language="js">{}</code></td>
+          <td>Template variable context.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">pathName</var></td>
+          <td><code data-language="js">string</code></td>
+          <td>✔</td>
+          <td><code data-language="js"></code></td>
+          <td>Path of the file. Used for relative include lookups.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">string</samp>: Rendered output.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">$ swig compile ./mytpl.html --wrap-start=&quot;var mytpl = &quot; &gt; mytpl.js</code></pre>
+    
+    <pre><code data-language="js">&lt;script src=&quot;mytpl.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+  swig.run(mytpl, {});
+  // =&gt; &quot;rendered template...&quot;
+&lt;/script&gt;</code></pre>
+    
+    
+  </section>
+  
+
+
+
+  </div>
+
+  <div class="span3">
+<nav>
+  <ol class="sidenav">
+    <li>
+      <a href="/docs/">Getting Started</a>
+      
+    </li>
+    <li>
+      <a href="/docs/api/">Swig API</a>
+      
+<ol>
+
+  
+
+  
+
+  
+  <li>
+    <a href="#setDefaults">swig.setDefaults</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#setDefaultTZOffset">swig.setDefaultTZOffset</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#Swig">swig.Swig</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#invalidateCache">swig.invalidateCache</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#setFilter">swig.setFilter</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#setTag">swig.setTag</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#setExtension">swig.setExtension</a>
+  </li>
+  
+
+  
+
+  
+
+  
+  <li>
+    <a href="#precompile">swig.precompile</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#render">swig.render</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#renderFile">swig.renderFile</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#compile">swig.compile</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#compileFile">swig.compileFile</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#run">swig.run</a>
+  </li>
+  
+
+</ol>
+
+    </li>
+    <li>
+      <a href="/docs/filters/">Filters</a>
+      
+    </li>
+    <li>
+      <a href="/docs/tags/">Tags</a>
+      
+    </li>
+    <li>
+      <a href="/docs/cli/">Command-Line</a>
+      
+    </li>
+  </ol>
+</nav>
+</div>
+</div>
+
+
+<a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
+
+
+  
+<script src="/swig/js/lib/rainbow.min.js"></script>
+<script src="/swig/js/master.js"></script>
+
+</body>
+</html>

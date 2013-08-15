@@ -1,0 +1,487 @@
+{
+    "functions": [
+        {
+            "name": "efn",
+            "access": "private",
+            "virtual": false,
+            "description": "Empty function, used in templates.",
+            "parameters": [],
+            "examples": [],
+            "returns": {
+                "type": "string",
+                "description": "Empty string"
+            }
+        },
+        {
+            "name": "validateOptions",
+            "access": "private",
+            "virtual": false,
+            "description": "Validate the Swig options object.",
+            "parameters": [
+                {
+                    "name": "options",
+                    "type": "SwigOpts",
+                    "description": "Swig options object.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": true
+                }
+            ],
+            "examples": [],
+            "returns": {
+                "type": "undefined",
+                "description": "This method will throw errors if anything is wrong."
+            }
+        },
+        {
+            "name": "setDefaults",
+            "access": "",
+            "virtual": false,
+            "description": "Set defaults for the base and all new Swig environments.",
+            "parameters": [
+                {
+                    "name": "options",
+                    "type": "SwigOpts",
+                    "description": "Swig options object.",
+                    "default": "{}",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [],
+            "returns": {
+                "type": "undefined",
+                "description": ""
+            }
+        },
+        {
+            "name": "setDefaultTZOffset",
+            "access": "",
+            "virtual": false,
+            "description": "Set the default TimeZone offset for date formatting via the date filter. This is a global setting and will affect all Swig environments, old or new.",
+            "parameters": [
+                {
+                    "name": "offset",
+                    "type": "number",
+                    "description": "Offset from GMT, in minutes.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [],
+            "returns": {
+                "type": "undefined",
+                "description": ""
+            }
+        },
+        {
+            "name": "Swig",
+            "access": "",
+            "virtual": false,
+            "description": "Create a new, separate Swig compile/render environment.",
+            "parameters": [
+                {
+                    "name": "opts",
+                    "type": "SwigOpts",
+                    "description": "Swig options object.",
+                    "default": "{}",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "var swig = require('swig');\nvar myswig = new swig.Swig({varControls: ['<%=', '%>']});\nmyswig.render('Tacos are <%= tacos =>!', { locals: { tacos: 'delicious' }});\n// => Tacos are delicious!\nswig.render('Tacos are <%= tacos =>!', { locals: { tacos: 'delicious' }});\n// => 'Tacos are <%= tacos =>!'"
+            ],
+            "returns": {
+                "type": "object",
+                "description": "New Swig environment."
+            }
+        },
+        {
+            "name": "invalidateCache",
+            "access": "",
+            "virtual": false,
+            "description": "Clears the in-memory template cache.",
+            "parameters": [],
+            "examples": [
+                "swig.invalidateCache();"
+            ],
+            "returns": {
+                "type": "undefined",
+                "description": ""
+            }
+        },
+        {
+            "name": "setFilter",
+            "access": "",
+            "virtual": false,
+            "description": "Add a custom filter for swig variables.",
+            "parameters": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "Name of filter, used in templates. <strong>Will</strong> overwrite previously defined filters, if using the same name.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "method",
+                    "type": "function",
+                    "description": "Function that acts against the input. See <a href=\"/docs/filters/#custom\">Custom Filters</a> for more information.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "function replaceMs(input) { return input.replace(/m/g, 'f'); }\nswig.setFilter('replaceMs', replaceMs);\n// => {{ \"onomatopoeia\"|replaceMs }}\n// => onofatopeia"
+            ],
+            "returns": {
+                "type": "undefined",
+                "description": ""
+            }
+        },
+        {
+            "name": "setTag",
+            "access": "",
+            "virtual": false,
+            "description": "Add a custom tag. To expose your own extensions to compiled template code, see <code data-language=\"js\">swig.setExtension</code>.",
+            "parameters": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "Tag name.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "parse",
+                    "type": "function",
+                    "description": "Method for parsing tokens.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "compile",
+                    "type": "function",
+                    "description": "Method for compiling renderable output.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "ends",
+                    "type": "boolean",
+                    "description": "Whether or not this tag requires an <i>end</i> tag.",
+                    "default": "false",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "var tacotag = require('./tacotag');\nswig.setTag('tacos', tacotag.parse, tacotag.compile, tacotag.ends);\n// => {% tacos %}Make this be tacos.{% endtacos %}\n// => Tacos tacos tacos tacos."
+            ],
+            "returns": {
+                "type": "undefined",
+                "description": ""
+            }
+        },
+        {
+            "name": "setExtension",
+            "access": "",
+            "virtual": false,
+            "description": "Add extensions for custom tags. This allows any custom tag to access a globally available methods via a special globally available object, <var>_ext</var>, in templates.",
+            "parameters": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "Key name of the extension. Accessed via <code data-language=\"js\">_ext[name]</code>.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "object",
+                    "type": "*",
+                    "description": "The method, value, or object that should be available via the given name.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "swig.setExtension('trans', function (v) { return translate(v); });\nfunction compileTrans(compiler, args, content, parent, options) {\n  return '_output += _ext.trans(' + args[0] + ');'\n};\nswig.setTag('trans', parseTrans, compileTrans, true);"
+            ],
+            "returns": {
+                "type": "undefined",
+                "description": ""
+            }
+        },
+        {
+            "name": "parse",
+            "access": "private",
+            "virtual": false,
+            "description": "Parse a given source string into tokens.",
+            "parameters": [
+                {
+                    "name": "source",
+                    "type": "string",
+                    "description": "Swig template source.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options",
+                    "type": "SwigOpts",
+                    "description": "Swig options object.",
+                    "default": "{}",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [],
+            "returns": {
+                "type": "object",
+                "description": "parsed  Template tokens object."
+            }
+        },
+        {
+            "name": "parseFile",
+            "access": "private",
+            "virtual": false,
+            "description": "Parse a given file into tokens.",
+            "parameters": [
+                {
+                    "name": "pathname",
+                    "type": "string",
+                    "description": "Full path to file to parse.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options",
+                    "type": "SwigOpts",
+                    "description": "Swig options object.",
+                    "default": "{}",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [],
+            "returns": {
+                "type": "object",
+                "description": "parsed    Template tokens object."
+            }
+        },
+        {
+            "name": "precompile",
+            "access": "",
+            "virtual": false,
+            "description": "Pre-compile a source string into a cache-able template function.",
+            "parameters": [
+                {
+                    "name": "source",
+                    "type": "string",
+                    "description": "Swig template source string.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options",
+                    "type": "SwigOpts",
+                    "description": "Swig options object.",
+                    "default": "{}",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "swig.precompile('{{ tacos }}');\n// => {\n//      tpl: function (locals, filters, utils, efn) { ... },\n//      tokens: {\n//        name: undefined,\n//        parent: null,\n//        tokens: [...],\n//        blocks: {}\n//      }\n//    }\n\nIn order to render a pre-compiled template, you must have access to filters and utils from Swig. <var>efn</var> is simply an empty function that does nothing."
+            ],
+            "returns": {
+                "type": "object",
+                "description": "Renderable function and tokens object."
+            }
+        },
+        {
+            "name": "render",
+            "access": "",
+            "virtual": false,
+            "description": "Compile and render a template string for final output.",
+            "parameters": [
+                {
+                    "name": "source",
+                    "type": "string",
+                    "description": "Swig template source string.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options",
+                    "type": "SwigOpts",
+                    "description": "Swig options object.",
+                    "default": "{}",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "swig.render('{{ tacos }}', { locals: { tacos: 'Tacos!!!!' }});\n// => Tacos!!!!\n\nWhen rendering a source string, a file path should be specified in the options object in order for <var>extends</var>, <var>include</var>, and <var>import</var> to work properly. Do this by adding <code data-language=\"js\">{ filename: '/absolute/path/to/mytpl.html' }</code> to the options argument."
+            ],
+            "returns": {
+                "type": "string",
+                "description": "Rendered output."
+            }
+        },
+        {
+            "name": "renderFile",
+            "access": "",
+            "virtual": false,
+            "description": "Compile and render a template file for final output. This is most useful for libraries like Express.js.",
+            "parameters": [
+                {
+                    "name": "pathName",
+                    "type": "string",
+                    "description": "File location.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "locals",
+                    "type": "object",
+                    "description": "Template variable context.",
+                    "default": "{}",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "fn",
+                    "type": "Function",
+                    "description": "Optional callback function.",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "swig.renderFile('./template.html', {}, function (err, output) {\n  if (err) {\n    throw err;\n  }\n  console.log(output);\n});",
+                "swig.renderFile('./template.html', {});\n// => output"
+            ],
+            "returns": {
+                "type": "string",
+                "description": "Rendered output."
+            }
+        },
+        {
+            "name": "compile",
+            "access": "",
+            "virtual": false,
+            "description": "Compile string source into a renderable template function.",
+            "parameters": [
+                {
+                    "name": "source",
+                    "type": "string",
+                    "description": "Swig template source string.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options",
+                    "type": "SwigOpts",
+                    "description": "Swig options object.",
+                    "default": "{}",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "var tpl = swig.compile('{{ tacos }}');\n// => {\n//      [Function: compiled]\n//      parent: null,\n//      tokens: [{ compile: [Function] }],\n//      blocks: {}\n//    }\ntpl({ tacos: 'Tacos!!!!' });\n// => Tacos!!!!\n\nWhen compiling a source string, a file path should be specified in the options object in order for <var>extends</var>, <var>include</var>, and <var>import</var> to work properly. Do this by adding <code data-language=\"js\">{ filename: '/absolute/path/to/mytpl.html' }</code> to the options argument."
+            ],
+            "returns": {
+                "type": "function",
+                "description": "Renderable function with keys for parent, blocks, and tokens."
+            }
+        },
+        {
+            "name": "compileFile",
+            "access": "",
+            "virtual": false,
+            "description": "Compile a source file into a renderable template function.",
+            "parameters": [
+                {
+                    "name": "pathname",
+                    "type": "string",
+                    "description": "File location.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options",
+                    "type": "SwigOpts",
+                    "description": "Swig options object.",
+                    "default": "{}",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "var tpl = swig.compileFile('./mytpl.html');\n// => {\n//      [Function: compiled]\n//      parent: null,\n//      tokens: [{ compile: [Function] }],\n//      blocks: {}\n//    }\ntpl({ tacos: 'Tacos!!!!' });\n// => Tacos!!!!"
+            ],
+            "returns": {
+                "type": "function",
+                "description": "Renderable function with keys for parent, blocks, and tokens."
+            }
+        },
+        {
+            "name": "run",
+            "access": "",
+            "virtual": false,
+            "description": "Run a pre-compiled template function. This is most useful in the browser when you've pre-compiled your templates with the Swig command-line tool.",
+            "parameters": [
+                {
+                    "name": "tpl",
+                    "type": "function",
+                    "description": "Pre-compiled Swig template function. Use the Swig CLI to compile your templates.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "locals",
+                    "type": "object",
+                    "description": "Template variable context.",
+                    "default": "{}",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "pathName",
+                    "type": "string",
+                    "description": "Path of the file. Used for relative include lookups.",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "$ swig compile ./mytpl.html --wrap-start=\"var mytpl = \" > mytpl.js",
+                "<script src=\"mytpl.js\"></script>\n<script>\n  swig.run(mytpl, {});\n  // => \"rendered template...\"\n</script>"
+            ],
+            "returns": {
+                "type": "string",
+                "description": "Rendered output."
+            }
+        }
+    ]
+}

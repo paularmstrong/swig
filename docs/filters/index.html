@@ -1,0 +1,985 @@
+
+  
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <!--[if IE]>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <![endif]-->
+  <title> » Documentation &raquo; Filters</title>
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="/swig/css/swig.css">
+
+
+
+</head>
+<body class="">
+
+  
+
+
+<header class="header">
+  <div class="content row">
+    <hgroup class="span7">
+      <h1><a href="/swig/">Swig</a></h1>
+      <h2>A Node.js and Browser-based JavaScript Template Engine</h2>
+    </hgroup>
+    
+    <nav class="span5">
+      <ul class="mainNav">
+        <li><a href="/swig/docs/">Documentation</a></li>
+        <li><a href="https://github.com/paularmstrong/swig/">Code</a></li>
+      </ul>
+    </nav>
+  
+  </div>
+
+  <div class="content">
+    <p class="warning">This documentation is for a pre-release version and may be missing information.</p>
+  </div>
+</header>
+
+
+
+<div class="content row guttered">
+  <div class="span9">
+  
+<h1 id="built-in">Filters</h1>
+
+<p>The rendering of variables can be modified by filters. Filters are special functions that are applied after any object token in a variable block using the pipe character, for example: <code data-language>{{ names|join(', ') }}</code>.</p>
+
+<p>Filters can also be chained together, one after another. In this case, we have a list of names in HTML tags that we want to remove, output together, and make title-cased:</p>
+
+<pre><code data-language="swig">// names = ['<p>paul</p>', '<p>jim</p>'];
+{{ names|striptags|join(', ')|title }}
+// => Paul, Jim</code></pre>
+
+<p>Swig comes pre-loaded with a set of useful filters:</p>
+
+
+  
+  <section id="addslashes" class="doc">
+    <h2>
+      addslashes
+      
+      </h2>
+
+    <p>Backslash-escape characters that need to be escaped.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">*</samp>: Backslash-escaped string.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{{ &quot;\&quot;quoted string\&quot;&quot;|addslashes }}
+// =&gt; \&quot;quoted string\&quot;</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="capitalize" class="doc">
+    <h2>
+      capitalize
+      
+      </h2>
+
+    <p>Upper-case the first letter of the input and lower-case the rest.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">*</samp>: Returns the same type as the input.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{{ &quot;i like Burritos&quot;|capitalize }}
+// =&gt; I like burritos</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="date" class="doc">
+    <h2>
+      date
+      
+      (format
+        , 
+      
+      offset
+        , 
+      
+      abbr
+        )
+      
+      </h2>
+
+    <p>Format a date or Date-compatible string.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        
+      
+        
+        <tr>
+          <td><var data-language="js">format</var></td>
+          <td><code data-language="js">string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>PHP-style date format compatible string.</td>
+        </tr>
+        
+      
+        
+        <tr>
+          <td><var data-language="js">offset</var></td>
+          <td><code data-language="js">number</code></td>
+          <td>✔</td>
+          <td><code data-language="js"></code></td>
+          <td>Timezone offset from GMT in minutes.</td>
+        </tr>
+        
+      
+        
+        <tr>
+          <td><var data-language="js">abbr</var></td>
+          <td><code data-language="js">string</code></td>
+          <td>✔</td>
+          <td><code data-language="js"></code></td>
+          <td>Timezone abbreviation. Used for output only.</td>
+        </tr>
+        
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">string</samp>: Formatted date string.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// now = new Date();
+{{ now|date(&#39;Y-m-d&#39;) }}
+// =&gt; 2013-08-14</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="default" class="doc">
+    <h2>
+      default
+      
+      (def
+        )
+      
+      </h2>
+
+    <p>If the input is `undefined`, `null`, or `false`, a default return value can be specified.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        
+      
+        
+        <tr>
+          <td><var data-language="js">def</var></td>
+          <td><code data-language="js">*</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Value to return if `input` is `undefined`, `null`, or `false`.</td>
+        </tr>
+        
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">*</samp>: `input` or `def` value.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{{ null_value|default(&#39;Tacos&#39;) }}
+// =&gt; Tacos</code></pre>
+    
+    <pre><code data-language="swig">{{ &quot;Burritos&quot;|default(&quot;Tacos&quot;) }}
+// =&gt; Burritos</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="escape" class="doc">
+    <h2>
+      escape
+      
+      (type
+        )
+      
+      </h2>
+
+    <p>Force escape the output of the variable. Optionally use `e` as a shortcut filter name. This filter will be applied by default if autoescape is turned on.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        
+      
+        
+        <tr>
+          <td><var data-language="js">type</var></td>
+          <td><code data-language="js">string</code></td>
+          <td>✔</td>
+          <td><code data-language="js">&#39;html&#39;</code></td>
+          <td>If you pass the string js in as the type, output will be escaped so that it is safe for JavaScript execution.</td>
+        </tr>
+        
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">string</samp>: Escaped string.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{{ &quot;&lt;blah&gt;&quot;|escape }}
+// =&gt; &lt;blah&gt;</code></pre>
+    
+    <pre><code data-language="swig">{{ &quot;&lt;blah&gt;&quot;|e(&quot;js&quot;) }}
+// =&gt; \u003Cblah\u003E</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="first" class="doc">
+    <h2>
+      first
+      
+      </h2>
+
+    <p>Get the first item in an array or character in a string.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">*</samp>: The first item of the array or first character of the string input.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// my_arr = [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]
+{{ my_arr|first }}
+// =&gt; a</code></pre>
+    
+    <pre><code data-language="swig">// my_val = &#39;Tacos&#39;
+{{ my_val|first }}
+// T</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="join" class="doc">
+    <h2>
+      join
+      
+      (glue
+        )
+      
+      </h2>
+
+    <p>Join the input with a string.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        
+      
+        
+        <tr>
+          <td><var data-language="js">glue</var></td>
+          <td><code data-language="js">string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>String value to join items together.</td>
+        </tr>
+        
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">string</samp>: </p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// my_array = [&#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;]
+{{ my_array|join(&#39;, &#39;) }}
+// =&gt; foo, bar, baz</code></pre>
+    
+    <pre><code data-language="swig">// my_key_object = { a: &#39;foo&#39;, b: &#39;bar&#39;, c: &#39;baz&#39; }
+{{ my_key_object|join(&#39; and &#39;) }}
+// =&gt; foo and bar and baz</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="json" class="doc">
+    <h2>
+      json
+      
+      (indent
+        )
+      
+      </h2>
+
+    <p>Return a string representation of an JavaScript object.</p><p>
+Backwards compatible with swig@0.x.x using `json_encode`.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        
+      
+        
+        <tr>
+          <td><var data-language="js">indent</var></td>
+          <td><code data-language="js">number</code></td>
+          <td>✔</td>
+          <td><code data-language="js"></code></td>
+          <td>Number of spaces to indent for pretty-formatting.</td>
+        </tr>
+        
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">string</samp>: A valid JSON string.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// val = { a: &#39;b&#39; }
+{{ val|json }}
+// =&gt; {&quot;a&quot;:&quot;b&quot;}</code></pre>
+    
+    <pre><code data-language="swig">// val = { a: &#39;b&#39; }
+{{ val|json(4) }}
+// =&gt; {
+//        &quot;a&quot;: &quot;b&quot;
+//    }</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="last" class="doc">
+    <h2>
+      last
+      
+      </h2>
+
+    <p>Get the last item in an array or character in a string.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">*</samp>: The last item of the array or last character of the string.input.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// my_arr = [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]
+{{ my_arr|last }}
+// =&gt; c</code></pre>
+    
+    <pre><code data-language="swig">// my_val = &#39;Tacos&#39;
+{{ my_val|last }}
+// s</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="lower" class="doc">
+    <h2>
+      lower
+      
+      </h2>
+
+    <p>Return the input in all lowercase letters.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">*</samp>: Returns the same type as the input.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{{ &quot;FOOBAR&quot;|lower }}
+// =&gt; foobar</code></pre>
+    
+    <pre><code data-language="swig">// myObj = { a: &#39;FOO&#39;, b: &#39;BAR&#39; }
+{{ myObj|lower|join(&#39;&#39;) }}
+// =&gt; foobar</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="raw" class="doc">
+    <h2>
+      raw
+      
+      </h2>
+
+    <p>Forces the input to not be auto-escaped. Use this only on content that you know is safe to be rendered on your page.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">*</samp>: Raw, un-escaped output.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// my_var = &quot;&lt;p&gt;Stuff&lt;/p&gt;&quot;;
+{{ my_var|raw }}
+// =&gt; &lt;p&gt;Stuff&lt;/p&gt;</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="replace" class="doc">
+    <h2>
+      replace
+      
+      (search
+        , 
+      
+      replacement
+        , 
+      
+      flags
+        )
+      
+      </h2>
+
+    <p>Returns a new string with the matched search pattern replaced by the given replacement string. Uses JavaScript's built-in String.replace() method.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        
+      
+        
+        <tr>
+          <td><var data-language="js">search</var></td>
+          <td><code data-language="js">string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>String or pattern to replace from the input.</td>
+        </tr>
+        
+      
+        
+        <tr>
+          <td><var data-language="js">replacement</var></td>
+          <td><code data-language="js">string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>String to replace matched pattern.</td>
+        </tr>
+        
+      
+        
+        <tr>
+          <td><var data-language="js">flags</var></td>
+          <td><code data-language="js">string</code></td>
+          <td>✔</td>
+          <td><code data-language="js"></code></td>
+          <td>Regular Expression flags. 'g': global match, 'i': ignore case, 'm': match over multiple lines</td>
+        </tr>
+        
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">string</samp>: Replaced string.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// my_var = &#39;foobar&#39;;
+{{ my_var|replace(&#39;o&#39;, &#39;e&#39;, &#39;g&#39;) }}
+// =&gt; feebar</code></pre>
+    
+    <pre><code data-language="swig">// my_var = &quot;farfegnugen&quot;;
+{{ my_var|replace(&#39;^f&#39;, &#39;p&#39;) }}
+// =&gt; parfegnugen</code></pre>
+    
+    <pre><code data-language="swig">// my_var = &#39;a1b2c3&#39;;
+{{ my_var|replace(&#39;\w&#39;, &#39;0&#39;, &#39;g&#39;) }}
+// =&gt; 010203</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="reverse" class="doc">
+    <h2>
+      reverse
+      
+      </h2>
+
+    <p>Reverse an array.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">array</samp>: Reversed array. The original input object is returned if it was not an array.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// val = [1, 2, 3];
+{{ val|reverse }}
+// =&gt; 3,2,1</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="striptags" class="doc">
+    <h2>
+      striptags
+      
+      </h2>
+
+    <p>Strip HTML tags.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">*</samp>: Returns the same object as the input, but with all string values stripped of tags.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// stuff = &#39;&lt;p&gt;foobar&lt;/p&gt;&#39;;
+{{ stuff|striptags }}
+// =&gt; foobar</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="title" class="doc">
+    <h2>
+      title
+      
+      </h2>
+
+    <p>Capitalizes every word given and lower-cases all other letters.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">*</samp>: Returns the same object as the input, but with all words in strings title-cased.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// my_str = &#39;this is soMe text&#39;;
+{{ my_str|title }}
+// =&gt; This Is Some Text</code></pre>
+    
+    <pre><code data-language="swig">// my_arr = [&#39;hi&#39;, &#39;this&#39;, &#39;is&#39;, &#39;an&#39;, &#39;array&#39;];
+{{ my_arr|title|join(&#39; &#39;) }}
+// =&gt; Hi This Is An Array</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="uniq" class="doc">
+    <h2>
+      uniq
+      
+      </h2>
+
+    <p>Remove all duplicate items from an array.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">array</samp>: Array with unique items. If input was not an array, the original item is returned untouched.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// my_arr = [1, 2, 3, 4, 4, 3, 2, 1];
+{{ my_arr|uniq|join(&#39;,&#39;) }}
+// =&gt; 1,2,3,4</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="upper" class="doc">
+    <h2>
+      upper
+      
+      </h2>
+
+    <p>Convert the input to all uppercase letters.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">*</samp>: Returns the same type as the input, with all strings upper-cased.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// my_str = &#39;tacos&#39;;
+{{ my_str|upper }}
+// =&gt; TACOS</code></pre>
+    
+    <pre><code data-language="swig">// my_arr = [&#39;tacos&#39;, &#39;burritos&#39;];
+{{ my_arr|upper|join(&#39; &amp; &#39;) }}
+// =&gt; TACOS &amp; BURRITOS</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="url_encode" class="doc">
+    <h2>
+      url_encode
+      
+      </h2>
+
+    <p>URL-encode a string.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">string</samp>: URL-encoded string.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// my_str = &#39;param=1&amp;anotherParam=2&#39;;
+{{ my_str|url_encode }}
+// =&gt; param%3D1%26anotherParam%3D2</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="url_decode" class="doc">
+    <h2>
+      url_decode
+      
+      </h2>
+
+    <p>URL-decode a string.</p>
+
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">string</samp>: URL-decoded string.</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// my_str = &#39;param%3D1%26anotherParam%3D2&#39;;
+{{ my_str|url_decode }}
+// =&gt; param=1&amp;anotherParam=2</code></pre>
+    
+    
+  </section>
+  
+
+
+
+  </div>
+
+  <div class="span3">
+<nav>
+  <ol class="sidenav">
+    <li>
+      <a href="/docs/">Getting Started</a>
+      
+    </li>
+    <li>
+      <a href="/docs/api/">Swig API</a>
+      
+    </li>
+    <li>
+      <a href="/docs/filters/">Filters</a>
+      
+<ol>
+  <li>
+    <a href="#built-in">Built-In Filters</a>
+    <ol>
+    
+      <li>
+        <a href="#addslashes">addslashes</a>
+      </li>
+    
+      <li>
+        <a href="#capitalize">capitalize</a>
+      </li>
+    
+      <li>
+        <a href="#date">date</a>
+      </li>
+    
+      <li>
+        <a href="#default">default</a>
+      </li>
+    
+      <li>
+        <a href="#escape">escape</a>
+      </li>
+    
+      <li>
+        <a href="#first">first</a>
+      </li>
+    
+      <li>
+        <a href="#join">join</a>
+      </li>
+    
+      <li>
+        <a href="#json">json</a>
+      </li>
+    
+      <li>
+        <a href="#last">last</a>
+      </li>
+    
+      <li>
+        <a href="#lower">lower</a>
+      </li>
+    
+      <li>
+        <a href="#raw">raw</a>
+      </li>
+    
+      <li>
+        <a href="#replace">replace</a>
+      </li>
+    
+      <li>
+        <a href="#reverse">reverse</a>
+      </li>
+    
+      <li>
+        <a href="#striptags">striptags</a>
+      </li>
+    
+      <li>
+        <a href="#title">title</a>
+      </li>
+    
+      <li>
+        <a href="#uniq">uniq</a>
+      </li>
+    
+      <li>
+        <a href="#upper">upper</a>
+      </li>
+    
+      <li>
+        <a href="#url_encode">url_encode</a>
+      </li>
+    
+      <li>
+        <a href="#url_decode">url_decode</a>
+      </li>
+    
+    </ol>
+  </li>
+  <li><a href="#custom">Custom Filters</a></li>
+</ol>
+
+    </li>
+    <li>
+      <a href="/docs/tags/">Tags</a>
+      
+    </li>
+    <li>
+      <a href="/docs/cli/">Command-Line</a>
+      
+    </li>
+  </ol>
+</nav>
+</div>
+</div>
+
+
+<a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
+
+
+  
+<script src="/swig/js/lib/rainbow.min.js"></script>
+<script src="/swig/js/master.js"></script>
+
+</body>
+</html>

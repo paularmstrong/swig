@@ -1,0 +1,1017 @@
+
+  
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <!--[if IE]>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <![endif]-->
+  <title> » Documentation &raquo; Tags</title>
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="/swig/css/swig.css">
+
+
+
+</head>
+<body class="">
+
+  
+
+
+<header class="header">
+  <div class="content row">
+    <hgroup class="span7">
+      <h1><a href="/swig/">Swig</a></h1>
+      <h2>A Node.js and Browser-based JavaScript Template Engine</h2>
+    </hgroup>
+    
+    <nav class="span5">
+      <ul class="mainNav">
+        <li><a href="/swig/docs/">Documentation</a></li>
+        <li><a href="https://github.com/paularmstrong/swig/">Code</a></li>
+      </ul>
+    </nav>
+  
+  </div>
+
+  <div class="content">
+    <p class="warning">This documentation is for a pre-release version and may be missing information.</p>
+  </div>
+</header>
+
+
+
+<div class="content row guttered">
+  <div class="span9">
+  
+<h1>Tags</h1>
+
+
+  
+  <section id="autoescape" class="doc">
+    <h2>autoescape</h2>
+
+    <p>Control auto-escaping of variable output from within your templates.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">control</var></td>
+          <td><code data-language="js">boolean or string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>One of `true`, `false`, `"js"` or `"html"`.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// myvar = &#39;&lt;foo&gt;&#39;;
+{% autoescape true %}{{ myvar }}{% endautoescape %}
+// =&gt; &lt;foo&gt;
+{% autoescape false %}{{ myvar }}{% endautoescape %}
+// =&gt; &lt;foo&gt;</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="block" class="doc">
+    <h2>block</h2>
+
+    <p>Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.</p><p>
+See <a href="#inheritance">Template Inheritance</a> for more information.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">name</var></td>
+          <td><code data-language="js">literal</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Name of the block for use in parent and extended templates.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{% block body %}...{% endblock %}</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="else" class="doc">
+    <h2>else</h2>
+
+    <p>Used within an <code data-language="swig">{% if %}</code> tag, the code block following this tag up until <code data-language="swig">{% endif %}</code> will be rendered if the <i>if</i> statement returns false.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{% if false %}
+  statement1
+{% else %}
+  statement2
+{% endif %}
+// =&gt; statement2</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="elif" class="doc">
+    <h2>elif</h2>
+
+    <p>Like <code data-language="swig">{% else %}</code>, except this tag can take more conditional statements.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">conditional</var></td>
+          <td><code data-language="js">mixed</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Conditional statement that returns a truthy or falsy value.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{% if false %}
+  Tacos
+{% elseif true %}
+  Burritos
+{% else %}
+  Churros
+{% endif %}
+// =&gt; Burritos</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="extends" class="doc">
+    <h2>extends</h2>
+
+    <p>Makes the current template extend a parent template. This tag must be the first item in your template.</p><p>
+See <a href="#inheritance">Template Inheritance</a> for more information.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">parentFile</var></td>
+          <td><code data-language="js">string</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Relative path to the file that this template extends.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{% extends &quot;./layout.html&quot; %}</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="filter" class="doc">
+    <h2>filter</h2>
+
+    <p>Apply a filter to an entire block of template.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">filter</var></td>
+          <td><code data-language="js">function</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>The filter that should be applied to the contents of the tag.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{% filter uppercase %}oh hi, {{ name }}{% endfilter %}
+// =&gt; OH HI, PAUL</code></pre>
+    
+    <pre><code data-language="swig">{% filter replace(&quot;.&quot;, &quot;!&quot;, &quot;g&quot;) %}Hi. My name is Paul.{% endfilter %}
+// =&gt; Hi! My name is Paul!</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="for" class="doc">
+    <h2>for</h2>
+
+    <p>Loop over objects and arrays.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">key</var></td>
+          <td><code data-language="js">literal</code></td>
+          <td>✔</td>
+          <td><code data-language="js"></code></td>
+          <td>A shortcut to the index of the array or current key accessor.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">variable</var></td>
+          <td><code data-language="js">literal</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>The current value will be assigned to this variable name temporarily. The variable will be reset upon ending the for tag.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">in</var></td>
+          <td><code data-language="js">literal</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Literally, "in". This token is required.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">object</var></td>
+          <td><code data-language="js">object</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>An enumerable object that will be iterated over.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">loop.index</samp>: The current iteration of the loop (1-indexed)</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// obj = { one: &#39;hi&#39;, two: &#39;bye&#39; };
+{% for x in obj %}
+  {% if loop.first %}&lt;ul&gt;{% endif %}
+  &lt;li&gt;{{ loop.index }} - {{ loop.key }}: {{ x }}&lt;/li&gt;
+  {% if loop.last %}&lt;/ul&gt;{% endif %}
+{% endfor %}
+// =&gt; &lt;ul&gt;
+//    &lt;li&gt;1 - one: hi&lt;/li&gt;
+//    &lt;li&gt;2 - two: bye&lt;/li&gt;
+//    &lt;/ul&gt;</code></pre>
+    
+    <pre><code data-language="swig">// arr = [1, 2, 3]
+// Reverse the array, shortcut the key/index to `key`
+{% for key, val in arr|reverse %}
+{{ key }} -- {{ val }}
+{% endfor %}
+// =&gt; 0 -- 3
+//    1 -- 2
+//    2 -- 1</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="if" class="doc">
+    <h2>if</h2>
+
+    <p>Used to create conditional statements in templates. Accepts most JavaScript valid comparisons.</p><p>
+Can be used in conjunction with <a href="#elseif"><code data-language="swig">{% elseif ... %}</code></a> and <a href="#else"><code data-language="swig">{% else %}</code></a> tags.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">conditional</var></td>
+          <td><code data-language="js">mixed</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Conditional statement that returns a truthy or falsy value.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{% if x %}{% endif %}
+{% if !x %}{% endif %}
+{% if not x %}{% endif %}</code></pre>
+    
+    <pre><code data-language="swig">{% if x and y %}{% endif %}
+{% if x &amp;&amp; y %}{% endif %}
+{% if x or y %}{% endif %}
+{% if x || y %}{% endif %}
+{% if x || (y &amp;&amp; z) %}{% endif %}</code></pre>
+    
+    <pre><code data-language="swig">{% if x [operator] y %}
+  Operators: ==, !=, &lt;, &lt;=, &gt;, &gt;=, ===, !==
+{% endif %}</code></pre>
+    
+    <pre><code data-language="swig">{% if x == &#39;five&#39; %}
+  The operands can be also be string or number literals
+{% endif %}</code></pre>
+    
+    <pre><code data-language="swig">{% if x|lower === &#39;tacos&#39; %}
+  You can use filters on any operand in the statement.
+{% endif %}</code></pre>
+    
+    <pre><code data-language="swig">{% if x in y %}
+  If x is a value that is present in y, this will return true.
+{% endif %}</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="import" class="doc">
+    <h2>import</h2>
+
+    <p>Allows you to import macros from another file directly into your current context.</p><p>
+The import tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">file</var></td>
+          <td><code data-language="js">string or var</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Relative path from the current template file to the file to import macros from.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">as</var></td>
+          <td><code data-language="js">literal</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Literally, "as".</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">varname</var></td>
+          <td><code data-language="js">literal</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Local-accessible object name to assign the macros to.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{% import &#39;./formmacros.html&#39; as forms %}
+{{ form.input(&quot;text&quot;, &quot;name&quot;) }}
+// =&gt; &lt;input type=&quot;text&quot; name=&quot;name&quot;&gt;</code></pre>
+    
+    <pre><code data-language="swig">{% import &quot;../shared/tags.html&quot; as tags %}
+{{ tags.stylesheet(&#39;global&#39;) }}
+// =&gt; &lt;link rel=&quot;stylesheet&quot; href=&quot;/global.css&quot;&gt;</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="include" class="doc">
+    <h2>include</h2>
+
+    <p>Includes a template partial in place. The template is rendered within the current locals variable context.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">file</var></td>
+          <td><code data-language="js">string or var</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>The path, relative to the template root, to render into the current context.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">with</var></td>
+          <td><code data-language="js">literal</code></td>
+          <td>✔</td>
+          <td><code data-language="js"></code></td>
+          <td>Literally, "with".</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">context</var></td>
+          <td><code data-language="js">object</code></td>
+          <td>✔</td>
+          <td><code data-language="js"></code></td>
+          <td>Restrict the local variable context in the file to this key-value object.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">ignore missing</var></td>
+          <td><code data-language="js">literal</code></td>
+          <td>✔</td>
+          <td><code data-language="js"></code></td>
+          <td>Will output empty string if not found instead of throwing an error.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// food = &#39;burritos&#39;;
+// drink = &#39;lemonade&#39;;
+{% include &quot;./partial.html&quot; %}
+// =&gt; I like burritos and lemonade.</code></pre>
+    
+    <pre><code data-language="swig">// my_obj = { food: &#39;tacos&#39;, drink: &#39;horchata&#39; };
+{% include &quot;./partial.html&quot; with my_obj %}
+// =&gt; I like tacos and horchata.</code></pre>
+    
+    <pre><code data-language="swig">{% include &quot;/this/file/does/not/exist&quot; ignore missing %}
+// =&gt; (Nothing! empty string)</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="macro" class="doc">
+    <h2>macro</h2>
+
+    <p>Create custom, reusable snippets within your templates.</p><p>
+Can be imported from one template to another using the <a href="#import"><code data-language="swig">{% import ... %}</code></a> tag.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">arguments</var></td>
+          <td><code data-language="js">arguments</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>User-defined arguments.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{% macro input type name id label value error %}
+  &lt;label for=&quot;{{ name }}&quot;&gt;{{ label }}&lt;/label&gt;
+  &lt;input type=&quot;{{ type }}&quot; name=&quot;{{ name }}&quot; id=&quot;{{ id }}&quot; value=&quot;{{ value }}&quot;{% if error %} class=&quot;error&quot;{% endif %}&gt;
+{% endmacro %}
+
+{{ input(&quot;text&quot;, &quot;fname&quot;, &quot;fname&quot;, &quot;First Name&quot;, fname.value, fname.errors) }}
+// =&gt; &lt;label for=&quot;fname&quot;&gt;First Name&lt;/label&gt;
+//    &lt;input type=&quot;text&quot; name=&quot;fname&quot; id=&quot;fname&quot; value=&quot;&quot;&gt;</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="parent" class="doc">
+    <h2>parent</h2>
+
+    <p>Inject the content from the parent template's block of the same name into the current block.</p><p>
+See <a href="#inheritance">Template Inheritance</a> for more information.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{% extends &quot;./foo.html&quot; %}
+{% block content %}
+  My content.
+  {% parent %}
+{% endblock %}</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="raw" class="doc">
+    <h2>raw</h2>
+
+    <p>Forces the content to not be auto-escaped. All swig instructions will be ignored and the content will be rendered exactly as it was given.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// foobar = &#39;&lt;p&gt;&#39;
+{% raw %}{{ foobar }}{% endraw %}
+// =&gt; {{ foobar }}</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="set" class="doc">
+    <h2>set</h2>
+
+    <p>Set a variable for re-use in the current context.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">varname</var></td>
+          <td><code data-language="js">literal</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>The variable name to assign the value to.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">assignement</var></td>
+          <td><code data-language="js">literal</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Any valid JavaScript assignement. <code data-language="js">=, +=, *=, /=, -=</code></td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">value</var></td>
+          <td><code data-language="js">*</code></td>
+          <td></td>
+          <td><code data-language="js"></code></td>
+          <td>Valid variable output.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{% set foo = &quot;anything!&quot; %}
+{{ foo }}
+// =&gt; anything!</code></pre>
+    
+    <pre><code data-language="swig">// index = 2;
+{% set bar = 1 %}
+{% set bar += index|default(3) %}
+// =&gt; 3</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="spaceless" class="doc">
+    <h2>spaceless</h2>
+
+    <p>Attempts to remove whitespace between HTML tags. Use at your own risk.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+      </tbody>
+    </table>
+    
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">{% spaceless %}
+  {% for num in foo %}
+  &lt;li&gt;{{ loop.index }}&lt;/li&gt;
+  {% endfor %}
+{% endspaceless %}
+// =&gt; &lt;li&gt;1&lt;/li&gt;&lt;li&gt;2&lt;/li&gt;&lt;li&gt;3&lt;/li&gt;</code></pre>
+    
+    
+  </section>
+  
+
+
+<section id="custom">
+  <h1>Custom Tags</h1>
+
+  <p>Swig can be extended to handle custom tags that will perform operations on full blocks of your templates. Use <a href="/docs/api/#addTag"><code data-language="js">swig.addTag(name, parse, compile, ends)</code></a> to add your custom tag.</p>
+
+  <p>Examples:</p>
+
+  <pre><code data-language="js">
+
+  </code></pre>
+
+  <section class="doc">
+    <h2>parse(str, line, parser, types)</h2>
+  </section>
+
+  <section class="doc">
+    <h2>compile(compiler, args, content, parent, options)</h2>
+  </section>
+</section>
+
+
+  </div>
+
+  <div class="span3">
+<nav>
+  <ol class="sidenav">
+    <li>
+      <a href="/docs/">Getting Started</a>
+      
+    </li>
+    <li>
+      <a href="/docs/api/">Swig API</a>
+      
+    </li>
+    <li>
+      <a href="/docs/filters/">Filters</a>
+      
+    </li>
+    <li>
+      <a href="/docs/tags/">Tags</a>
+      
+<ol>
+
+  
+  <li>
+    <a href="#autoescape">autoescape</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#block">block</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#else">else</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#elif">elif</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#extends">extends</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#filter">filter</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#for">for</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#if">if</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#import">import</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#include">include</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#macro">macro</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#parent">parent</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#raw">raw</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#set">set</a>
+  </li>
+  
+
+  
+  <li>
+    <a href="#spaceless">spaceless</a>
+  </li>
+  
+
+</ol>
+
+    </li>
+    <li>
+      <a href="/docs/cli/">Command-Line</a>
+      
+    </li>
+  </ol>
+</nav>
+</div>
+</div>
+
+
+<a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
+
+
+  
+<script src="/swig/js/lib/rainbow.min.js"></script>
+<script src="/swig/js/master.js"></script>
+
+</body>
+</html>
