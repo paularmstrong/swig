@@ -212,7 +212,7 @@ exports.U = function (input) {
 };
 
 },{"./utils":23}],3:[function(require,module,exports){
-var utils = require('./utils'),
+(function(){var utils = require('./utils'),
   dateFormatter = require('./dateformatter');
 
 /**
@@ -700,6 +700,7 @@ exports.url_decode = function (input) {
   return decodeURIComponent(input);
 };
 
+})()
 },{"./dateformatter":2,"./utils":23}],4:[function(require,module,exports){
 var utils = require('./utils');
 
@@ -1304,13 +1305,14 @@ exports.parse = function (source, opts, tags, filters) {
     varStripAfter = new RegExp('-' + escapedVarClose + '$'),
     cmtOpen = opts.cmtControls[0],
     cmtClose = opts.cmtControls[1],
+    anyChar = '[\\s\\S]*?',
     // Split the template source based on variable, tag, and comment blocks
-    // /(\{\{.*?\}\}|\{\%.*?\%\}|\{\#[^.*?\#\})/
+    // /(\{%[\s\S]*?%\}|\{\{[\s\S]*?\}\}|\{#[\s\S]*?#\})/
     splitter = new RegExp(
       '(' +
-        escapedTagOpen + '.*?' + escapedTagClose + '|' +
-        escapedVarOpen + '.*?' + escapedVarClose + '|' +
-        escapeRegExp(cmtOpen) + '.*?' + escapeRegExp(cmtClose) +
+        escapedTagOpen + anyChar + escapedTagClose + '|' +
+        escapedVarOpen + anyChar + escapedVarClose + '|' +
+        escapeRegExp(cmtOpen) + anyChar + escapeRegExp(cmtClose) +
         ')'
     ),
     line = 1,
@@ -1379,7 +1381,7 @@ exports.parse = function (source, opts, tags, filters) {
 
     if (utils.startsWith(str, 'end')) {
       last = stack[stack.length - 1];
-      if (last.name === str.replace(/^end/, '') && last.ends) {
+      if (last && last.name === str.replace(/^end/, '') && last.ends) {
         switch (last.name) {
         case 'autoescape':
           escape = opts.autoescape;
@@ -1487,6 +1489,8 @@ exports.parse = function (source, opts, tags, filters) {
     } else if (inRaw || (!utils.startsWith(chunk, cmtOpen) && !utils.endsWith(chunk, cmtClose))) {
       token = (stripNext) ? chunk.replace(/^\s*/, '') : chunk;
       stripNext = false;
+    } else if (utils.startsWith(chunk, cmtOpen) && utils.endsWith(chunk, cmtClose)) {
+      return;
     }
 
     // Did this tag ask to strip previous whitespace? <code>{%- ... %}</code> or <code>{{- ... }}</code>
@@ -1547,7 +1551,7 @@ exports.compile = function (template, parent, options, blockName) {
 };
 
 },{"./lexer":4,"./utils":23}],6:[function(require,module,exports){
-var fs = require('fs'),
+(function(){var fs = require('fs'),
   path = require('path'),
   utils = require('./utils'),
   _tags = require('./tags'),
@@ -2133,6 +2137,7 @@ exports.renderFile = defaultInstance.renderFile;
 exports.run = defaultInstance.run;
 exports.invalidateCache = defaultInstance.invalidateCache;
 
+})()
 },{"./dateformatter":2,"./filters":3,"./parser":5,"./tags":7,"./utils":23,"fs":24,"path":25}],7:[function(require,module,exports){
 exports.autoescape = require('./tags/autoescape');
 exports.block = require('./tags/block');
@@ -2570,7 +2575,7 @@ exports.parse = function (str, line, parser, types) {
 exports.ends = true;
 
 },{}],16:[function(require,module,exports){
-var utils = require('../utils');
+(function(){var utils = require('../utils');
 
 /**
  * Allows you to import macros from another file directly into your current context.
@@ -2647,6 +2652,7 @@ exports.parse = function (str, line, parser, types) {
 };
 
 
+})()
 },{"../swig":6,"../utils":23}],17:[function(require,module,exports){
 var ignore = 'ignore',
   missing = 'missing';
@@ -2861,7 +2867,7 @@ exports.parse = function (str, line, parser, types, stack) {
 exports.ends = true;
 
 },{}],21:[function(require,module,exports){
-/**
+(function(){/**
  * Set a variable for re-use in the current context.
  *
  * @alias set
@@ -2911,6 +2917,7 @@ exports.parse = function (str, line, parser, types, stack) {
   return true;
 };
 
+})()
 },{}],22:[function(require,module,exports){
 var utils = require('../utils');
 
@@ -3109,7 +3116,7 @@ exports.extend = function () {
 // nothing to see here... no file methods for the browser
 
 },{}],25:[function(require,module,exports){
-var process=require("__browserify_process");function filter (xs, fn) {
+(function(process){function filter (xs, fn) {
     var res = [];
     for (var i = 0; i < xs.length; i++) {
         if (fn(xs[i], i, xs)) res.push(xs[i]);
@@ -3285,8 +3292,7 @@ exports.relative = function(from, to) {
   return outputParts.join('/');
 };
 
-exports.sep = '/';
-
+})(require("__browserify_process"))
 },{"__browserify_process":26}],26:[function(require,module,exports){
 // shim for using process in browser
 
