@@ -143,6 +143,7 @@ ifeq (${THIS_BRANCH}, master)
 	@git commit -n -am "Automated build from ${SHA}"
 	@git push ${REMOTE} ${BRANCH}
 	@git checkout ${THIS_BRANCH}
+	@git clean -f -d docs/
 endif
 
 port = 3000
