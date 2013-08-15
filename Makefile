@@ -3,7 +3,7 @@ THIS_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 VERSION_REGEX = [0-9]*\.[0-9]*\.[0-9]*[^\" ]*
 VERSION := $(shell npm ls | grep "swig@" |  grep -Eo "${VERSION_REGEX}" -m 1)
 
-TMP = 'tmp_build'
+TMP = 'tmp'
 REMOTE = origin
 BRANCH = gh-pages
 BIN = node_modules/.bin
