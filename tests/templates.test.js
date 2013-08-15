@@ -41,7 +41,10 @@ describe('Templates', function () {
     var test = _.find(files, isTest),
       expectation = fs.readFileSync(_.find(files, isExpectation), 'utf8');
 
-    it(c, function () {
+    if (test.indexOf('include_extends.test.html') === -1) {
+      return;
+    }
+    it.only(c, function () {
       expect(swig.compileFile(test)(locals)).to.equal(expectation);
     });
   });
