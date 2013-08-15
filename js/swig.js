@@ -212,7 +212,7 @@ exports.U = function (input) {
 };
 
 },{"./utils":23}],3:[function(require,module,exports){
-(function(){var utils = require('./utils'),
+var utils = require('./utils'),
   dateFormatter = require('./dateformatter');
 
 /**
@@ -700,7 +700,6 @@ exports.url_decode = function (input) {
   return decodeURIComponent(input);
 };
 
-})()
 },{"./dateformatter":2,"./utils":23}],4:[function(require,module,exports){
 var utils = require('./utils');
 
@@ -1023,6 +1022,9 @@ function TokenParser(tokens, filters, line) {
   this.parse = function () {
     var self = this;
 
+    if (self._parsers.start) {
+      self._parsers.start.call(self);
+    }
     utils.each(tokens, function (token, i) {
       var prevToken = tokens[i - 1];
       self.isLast = (i === tokens.length - 1);
@@ -1035,6 +1037,9 @@ function TokenParser(tokens, filters, line) {
       self.prevToken = prevToken;
       self.parseToken(token);
     });
+    if (self._parsers.end) {
+      self._parsers.end.call(self);
+    }
 
     return self.out;
   };
@@ -1045,9 +1050,15 @@ TokenParser.prototype = {
    * Set a custom method to be called when a token type is found.
    *
    * @example
-   *
    * parser.on(types.STRING, function (token) {
    *   this.out.push(token.match);
+   * });
+   * @example
+   * parser.on('start', function () {
+   *   this.out.push('something at the beginning of your args')
+   * });
+   * parser.on('end', function () {
+   *   this.out.push('something at the end of your args');
    * });
    *
    * @param  {number}   type Token type ID. Found in the Lexer.
@@ -1256,7 +1267,7 @@ TokenParser.prototype = {
         if (i === 0) {
           return;
         }
-        build += ' && ' + c + '.hasOwnProperty("' + v + '")';
+        build += ' && "' + v + '" in ' + c;
         c += '.' + v;
       });
       build += ')';
@@ -1414,7 +1425,7 @@ exports.parse = function (source, opts, tags, filters) {
     parser = new TokenParser(tokens, filters, line);
     tag = tags[tagName];
 
-    if (!tag.parse(chunks[1], line, parser, _t, stack)) {
+    if (!tag.parse(chunks[1], line, parser, _t, stack, opts)) {
       throw new Error('Unexpected tag "' + tagName + '" on line ' + line + '.');
     }
 
@@ -1551,7 +1562,7 @@ exports.compile = function (template, parent, options, blockName) {
 };
 
 },{"./lexer":4,"./utils":23}],6:[function(require,module,exports){
-(function(){var fs = require('fs'),
+var fs = require('fs'),
   path = require('path'),
   utils = require('./utils'),
   _tags = require('./tags'),
@@ -1899,7 +1910,7 @@ exports.Swig = function (opts) {
 
       parentFile = parentFile || options.filename;
       parentFile = path.resolve(path.dirname(parentFile), parentName);
-      parent = self.compileFile(parentFile, utils.extend({}, options, { filename: parentFile }));
+      parent = self.parseFile(parentFile, utils.extend({}, options, { filename: parentFile }));
       blocks = utils.extend({}, parent.blocks, blocks);
       parent.tokens = remapBlocks(blocks, parent.tokens);
       parentName = parent.parent;
@@ -2137,7 +2148,6 @@ exports.renderFile = defaultInstance.renderFile;
 exports.run = defaultInstance.run;
 exports.invalidateCache = defaultInstance.invalidateCache;
 
-})()
 },{"./dateformatter":2,"./filters":3,"./parser":5,"./tags":7,"./utils":23,"fs":24,"path":25}],7:[function(require,module,exports){
 exports.autoescape = require('./tags/autoescape');
 exports.block = require('./tags/block');
@@ -2575,7 +2585,7 @@ exports.parse = function (str, line, parser, types) {
 exports.ends = true;
 
 },{}],16:[function(require,module,exports){
-(function(){var utils = require('../utils');
+var utils = require('../utils');
 
 /**
  * Allows you to import macros from another file directly into your current context.
@@ -2599,7 +2609,8 @@ exports.ends = true;
  * @param {literal}     varname   Local-accessible object name to assign the macros to.
  */
 exports.compile = function (compiler, args, content, parent, options) {
-  var parseFile = require('../swig').parseFile,
+  var parentFile = args.shift(),
+    parseFile = require('../swig').parseFile,
     file = args.shift(),
     ctx = args.shift(),
     out = 'var ' + ctx + ' = {};\n' +
@@ -2613,7 +2624,7 @@ exports.compile = function (compiler, args, content, parent, options) {
     if (!token || token.name !== 'macro' || !token.compile) {
       return;
     }
-    out += ctx + '.' + token.args[0] + ' = ' + token.compile(compiler, token.args, token.content, parent, options);
+    out += ctx + '.' + token.args[0] + ' = ' + token.compile(compiler, token.args, token.content, parent, utils.extend({}, options, { resolveFrom: parentFile }));
   });
 
   out += '})();\n';
@@ -2621,7 +2632,7 @@ exports.compile = function (compiler, args, content, parent, options) {
   return out;
 };
 
-exports.parse = function (str, line, parser, types) {
+exports.parse = function (str, line, parser, types, stack, opts) {
   var file, ctx;
   parser.on(types.STRING, function (token) {
     if (!file) {
@@ -2647,12 +2658,14 @@ exports.parse = function (str, line, parser, types) {
 
     return false;
   });
+  parser.on('start', function () {
+    this.out.push(opts.filename);
+  });
 
   return true;
 };
 
 
-})()
 },{"../swig":6,"../utils":23}],17:[function(require,module,exports){
 var ignore = 'ignore',
   missing = 'missing';
@@ -2684,19 +2697,20 @@ var ignore = 'ignore',
  */
 exports.compile = function (compiler, args, content, parent, options) {
   var file = args.shift(),
+    parentFile = args.pop(),
     ignore = args[args.length - 1] === missing ? (args.pop()) : false,
     w = args.join('');
 
   return '(function () {\n' +
     (ignore ? '  try {\n' : '') +
     '    _output += _swig.compileFile(' + file + ', {' +
-    'resolveFrom: "' + options.filename + '"' +
+    'resolveFrom: "' + parentFile + '"' +
     '})(' + (w || '_ctx') + ');\n' +
     (ignore ? '} catch (e) {}\n' : '') +
     '})();\n';
 };
 
-exports.parse = function (str, line, parser, types) {
+exports.parse = function (str, line, parser, types, stack, opts) {
   var file, w;
   parser.on(types.STRING, function (token) {
     if (!file) {
@@ -2736,6 +2750,10 @@ exports.parse = function (str, line, parser, types) {
     }
 
     return true;
+  });
+
+  parser.on('end', function () {
+    this.out.push(opts.filename);
   });
 
   return true;
@@ -2867,7 +2885,7 @@ exports.parse = function (str, line, parser, types, stack) {
 exports.ends = true;
 
 },{}],21:[function(require,module,exports){
-(function(){/**
+/**
  * Set a variable for re-use in the current context.
  *
  * @alias set
@@ -2917,7 +2935,6 @@ exports.parse = function (str, line, parser, types, stack) {
   return true;
 };
 
-})()
 },{}],22:[function(require,module,exports){
 var utils = require('../utils');
 
@@ -3116,7 +3133,7 @@ exports.extend = function () {
 // nothing to see here... no file methods for the browser
 
 },{}],25:[function(require,module,exports){
-(function(process){function filter (xs, fn) {
+var process=require("__browserify_process");function filter (xs, fn) {
     var res = [];
     for (var i = 0; i < xs.length; i++) {
         if (fn(xs[i], i, xs)) res.push(xs[i]);
@@ -3292,7 +3309,8 @@ exports.relative = function(from, to) {
   return outputParts.join('/');
 };
 
-})(require("__browserify_process"))
+exports.sep = '/';
+
 },{"__browserify_process":26}],26:[function(require,module,exports){
 // shim for using process in browser
 
