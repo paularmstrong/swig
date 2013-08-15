@@ -33,7 +33,8 @@ var cases = {
   'can include objects': [
     { c: '{{ {0: 1, a: "b"} }}', e: '[object Object]' },
     { c: '{{ Object.keys({ 0: 1, a: "b" }) }}', e: '0,a' },
-    { c: '{{ o.foo() }}', e: 'bar'}
+    { c: '{{ o.foo() }}', e: 'bar'},
+    { c: '{{ o2.foo() }}', e: 'bar'}
   ],
   'can include arrays': [
     { c: '{{ [0, 1, 3] }}', e: '0,1,3' }
@@ -75,7 +76,8 @@ describe('Variables', function () {
     g: { '0': { q: { c: { b: { foo: 'hi!' }}}}},
     h: { g: {  i: 'q' } },
     i: 'foo',
-    o: Object.create({ foo: function () { return 'bar'; } })
+    o: Object.create({ foo: function () { return 'bar'; } }),
+    o2: { a: 'bar', foo: function () { return this.a; } }
   }};
   _.each(cases, function (cases, description) {
     describe(description, function () {
