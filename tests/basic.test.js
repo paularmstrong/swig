@@ -17,6 +17,15 @@ describe('options', function () {
   afterEach(resetOptions);
 
   describe('open/close controls', function () {
+    it('can have new lines inside', function () {
+      expect(swig.render('{{\nfoo\n}}', { locals: { foo: 'tacos' }}))
+        .to.equal('tacos');
+      expect(swig.render('{%\nif foo\n%}tacos{% endif %}', { locals: { foo: 'tacos' }}))
+        .to.equal('tacos');
+      expect(swig.render('{#\nfoo\n#}'))
+        .to.equal('');
+    });
+
     it('can be set at compile time', function () {
       expect(swig.compile('<%= a %>', { varControls: [ '<%=', '%>' ]})({ a: 'b' })).to.eql('b');
       expect(swig.compile('<* if a *>c<* endif *>', { tagControls: [ '<*', '*>' ]})({ a: 1 })).to.eql('c');
