@@ -1,4 +1,4 @@
-{% extends "./layout.html" %}
+z{% extends "./layout.html" %}
 
 {% block title %}{% parent %} &raquo; Tags{% endblock %}
 
@@ -60,7 +60,7 @@
 
   <p>All of Swig's tags are written using the same api (with a few exceptions for core modules, like <var>extends</var> and <var>block</var>). View a tag's source to see more examples to write your own custom tags.</p>
 
-  <section class="doc">
+  <section id="parse" class="doc">
     <h2>parse(str, line, parser, types, options)</h2>
 
     <p>Parses tokens within the bounds of the tag control <code data-language>{% raw %}{% tagname [tokens...] %}{% endraw %}</code></p>
@@ -69,12 +69,14 @@
   parser.on('start', function () {
     // ...
   });
-  parser.on(types.STRING, function () {
+  parser.on(types.STRING, function (token) {
     // ...
   });
 };</code></pre>
 
     <h3>parser.on(type, callback)</h3>
+
+    <p>Callbacks can be registered for various token types found while parsing</p>
 
     <h4>Parameters</h4>
     <table>
@@ -91,40 +93,60 @@
           <td><code data-language="js">string or LexerToken</code></td>
           <td>See the list of token types.</td>
         </tr>
+        <tr>
+          <td><var data-language="js">callback</var></td>
+          <td><code data-anguage="js">function</code></td>
+          <td>Function to run for the found token.</td>
+        </tr>
       </tbody>
     </table>
 
-    <p>Callbacks can be registered for various token types found while parsing</p>
-  </section>
+    <section id="token-types">
+      <h3>Tokens Types</h3>
 
-  <section class="doc">
-    <h3>Tokens Types</h3>
-
-    {% for prop in properties %}
-      {% if prop.name === 'TYPES' %}
-        <table>
-          <thead>
+      {% for prop in properties %}
+        {% if prop.name === 'TYPES' %}
+          <table>
+            <thead>
+              <tr>
+                <th>Value</th>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
             <tr>
-              <th>Value</th>
-              <th>Name</th>
-              <th>Description</th>
+              <td><samp data-language="js">'*'</samp></td>
+              <td></td>
+              <td>For every token, run the given callback.</td>
             </tr>
-          </thead>
-          <tbody>
-          {% for p in prop.properties %}
-          <tr>
-            <td><samp data-language="js">{{ p.default }}</samp></td>
-            <td><var data-language="js">types.{{ p.name }}</var></td>
-            <td>{{ p.description|raw }}</td>
-          </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      {% endif %}
-    {% endfor %}
+            <tr>
+              <td><samp data-language="js">'start'</samp></td>
+              <td></td>
+              <td>Run before any token is parsed.</td>
+            </tr>
+            <tr>
+              <td><samp data-language="js">'end'</samp></td>
+              <td></td>
+              <td>Run after all other tokens have been parsed.</td>
+            </tr>
+            {% for p in prop.properties %}
+            <tr>
+              <td><samp data-language="js">{{ p.default }}</samp></td>
+              <td><var data-language="js">types.{{ p.name }}</var></td>
+              <td>{{ p.description|raw }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+      {% endfor %}
+    </section>
+
+
   </section>
 
-  <section class="doc">
+  <section id="compile" class="doc">
     <h2>compile(compiler, args, content, parent, options)</h2>
 
     <pre><code data-language="js">exports.compile = function (compiler, args, content, parent, options) {
@@ -149,6 +171,13 @@
     {% endfor %}
     </ol>
   </li>
-  <li><a href="#custom">Custom Tags</a></li>
+  <li>
+    <a href="#custom">Custom Tags</a>
+    <ol>
+      <li><a href="#parse">parse</a></li>
+      <li><a href="#token-types">Token Types</a></li>
+      <li><a href="#compile">compile</a></li>
+    </ol>
+  </li>
 </ol>
 {% endblock %}
