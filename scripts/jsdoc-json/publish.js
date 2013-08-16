@@ -92,6 +92,9 @@ function graft(parentNode, childNodes, parentLongname, parentName) {
 
       case 'member':
         thisObj.type = (element.type) ? ((element.type.length === 1) ? element.type[0] : element.type) : '';
+        thisObj.properties = [];
+        thisObj.isEnum = !!element.isEnum;
+        pushParams(thisObj, 'properties', element.properties);
         break;
 
       case 'class':
@@ -114,6 +117,7 @@ function graft(parentNode, childNodes, parentLongname, parentName) {
         delete thisObj.virtual;
         pushParams(thisObj, 'properties', element.properties);
         break;
+
       }
 
       parentNode[nodeName].push(thisObj);
