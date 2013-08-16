@@ -74,6 +74,17 @@ console.log(swig.render('{% if foo %}Hooray!{% endif %}', { locals: { foo: true 
 {% endfor %}
 {% endraw %}</code></pre>
 
+  <p><code>end</code> tags may also have any set of extra context within them, and will just be ignore. This is useful for scoping and understanding which block you are closing and where.</p>
+
+  <pre><code data-language="swig">{% raw %}{% block tacos %}
+  //...
+{% endblock tacos %}
+{% block burritos %}
+  {% if foo %}
+    // ...
+  {% endif the above will render if foo == true %}
+{% endblock burritos %}{% endraw %}</code></pre>
+
   <p>View the <a href="#tags">Tags documentation</a> for a full list of tags and usage instructions.</p>
 </section>
 

@@ -16,6 +16,11 @@ describe('Tags', function () {
     }).to.throwError(/Unexpected end of tag "foo" on line 4\./);
   });
 
+  it('can have any set of tokens in end tags', function () {
+    expect(swig.render('{% if foo %}hi!{% endif the above will render if foo == true %}', { locals: { foo: true }}))
+      .to.equal('hi!');
+  });
+
   describe('can be set', function () {
     function parse(str, line, parser, types) {
       return true;
