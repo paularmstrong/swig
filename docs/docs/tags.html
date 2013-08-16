@@ -12,7 +12,7 @@
 
     <p>{{ fn.description|replace('\n', '</p><p>')|raw }}</p>
 
-    {% if fn.parameters %}
+    {% if fn.parameters.length %}
     <h3>Parameters</h3>
     <table>
       <thead>
@@ -58,18 +58,32 @@
 
   <p>Swig can be extended to handle custom tags that will perform operations on full blocks of your templates. Use <a href="/docs/api/#addTag"><code data-language="js">swig.addTag(name, parse, compile, ends)</code></a> to add your custom tag.</p>
 
-  <p>Examples:</p>
-
-  <pre><code data-language="js">
-
-  </code></pre>
+  <p>All of Swig's tags are written using the same api (with a few exceptions for core modules, like <var>extends</var> and <var>block</var>). View a tag's source to see more examples to write your own custom tags.</p>
 
   <section class="doc">
-    <h2>parse(str, line, parser, types)</h2>
+    <h2>parse(str, line, parser, types, options)</h2>
+
+    <p>Parses tokens within the bounds of the tag control <code data-language>{% raw %}{% tagname [tokens...] %}{% endraw %}</code></p>
+
+    <pre><code data-language="js">exports.parse = function (str, line, parser, types, options) {
+  // Executed before any tokens are parsed
+  parser.on('start', function () {});
+
+  parser.on(types.STRING, function (token) {
+    this.out.push(token.match);
+  });
+
+  // Executed after all tokens are parsed (or after 'start', if no tokens were found)
+  parser.on('end', function () {});
+};</code></pre>
   </section>
 
   <section class="doc">
     <h2>compile(compiler, args, content, parent, options)</h2>
+
+    <pre><code data-language="js">exports.compile = function (compiler, args, content, parent, options) {
+  return '_ouput += ' + args.join('') + ';\\n';
+};</code></pre>
   </section>
 </section>
 
@@ -77,12 +91,18 @@
 
 {% block tagsubnav %}
 <ol>
-{% for fn in functions %}
-  {% if fn.access !== "private" %}
   <li>
-    <a href="#{{ fn.name }}">{{ fn.name }}</a>
+    <a href="#tags">Built-In Tags</a>
+    <ol>
+    {% for fn in functions %}
+    {% if fn.access !== "private" %}
+      <li>
+        <a href="#{{ fn.name }}">{{ fn.name }}</a>
+      </li>
+    {% endif %}
+    {% endfor %}
+    </ol>
   </li>
-  {% endif %}
-{% endfor %}
+  <li><a href="#custom">Custom Tags</a></li>
 </ol>
 {% endblock %}
