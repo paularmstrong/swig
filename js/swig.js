@@ -1,6 +1,6 @@
 /*! Swig v1.0.0-pre1 | https://paularmstrong.github.com/swig | https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
-;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
 
 if (typeof window.define === 'function' && typeof window.define.amd === 'object') {
@@ -212,7 +212,7 @@ exports.U = function (input) {
 };
 
 },{"./utils":23}],3:[function(require,module,exports){
-var utils = require('./utils'),
+(function(){var utils = require('./utils'),
   dateFormatter = require('./dateformatter');
 
 /**
@@ -700,6 +700,7 @@ exports.url_decode = function (input) {
   return decodeURIComponent(input);
 };
 
+})()
 },{"./dateformatter":2,"./utils":23}],4:[function(require,module,exports){
 var utils = require('./utils');
 
@@ -747,8 +748,9 @@ var TYPES = exports.types = {
     DOTKEY: 13,
     /** Start of an array */
     ARRAYOPEN: 14,
-    /** End of an array */
-    ARRAYCLOSE: 15,
+    /** End of an array
+     * Currently unused
+    ARRAYCLOSE: 15, */
     /** Open curly brace */
     CURLYOPEN: 16,
     /** Close curly brace */
@@ -765,6 +767,11 @@ var TYPES = exports.types = {
     BOOL: 22,
     /** Variable assignment */
     ASSIGNMENT: 23,
+    /** Start of a method */
+    METHODOPEN: 24,
+    /** End of a method
+     * Currently unused
+    METHODEND: 25, */
     /** Unknown type */
     UNKNOWN: 100
   },
@@ -1100,6 +1107,13 @@ TokenParser.prototype = {
       self.out.push(', ');
     }
 
+    if (lastState && lastState === _t.METHODOPEN) {
+      self.state.pop();
+      if (token.type !== _t.PARENCLOSE) {
+        self.out.push(', ');
+      }
+    }
+
     switch (token.type) {
     case _t.WHITESPACE:
       break;
@@ -1139,13 +1153,19 @@ TokenParser.prototype = {
       break;
 
     case _t.PARENOPEN:
+      self.state.push(token.type);
       if (self.filterApplyIdx.length) {
         self.out.splice(self.filterApplyIdx[self.filterApplyIdx.length - 1], 0, '(');
-        self.out.push(' || _fn)(');
+        if (prevToken && prevToken.type === _t.VAR) {
+          temp = prevToken.match.split('.').slice(0, -1);
+          self.out.push(' || _fn).call(' + self.checkMatch(temp));
+          self.state.push(_t.METHODOPEN);
+        } else {
+          self.out.push(' || _fn)(');
+        }
       } else {
         self.out.push('(');
       }
-      self.state.push(token.type);
       self.filterApplyIdx.push(self.out.length - 1);
       break;
 
@@ -1243,8 +1263,7 @@ TokenParser.prototype = {
    * @private
    */
   parseVar: function (token, match, lastState, prevToken) {
-    var self = this,
-      temp;
+    var self = this;
 
     match = match.split('.');
     self.filterApplyIdx.push(self.out.length);
@@ -1255,7 +1274,17 @@ TokenParser.prototype = {
       self.out.push(match[0]);
       return;
     }
-    temp = match[0];
+
+    self.out.push(self.checkMatch(match));
+  },
+
+  /**
+   * Return contextual dot-check string for a match
+   * @param  {string} match       Shortcut for token.match
+   * @private
+   */
+  checkMatch: function (match) {
+    var temp = match[0];
 
     function checkDot(ctx) {
       var c = ctx + temp,
@@ -1279,7 +1308,7 @@ TokenParser.prototype = {
       return '(' + checkDot(ctx) + ' ? ' + ctx + match.join('.') + ' : "")';
     }
 
-    self.out.push('(' + checkDot('') + ' ? ' + buildDot('') + ' : ' + buildDot('_ctx.') + ')');
+    return '(' + checkDot('') + ' ? ' + buildDot('') + ' : ' + buildDot('_ctx.') + ')';
   }
 };
 
@@ -1562,7 +1591,7 @@ exports.compile = function (template, parent, options, blockName) {
 };
 
 },{"./lexer":4,"./utils":23}],6:[function(require,module,exports){
-var fs = require('fs'),
+(function(){var fs = require('fs'),
   path = require('path'),
   utils = require('./utils'),
   _tags = require('./tags'),
@@ -1571,7 +1600,7 @@ var fs = require('fs'),
   dateformatter = require('./dateformatter');
 
 /**
- * Swig Options Object.
+ * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
  * @typedef {Object} SwigOpts
  * @property {boolean} autoescape  Controls whether or not variable output will automatically be escaped for safe HTML output. Defaults to <code data-language="js">true</code>.
  * @property {array}   varControls Open and close controls for variables. Defaults to <code data-language="js">['{{', '}}']</code>.
@@ -1636,6 +1665,17 @@ function validateOptions(options) {
 
 /**
  * Set defaults for the base and all new Swig environments.
+ *
+ * @example
+ * swig.setDefaults({ cache: false });
+ * // => Disables Cache
+ *
+ * @example
+ * swig.setDefaults({ locals: { now: function () { return new Date(); } }});
+ * // => sets a globally accessible method for all template
+ * //    contexts, allowing you to print the current date
+ * // => {{ now()|date('F jS, Y') }}
+ *
  * @param  {SwigOpts} [options={}] Swig options object.
  * @return {undefined}
  */
@@ -2083,6 +2123,10 @@ exports.Swig = function (opts) {
    * tpl({ tacos: 'Tacos!!!!' });
    * // => Tacos!!!!
    *
+   * @example
+   * swig.compileFile('/myfile.txt', { varControls: ['<%=', '=%>'], tagControls: ['<%', '%>']});
+   * // => will compile 'myfile.txt' using the var and tag controls as specified.
+   *
    * @param  {string} pathname  File location.
    * @param  {SwigOpts} [options={}] Swig options object.
    * @return {function}         Renderable function with keys for parent, blocks, and tokens.
@@ -2148,6 +2192,7 @@ exports.renderFile = defaultInstance.renderFile;
 exports.run = defaultInstance.run;
 exports.invalidateCache = defaultInstance.invalidateCache;
 
+})()
 },{"./dateformatter":2,"./filters":3,"./parser":5,"./tags":7,"./utils":23,"fs":24,"path":25}],7:[function(require,module,exports){
 exports.autoescape = require('./tags/autoescape');
 exports.block = require('./tags/block');
@@ -2585,7 +2630,7 @@ exports.parse = function (str, line, parser, types) {
 exports.ends = true;
 
 },{}],16:[function(require,module,exports){
-var utils = require('../utils');
+(function(){var utils = require('../utils');
 
 /**
  * Allows you to import macros from another file directly into your current context.
@@ -2666,6 +2711,7 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 };
 
 
+})()
 },{"../swig":6,"../utils":23}],17:[function(require,module,exports){
 var ignore = 'ignore',
   missing = 'missing';
@@ -2885,7 +2931,7 @@ exports.parse = function (str, line, parser, types, stack) {
 exports.ends = true;
 
 },{}],21:[function(require,module,exports){
-/**
+(function(){/**
  * Set a variable for re-use in the current context.
  *
  * @alias set
@@ -2935,6 +2981,7 @@ exports.parse = function (str, line, parser, types, stack) {
   return true;
 };
 
+})()
 },{}],22:[function(require,module,exports){
 var utils = require('../utils');
 
@@ -3133,7 +3180,7 @@ exports.extend = function () {
 // nothing to see here... no file methods for the browser
 
 },{}],25:[function(require,module,exports){
-var process=require("__browserify_process");function filter (xs, fn) {
+(function(process){function filter (xs, fn) {
     var res = [];
     for (var i = 0; i < xs.length; i++) {
         if (fn(xs[i], i, xs)) res.push(xs[i]);
@@ -3309,8 +3356,7 @@ exports.relative = function(from, to) {
   return outputParts.join('/');
 };
 
-exports.sep = '/';
-
+})(require("__browserify_process"))
 },{"__browserify_process":26}],26:[function(require,module,exports){
 // shim for using process in browser
 

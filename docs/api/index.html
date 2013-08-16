@@ -54,6 +54,66 @@
 <h1>Swig API</h1>
 
 
+  <section id="SwigOpts" class="doc">
+    <h2>Object Type: SwigOpts</h2>
+
+    <p>Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.</p>
+
+    
+    <h3>Properties</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr>
+          <td><var data-language="js">autoescape</var></td>
+          <td><code data-language="js">boolean</code></td>
+          <td>Controls whether or not variable output will automatically be escaped for safe HTML output. Defaults to <code data-language="js">true</code>.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">varControls</var></td>
+          <td><code data-language="js">array</code></td>
+          <td>Open and close controls for variables. Defaults to <code data-language="js">['{{', '}}']</code>.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">tagControls</var></td>
+          <td><code data-language="js">array</code></td>
+          <td>Open and close controls for tags. Defaults to <code data-language="js">['{%', '%}']</code>.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">cmtControls</var></td>
+          <td><code data-language="js">array</code></td>
+          <td>Open and close controls for comments. Defaults to <code data-language="js">['{#', '#}']</code>.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">locals</var></td>
+          <td><code data-language="js">object</code></td>
+          <td>Default variable context to be passed to <strong>all</strong> templates.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">cache</var></td>
+          <td><code data-language="js">boolean or string or Object</code></td>
+          <td>Cache control for templates. Defaults to saving in <code data-language="js">'memory'</code>. Send <code data-language="js">false</code> to disable. Send an object with <code data-language="js">get</code> and <code data-language="js">set</code> functions to customize.</td>
+        </tr>
+      
+      </tbody>
+    </table>
+    
+  </section>
+
+
+
   
 
   
@@ -99,6 +159,17 @@
       <p><samp data-language="js">undefined</samp>: </p>
     
 
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">swig.setDefaults({ cache: false });
+// =&gt; Disables Cache</code></pre>
+    
+    <pre><code data-language="js">swig.setDefaults({ locals: { now: function () { return new Date(); } }});
+// =&gt; sets a globally accessible method for all template
+//    contexts, allowing you to print the current date
+// =&gt; {{ now()|date(&#39;F jS, Y&#39;) }}</code></pre>
+    
     
   </section>
   
@@ -776,6 +847,9 @@ When compiling a source string, a file path should be specified in the options o
 //    }
 tpl({ tacos: &#39;Tacos!!!!&#39; });
 // =&gt; Tacos!!!!</code></pre>
+    
+    <pre><code data-language="js">swig.compileFile(&#39;/myfile.txt&#39;, { varControls: [&#39;&lt;%=&#39;, &#39;=%&gt;&#39;], tagControls: [&#39;&lt;%&#39;, &#39;%&gt;&#39;]});
+// =&gt; will compile &#39;myfile.txt&#39; using the var and tag controls as specified.</code></pre>
     
     
   </section>
