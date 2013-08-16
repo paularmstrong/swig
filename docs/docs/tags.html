@@ -3,7 +3,7 @@
 {% block title %}{% parent %} &raquo; Tags{% endblock %}
 
 {% block content %}
-<h1>Tags</h1>
+<h1 id="tags">Tags</h1>
 
 {% for fn in functions %}
   {% if fn.access !== "private" %}
@@ -66,16 +66,62 @@
     <p>Parses tokens within the bounds of the tag control <code data-language>{% raw %}{% tagname [tokens...] %}{% endraw %}</code></p>
 
     <pre><code data-language="js">exports.parse = function (str, line, parser, types, options) {
-  // Executed before any tokens are parsed
-  parser.on('start', function () {});
-
-  parser.on(types.STRING, function (token) {
-    this.out.push(token.match);
+  parser.on('start', function () {
+    // ...
   });
-
-  // Executed after all tokens are parsed (or after 'start', if no tokens were found)
-  parser.on('end', function () {});
+  parser.on(types.STRING, function () {
+    // ...
+  });
 };</code></pre>
+
+    <h3>parser.on(type, callback)</h3>
+
+    <h4>Parameters</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><var data-language="js">type</var></td>
+          <td><code data-language="js">string or LexerToken</code></td>
+          <td>See the list of token types.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Callbacks can be registered for various token types found while parsing</p>
+  </section>
+
+  <section class="doc">
+    <h3>Tokens Types</h3>
+
+    {% for prop in properties %}
+      {% if prop.name === 'TYPES' %}
+        <table>
+          <thead>
+            <tr>
+              <th>Value</th>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for p in prop.properties %}
+          <tr>
+            <td><samp data-language="js">{{ p.default }}</samp></td>
+            <td><var data-language="js">types.{{ p.name }}</var></td>
+            <td>{{ p.description|raw }}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    {% endfor %}
   </section>
 
   <section class="doc">
