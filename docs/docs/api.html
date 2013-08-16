@@ -5,6 +5,36 @@
 {% block content %}
 <h1>Swig API</h1>
 
+{% for def in typedefs %}
+  <section id="{{ def.name }}" class="doc">
+    <h2>Object Type: {{ def.name }}</h2>
+
+    <p>{{ def.description|replace('\n', '</p><p>')|raw }}</p>
+
+    {% if def.properties.length %}
+    <h3>Properties</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for prop in def.properties %}
+        <tr>
+          <td><var data-language="js">{{ prop.name }}</var></td>
+          <td><code data-language="js">{{ prop.type|join(" or ") }}</code></td>
+          <td>{{ prop.description|raw }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </section>
+{% endfor %}
+
 {% for fn in functions %}
   {% if fn.access !== "private" %}
   <section id="{{ fn.name }}" class="doc">

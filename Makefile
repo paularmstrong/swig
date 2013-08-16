@@ -93,7 +93,7 @@ else
 	@echo
 endif
 
-JSDOCOPTS=-t node_modules/jsdoc/templates/haruki/ -d console
+JSDOCOPTS=-t scripts/jsdoc-json/
 docs/index.json: FORCE
 	@echo "Building $@..."
 	@sed -i.bak 's/v${VERSION_REGEX}/v${VERSION}/' $@
