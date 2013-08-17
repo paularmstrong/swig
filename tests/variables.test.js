@@ -144,5 +144,13 @@ describe('Variables', function () {
         swig.render('{{ foo, bar }}');
       }).to.throwError(/Unexpected comma on line 1\./);
     });
+
+    it('throws for reserved JS words', function () {
+      _.each(['break', 'case', 'catch', 'continue', 'debugger', 'default', 'delete', 'do', 'else', 'finally', 'for', 'function', 'if', 'in', 'instanceof', 'new', 'return', 'switch', 'this', 'throw', 'try', 'typeof', 'var', 'void', 'while', 'with'], function (r) {
+        expect(function () {
+          swig.render('{{ ' + r + ' }}', { filename: r + '.html' });
+        }).to.throwError(/Reserved keyword "\w+" attempted to be used as a variable on line 1 in file \w+\.html\./);
+      });
+    });
   });
 });
