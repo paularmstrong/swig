@@ -35,8 +35,8 @@ describe('Tag: autoescape', function () {
 
   it('{% autoescape whatthewhat %} throws because unknown argument', function () {
     expect(function () {
-      swig.render('{% autoescape whatthewhat %}huh?{% endautoescape %}');
-    }).to.throwError(/Unexpected token "whatthewhat" in autoescape tag on line 1\./);
+      swig.render('{% autoescape whatthewhat %}huh?{% endautoescape %}', { filename: 'foobar' });
+    }).to.throwError(/Unexpected token "whatthewhat" in autoescape tag on line 1 in file foobar\./);
 
     expect(function () {
       swig.render('{% autoescape true "html" %}huh?{% endautoescape %}');

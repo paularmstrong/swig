@@ -237,8 +237,8 @@ describe('Filters:', function () {
 
   it('throws on unknown filter', function () {
     expect(function () {
-      swig.render('{{ foo|thisisnotreal }}');
-    }).to.throwError(/Invalid filter "thisisnotreal" found on line 1\./);
+      swig.render('{{ foo|thisisnotreal }}', { filename: 'foobar.html' });
+    }).to.throwError(/Invalid filter "thisisnotreal" on line 1 in file foobar\.html\./);
   });
 
   _.each(cases, function (cases, filter) {

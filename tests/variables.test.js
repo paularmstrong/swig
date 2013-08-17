@@ -107,7 +107,7 @@ describe('Variables', function () {
     it('with unknown filters', function () {
       expect(function () {
         swig.render('\n\n{{ a|bar() }}');
-      }).to.throwError(/Invalid filter "bar" found on line 3\./);
+      }).to.throwError(/Invalid filter "bar" on line 3\./);
     });
 
     it('with weird closing characters', function () {
