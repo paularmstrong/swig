@@ -5,12 +5,52 @@
 {% block content %}
 
 {% macro description(el) %}
-  <p>{{ el.description|replace('\n', '</p><p>')|raw }}</p>
+  <p>{{ el.description|replace('\n', '</p><p>', 'g')|raw }}</p>
 {% endmacro %}
 
 <h1 id="extending">Extending Swig</h1>
 
-<section class="doc" id="tags">
+<section id="filters">
+  <h2>Custom Filters</h2>
+
+  {% for t in typedefs %}{% if t.name === 'Filter' %}
+  <section class="doc">
+    {{ description(t)|raw }}
+
+    <h4>Arguments</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for p in t.params %}
+      <tr>
+        <td><var data-language="js">{{ p.name }}</var></td>
+        <td><code data-language="js">{{ p.type }}</code></td>
+        <td>{% if p.optional %}✔{% endif %}</td>
+        <td><samp data-language="js">{{ p.default }}</samp></td>
+        <td>{{ description(p)|raw }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    {% for ex in t.examples %}
+    <pre><code data-language="js">{{ ex }}</code></pre>
+    {% endfor %}
+  </section>
+  {% endif %}{% endfor %}
+</section>
+
+<hr>
+
+<section id="tags">
   <h2>Custom Tags</h2>
 
   <p>Swig can be extended to handle custom tags that will perform operations on full blocks of your templates. Use <a href="{{ baseurl }}/docs/api/#addTag"><code data-language="js">swig.addTag(name, parse, compile, ends)</code></a> to add your custom tag.</p>
@@ -108,14 +148,11 @@
     {% endif %}
   {% endfor %}
 </section>
-
-<section id="filters" class="doc">
-  <h2>Custom Filters</h2>
-</section>
 {% endblock %}
 
 {% block extendingsubnav %}
 <ol>
+  <li><a href="#filters">Custom Filters</a></li>
   <li>
     <a href="#tags">Custom Tags</a>
     <ol>
@@ -125,6 +162,5 @@
       <li><a href="#TYPES">Token Types</a></li>
     </ol>
   </li>
-  <li><a href="#filters">Custom Filters</a></li>
 </ol>
 {% endblock %}

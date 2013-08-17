@@ -30,6 +30,7 @@ function pushParams(obj, key, element) {
       'type': getType(param),
       'description': param.description || '',
       'default': param.defaultvalue || '',
+      'variable': !!param.variable,
       'optional': (typeof param.optional === 'boolean') ? param.optional : '',
       'nullable': (typeof param.nullable === 'boolean') ? param.nullable : ''
     });
