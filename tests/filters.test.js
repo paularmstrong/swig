@@ -25,8 +25,9 @@ var n = new Swig(),
         e: "\\&quot;Top O\\&#39; the\\\\ mornin\\&quot;"
       },
       {
+        c: 'v|addslashes|raw',
         v: ["\"Top", "O'", "the\\", "mornin\""],
-        e: "\\\"Top,O\\',the\\\\,mornin\\\""
+        e: '\\"Top,O\\\',the\\\\,mornin\\"'
       }
     ],
     capitalize: [
@@ -117,12 +118,13 @@ var n = new Swig(),
       { c: 'v|escape("js")', v: '<script>and this</script>', e: '\\u003Cscript\\u003Eand this\\u003C/script\\u003E' },
       { c: 'v|e("js")', v: '\\ : backslashes, too', e: '\\u005C : backslashes, too' },
       { c: 'v|e("js")', v: 'and lots of whitespace: \r\n\t\v\f\b', e: 'and lots of whitespace: \\u000D\\u000A\\u0009\\u000B\\u000C\\u0008' },
-      { c: 'v|e("js")', v: 'and "special" chars = -1;', e: 'and \\u0022special\\u0022 chars \\u003D \\u002D1\\u003B' }
+      { c: 'v|e("js")', v: 'and "special" chars = -1;', e: 'and \\u0022special\\u0022 chars \\u003D \\u002D1\\u003B' },
+      { c: 'v|e', v: ['<p>', '</p>'], e: '&lt;p&gt;,&lt;/p&gt;' }
     ],
     first: [
       { v: [1, 2, 3, 4], e: '1' },
       { v: '213', e: '2' },
-      { v: { foo: 'blah' }, e: '' }
+      { v: { foo: 'blah' }, e: 'blah' }
     ],
     join: [
       { c: 'v|join("+")', v: [1, 2, 3], e: '1+2+3' },
@@ -138,7 +140,7 @@ var n = new Swig(),
     last: [
       { v: [1, 2, 3, 4], e: '4' },
       { v: '123', e: '3' },
-      { v: { foo: 'blah', bar: 'nope' }, e: ''}
+      { v: { foo: 'blah', bar: 'nope' }, e: 'nope'}
     ],
     lower: [
       { v: 'BaR', e: 'bar' },
@@ -180,10 +182,12 @@ var n = new Swig(),
       { c: 'v|upper|join("")', v: { foo: 'bar' }, e: 'BAR' }
     ],
     url_encode: [
-      { v: 'param=1&anotherParam=2', e: 'param%3D1%26anotherParam%3D2' }
+      { v: 'param=1&anotherParam=2', e: 'param%3D1%26anotherParam%3D2' },
+      { v: ['param=1', 'anotherParam=2'], e: 'param%3D1,anotherParam%3D2' }
     ],
     url_decode: [
-      { c: 'v|url_decode', v: 'param%3D1%26anotherParam%3D2', e: 'param=1&amp;anotherParam=2' }
+      { v: 'param%3D1%26anotherParam%3D2', e: 'param=1&amp;anotherParam=2' },
+      { v: ['param%3D1', 'anotherParam%3D2'], e: 'param=1,anotherParam=2' }
     ]
   };
 
