@@ -46,6 +46,12 @@ describe('Templates', function () {
     });
   });
 
+  it('throw if circular extends are found', function () {
+    expect(function () {
+      swig.compileFile(__dirname + '/cases-error/circular.test.html')();
+    }).to.throwError(/Illegal circular extends of "[\w\/\._\-]+"\./);
+  });
+
   describe('renderFile', function () {
     var extends_expectation = fs.readFileSync(__dirname + '/cases/extends_1.expectation.html', 'utf8'),
       include_expectation = fs.readFileSync(__dirname + '/cases/include.expectation.html', 'utf8'),
