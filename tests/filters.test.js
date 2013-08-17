@@ -163,6 +163,11 @@ var n = new Swig(),
       { c: 'v|reverse', v: 'asdf', e: 'asdf' },
       { c: 'v|reverse|join("")', v: { foo: 'bar', baz: 'bop' }, e: 'barbop' }
     ],
+    sort: [
+      { v: [3, 1, 4], e: '1,3,4' },
+      { v: 'zaq', e: 'aqz' },
+      { v: { foo: '1', bar: '2' }, e: 'bar,foo' }
+    ],
     striptags: [
       { v: '<h1>foo</h1> <div class="blah">hi</div>', e: 'foo hi' },
       { v: ['<foo>bar</foo>', '<bar>foo'], e: 'bar,foo' }
