@@ -138,7 +138,6 @@ gh-pages: clean build build-docs
 	@${BIN}/lessc --yui-compress --include-path=docs/less docs/less/swig.less docs/css/swig.css
 	@${BIN}/still docs -o ${TMP} -i "layout" -i "json" -i "less" -v
 	@make coverage out=${TMP}/coverage.html
-	@cp ${out} ${TMP}/
 	@cp dist/swig.* ${TMP}/js/
 ifeq (${THIS_BRANCH}, master)
 	@git checkout ${BRANCH}
