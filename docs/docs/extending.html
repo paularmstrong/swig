@@ -66,52 +66,52 @@
 // => A template attempts close this tag will throw an Error.</code></pre>
    </section>
 
-    {% for prop in properties %}
-      {% if prop.isEnum %}
-      <section id="{{ prop.name }}" class="doc">
-        <h3>{{ prop.name }}</h3>
-        <p>{{ description(prop)|raw }}</p>
-        <table>
-          <thead>
-            <tr>
-              <th>Value</th>
-              <th>Name</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
+  {% for prop in properties %}
+    {% if prop.isEnum %}
+    <section id="{{ prop.name }}" class="doc">
+      <h3>{{ prop.name }}</h3>
+      <p>{{ description(prop)|raw }}</p>
+      <table>
+        <thead>
           <tr>
-            <td><samp data-language="js">'*'</samp></td>
-            <td></td>
-            <td>For every token, run the given callback.</td>
+            <th>Value</th>
+            <th>Name</th>
+            <th>Description</th>
           </tr>
-          <tr>
-            <td><samp data-language="js">'start'</samp></td>
-            <td></td>
-            <td>Run before any token is parsed.</td>
-          </tr>
-          <tr>
-            <td><samp data-language="js">'end'</samp></td>
-            <td></td>
-            <td>Run after all other tokens have been parsed.</td>
-          </tr>
-          {% for p in prop.properties %}
-          <tr>
-            <td><samp data-language="js">{{ p.default }}</samp></td>
-            <td><var data-language="js">types.{{ p.name }}</var></td>
-            <td>{{ p.description|raw }}</td>
-          </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </section>
-      {% endif %}
-    {% endfor %}
-  </section>
+        </thead>
+        <tbody>
+        <tr>
+          <td><samp data-language="js">'*'</samp></td>
+          <td></td>
+          <td>For every token, run the given callback.</td>
+        </tr>
+        <tr>
+          <td><samp data-language="js">'start'</samp></td>
+          <td></td>
+          <td>Run before any token is parsed.</td>
+        </tr>
+        <tr>
+          <td><samp data-language="js">'end'</samp></td>
+          <td></td>
+          <td>Run after all other tokens have been parsed.</td>
+        </tr>
+        {% for p in prop.properties %}
+        <tr>
+          <td><samp data-language="js">{{ p.default }}</samp></td>
+          <td><var data-language="js">types.{{ p.name }}</var></td>
+          <td>{{ p.description|raw }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </section>
+    {% endif %}
+  {% endfor %}
+</section>
 
-  <section id="filters" class="doc">
-    <h2>Custom Filters</h2>
-  </section>
+<section id="filters" class="doc">
+  <h2>Custom Filters</h2>
+</section>
 {% endblock %}
 
 {% block extendingsubnav %}
