@@ -327,7 +327,7 @@
       
       </h2>
 
-    <p>Get the first item in an array or character in a string.</p>
+    <p>Get the first item in an array or character in a string. All other objects will attempt to return the first value available.</p>
 
     
 
@@ -485,7 +485,7 @@ Backwards compatible with swig@0.x.x using `json_encode`.</p>
       
       </h2>
 
-    <p>Get the last item in an array or character in a string.</p>
+    <p>Get the last item in an array or character in a string. All other objects will attempt to return the last value available.</p>
 
     
 
@@ -665,7 +665,7 @@ Backwards compatible with swig@0.x.x using `json_encode`.</p>
       
       </h2>
 
-    <p>Reverse an array.</p>
+    <p>Reverse sort the input. This is an alias for <code data-language="swig">{{ input|sort(true) }}</code>.</p>
 
     
 
@@ -680,6 +680,73 @@ Backwards compatible with swig@0.x.x using `json_encode`.</p>
     <pre><code data-language="swig">// val = [1, 2, 3];
 {{ val|reverse }}
 // =&gt; 3,2,1</code></pre>
+    
+    
+  </section>
+  
+
+  
+  <section id="sort" class="doc">
+    <h2>
+      sort
+      
+      (reverse
+        )
+      
+      </h2>
+
+    <p>Sort the input in an ascending direction.</p><p>If given an object, will return the keys as a sorted array.
+If given a string, each character will be sorted individually.</p>
+
+    
+    <h3>Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        
+      
+        
+        <tr>
+          <td><var data-language="js">reverse</var></td>
+          <td><code data-language="js">boolean</code></td>
+          <td>✔</td>
+          <td><code data-language="js">false</code></td>
+          <td>Output is given reverse-sorted if true.</td>
+        </tr>
+        
+      
+      </tbody>
+    </table>
+    
+
+    
+    <h3>Returns</h3>
+      <p><samp data-language="js">*</samp>: Sorted array;</p>
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="swig">// val = [2, 6, 4];
+{{ val|sort }}
+// =&gt; 2,4,6</code></pre>
+    
+    <pre><code data-language="swig">// val = &#39;zaq&#39;;
+{{ val|sort }}
+// =&gt; aqz</code></pre>
+    
+    <pre><code data-language="swig">// val = { bar: 1, foo: 2 }
+{{ val|sort(true) }}
+// =&gt; foo,bar</code></pre>
     
     
   </section>
@@ -777,7 +844,7 @@ Backwards compatible with swig@0.x.x using `json_encode`.</p>
       
       </h2>
 
-    <p>Convert the input to all uppercase letters.</p>
+    <p>Convert the input to all uppercase letters. If an object or array is provided, all values will be uppercased.</p>
 
     
 
@@ -808,13 +875,13 @@ Backwards compatible with swig@0.x.x using `json_encode`.</p>
       
       </h2>
 
-    <p>URL-encode a string.</p>
+    <p>URL-encode a string. If an object or array is passed, all values will be URL-encoded.</p>
 
     
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">string</samp>: URL-encoded string.</p>
+      <p><samp data-language="js">*</samp>: URL-encoded string.</p>
     
 
     
@@ -835,13 +902,13 @@ Backwards compatible with swig@0.x.x using `json_encode`.</p>
       
       </h2>
 
-    <p>URL-decode a string.</p>
+    <p>URL-decode a string. If an object or array is passed, all values will be URL-decoded.</p>
 
     
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">string</samp>: URL-decoded string.</p>
+      <p><samp data-language="js">*</samp>: URL-decoded string.</p>
     
 
     
@@ -874,89 +941,87 @@ Backwards compatible with swig@0.x.x using `json_encode`.</p>
       <a href="/swig/docs/filters/">Filters</a>
       
 <ol>
+
   <li>
-    <a href="#built-in">Built-In Filters</a>
-    <ol>
-    
-      <li>
-        <a href="#addslashes">addslashes</a>
-      </li>
-    
-      <li>
-        <a href="#capitalize">capitalize</a>
-      </li>
-    
-      <li>
-        <a href="#date">date</a>
-      </li>
-    
-      <li>
-        <a href="#default">default</a>
-      </li>
-    
-      <li>
-        <a href="#escape">escape</a>
-      </li>
-    
-      <li>
-        <a href="#first">first</a>
-      </li>
-    
-      <li>
-        <a href="#join">join</a>
-      </li>
-    
-      <li>
-        <a href="#json">json</a>
-      </li>
-    
-      <li>
-        <a href="#last">last</a>
-      </li>
-    
-      <li>
-        <a href="#lower">lower</a>
-      </li>
-    
-      <li>
-        <a href="#raw">raw</a>
-      </li>
-    
-      <li>
-        <a href="#replace">replace</a>
-      </li>
-    
-      <li>
-        <a href="#reverse">reverse</a>
-      </li>
-    
-      <li>
-        <a href="#striptags">striptags</a>
-      </li>
-    
-      <li>
-        <a href="#title">title</a>
-      </li>
-    
-      <li>
-        <a href="#uniq">uniq</a>
-      </li>
-    
-      <li>
-        <a href="#upper">upper</a>
-      </li>
-    
-      <li>
-        <a href="#url_encode">url_encode</a>
-      </li>
-    
-      <li>
-        <a href="#url_decode">url_decode</a>
-      </li>
-    
-    </ol>
+    <a href="#addslashes">addslashes</a>
   </li>
-  <li><a href="#custom">Custom Filters</a></li>
+
+  <li>
+    <a href="#capitalize">capitalize</a>
+  </li>
+
+  <li>
+    <a href="#date">date</a>
+  </li>
+
+  <li>
+    <a href="#default">default</a>
+  </li>
+
+  <li>
+    <a href="#escape">escape</a>
+  </li>
+
+  <li>
+    <a href="#first">first</a>
+  </li>
+
+  <li>
+    <a href="#join">join</a>
+  </li>
+
+  <li>
+    <a href="#json">json</a>
+  </li>
+
+  <li>
+    <a href="#last">last</a>
+  </li>
+
+  <li>
+    <a href="#lower">lower</a>
+  </li>
+
+  <li>
+    <a href="#raw">raw</a>
+  </li>
+
+  <li>
+    <a href="#replace">replace</a>
+  </li>
+
+  <li>
+    <a href="#reverse">reverse</a>
+  </li>
+
+  <li>
+    <a href="#sort">sort</a>
+  </li>
+
+  <li>
+    <a href="#striptags">striptags</a>
+  </li>
+
+  <li>
+    <a href="#title">title</a>
+  </li>
+
+  <li>
+    <a href="#uniq">uniq</a>
+  </li>
+
+  <li>
+    <a href="#upper">upper</a>
+  </li>
+
+  <li>
+    <a href="#url_encode">url_encode</a>
+  </li>
+
+  <li>
+    <a href="#url_decode">url_decode</a>
+  </li>
+
 </ol>
 
     </li>
@@ -966,6 +1031,10 @@ Backwards compatible with swig@0.x.x using `json_encode`.</p>
     </li>
     <li>
       <a href="/swig/docs/cli/">Command-Line</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/extending/">Extending Swig</a>
       
     </li>
   </ol>

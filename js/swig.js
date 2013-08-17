@@ -212,7 +212,7 @@ exports.U = function (input) {
 };
 
 },{"./utils":23}],3:[function(require,module,exports){
-(function(){var utils = require('./utils'),
+var utils = require('./utils'),
   dateFormatter = require('./dateformatter');
 
 /**
@@ -321,11 +321,18 @@ exports.default = function (input, def) {
  * {{ "<blah>"|e("js") }}
  * // => \u003Cblah\u003E
  *
- * @param  {?string} input
+ * @param  {*} input
  * @param  {string} [type='html']   If you pass the string js in as the type, output will be escaped so that it is safe for JavaScript execution.
  * @return {string}         Escaped string.
  */
 exports.escape = function (input, type) {
+  if (typeof input === 'object') {
+    utils.each(input, function (value, key) {
+      input[key] = exports.escape(value);
+    });
+    return input;
+  }
+
   if (typeof input !== 'string') {
     return input;
   }
@@ -367,7 +374,7 @@ exports.escape = function (input, type) {
 exports.e = exports.escape;
 
 /**
- * Get the first item in an array or character in a string.
+ * Get the first item in an array or character in a string. All other objects will attempt to return the first value available.
  *
  * @example
  * // my_arr = ['a', 'b', 'c']
@@ -379,12 +386,13 @@ exports.e = exports.escape;
  * {{ my_val|first }}
  * // T
  *
- * @param  {(string|array)} input
- * @return {*}                  The first item of the array or first character of the string input.
+ * @param  {*} input
+ * @return {*}        The first item of the array or first character of the string input.
  */
 exports.first = function (input) {
   if (typeof input === 'object' && !utils.isArray(input)) {
-    return '';
+    var keys = utils.keys(input);
+    return input[keys[0]];
   }
 
   if (typeof input === 'string') {
@@ -453,7 +461,7 @@ exports.json = function (input, indent) {
 exports.json_encode = exports.json;
 
 /**
- * Get the last item in an array or character in a string.
+ * Get the last item in an array or character in a string. All other objects will attempt to return the last value available.
  *
  * @example
  * // my_arr = ['a', 'b', 'c']
@@ -465,12 +473,13 @@ exports.json_encode = exports.json;
  * {{ my_val|last }}
  * // s
  *
- * @param  {(string|array)} input
- * @return {*}                  The last item of the array or last character of the string.input.
+ * @param  {*} input
+ * @return {*}          The last item of the array or last character of the string.input.
  */
 exports.last = function (input) {
   if (typeof input === 'object' && !utils.isArray(input)) {
-    return '';
+    var keys = utils.keys(input);
+    return input[keys[keys.length - 1]];
   }
 
   if (typeof input === 'string') {
@@ -551,7 +560,7 @@ exports.replace = function (input, search, replacement, flags) {
 };
 
 /**
- * Reverse an array.
+ * Reverse sort the input. This is an alias for <code data-language="swig">{{ input|sort(true) }}</code>.
  *
  * @example
  * // val = [1, 2, 3];
@@ -562,10 +571,56 @@ exports.replace = function (input, search, replacement, flags) {
  * @return {array}        Reversed array. The original input object is returned if it was not an array.
  */
 exports.reverse = function (input) {
+  return exports.sort(input, true);
+};
+
+/**
+ * Sort the input in an ascending direction.
+ * If given an object, will return the keys as a sorted array.
+ * If given a string, each character will be sorted individually.
+ *
+ * @example
+ * // val = [2, 6, 4];
+ * {{ val|sort }}
+ * // => 2,4,6
+ *
+ * @example
+ * // val = 'zaq';
+ * {{ val|sort }}
+ * // => aqz
+ *
+ * @example
+ * // val = { bar: 1, foo: 2 }
+ * {{ val|sort(true) }}
+ * // => foo,bar
+ *
+ * @param  {*} input
+ * @param {boolean} [reverse=false] Output is given reverse-sorted if true.
+ * @return {*}        Sorted array;
+ */
+exports.sort = function (input, reverse) {
+  var out;
   if (utils.isArray(input)) {
-    return input.reverse();
+    out = input.sort();
+  } else {
+    switch (typeof input) {
+    case 'object':
+      out = utils.keys(input).sort();
+      break;
+    case 'string':
+      out = input.split('');
+      if (reverse) {
+        return out.reverse().join('');
+      }
+      return out.sort().join('');
+    }
   }
-  return input;
+
+  if (out && reverse) {
+    return out.reverse();
+  }
+
+  return out || input;
 };
 
 /**
@@ -645,7 +700,7 @@ exports.uniq = function (input) {
 };
 
 /**
- * Convert the input to all uppercase letters.
+ * Convert the input to all uppercase letters. If an object or array is provided, all values will be uppercased.
  *
  * @example
  * // my_str = 'tacos';
@@ -671,36 +726,47 @@ exports.upper = function (input) {
 };
 
 /**
- * URL-encode a string.
+ * URL-encode a string. If an object or array is passed, all values will be URL-encoded.
  *
  * @example
  * // my_str = 'param=1&anotherParam=2';
  * {{ my_str|url_encode }}
  * // => param%3D1%26anotherParam%3D2
  *
- * @param  {string} input
- * @return {string}       URL-encoded string.
+ * @param  {*} input
+ * @return {*}       URL-encoded string.
  */
 exports.url_encode = function (input) {
+  if (typeof input === 'object') {
+    utils.each(input, function (value, key) {
+      input[key] = exports.url_encode(value);
+    });
+    return input;
+  }
   return encodeURIComponent(input);
 };
 
 /**
- * URL-decode a string.
+ * URL-decode a string. If an object or array is passed, all values will be URL-decoded.
  *
  * @example
  * // my_str = 'param%3D1%26anotherParam%3D2';
  * {{ my_str|url_decode }}
  * // => param=1&anotherParam=2
  *
- * @param  {string} input
- * @return {string}       URL-decoded string.
+ * @param  {*} input
+ * @return {*}       URL-decoded string.
  */
 exports.url_decode = function (input) {
+  if (typeof input === 'object') {
+    utils.each(input, function (value, key) {
+      input[key] = exports.url_decode(value);
+    });
+    return input;
+  }
   return decodeURIComponent(input);
 };
 
-})()
 },{"./dateformatter":2,"./utils":23}],4:[function(require,module,exports){
 var utils = require('./utils');
 
@@ -717,7 +783,7 @@ var utils = require('./utils');
  * @readonly
  * @enum {number}
  */
-var TYPES = exports.types = {
+var TYPES = {
     /** Whitespace */
     WHITESPACE: 0,
     /** Plain string */
@@ -934,6 +1000,8 @@ var TYPES = exports.types = {
     }
   ];
 
+exports.types = TYPES;
+
 /**
  * Return the token type object for a single chunk of a string.
  * @param  {string} str String chunk.
@@ -979,6 +1047,7 @@ function reader(str) {
  * Read a string and break it into separate token types.
  * @param  {string} str
  * @return {Array.LexerToken}     Array of defined types, potentially stripped or replaced with more suitable content.
+ * @private
  */
 exports.read = function (str) {
   var offset = 0,
@@ -999,6 +1068,28 @@ var utils = require('./utils'),
   lexer = require('./lexer');
 
 var _t = lexer.types;
+
+
+/**
+ * Filters are simply functions that perform transformations on their first input argument.
+ * Filters are run at render time, so they may not directly modify the compiled template structure in any way.
+ * All of Swig's built-in filters are written in this same way. For more examples, reference the `filters.js` file in Swig's source.
+ * @typedef {function} Filter
+ *
+ * @example
+ * // This filter will return 'bazbop' if the idx on the input is not 'foobar'
+ * swig.setFilter('foobar', function (input, idx) {
+ *   return input[idx] === 'foobar' ? input[idx] : 'bazbop';
+ * });
+ * // myvar = ['foo', 'bar', 'baz', 'bop'];
+ * // => {{ myvar|foobar(3) }}
+ * // Since myvar[3] !== 'foobar', we render:
+ * // => bazbop
+ *
+ * @param {*} input Input argument, automatically sent from Swig's built-in parser.
+ * @param {...*} [args] All other arguments are defined by the Filter author.
+ * @return {*}
+ */
 
 /*!
  * Makes a string safe for a regular expression.
@@ -1316,7 +1407,6 @@ TokenParser.prototype = {
  * Parse a source string into tokens that are ready for compilation.
  *
  * @example
- *
  * exports.parse('{{ tacos }}', {}, tags, filters);
  * // => [{ compile: [Function], ... }]
  *
@@ -1367,7 +1457,7 @@ exports.parse = function (source, opts, tags, filters) {
    * Parse a variable.
    * @param  {string} str  String contents of the variable, between <i>{{</i> and <i>}}</i>
    * @param  {number} line The line number that this variable starts on.
-   * @return {{compile: Function}}      Parsed token object.
+   * @return {VarToken}      Parsed variable token object.
    * @private
    */
   function parseVariable(str, line) {
@@ -1401,6 +1491,11 @@ exports.parse = function (source, opts, tags, filters) {
       throw new Error('Unable to parse "' + str + '" on line ' + line + '.');
     }
 
+    /**
+     * A parsed variable token.
+     * @typedef {object} VarToken
+     * @property {function} compile Method for compiling this token.
+     */
     return {
       compile: function () {
         return '_output += ' + out + ';\n';
@@ -1413,7 +1508,7 @@ exports.parse = function (source, opts, tags, filters) {
    * Parse a tag.
    * @param  {string} str  String contents of the tag, between <i>{%</i> and <i>%}</i>
    * @param  {number} line The line number that this tag starts on.
-   * @return {{compile: Function, args: Array, content: object, ends: boolean, name: string}}      Parsed token object.
+   * @return {TagToken}      Parsed token object.
    * @private
    */
   function parseTag(str, line) {
@@ -1421,7 +1516,7 @@ exports.parse = function (source, opts, tags, filters) {
 
     if (utils.startsWith(str, 'end')) {
       last = stack[stack.length - 1];
-      if (last && last.name === str.replace(/^end/, '') && last.ends) {
+      if (last && last.name === str.split(/\s+/)[0].replace(/^end/, '') && last.ends) {
         switch (last.name) {
         case 'autoescape':
           escape = opts.autoescape;
@@ -1454,6 +1549,27 @@ exports.parse = function (source, opts, tags, filters) {
     parser = new TokenParser(tokens, filters, line);
     tag = tags[tagName];
 
+    /**
+     * Define custom parsing methods for your tag.
+     * @callback parse
+     *
+     * @example
+     * exports.parse = function (str, line, parser, types, options) {
+     *   parser.on('start', function () {
+     *     // ...
+     *   });
+     *   parser.on(types.STRING, function (token) {
+     *     // ...
+     *   });
+     * };
+     *
+     * @param {string} str The full token string of the tag.
+     * @param {number} line The line number that this tag appears on.
+     * @param {TokenParser} parser A TokenParser instance.
+     * @param {TYPES} types Lexer token type enum.
+     * @param {TagToken[]} stack The current stack of open tags.
+     * @param {SwigOpts} options Swig Options Object.
+     */
     if (!tag.parse(chunks[1], line, parser, _t, stack, opts)) {
       throw new Error('Unexpected tag "' + tagName + '" on line ' + line + '.');
     }
@@ -1470,6 +1586,15 @@ exports.parse = function (source, opts, tags, filters) {
       break;
     }
 
+    /**
+     * A parsed tag token.
+     * @typedef {Object} TagToken
+     * @property {compile} [compile] Method for compiling this token.
+     * @property {array} [args] Array of arguments for the tag.
+     * @property {Token[]} [content=[]] An array of tokens that are children of this Token.
+     * @property {boolean} [ends] Whether or not this tag requires an end tag.
+     * @property {string} name The name of this tag.
+     */
     return {
       compile: tag.compile,
       args: args,
@@ -1574,24 +1699,54 @@ exports.parse = function (source, opts, tags, filters) {
   };
 };
 
-exports.compile = function (template, parent, options, blockName) {
+
+/**
+ * Compile an array of tokens.
+ * @param  {Token[]} template     An array of template tokens.
+ * @param  {Templates[]} parents  Array of parent templates.
+ * @param  {SwigOpts} [options]   Swig options object.
+ * @param  {string} [blockName]   Name of the current block context.
+ * @return {string}               Partial for a compiled JavaScript method that will output a rendered template.
+ */
+exports.compile = function (template, parents, options, blockName) {
   var out = '',
     tokens = utils.isArray(template) ? template : template.tokens;
 
   utils.each(tokens, function (token, index) {
+    var o;
     if (typeof token === 'string') {
       out += '_output += "' + token.replace(/\n|\r/g, '\\n').replace(/"/g, '\\"') + '";\n';
       return;
     }
 
-    out += token.compile(exports.compile, token.args, token.content, parent, options, blockName);
+    /**
+     * Compile callback for VarToken and TagToken objects.
+     * @callback compile
+     *
+     * @example
+     * exports.compile = function (compiler, args, content, parents, options, blockName) {
+     *   if (args[0] === 'foo') {
+     *     return compiler(content, parents, options, blockName) + '\n';
+     *   }
+     *   return '_output += "fallback";\n';
+     * };
+     *
+     * @param {parserCompiler} compiler
+     * @param {array} [args] Array of parsed arguments on the for the token.
+     * @param {array} [content] Array of content within the token.
+     * @param {array} [parents] Array of parent templates for the current template context.
+     * @param {SwigOpts} [options] Swig Options Object
+     * @param {string} [blockName] Name of the direct block parent, if any.
+     */
+    o = token.compile(exports.compile, token.args, token.content, parents, options, blockName);
+    out += o || '';
   });
 
   return out;
 };
 
 },{"./lexer":4,"./utils":23}],6:[function(require,module,exports){
-(function(){var fs = require('fs'),
+var fs = require('fs'),
   path = require('path'),
   utils = require('./utils'),
   _tags = require('./tags'),
@@ -1940,8 +2095,10 @@ exports.Swig = function (opts) {
   function getParents(tokens, options) {
     var blocks = {},
       parentName = tokens.parent,
+      parents = [],
       parentFile,
-      parent;
+      parent,
+      l;
 
     while (parentName) {
       if (!options || !options.filename) {
@@ -1951,17 +2108,17 @@ exports.Swig = function (opts) {
       parentFile = parentFile || options.filename;
       parentFile = path.resolve(path.dirname(parentFile), parentName);
       parent = self.parseFile(parentFile, utils.extend({}, options, { filename: parentFile }));
-      blocks = utils.extend({}, parent.blocks, blocks);
-      parent.tokens = remapBlocks(blocks, parent.tokens);
       parentName = parent.parent;
+      parents.push(parent);
     }
 
-
-    if (parent) {
-      parent.blocks = blocks;
+    // Remap each parents'(1) blocks onto its own parent(2), receiving the full token list for rendering the original parent(1) on its own.
+    l = parents.length;
+    for (l = parents.length - 2; l >= 0; l -= 1) {
+      parents[l].tokens = remapBlocks(parents[l].blocks, parents[l + 1].tokens);
     }
 
-    return parent;
+    return parents;
   }
 
   /**
@@ -1986,21 +2143,19 @@ exports.Swig = function (opts) {
    * @return {object}         Renderable function and tokens object.
    */
   this.precompile = function (source, options) {
-    var tokens,
-      tpl,
-      parent;
+    var tokens = self.parse(source, options),
+      parents = getParents(tokens, options),
+      tpl;
 
-    tokens = self.parse(source, options);
-    parent = getParents(tokens, options);
-
-    if (parent) {
-      tokens.tokens = remapBlocks(tokens.blocks, parent.tokens);
+    if (parents.length) {
+      // Remap the templates first-parent's tokens using this template's blocks.
+      tokens.tokens = remapBlocks(tokens.blocks, parents[0].tokens);
     }
 
     tpl = new Function('_swig', '_ctx', '_filters', 'utils', '_fn', [
       '  var _ext = _swig.extensions,\n',
       '    _output = "";',
-      parser.compile(tokens, parent, options),
+      parser.compile(tokens, parents, options),
       '  return _output;',
     ].join('\n  '));
 
@@ -2192,7 +2347,6 @@ exports.renderFile = defaultInstance.renderFile;
 exports.run = defaultInstance.run;
 exports.invalidateCache = defaultInstance.invalidateCache;
 
-})()
 },{"./dateformatter":2,"./filters":3,"./parser":5,"./tags":7,"./utils":23,"fs":24,"path":25}],7:[function(require,module,exports){
 exports.autoescape = require('./tags/autoescape');
 exports.block = require('./tags/block');
@@ -2266,8 +2420,8 @@ exports.ends = true;
  *
  * @param {literal}  name   Name of the block for use in parent and extended templates.
  */
-exports.compile = function (compiler, args, content, parent, options) {
-  return compiler(content, parent, options, args.join(''));
+exports.compile = function (compiler, args, content, parents, options) {
+  return compiler(content, parents, options, args.join(''));
 };
 
 exports.parse = function (str, line, parser, types) {
@@ -2376,11 +2530,11 @@ var filters = require('../filters');
  * @param {function} filter  The filter that should be applied to the contents of the tag.
  */
 
-exports.compile = function (compiler, args, content, parent, options) {
+exports.compile = function (compiler, args, content, parents, options) {
   var filter = args.shift().replace(/\($/, ''),
     val = '(function () {\n' +
       '  var _output = "";\n' +
-      compiler(content, parent, options) +
+      compiler(content, parents, options) +
       '  return _output;\n' +
       '})()';
 
@@ -2630,7 +2784,7 @@ exports.parse = function (str, line, parser, types) {
 exports.ends = true;
 
 },{}],16:[function(require,module,exports){
-(function(){var utils = require('../utils');
+var utils = require('../utils');
 
 /**
  * Allows you to import macros from another file directly into your current context.
@@ -2653,7 +2807,7 @@ exports.ends = true;
  * @param {literal}     as        Literally, "as".
  * @param {literal}     varname   Local-accessible object name to assign the macros to.
  */
-exports.compile = function (compiler, args, content, parent, options) {
+exports.compile = function (compiler, args, content, parents, options) {
   var parentFile = args.shift(),
     parseFile = require('../swig').parseFile,
     file = args.shift(),
@@ -2669,7 +2823,7 @@ exports.compile = function (compiler, args, content, parent, options) {
     if (!token || token.name !== 'macro' || !token.compile) {
       return;
     }
-    out += ctx + '.' + token.args[0] + ' = ' + token.compile(compiler, token.args, token.content, parent, utils.extend({}, options, { resolveFrom: parentFile }));
+    out += ctx + '.' + token.args[0] + ' = ' + token.compile(compiler, token.args, token.content, parents, utils.extend({}, options, { resolveFrom: parentFile }));
   });
 
   out += '})();\n';
@@ -2711,7 +2865,6 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 };
 
 
-})()
 },{"../swig":6,"../utils":23}],17:[function(require,module,exports){
 var ignore = 'ignore',
   missing = 'missing';
@@ -2741,7 +2894,7 @@ var ignore = 'ignore',
  * @param {object}      [context] Restrict the local variable context in the file to this key-value object.
  * @param {literal} [ignore missing] Will output empty string if not found instead of throwing an error.
  */
-exports.compile = function (compiler, args, content, parent, options) {
+exports.compile = function (compiler, args, content, parents, options) {
   var file = args.shift(),
     parentFile = args.pop(),
     ignore = args[args.length - 1] === missing ? (args.pop()) : false,
@@ -2889,19 +3042,40 @@ exports.ends = true;
  * {% endblock %}
  *
  */
-exports.compile = function (compiler, args, content, parent, options, blockName) {
-  if (!parent || !parent.blocks || !parent.blocks.hasOwnProperty(blockName)) {
+exports.compile = function (compiler, args, content, parents, options, blockName) {
+  if (!parents || !parents.length) {
     return '';
   }
 
-  var block = parent.blocks[blockName];
-  return block.compile(compiler, [], block.content, null, options) + '\n';
+  var parentFile = args[0],
+    breaker = true,
+    l = parents.length,
+    i = 0,
+    parent,
+    block;
+
+  for (i; i < l; i += 1) {
+    parent = parents[i];
+    if (!parent.blocks || !parent.blocks.hasOwnProperty(blockName)) {
+      continue;
+    }
+    // Silly JSLint "Strange Loop" requires return to be in a conditional
+    if (breaker) {
+      block = parent.blocks[blockName];
+      return block.compile(compiler, [blockName], block.content, parents.slice(i + 1), options) + '\n';
+    }
+  }
 };
 
-exports.parse = function (str, line, parser, types) {
+exports.parse = function (str, line, parser, types, stack, opts) {
   parser.on('*', function (token) {
     throw new Error('Unexpected argument "' + token.match + '" on line ' + line + '.');
   });
+
+  parser.on('end', function () {
+    this.out.push(opts.filename);
+  });
+
   return true;
 };
 
@@ -2931,7 +3105,7 @@ exports.parse = function (str, line, parser, types, stack) {
 exports.ends = true;
 
 },{}],21:[function(require,module,exports){
-(function(){/**
+/**
  * Set a variable for re-use in the current context.
  *
  * @alias set
@@ -2981,7 +3155,6 @@ exports.parse = function (str, line, parser, types, stack) {
   return true;
 };
 
-})()
 },{}],22:[function(require,module,exports){
 var utils = require('../utils');
 
@@ -2999,7 +3172,7 @@ var utils = require('../utils');
  * // => <li>1</li><li>2</li><li>3</li>
  *
  */
-exports.compile = function (compiler, args, content, parent, options) {
+exports.compile = function (compiler, args, content, parents, options) {
   function stripWhitespace(tokens) {
     return utils.map(tokens, function (token) {
       if (token.content) {
@@ -3013,7 +3186,7 @@ exports.compile = function (compiler, args, content, parent, options) {
     });
   }
 
-  return compiler(stripWhitespace(content), parent, options);
+  return compiler(stripWhitespace(content), parents, options);
 };
 
 exports.parse = function (str, line, parser, types) {
@@ -3176,11 +3349,26 @@ exports.extend = function () {
   return target;
 };
 
+/**
+ * Get all of the keys on an object.
+ * @param  {object} obj
+ * @return {array}
+ */
+exports.keys = function (obj) {
+  if (Object.keys) {
+    return Object.keys(obj);
+  }
+
+  return exports.map(obj, function (v, k) {
+    return k;
+  });
+};
+
 },{}],24:[function(require,module,exports){
 // nothing to see here... no file methods for the browser
 
 },{}],25:[function(require,module,exports){
-(function(process){function filter (xs, fn) {
+var process=require("__browserify_process");function filter (xs, fn) {
     var res = [];
     for (var i = 0; i < xs.length; i++) {
         if (fn(xs[i], i, xs)) res.push(xs[i]);
@@ -3356,7 +3544,8 @@ exports.relative = function(from, to) {
   return outputParts.join('/');
 };
 
-})(require("__browserify_process"))
+exports.sep = '/';
+
 },{"__browserify_process":26}],26:[function(require,module,exports){
 // shim for using process in browser
 

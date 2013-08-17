@@ -51,7 +51,7 @@
 <div class="content row guttered">
   <div class="span9">
   
-<h1>Tags</h1>
+<h1 id="tags">Tags</h1>
 
 
   
@@ -151,22 +151,6 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
 
     <p>Used within an <code data-language="swig">{% if %}</code> tag, the code block following this tag up until <code data-language="swig">{% endif %}</code> will be rendered if the <i>if</i> statement returns false.</p>
 
-    
-    <h3>Parameters</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Optional</th>
-          <th>Default</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-      
-      </tbody>
-    </table>
     
 
     
@@ -684,22 +668,6 @@ Can be imported from one template to another using the <a href="#import"><code d
 See <a href="#inheritance">Template Inheritance</a> for more information.</p>
 
     
-    <h3>Parameters</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Optional</th>
-          <th>Default</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-      
-      </tbody>
-    </table>
-    
 
     
 
@@ -722,22 +690,6 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
 
     <p>Forces the content to not be auto-escaped. All swig instructions will be ignored and the content will be rendered exactly as it was given.</p>
 
-    
-    <h3>Parameters</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Optional</th>
-          <th>Default</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-      
-      </tbody>
-    </table>
     
 
     
@@ -826,22 +778,6 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
     <p>Attempts to remove whitespace between HTML tags. Use at your own risk.</p>
 
     
-    <h3>Parameters</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Optional</th>
-          <th>Default</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-      
-      </tbody>
-    </table>
-    
 
     
 
@@ -858,27 +794,6 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
     
   </section>
   
-
-
-<section id="custom">
-  <h1>Custom Tags</h1>
-
-  <p>Swig can be extended to handle custom tags that will perform operations on full blocks of your templates. Use <a href="/docs/api/#addTag"><code data-language="js">swig.addTag(name, parse, compile, ends)</code></a> to add your custom tag.</p>
-
-  <p>Examples:</p>
-
-  <pre><code data-language="js">
-
-  </code></pre>
-
-  <section class="doc">
-    <h2>parse(str, line, parser, types)</h2>
-  </section>
-
-  <section class="doc">
-    <h2>compile(compiler, args, content, parent, options)</h2>
-  </section>
-</section>
 
 
   </div>
@@ -902,102 +817,106 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
       <a href="/swig/docs/tags/">Tags</a>
       
 <ol>
-
   
-  <li>
-    <a href="#autoescape">autoescape</a>
-  </li>
   
-
+    <li>
+      <a href="#autoescape">autoescape</a>
+    </li>
   
-  <li>
-    <a href="#block">block</a>
-  </li>
   
-
   
-  <li>
-    <a href="#else">else</a>
-  </li>
+    <li>
+      <a href="#block">block</a>
+    </li>
   
-
   
-  <li>
-    <a href="#elif">elif</a>
-  </li>
   
-
+    <li>
+      <a href="#else">else</a>
+    </li>
   
-  <li>
-    <a href="#extends">extends</a>
-  </li>
   
-
   
-  <li>
-    <a href="#filter">filter</a>
-  </li>
+    <li>
+      <a href="#elif">elif</a>
+    </li>
   
-
   
-  <li>
-    <a href="#for">for</a>
-  </li>
   
-
+    <li>
+      <a href="#extends">extends</a>
+    </li>
   
-  <li>
-    <a href="#if">if</a>
-  </li>
   
-
   
-  <li>
-    <a href="#import">import</a>
-  </li>
+    <li>
+      <a href="#filter">filter</a>
+    </li>
   
-
   
-  <li>
-    <a href="#include">include</a>
-  </li>
   
-
+    <li>
+      <a href="#for">for</a>
+    </li>
   
-  <li>
-    <a href="#macro">macro</a>
-  </li>
   
-
   
-  <li>
-    <a href="#parent">parent</a>
-  </li>
+    <li>
+      <a href="#if">if</a>
+    </li>
   
-
   
-  <li>
-    <a href="#raw">raw</a>
-  </li>
   
-
+    <li>
+      <a href="#import">import</a>
+    </li>
   
-  <li>
-    <a href="#set">set</a>
-  </li>
   
-
   
-  <li>
-    <a href="#spaceless">spaceless</a>
-  </li>
+    <li>
+      <a href="#include">include</a>
+    </li>
   
-
+  
+  
+    <li>
+      <a href="#macro">macro</a>
+    </li>
+  
+  
+  
+    <li>
+      <a href="#parent">parent</a>
+    </li>
+  
+  
+  
+    <li>
+      <a href="#raw">raw</a>
+    </li>
+  
+  
+  
+    <li>
+      <a href="#set">set</a>
+    </li>
+  
+  
+  
+    <li>
+      <a href="#spaceless">spaceless</a>
+    </li>
+  
+  
 </ol>
 
     </li>
     <li>
       <a href="/swig/docs/cli/">Command-Line</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/extending/">Extending Swig</a>
       
     </li>
   </ol>

@@ -1,0 +1,821 @@
+{
+    "typedefs": [
+        {
+            "name": "Filter",
+            "description": "Filters are simply functions that perform transformations on their first input argument.\nFilters are run at render time, so they may not directly modify the compiled template structure in any way.\nAll of Swig's built-in filters are written in this same way. For more examples, reference the `filters.js` file in Swig's source.",
+            "type": "function",
+            "params": [
+                {
+                    "name": "input",
+                    "type": "*",
+                    "description": "Input argument, automatically sent from Swig's built-in parser.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "args",
+                    "type": "*",
+                    "description": "All other arguments are defined by the Filter author.",
+                    "default": "",
+                    "variable": true,
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// This filter will return 'bazbop' if the idx on the input is not 'foobar'\nswig.setFilter('foobar', function (input, idx) {\n  return input[idx] === 'foobar' ? input[idx] : 'bazbop';\n});\n// myvar = ['foo', 'bar', 'baz', 'bop'];\n// => {{ myvar|foobar(3) }}\n// Since myvar[3] !== 'foobar', we render:\n// => bazbop"
+            ]
+        },
+        {
+            "name": "VarToken",
+            "description": "A parsed variable token.",
+            "type": "object",
+            "properties": [
+                {
+                    "name": "compile",
+                    "type": "function",
+                    "description": "Method for compiling this token.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": []
+        },
+        {
+            "name": "parse",
+            "description": "Define custom parsing methods for your tag.",
+            "type": "function",
+            "params": [
+                {
+                    "name": "str",
+                    "type": "string",
+                    "description": "The full token string of the tag.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "line",
+                    "type": "number",
+                    "description": "The line number that this tag appears on.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "parser",
+                    "type": "TokenParser",
+                    "description": "A TokenParser instance.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "types",
+                    "type": "TYPES",
+                    "description": "Lexer token type enum.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "stack",
+                    "type": "TagToken[]",
+                    "description": "The current stack of open tags.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options",
+                    "type": "SwigOpts",
+                    "description": "Swig Options Object.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "exports.parse = function (str, line, parser, types, options) {\n  parser.on('start', function () {\n    // ...\n  });\n  parser.on(types.STRING, function (token) {\n    // ...\n  });\n};"
+            ]
+        },
+        {
+            "name": "TagToken",
+            "description": "A parsed tag token.",
+            "type": "Object",
+            "properties": [
+                {
+                    "name": "compile",
+                    "type": "compile",
+                    "description": "Method for compiling this token.",
+                    "default": "",
+                    "variable": false,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "args",
+                    "type": "array",
+                    "description": "Array of arguments for the tag.",
+                    "default": "",
+                    "variable": false,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "content",
+                    "type": "Token[]",
+                    "description": "An array of tokens that are children of this Token.",
+                    "default": "[]",
+                    "variable": false,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "ends",
+                    "type": "boolean",
+                    "description": "Whether or not this tag requires an end tag.",
+                    "default": "",
+                    "variable": false,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "The name of this tag.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": []
+        },
+        {
+            "name": "compile",
+            "description": "Compile callback for VarToken and TagToken objects.",
+            "type": "function",
+            "params": [
+                {
+                    "name": "compiler",
+                    "type": "parserCompiler",
+                    "description": "",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "args",
+                    "type": "array",
+                    "description": "Array of parsed arguments on the for the token.",
+                    "default": "",
+                    "variable": false,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "content",
+                    "type": "array",
+                    "description": "Array of content within the token.",
+                    "default": "",
+                    "variable": false,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "parents",
+                    "type": "array",
+                    "description": "Array of parent templates for the current template context.",
+                    "default": "",
+                    "variable": false,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options",
+                    "type": "SwigOpts",
+                    "description": "Swig Options Object",
+                    "default": "",
+                    "variable": false,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "blockName",
+                    "type": "string",
+                    "description": "Name of the direct block parent, if any.",
+                    "default": "",
+                    "variable": false,
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "exports.compile = function (compiler, args, content, parents, options, blockName) {\n  if (args[0] === 'foo') {\n    return compiler(content, parents, options, blockName) + '\\n';\n  }\n  return '_output += \"fallback\";\\n';\n};"
+            ]
+        },
+        {
+            "name": "LexerToken",
+            "description": "A lexer token.",
+            "type": "object",
+            "properties": [
+                {
+                    "name": "match",
+                    "type": "string",
+                    "description": "The string that was matched.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "type",
+                    "type": "number",
+                    "description": "Lexer type enum.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "length",
+                    "type": "number",
+                    "description": "Length of the original string processed.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": []
+        }
+    ],
+    "classes": [
+        {
+            "name": "TokenParser",
+            "description": "Parse strings of variables and tags into tokens for future compilation.",
+            "access": "private",
+            "virtual": false,
+            "fires": "",
+            "constructor": {
+                "name": "TokenParser",
+                "description": "Parse strings of variables and tags into tokens for future compilation.",
+                "parameters": [
+                    {
+                        "name": "tokens",
+                        "type": "array",
+                        "description": "Pre-split tokens read by the Lexer.",
+                        "default": "",
+                        "variable": false,
+                        "optional": "",
+                        "nullable": ""
+                    },
+                    {
+                        "name": "filters",
+                        "type": "object",
+                        "description": "Keyed object of filters that may be applied to variables.",
+                        "default": "",
+                        "variable": false,
+                        "optional": "",
+                        "nullable": ""
+                    },
+                    {
+                        "name": "line",
+                        "type": "number",
+                        "description": "Beginning line number for the first token.",
+                        "default": "",
+                        "variable": false,
+                        "optional": "",
+                        "nullable": ""
+                    }
+                ]
+            },
+            "examples": [],
+            "functions": [
+                {
+                    "name": "on",
+                    "description": "Set a custom method to be called when a token type is found.",
+                    "access": "",
+                    "virtual": false,
+                    "parameters": [
+                        {
+                            "name": "type",
+                            "type": "number",
+                            "description": "Token type ID. Found in the Lexer.",
+                            "default": "",
+                            "variable": false,
+                            "optional": "",
+                            "nullable": ""
+                        },
+                        {
+                            "name": "fn",
+                            "type": "Function",
+                            "description": "Callback function. Return true to continue executing the default parsing function.",
+                            "default": "",
+                            "variable": false,
+                            "optional": "",
+                            "nullable": ""
+                        }
+                    ],
+                    "returns": {
+                        "type": "undefined",
+                        "description": ""
+                    },
+                    "examples": [
+                        "parser.on(types.STRING, function (token) {\n  this.out.push(token.match);\n});",
+                        "parser.on('start', function () {\n  this.out.push('something at the beginning of your args')\n});\nparser.on('end', function () {\n  this.out.push('something at the end of your args');\n});"
+                    ]
+                },
+                {
+                    "name": "parseToken",
+                    "description": "Parse a single token.",
+                    "access": "private",
+                    "virtual": false,
+                    "parameters": [
+                        {
+                            "name": "token",
+                            "type": "Object",
+                            "description": "Lexer token object.",
+                            "default": "",
+                            "variable": false,
+                            "optional": "",
+                            "nullable": ""
+                        }
+                    ],
+                    "returns": {
+                        "type": "undefined",
+                        "description": ""
+                    },
+                    "examples": []
+                },
+                {
+                    "name": "parseVar",
+                    "description": "Parse variable token",
+                    "access": "private",
+                    "virtual": false,
+                    "parameters": [
+                        {
+                            "name": "token",
+                            "type": "Object",
+                            "description": "Lexer token object.",
+                            "default": "",
+                            "variable": false,
+                            "optional": "",
+                            "nullable": ""
+                        },
+                        {
+                            "name": "match",
+                            "type": "string",
+                            "description": "Shortcut for token.match",
+                            "default": "",
+                            "variable": false,
+                            "optional": "",
+                            "nullable": ""
+                        },
+                        {
+                            "name": "lastState",
+                            "type": "number",
+                            "description": "Lexer token type state.",
+                            "default": "",
+                            "variable": false,
+                            "optional": "",
+                            "nullable": ""
+                        },
+                        {
+                            "name": "prevToken",
+                            "type": "Object",
+                            "description": "Lexer token object.",
+                            "default": "",
+                            "variable": false,
+                            "optional": "",
+                            "nullable": ""
+                        }
+                    ],
+                    "returns": {
+                        "type": "undefined",
+                        "description": ""
+                    },
+                    "examples": []
+                },
+                {
+                    "name": "checkMatch",
+                    "description": "Return contextual dot-check string for a match",
+                    "access": "private",
+                    "virtual": false,
+                    "parameters": [
+                        {
+                            "name": "match",
+                            "type": "string",
+                            "description": "Shortcut for token.match",
+                            "default": "",
+                            "variable": false,
+                            "optional": "",
+                            "nullable": ""
+                        }
+                    ],
+                    "examples": []
+                }
+            ]
+        }
+    ],
+    "functions": [
+        {
+            "name": "parse",
+            "description": "Parse a source string into tokens that are ready for compilation.",
+            "access": "",
+            "virtual": false,
+            "parameters": [
+                {
+                    "name": "source",
+                    "type": "string",
+                    "description": "Swig template source.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "opts",
+                    "type": "object",
+                    "description": "Swig options object.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "tags",
+                    "type": "object",
+                    "description": "Keyed object of tags that can be parsed and compiled.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "filters",
+                    "type": "object",
+                    "description": "Keyed object of filters that may be applied to variables.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "returns": {
+                "type": "array",
+                "description": "List of tokens ready for compilation."
+            },
+            "examples": [
+                "exports.parse('{{ tacos }}', {}, tags, filters);\n// => [{ compile: [Function], ... }]"
+            ]
+        },
+        {
+            "name": "compile",
+            "description": "Compile an array of tokens.",
+            "access": "",
+            "virtual": false,
+            "parameters": [
+                {
+                    "name": "template",
+                    "type": "Token[]",
+                    "description": "An array of template tokens.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "parents",
+                    "type": "Templates[]",
+                    "description": "Array of parent templates.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options",
+                    "type": "SwigOpts",
+                    "description": "Swig options object.",
+                    "default": "",
+                    "variable": false,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "blockName",
+                    "type": "string",
+                    "description": "Name of the current block context.",
+                    "default": "",
+                    "variable": false,
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "returns": {
+                "type": "string",
+                "description": "Partial for a compiled JavaScript method that will output a rendered template."
+            },
+            "examples": []
+        },
+        {
+            "name": "reader",
+            "description": "Return the token type object for a single chunk of a string.",
+            "access": "private",
+            "virtual": false,
+            "parameters": [
+                {
+                    "name": "str",
+                    "type": "string",
+                    "description": "String chunk.",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "returns": {
+                "type": "LexerToken",
+                "description": "Defined type, potentially stripped or replaced with more suitable content."
+            },
+            "examples": []
+        },
+        {
+            "name": "read",
+            "description": "Read a string and break it into separate token types.",
+            "access": "private",
+            "virtual": false,
+            "parameters": [
+                {
+                    "name": "str",
+                    "type": "string",
+                    "description": "",
+                    "default": "",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "returns": {
+                "type": "Array.LexerToken",
+                "description": "Array of defined types, potentially stripped or replaced with more suitable content."
+            },
+            "examples": []
+        }
+    ],
+    "properties": [
+        {
+            "name": "TYPES",
+            "description": "Enum for token types.",
+            "access": "",
+            "virtual": false,
+            "type": {
+                "names": [
+                    "number"
+                ]
+            },
+            "properties": [
+                {
+                    "name": "WHITESPACE",
+                    "type": "number",
+                    "description": "Whitespace",
+                    "default": "0",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "STRING",
+                    "type": "number",
+                    "description": "Plain string",
+                    "default": "1",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "FILTER",
+                    "type": "number",
+                    "description": "Variable filter",
+                    "default": "2",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "FILTEREMPTY",
+                    "type": "number",
+                    "description": "Empty variable filter",
+                    "default": "3",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "FUNCTION",
+                    "type": "number",
+                    "description": "Function",
+                    "default": "4",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "PARENOPEN",
+                    "type": "number",
+                    "description": "Open parenthesis",
+                    "default": "5",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "PARENCLOSE",
+                    "type": "number",
+                    "description": "Close parenthesis",
+                    "default": "6",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "COMMA",
+                    "type": "number",
+                    "description": "Comma",
+                    "default": "7",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "VAR",
+                    "type": "number",
+                    "description": "Variable",
+                    "default": "8",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "NUMBER",
+                    "type": "number",
+                    "description": "Number",
+                    "default": "9",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "OPERATOR",
+                    "type": "number",
+                    "description": "Math operator",
+                    "default": "10",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "BRACKETOPEN",
+                    "type": "number",
+                    "description": "Open square bracket",
+                    "default": "11",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "BRACKETCLOSE",
+                    "type": "number",
+                    "description": "Close square bracket",
+                    "default": "12",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "DOTKEY",
+                    "type": "number",
+                    "description": "Key on an object using dot-notation",
+                    "default": "13",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "ARRAYOPEN",
+                    "type": "number",
+                    "description": "Start of an array",
+                    "default": "14",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "CURLYOPEN",
+                    "type": "number",
+                    "description": "Open curly brace",
+                    "default": "16",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "CURLYCLOSE",
+                    "type": "number",
+                    "description": "Close curly brace",
+                    "default": "17",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "COLON",
+                    "type": "number",
+                    "description": "Colon (:)",
+                    "default": "18",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "COMPARATOR",
+                    "type": "number",
+                    "description": "JavaScript-valid comparator",
+                    "default": "19",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "LOGIC",
+                    "type": "number",
+                    "description": "Boolean logic",
+                    "default": "20",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "NOT",
+                    "type": "number",
+                    "description": "Boolean logic \"not\"",
+                    "default": "21",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "BOOL",
+                    "type": "number",
+                    "description": "true or false",
+                    "default": "22",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "ASSIGNMENT",
+                    "type": "number",
+                    "description": "Variable assignment",
+                    "default": "23",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "METHODOPEN",
+                    "type": "number",
+                    "description": "Start of a method",
+                    "default": "24",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "UNKNOWN",
+                    "type": "number",
+                    "description": "Unknown type",
+                    "default": "100",
+                    "variable": false,
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "isEnum": true,
+            "examples": []
+        }
+    ]
+}

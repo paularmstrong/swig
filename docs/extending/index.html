@@ -1,0 +1,576 @@
+
+  
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <!--[if IE]>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <![endif]-->
+  <title> » Documentation &raquo; Extending Swig</title>
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="/swig/css/swig.css">
+
+
+
+</head>
+<body class="">
+
+  
+
+
+<header class="header">
+  <div class="content row">
+    <hgroup class="span7">
+      <h1><a href="/swig/">Swig</a></h1>
+      <h2>A Node.js and Browser-based JavaScript Template Engine</h2>
+    </hgroup>
+    
+    <nav class="span5">
+      <ul class="mainNav">
+        <li><a href="/swig/docs/">Documentation</a></li>
+        <li><a href="https://github.com/paularmstrong/swig/">Code</a></li>
+      </ul>
+    </nav>
+  
+  </div>
+
+  <div class="content">
+    <p class="warning">This documentation is for a pre-release version and may be missing information.</p>
+  </div>
+</header>
+
+
+
+<div class="content row guttered">
+  <div class="span9">
+  
+
+
+
+<h1 id="extending">Extending Swig</h1>
+
+<section id="filters">
+  <h2>Custom Filters</h2>
+
+  
+  <section class="doc">
+    
+  <p>Filters are simply functions that perform transformations on their first input argument.</p><p>Filters are run at render time, so they may not directly modify the compiled template structure in any way.</p><p>All of Swig's built-in filters are written in this same way. For more examples, reference the `filters.js` file in Swig's source.</p>
+
+
+    <h4>Arguments</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+      <tr>
+        <td><var data-language="js">input</var></td>
+        <td><code data-language="js">*</code></td>
+        <td></td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p>Input argument, automatically sent from Swig's built-in parser.</p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><var data-language="js">args</var></td>
+        <td><code data-language="js">*</code></td>
+        <td>✔</td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p>All other arguments are defined by the Filter author.</p>
+</td>
+      </tr>
+      
+      </tbody>
+    </table>
+
+    
+    <pre><code data-language="js">// This filter will return &#39;bazbop&#39; if the idx on the input is not &#39;foobar&#39;
+swig.setFilter(&#39;foobar&#39;, function (input, idx) {
+  return input[idx] === &#39;foobar&#39; ? input[idx] : &#39;bazbop&#39;;
+});
+// myvar = [&#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;, &#39;bop&#39;];
+// =&gt; {{ myvar|foobar(3) }}
+// Since myvar[3] !== &#39;foobar&#39;, we render:
+// =&gt; bazbop</code></pre>
+    
+  </section>
+  
+</section>
+
+<hr>
+
+<section id="tags">
+  <h2>Custom Tags</h2>
+
+  <p>Swig can be extended to handle custom tags that will perform operations on full blocks of your templates. Use <a href="/swig/docs/api/#addTag"><code data-language="js">swig.addTag(name, parse, compile, ends)</code></a> to add your custom tag.</p>
+
+  <p>All of Swig's tags are written using the same api (with a few exceptions for core modules, like <var>extends</var> and <var>block</var>). View a tag's source to see more examples to write your own custom tags.</p>
+
+  
+  <section id="parse" class="doc">
+    <h3>parse(str, line, parser, types, stack, options)</h3>
+
+    <p>
+  <p>Define custom parsing methods for your tag.</p>
+</p>
+
+    <h4>Arguments</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+      <tr>
+        <td><var data-language="js">str</var></td>
+        <td><code data-language="js">string</code></td>
+        <td></td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p>The full token string of the tag.</p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><var data-language="js">line</var></td>
+        <td><code data-language="js">number</code></td>
+        <td></td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p>The line number that this tag appears on.</p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><var data-language="js">parser</var></td>
+        <td><code data-language="js">TokenParser</code></td>
+        <td></td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p>A TokenParser instance.</p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><var data-language="js">types</var></td>
+        <td><code data-language="js">TYPES</code></td>
+        <td></td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p>Lexer token type enum.</p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><var data-language="js">stack</var></td>
+        <td><code data-language="js">TagToken[]</code></td>
+        <td></td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p>The current stack of open tags.</p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><var data-language="js">options</var></td>
+        <td><code data-language="js">SwigOpts</code></td>
+        <td></td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p>Swig Options Object.</p>
+</td>
+      </tr>
+      
+      </tbody>
+    </table>
+
+    
+    <pre><code data-language="js">exports.parse = function (str, line, parser, types, options) {
+  parser.on(&#39;start&#39;, function () {
+    // ...
+  });
+  parser.on(types.STRING, function (token) {
+    // ...
+  });
+};</code></pre>
+    
+
+  </section>
+  
+  <section id="compile" class="doc">
+    <h3>compile(compiler, args, content, parents, options, blockName)</h3>
+
+    <p>
+  <p>Compile callback for VarToken and TagToken objects.</p>
+</p>
+
+    <h4>Arguments</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+      <tr>
+        <td><var data-language="js">compiler</var></td>
+        <td><code data-language="js">parserCompiler</code></td>
+        <td></td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p></p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><var data-language="js">args</var></td>
+        <td><code data-language="js">array</code></td>
+        <td>✔</td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p>Array of parsed arguments on the for the token.</p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><var data-language="js">content</var></td>
+        <td><code data-language="js">array</code></td>
+        <td>✔</td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p>Array of content within the token.</p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><var data-language="js">parents</var></td>
+        <td><code data-language="js">array</code></td>
+        <td>✔</td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p>Array of parent templates for the current template context.</p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><var data-language="js">options</var></td>
+        <td><code data-language="js">SwigOpts</code></td>
+        <td>✔</td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p>Swig Options Object</p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><var data-language="js">blockName</var></td>
+        <td><code data-language="js">string</code></td>
+        <td>✔</td>
+        <td><samp data-language="js"></samp></td>
+        <td>
+  <p>Name of the direct block parent, if any.</p>
+</td>
+      </tr>
+      
+      </tbody>
+    </table>
+
+    
+    <pre><code data-language="js">exports.compile = function (compiler, args, content, parents, options, blockName) {
+  if (args[0] === &#39;foo&#39;) {
+    return compiler(content, parents, options, blockName) + &#39;\n&#39;;
+  }
+  return &#39;_output += &quot;fallback&quot;;\n&#39;;
+};</code></pre>
+    
+
+  </section>
+  
+
+  <section id="ends" class="doc">
+      <h3>ends</h3>
+
+      <p>Controls whether or not a tag must have an <code data-language="swig">{% end[tagName] %}</code> declared after usage in templates.</p>
+
+      <pre><code data-language="js">exports.ends = true;
+// => A template that fails to close this tag will throw an Error.</code></pre>
+
+      <pre><code data-language="js">exports.ends = false;
+// => A template attempts close this tag will throw an Error.</code></pre>
+   </section>
+
+  
+    
+    <section id="TYPES" class="doc">
+      <h3>TYPES</h3>
+      <p>
+  <p>Enum for token types.</p>
+</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Value</th>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><samp data-language="js">'*'</samp></td>
+          <td></td>
+          <td>For every token, run the given callback.</td>
+        </tr>
+        <tr>
+          <td><samp data-language="js">'start'</samp></td>
+          <td></td>
+          <td>Run before any token is parsed.</td>
+        </tr>
+        <tr>
+          <td><samp data-language="js">'end'</samp></td>
+          <td></td>
+          <td>Run after all other tokens have been parsed.</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">0</samp></td>
+          <td><var data-language="js">types.WHITESPACE</var></td>
+          <td>Whitespace</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">1</samp></td>
+          <td><var data-language="js">types.STRING</var></td>
+          <td>Plain string</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">2</samp></td>
+          <td><var data-language="js">types.FILTER</var></td>
+          <td>Variable filter</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">3</samp></td>
+          <td><var data-language="js">types.FILTEREMPTY</var></td>
+          <td>Empty variable filter</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">4</samp></td>
+          <td><var data-language="js">types.FUNCTION</var></td>
+          <td>Function</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">5</samp></td>
+          <td><var data-language="js">types.PARENOPEN</var></td>
+          <td>Open parenthesis</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">6</samp></td>
+          <td><var data-language="js">types.PARENCLOSE</var></td>
+          <td>Close parenthesis</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">7</samp></td>
+          <td><var data-language="js">types.COMMA</var></td>
+          <td>Comma</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">8</samp></td>
+          <td><var data-language="js">types.VAR</var></td>
+          <td>Variable</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">9</samp></td>
+          <td><var data-language="js">types.NUMBER</var></td>
+          <td>Number</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">10</samp></td>
+          <td><var data-language="js">types.OPERATOR</var></td>
+          <td>Math operator</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">11</samp></td>
+          <td><var data-language="js">types.BRACKETOPEN</var></td>
+          <td>Open square bracket</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">12</samp></td>
+          <td><var data-language="js">types.BRACKETCLOSE</var></td>
+          <td>Close square bracket</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">13</samp></td>
+          <td><var data-language="js">types.DOTKEY</var></td>
+          <td>Key on an object using dot-notation</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">14</samp></td>
+          <td><var data-language="js">types.ARRAYOPEN</var></td>
+          <td>Start of an array</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">16</samp></td>
+          <td><var data-language="js">types.CURLYOPEN</var></td>
+          <td>Open curly brace</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">17</samp></td>
+          <td><var data-language="js">types.CURLYCLOSE</var></td>
+          <td>Close curly brace</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">18</samp></td>
+          <td><var data-language="js">types.COLON</var></td>
+          <td>Colon (:)</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">19</samp></td>
+          <td><var data-language="js">types.COMPARATOR</var></td>
+          <td>JavaScript-valid comparator</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">20</samp></td>
+          <td><var data-language="js">types.LOGIC</var></td>
+          <td>Boolean logic</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">21</samp></td>
+          <td><var data-language="js">types.NOT</var></td>
+          <td>Boolean logic "not"</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">22</samp></td>
+          <td><var data-language="js">types.BOOL</var></td>
+          <td>true or false</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">23</samp></td>
+          <td><var data-language="js">types.ASSIGNMENT</var></td>
+          <td>Variable assignment</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">24</samp></td>
+          <td><var data-language="js">types.METHODOPEN</var></td>
+          <td>Start of a method</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">100</samp></td>
+          <td><var data-language="js">types.UNKNOWN</var></td>
+          <td>Unknown type</td>
+        </tr>
+        
+        </tbody>
+      </table>
+    </section>
+    
+  
+</section>
+
+  </div>
+
+  <div class="span3">
+<nav>
+  <ol class="sidenav">
+    <li>
+      <a href="/swig/docs/">Getting Started</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/api/">Swig API</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/filters/">Filters</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/tags/">Tags</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/cli/">Command-Line</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/extending/">Extending Swig</a>
+      
+<ol>
+  <li><a href="#filters">Custom Filters</a></li>
+  <li>
+    <a href="#tags">Custom Tags</a>
+    <ol>
+      <li><a href="#parse">parse</a></li>
+      <li><a href="#compile">compile</a></li>
+      <li><a href="#ends">ends</a></li>
+      <li><a href="#TYPES">Token Types</a></li>
+    </ol>
+  </li>
+</ol>
+
+    </li>
+  </ol>
+</nav>
+</div>
+</div>
+
+
+<a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
+
+
+  
+<script src="/swig/js/lib/rainbow.min.js"></script>
+<script src="/swig/js/master.js"></script>
+
+</body>
+</html>
