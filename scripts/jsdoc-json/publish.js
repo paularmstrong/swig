@@ -71,7 +71,6 @@ function graft(parentNode, childNodes, parentLongname, parentName) {
       case 'event':
       case 'function':
         thisObj.parameters = [];
-        thisObj.examples = element.examples || [];
 
         if (element.returns) {
           thisObj.returns = {
@@ -102,8 +101,7 @@ function graft(parentNode, childNodes, parentLongname, parentName) {
         thisObj.constructor = {
           'name': element.name,
           'description': element.description || '',
-          'parameters': [],
-          'examples': element.examples || []
+          'parameters': []
         };
 
         pushParams(thisObj.constructor, 'parameters', element.params);
@@ -112,14 +110,16 @@ function graft(parentNode, childNodes, parentLongname, parentName) {
         break;
 
       case 'typedef':
-        thisObj.properties = [];
+        thisObj.type = getType(element);
         delete thisObj.access;
         delete thisObj.virtual;
         pushParams(thisObj, 'properties', element.properties);
+        pushParams(thisObj, 'params', element.params);
         break;
 
       }
 
+      thisObj.examples = element.examples || [];
       parentNode[nodeName].push(thisObj);
       if (shouldGraft) {
         graft(thisObj, childNodes, element.longname, element.name);
