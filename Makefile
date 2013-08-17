@@ -113,7 +113,7 @@ docs/docs/filters.json: FORCE
 
 docs/docs/tags.json: FORCE
 	@echo "Building $@..."
-	@${BIN}/jsdoc lib/tags/ lib/lexer.js ${JSDOCOPTS} > $@
+	@${BIN}/jsdoc lib/tags/ ${JSDOCOPTS} > $@
 
 docs/docs/extending.json: FORCE
 	@echo "Building $@..."
