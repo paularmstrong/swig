@@ -159,9 +159,9 @@ var n = new Swig(),
       { c: 'v|replace("\\W+", "-")', v: '$*&1aZ', e: '-1aZ' }
     ],
     reverse: [
-      { c: 'v|reverse', v: [1, 2, 3], e: '3,2,1' },
-      { c: 'v|reverse', v: 'asdf', e: 'asdf' },
-      { c: 'v|reverse|join("")', v: { foo: 'bar', baz: 'bop' }, e: 'barbop' }
+      { v: [1, 2, 3], e: '3,2,1' },
+      { v: 'asdf', e: 'fdsa' },
+      { v: { baz: 'bop', foo: 'bar' }, e: 'foo,baz' }
     ],
     sort: [
       { v: [3, 1, 4], e: '1,3,4' },
