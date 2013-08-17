@@ -1,0 +1,130 @@
+{% extends "./layout.html" %}
+
+{% block title %}{% parent %} &raquo; Extending Swig{% endblock %}
+
+{% block content %}
+
+{% macro description(el) %}
+  <p>{{ el.description|replace('\n', '</p><p>')|raw }}</p>
+{% endmacro %}
+
+<h1 id="extending">Extending Swig</h1>
+
+<section class="doc" id="tags">
+  <h2>Custom Tags</h2>
+
+  <p>Swig can be extended to handle custom tags that will perform operations on full blocks of your templates. Use <a href="{{ baseurl }}/docs/api/#addTag"><code data-language="js">swig.addTag(name, parse, compile, ends)</code></a> to add your custom tag.</p>
+
+  <p>All of Swig's tags are written using the same api (with a few exceptions for core modules, like <var>extends</var> and <var>block</var>). View a tag's source to see more examples to write your own custom tags.</p>
+
+  {% for t in typedefs %}{% if t.name === 'parse' or t.name === 'compile' %}
+  <section id="{{ t.name }}" class="doc">
+    <h3>{{ t.name }}({% for p in t.params %}{{ p.name }}{% if not loop.last %}, {% endif %}{% endfor %})</h3>
+
+    <p>{{ description(t)|raw }}</p>
+
+    <h4>Arguments</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Optional</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for p in t.params %}
+      <tr>
+        <td><var data-language="js">{{ p.name }}</var></td>
+        <td><code data-language="js">{{ p.type }}</code></td>
+        <td>{% if p.optional %}✔{% endif %}</td>
+        <td><samp data-language="js">{{ p.default }}</samp></td>
+        <td>{{ description(p)|raw }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    {% for ex in t.examples %}
+    <pre><code data-language="js">{{ ex }}</code></pre>
+    {% endfor %}
+
+  </section>
+  {% endif %}{% endfor %}
+
+  <section id="ends" class="doc">
+      <h3>ends</h3>
+
+      <p>Controls whether or not a tag must have an <code data-language="swig">{% raw %}{% end[tagName] %}{% endraw %}</code> declared after usage in templates.</p>
+
+      <pre><code data-language="js">exports.ends = true;
+// => A template that fails to close this tag will throw an Error.</code></pre>
+
+      <pre><code data-language="js">exports.ends = false;
+// => A template attempts close this tag will throw an Error.</code></pre>
+   </section>
+
+  {% for prop in properties %}
+    {% if prop.isEnum %}
+    <section id="{{ prop.name }}" class="doc">
+      <h3>{{ prop.name }}</h3>
+      <p>{{ description(prop)|raw }}</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Value</th>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><samp data-language="js">'*'</samp></td>
+          <td></td>
+          <td>For every token, run the given callback.</td>
+        </tr>
+        <tr>
+          <td><samp data-language="js">'start'</samp></td>
+          <td></td>
+          <td>Run before any token is parsed.</td>
+        </tr>
+        <tr>
+          <td><samp data-language="js">'end'</samp></td>
+          <td></td>
+          <td>Run after all other tokens have been parsed.</td>
+        </tr>
+        {% for p in prop.properties %}
+        <tr>
+          <td><samp data-language="js">{{ p.default }}</samp></td>
+          <td><var data-language="js">types.{{ p.name }}</var></td>
+          <td>{{ p.description|raw }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </section>
+    {% endif %}
+  {% endfor %}
+</section>
+
+<section id="filters" class="doc">
+  <h2>Custom Filters</h2>
+</section>
+{% endblock %}
+
+{% block extendingsubnav %}
+<ol>
+  <li>
+    <a href="#tags">Custom Tags</a>
+    <ol>
+      <li><a href="#parse">parse</a></li>
+      <li><a href="#compile">compile</a></li>
+      <li><a href="#ends">ends</a></li>
+      <li><a href="#TYPES">Token Types</a></li>
+    </ol>
+  </li>
+  <li><a href="#filters">Custom Filters</a></li>
+</ol>
+{% endblock %}

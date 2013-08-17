@@ -31,7 +31,7 @@
 
     <p>{{ fn.description|replace('\n', '</p><p>')|raw }}</p>
 
-    {% if fn.parameters.length > 1 %}
+    {% if fn.parameters.length %}
     <h3>Parameters</h3>
     <table>
       <thead>
@@ -78,16 +78,10 @@
 
 {% block filtersubnav %}
 <ol>
+{% for fn in functions %}
   <li>
-    <a href="#built-in">Built-In Filters</a>
-    <ol>
-    {% for fn in functions %}
-      <li>
-        <a href="#{{ fn.name }}">{{ fn.name }}</a>
-      </li>
-    {% endfor %}
-    </ol>
+    <a href="#{{ fn.name }}">{{ fn.name }}</a>
   </li>
-  <li><a href="#custom">Custom Filters</a></li>
+{% endfor %}
 </ol>
 {% endblock %}

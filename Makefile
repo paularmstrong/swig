@@ -115,13 +115,18 @@ docs/docs/tags.json: FORCE
 	@echo "Building $@..."
 	@${BIN}/jsdoc lib/tags/ ${JSDOCOPTS} > $@
 
+docs/docs/extending.json: FORCE
+	@echo "Building $@..."
+	@${BIN}/jsdoc lib/parser.js lib/lexer.js ${JSDOCOPTS} > $@
+
 .SECONDARY build-docs: \
 	docs/index.json
 
 .INTERMDIATE build-docs: \
 	docs/docs/api.json \
 	docs/docs/filters.json \
-	docs/docs/tags.json
+	docs/docs/tags.json \
+	docs/docs/extending.json
 
 build-docs: FORCE
 	@echo "Documentation built."
