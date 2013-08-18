@@ -51,34 +51,4 @@ describe('Templates', function () {
       swig.compileFile(__dirname + '/cases-error/circular.test.html')();
     }).to.throwError(/Illegal circular extends of "[\w\/\._\-]+"\./);
   });
-
-  describe('renderFile', function () {
-    var extends_expectation = fs.readFileSync(__dirname + '/cases/extends_1.expectation.html', 'utf8'),
-      include_expectation = fs.readFileSync(__dirname + '/cases/include.expectation.html', 'utf8'),
-      opts = { locals: locals };
-
-    it('renders files immediately', function () {
-      expect(swig.renderFile(__dirname + '/cases/extends_1.test.html', opts)).to.equal(extends_expectation);
-    });
-
-    it('throws immediately with no callback', function () {
-      expect(function () {
-        swig.renderFile('foobar');
-      }).to.throwError();
-    });
-
-    it('can use callbacks', function (done) {
-      swig.renderFile(__dirname + '/cases/include.test.html', locals, function (err, out) {
-        expect(out).to.equal(include_expectation);
-        done();
-      });
-    });
-
-    it('can use callbacks with errors', function (done) {
-      swig.renderFile(__dirname + '/cases/not-existing', opts, function (err, out) {
-        expect(err.errno).to.equal(34);
-        done();
-      });
-    });
-  });
 });

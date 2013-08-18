@@ -1,5 +1,6 @@
 var swig = require('../lib/swig'),
   expect = require('expect.js'),
+  fs = require('fs'),
   _ = require('lodash'),
   Swig = swig.Swig;
 
@@ -12,7 +13,6 @@ function resetOptions() {
 }
 
 describe('options', function () {
-  var oDefaults;
   beforeEach(resetOptions);
   afterEach(resetOptions);
 
@@ -153,5 +153,51 @@ describe('separate instances', function () {
       b = new Swig();
     expect(a.options.varControls[0]).to.equal('<%');
     expect(b.options.varControls[0]).to.equal('{{');
+  });
+});
+
+describe('swig.compileFile', function () {
+  var test = __dirname + '/cases/extends_1.test.html';
+
+  beforeEach(resetOptions);
+  afterEach(resetOptions);
+
+  it('can run syncronously', function () {
+    expect(swig.compileFile(test)())
+      .to.be.ok();
+  });
+
+  it('can run asynchronously', function (done) {
+    expect(swig.compileFile(test, {}, function (err, fn) {
+      expect(fn).to.be.a(Function);
+      done();
+    }));
+  });
+});
+
+describe('swig.renderFile', function () {
+  var test = __dirname + '/cases/extends_1.test.html',
+    expectation = fs.readFileSync(test.replace('test.html', 'expectation.html'), 'utf8');
+
+  beforeEach(resetOptions);
+  afterEach(resetOptions);
+
+  it('can run syncronously', function () {
+    expect(swig.renderFile(test))
+      .to.equal(expectation);
+  });
+
+  it('can run asynchronously', function (done) {
+    expect(swig.renderFile(test, {}, function (err, fn) {
+      expect(fn).to.equal(expectation);
+      done();
+    }));
+  });
+
+  it('can use callbacks with errors', function (done) {
+    swig.renderFile(__dirname + '/cases/not-existing', {}, function (err, out) {
+      expect(err.errno).to.equal(34);
+      done();
+    });
   });
 });
