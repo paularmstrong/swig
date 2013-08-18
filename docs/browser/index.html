@@ -1,0 +1,135 @@
+
+  
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <!--[if IE]>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <![endif]-->
+  <title> » Documentation &raquo; Browser Usage</title>
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="/swig/css/swig.css">
+
+
+
+</head>
+<body class="">
+
+  
+
+
+<header class="header">
+  <div class="content row">
+    <hgroup class="span7">
+      <h1><a href="/swig/">Swig</a></h1>
+      <h2>A Node.js and Browser-based JavaScript Template Engine</h2>
+    </hgroup>
+    
+    <nav class="span5">
+      <ul class="mainNav">
+        <li><a href="/swig/docs/">Documentation</a></li>
+        <li><a href="https://github.com/paularmstrong/swig/">Code</a></li>
+      </ul>
+    </nav>
+  
+  </div>
+
+  <div class="content">
+    <p class="warning">This documentation is for a pre-release version and may be missing information.</p>
+  </div>
+</header>
+
+
+
+<div class="content row guttered">
+  <div class="span9">
+  
+<h1>Swig in the Browser</h1>
+
+<p>Most of Swig works in the browser in the same way that Swig works within node.js. The only exception to this is that Swig is unable to look up files by their path name, unless you directly tell Swig what each template's path name is before hand.</p>
+
+<p>In short, Swig cannot resolve the directive <code data-language="swig">{% extends "./myfile.html" %}</code> and <code data-language="swig">{% include "./myfile.html" %}</code> without first having already been told about <var>./myfile.html</var>.</p>
+
+<p>The best way to work around this is to first pre-compile your templates using the Swig <a href="/swig/docs/cli/">command-line interface</a>.</p>
+
+<ol>
+  <li>
+    <p>Compile each template into JavaScript files. Assign a method name to the output that will be globally available in your browser.</p>
+    <pre><code data-language="sh">$ swig compile myfile.html --method-name=myfile > myfile.js</code></pre>
+  </li>
+  <li>
+    <p>Include Swig and your <samp>myfile.js</samp> in your web page.</p>
+    <pre><code data-language="html">&lt;script src="swig.min.js"&gt;&lt;/script&gt;
+&lt;script src="myfile.js"&gt;&lt;/script&gt;
+</code></pre>
+  </li>
+  <li>
+    <p>Pre-run the template to prime Swig's cache.</p>
+    <pre><code data-language="js">swig.run(myfile, {}, '/myfile.html');</code></pre>
+  </li>
+  <li>
+    <p>Now, you are ready to render a template in-browser that can extend <samp>myfile.html</samp></p>
+    <pre><code data-language="js">var tpl = '{% extends "./myfile.html" %}{% block content %}{{ stuff }}{% endblock %}';
+var output = swig.render(tpl, { filename: '/tpl', locals: { stuff: 'awesome' }});
+document.querySelector('#foo').innerHTML = output;</code></pre>
+  </li>
+</ol>
+
+<hr>
+
+
+  </div>
+
+  <div class="span3">
+<nav>
+  <ol class="sidenav">
+    <li>
+      <a href="/swig/docs/">Getting Started</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/api/">Swig API</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/filters/">Filters</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/tags/">Tags</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/cli/">Command-Line</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/browser/">Browser Usage</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/extending/">Extending Swig</a>
+      
+    </li>
+  </ol>
+</nav>
+</div>
+</div>
+
+
+<a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
+
+
+  
+<script src="/swig/js/lib/rainbow.min.js"></script>
+<script src="/swig/js/master.js"></script>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-/*! Swig v1.0.0-pre1 | https://paularmstrong.github.com/swig | https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.0.0-pre2 | https://paularmstrong.github.com/swig | https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -1067,7 +1067,8 @@ exports.read = function (str) {
 var utils = require('./utils'),
   lexer = require('./lexer');
 
-var _t = lexer.types;
+var _t = lexer.types,
+  _reserved = ['break', 'case', 'catch', 'continue', 'debugger', 'default', 'delete', 'do', 'else', 'finally', 'for', 'function', 'if', 'in', 'instanceof', 'new', 'return', 'switch', 'this', 'throw', 'try', 'typeof', 'var', 'void', 'while', 'with'];
 
 
 /**
@@ -1104,17 +1105,19 @@ function escapeRegExp(str) {
 /**
  * Parse strings of variables and tags into tokens for future compilation.
  * @class
- * @param {array}  tokens  Pre-split tokens read by the Lexer.
- * @param {object} filters Keyed object of filters that may be applied to variables.
- * @param {number} line    Beginning line number for the first token.
+ * @param {array}  tokens     Pre-split tokens read by the Lexer.
+ * @param {object} filters    Keyed object of filters that may be applied to variables.
+ * @param {number} line       Beginning line number for the first token.
+ * @param {string} [filename] Name of the file being parsed.
  * @private
  */
-function TokenParser(tokens, filters, line) {
+function TokenParser(tokens, filters, line, filename) {
   this.out = [];
   this.state = [];
   this.filterApplyIdx = [];
   this._parsers = {};
   this.line = line;
+  this.filename = filename;
   this.filters = filters;
 
   this.parse = function () {
@@ -1221,7 +1224,7 @@ TokenParser.prototype = {
 
     case _t.FILTER:
       if (!self.filters.hasOwnProperty(match) || typeof self.filters[match] !== "function") {
-        throw new Error('Invalid filter "' + match + '" found on line ' + self.line + '.');
+        utils.throwError('Invalid filter "' + match + '"', self.line, self.filename);
       }
       self.out.splice(self.filterApplyIdx[self.filterApplyIdx.length - 1], 0, '_filters["' + match + '"](');
       self.state.push(token.type);
@@ -1229,7 +1232,7 @@ TokenParser.prototype = {
 
     case _t.FILTEREMPTY:
       if (!self.filters.hasOwnProperty(match) || typeof self.filters[match] !== "function") {
-        throw new Error('Invalid filter "' + match + '" found on line ' + self.line + '.');
+        utils.throwError('Invalid filter "' + match + '"', self.line, self.filename);
       }
       self.out.splice(self.filterApplyIdx[self.filterApplyIdx.length - 1], 0, '_filters["' + match + '"](');
       self.out.push(')');
@@ -1263,7 +1266,7 @@ TokenParser.prototype = {
     case _t.PARENCLOSE:
       temp = self.state.pop();
       if (temp !== _t.PARENOPEN && temp !== _t.FUNCTION && temp !== _t.FILTER) {
-        throw new Error('Mismatched nesting state on line ' + self.line + '.');
+        utils.throwError('Mismatched nesting state', self.line, self.filename);
       }
       self.out.push(')');
       self.filterApplyIdx.pop();
@@ -1275,7 +1278,7 @@ TokenParser.prototype = {
           lastState !== _t.ARRAYOPEN &&
           lastState !== _t.CURLYOPEN &&
           lastState !== _t.PARENOPEN) {
-        throw new Error('Unexpected comma on line ' + self.line + '.');
+        utils.throwError('Unexpected comma', self.line, self.filename);
       }
       self.out.push(', ');
       self.filterApplyIdx.pop();
@@ -1301,7 +1304,7 @@ TokenParser.prototype = {
     case _t.BRACKETCLOSE:
       temp = self.state.pop();
       if (temp !== _t.BRACKETOPEN && temp !== _t.ARRAYOPEN) {
-        throw new Error('Unexpected closing square bracket on line ' + self.line + '.');
+        utils.throwError('Unexpected closing square bracket', self.line, self.filename);
       }
       self.out.push(']');
       self.filterApplyIdx.pop();
@@ -1315,7 +1318,7 @@ TokenParser.prototype = {
 
     case _t.COLON:
       if (lastState !== _t.CURLYOPEN) {
-        throw new Error('Unexpected colon on line ' + self.line + '.');
+        utils.throwError('Unexpected colon', self.line, self.filename);
       }
       self.out.push(':');
       self.filterApplyIdx.pop();
@@ -1323,7 +1326,7 @@ TokenParser.prototype = {
 
     case _t.CURLYCLOSE:
       if (self.state.pop() !== _t.CURLYOPEN) {
-        throw new Error('Unexpected closing curly brace on line ' + self.line + '.');
+        utils.throwError('Unexpected closing curly brace', self.line, self.filename);
       }
       self.out.push('}');
 
@@ -1332,7 +1335,7 @@ TokenParser.prototype = {
 
     case _t.DOTKEY:
       if (prevToken.type !== _t.VAR && prevToken.type !== _t.BRACKETCLOSE && prevToken.type !== _t.DOTKEY) {
-        throw new Error('Unexpected key "' + match + '" on line ' + self.line + '.');
+        utils.throwError('Unexpected key "' + match + '"', self.line, self.filename);
       }
       self.out.push('.' + match);
       break;
@@ -1354,13 +1357,19 @@ TokenParser.prototype = {
    * @private
    */
   parseVar: function (token, match, lastState, prevToken) {
-    var self = this;
+    var self = this,
+      isReserved;
 
     match = match.split('.');
+
+    if (_reserved.indexOf(match[0]) !== -1) {
+      utils.throwError('Reserved keyword "' + match[0] + '" attempted to be used as a variable', self.line, self.filename);
+    }
+
     self.filterApplyIdx.push(self.out.length);
     if (lastState === _t.CURLYOPEN) {
       if (match.length > 1) {
-        throw new Error('Unexpected dot on line ' + self.line + '.');
+        utils.throwError('Unexpected dot', self.line, self.filename);
       }
       self.out.push(match[0]);
       return;
@@ -1484,11 +1493,11 @@ exports.parse = function (source, opts, tags, filters) {
       }
     }
 
-    parser = new TokenParser(tokens, filters, line);
+    parser = new TokenParser(tokens, filters, line, opts.filename);
     out = parser.parse().join('');
 
     if (parser.state.length) {
-      throw new Error('Unable to parse "' + str + '" on line ' + line + '.');
+      utils.throwError('Unable to parse "' + str + '"', line, opts.filename);
     }
 
     /**
@@ -1530,7 +1539,7 @@ exports.parse = function (source, opts, tags, filters) {
       }
 
       if (!inRaw) {
-        throw new Error('Unexpected end of tag "' + str.replace(/^end/, '') + '" on line ' + line + '. of ' + opts.filename);
+        utils.throwError('Unexpected end of tag "' + str.replace(/^end/, '') + '"', line, opts.filename);
       }
     }
 
@@ -1542,11 +1551,11 @@ exports.parse = function (source, opts, tags, filters) {
     tagName = chunks.shift();
 
     if (!tags.hasOwnProperty(tagName)) {
-      throw new Error('Unexpected tag "' + str + '" on line ' + line + '.');
+      utils.throwError('Unexpected tag "' + str + '"', line, opts.filename);
     }
 
     tokens = lexer.read(utils.strip(chunks.join(' ')));
-    parser = new TokenParser(tokens, filters, line);
+    parser = new TokenParser(tokens, filters, line, opts.filename);
     tag = tags[tagName];
 
     /**
@@ -1571,7 +1580,7 @@ exports.parse = function (source, opts, tags, filters) {
      * @param {SwigOpts} options Swig Options Object.
      */
     if (!tag.parse(chunks[1], line, parser, _t, stack, opts)) {
-      throw new Error('Unexpected tag "' + tagName + '" on line ' + line + '.');
+      utils.throwError('Unexpected tag "' + tagName + '"', line, opts.filename);
     }
 
     parser.parse();
@@ -1762,7 +1771,7 @@ var fs = require('fs'),
  * @property {array}   tagControls Open and close controls for tags. Defaults to <code data-language="js">['{%', '%}']</code>.
  * @property {array}   cmtControls Open and close controls for comments. Defaults to <code data-language="js">['{#', '#}']</code>.
  * @property {object}  locals      Default variable context to be passed to <strong>all</strong> templates.
- * @property {(boolean|string|{get: Function, set: Function})} cache Cache control for templates. Defaults to saving in <code data-language="js">'memory'</code>. Send <code data-language="js">false</code> to disable. Send an object with <code data-language="js">get</code> and <code data-language="js">set</code> functions to customize.
+ * @property {CacheOptions} cache Cache control for templates. Defaults to saving in <code data-language="js">'memory'</code>. Send <code data-language="js">false</code> to disable. Send an object with <code data-language="js">get</code> and <code data-language="js">set</code> functions to customize.
  */
 var defaultOptions = {
     autoescape: true,
@@ -1770,6 +1779,24 @@ var defaultOptions = {
     tagControls: ['{%', '%}'],
     cmtControls: ['{#', '#}'],
     locals: {},
+    /**
+     * Cache control for templates. Defaults to saving all templates into memory.
+     * @typedef {boolean|string|object} CacheOptions
+     * @example
+     * // Default
+     * swig.setDefaults({ cache: 'memory' });
+     * @example
+     * // Disables caching in Swig.
+     * swig.setDefaults({ cache: false });
+     * @example
+     * // Custom cache storage and retrieval
+     * swig.setDefaults({
+     *   cache: {
+     *     get: function (key) { ... },
+     *     set: function (key, val) { ... }
+     *   }
+     * });
+     */
     cache: 'memory'
   },
   defaultInstance;
@@ -2055,6 +2082,10 @@ exports.Swig = function (opts) {
     }
 
     pathname = (options.resolveFrom) ? path.resolve(path.dirname(options.resolveFrom), pathname) : pathname;
+
+    if (!fs || !fs.readFileSync) {
+      throw new Error('Unable to find file ' + pathname + ' because there is no filesystem to read from.');
+    }
     src = fs.readFileSync(pathname, 'utf8');
 
     if (!options.filename) {
@@ -2095,6 +2126,7 @@ exports.Swig = function (opts) {
   function getParents(tokens, options) {
     var blocks = {},
       parentName = tokens.parent,
+      parentFiles = [],
       parents = [],
       parentFile,
       parent,
@@ -2109,6 +2141,12 @@ exports.Swig = function (opts) {
       parentFile = path.resolve(path.dirname(parentFile), parentName);
       parent = self.parseFile(parentFile, utils.extend({}, options, { filename: parentFile }));
       parentName = parent.parent;
+
+      if (parentFiles.indexOf(parentFile) !== -1) {
+        throw new Error('Illegal circular extends of "' + parentFile + '".');
+      }
+      parentFiles.push(parentFile);
+
       parents.push(parent);
     }
 
@@ -2196,25 +2234,23 @@ exports.Swig = function (opts) {
    *
    * @param  {string}   pathName    File location.
    * @param  {object}   [locals={}] Template variable context.
-   * @param  {Function} [fn]      Optional callback function.
+   * @param  {Function} [cb] Asyncronous callback function. If not provided, <var>compileFile</var> will run syncronously.
    * @return {string}             Rendered output.
    */
-  this.renderFile = function (pathName, locals, fn) {
+  this.renderFile = function (pathName, locals, cb) {
     var out;
-    try {
-      out = exports.compileFile(pathName)(locals);
-      if (fn) {
-        fn(null, out);
-        return;
-      }
-    } catch (e) {
-      if (fn) {
-        fn(e);
-        return;
-      }
-      throw e;
+    if (cb) {
+      exports.compileFile(pathName, {}, function (err, fn) {
+        if (err) {
+          cb(err);
+          return;
+        }
+        cb(null, fn(locals));
+      });
+      return;
     }
-    return out;
+
+    return exports.compileFile(pathName)(locals);
   };
 
   /**
@@ -2284,9 +2320,10 @@ exports.Swig = function (opts) {
    *
    * @param  {string} pathname  File location.
    * @param  {SwigOpts} [options={}] Swig options object.
+   * @param  {Function} [cb] Asyncronous callback function. If not provided, <var>compileFile</var> will run syncronously.
    * @return {function}         Renderable function with keys for parent, blocks, and tokens.
    */
-  this.compileFile = function (pathname, options) {
+  this.compileFile = function (pathname, options, cb) {
     var src, cached;
 
     if (!options) {
@@ -2303,8 +2340,22 @@ exports.Swig = function (opts) {
       return cached;
     }
 
-    src = fs.readFileSync(pathname, 'utf8');
+    if (!fs || !fs.readFileSync) {
+      throw new Error('Unable to find file ' + pathname + ' because there is no filesystem to read from.');
+    }
 
+    if (cb) {
+      fs.readFile(pathname, 'utf8', function (err, src) {
+        if (err) {
+          cb(err);
+          return;
+        }
+        cb(err, self.compile(src, options));
+      });
+      return;
+    }
+
+    src = fs.readFileSync(pathname, 'utf8');
     return self.compile(src, options);
   };
 
@@ -2366,7 +2417,8 @@ exports.set = require('./tags/set');
 exports.spaceless = require('./tags/spaceless');
 
 },{"./tags/autoescape":8,"./tags/block":9,"./tags/else":10,"./tags/elseif":11,"./tags/extends":12,"./tags/filter":13,"./tags/for":14,"./tags/if":15,"./tags/import":16,"./tags/include":17,"./tags/macro":18,"./tags/parent":19,"./tags/raw":20,"./tags/set":21,"./tags/spaceless":22}],8:[function(require,module,exports){
-var bools = ['false', 'true'],
+var utils = require('../utils'),
+  bools = ['false', 'true'],
   strings = ['html', 'js'];
 
 /**
@@ -2386,7 +2438,7 @@ var bools = ['false', 'true'],
 exports.compile = function (compiler, args, content) {
   return compiler(content);
 };
-exports.parse = function (str, line, parser, types, stack) {
+exports.parse = function (str, line, parser, types, stack, opts) {
   var matched;
   parser.on('*', function (token) {
     if (token.type === types.WHITESPACE) {
@@ -2400,14 +2452,14 @@ exports.parse = function (str, line, parser, types, stack) {
       matched = true;
       return;
     }
-    throw new Error('Unexpected token "' + token.match + '" in autoescape tag on line ' + line + '.');
+    utils.throwError('Unexpected token "' + token.match + '" in autoescape tag', line, opts.filename);
   });
 
   return true;
 };
 exports.ends = true;
 
-},{}],9:[function(require,module,exports){
+},{"../utils":23}],9:[function(require,module,exports){
 /**
  * Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.
  *
@@ -3362,6 +3414,23 @@ exports.keys = function (obj) {
   return exports.map(obj, function (v, k) {
     return k;
   });
+};
+
+/**
+ * Throw an error with possible line number and source file.
+ * @param  {string} message Error message
+ * @param  {number} [line]  Line number in template.
+ * @param  {string} [file]  Template file the error occured in.
+ * @throws {Error} No seriously, the point is to throw an error.
+ */
+exports.throwError = function (message, line, file) {
+  if (line) {
+    message += ' on line ' + line;
+  }
+  if (file) {
+    message += ' in file ' + file;
+  }
+  throw new Error(message + '.');
 };
 
 },{}],24:[function(require,module,exports){

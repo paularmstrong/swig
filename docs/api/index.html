@@ -103,12 +103,41 @@
       
         <tr>
           <td><var data-language="js">cache</var></td>
-          <td><code data-language="js">boolean or string or Object</code></td>
+          <td><code data-language="js">CacheOptions</code></td>
           <td>Cache control for templates. Defaults to saving in <code data-language="js">'memory'</code>. Send <code data-language="js">false</code> to disable. Send an object with <code data-language="js">get</code> and <code data-language="js">set</code> functions to customize.</td>
         </tr>
       
       </tbody>
     </table>
+    
+
+    
+  </section>
+
+  <section id="CacheOptions" class="doc">
+    <h2>Object Type: CacheOptions</h2>
+
+    <p>Cache control for templates. Defaults to saving all templates into memory.</p>
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">// Default
+swig.setDefaults({ cache: &#39;memory&#39; });</code></pre>
+    
+    <pre><code data-language="js">// Disables caching in Swig.
+swig.setDefaults({ cache: false });</code></pre>
+    
+    <pre><code data-language="js">// Custom cache storage and retrieval
+swig.setDefaults({
+  cache: {
+    get: function (key) { ... },
+    set: function (key, val) { ... }
+  }
+});</code></pre>
+    
     
   </section>
 
@@ -646,7 +675,7 @@ When rendering a source string, a file path should be specified in the options o
       swig.renderFile(
       pathName
       , locals
-      , fn
+      , cb
       )
     </h2>
 
@@ -683,11 +712,11 @@ When rendering a source string, a file path should be specified in the options o
         </tr>
       
         <tr>
-          <td><var data-language="js">fn</var></td>
+          <td><var data-language="js">cb</var></td>
           <td><code data-language="js">Function</code></td>
           <td>✔</td>
           <td><code data-language="js"></code></td>
-          <td>Optional callback function.</td>
+          <td>Asyncronous callback function. If not provided, <var>compileFile</var> will run syncronously.</td>
         </tr>
       
       </tbody>
@@ -791,6 +820,7 @@ When compiling a source string, a file path should be specified in the options o
       swig.compileFile(
       pathname
       , options
+      , cb
       )
     </h2>
 
@@ -824,6 +854,14 @@ When compiling a source string, a file path should be specified in the options o
           <td>✔</td>
           <td><code data-language="js">{}</code></td>
           <td>Swig options object.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">cb</var></td>
+          <td><code data-language="js">Function</code></td>
+          <td>✔</td>
+          <td><code data-language="js"></code></td>
+          <td>Asyncronous callback function. If not provided, <var>compileFile</var> will run syncronously.</td>
         </tr>
       
       </tbody>
@@ -945,6 +983,11 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
       
 <ol>
 
+  <li><a href="#SwigOpts">Object: SwigOpts</a></li>
+
+  <li><a href="#CacheOptions">Object: CacheOptions</a></li>
+
+
   
 
   
@@ -1044,6 +1087,10 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
     </li>
     <li>
       <a href="/swig/docs/cli/">Command-Line</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/browser/">Browser Usage</a>
       
     </li>
     <li>
