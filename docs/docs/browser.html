@@ -1,0 +1,41 @@
+{% extends "./layout.html" %}
+
+{% block title %}{% parent %} &raquo; Browser Usage{% endblock %}
+
+{% block content %}
+<h1>Swig in the Browser</h1>
+
+<h2>File Resolution</h2>
+
+<p>Most of Swig works in the browser in the same way that Swig works within node.js. The only exception to this is that Swig is unable to look up files by their path name, unless you directly tell Swig what each template's path name is before hand.</p>
+
+<p>In short, Swig cannot resolve the directive <code data-language="swig">{% raw %}{% extends "./myparent.js" %}{% endraw %}</code> without first having already been told about <var>./myparent.html</var>.</p>
+
+<p>The best way to work around this is to first pre-compile your templates using the Swig <a href="{{ baseurl }}/docs/cli/">command-line interface</a>.</p>
+
+<ol>
+  <li>
+    <p>Compile each template into JavaScript files. Assign a method name to the output that will be globally available in your browser.</p>
+    <pre><code data-language="sh">$ swig compile myparent.html --method-name=myparent > myparent.js</code></pre>
+  </li>
+  <li>
+    <p>Include Swig and your <samp>myparent.js</samp> in your web page.</p>
+    <pre><code data-language="html">&lt;script src="swig.min.js"&gt;&lt;/script&gt;
+&lt;script src="myparent.js"&gt;&lt;/script&gt;
+</code></pre>
+  </li>
+  <li>
+    <p>Pre-run the template to prime Swig's cache.</p>
+    <pre><code data-language="js">swig.run(myparent, {}, '/myparent.html');</code></pre>
+  </li>
+  <li>
+    <p>Now, you are ready to render a template in-browser that can extend <samp>myparent.html</samp></p>
+    <pre><code data-language="js">var tpl = '{% raw %}{% extends "./myparent.html" %}{% block content %}{{ stuff }}{% endblock %}{% endraw %}';
+var output = swig.render(tpl, { filename: '/tpl', locals: { stuff: 'awesome' }});
+document.querySelector('#foo').innerHTML = output;</code></pre>
+  </li>
+</ol>
+
+<hr>
+
+{% endblock %}
