@@ -23,7 +23,7 @@ var command,
       m: 'Minify compiled functions with uglify-js',
       'wrap-start': 'Template wrapper beginning for "compile".',
       'wrap-end': 'Template wrapper end for "compile".',
-      'method-name': 'Method name to execute during "run". See "--wrap-start" for defining this.'
+      'method-name': 'Method name to set template to and run from.'
     })
     .alias('o', 'output')
     .default('o', 'stdout')
@@ -42,6 +42,14 @@ var command,
       command = argv._.shift();
       if (command !== 'compile' && command !== 'render' && command !== 'run') {
         throw new Error('Unrecognized command "' + command + '". Use -h for help.');
+      }
+
+      if (argv['method-name'] !== 'tpl' && argv['wrap-start'] !== 'var tpl =') {
+        throw new Error('Cannot use arguments "--method-name" and "--wrap-start" together.');
+      }
+
+      if (argv['method-name'] !== 'tpl') {
+        argv['wrap-start'] = 'var ' + argv['method-name'] + ' = ';
       }
     })
     .argv,
