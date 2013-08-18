@@ -1,3 +1,21 @@
+[1.0.0-pre2](https://github.com/paularmstrong/swig/tree/v1.0.0-pre2) / 2013-08-18
+---------------------------------------------------------------------------------
+
+* **Changed** Binary: Allow --method-name to be a shortcut for --wrap-start var setting.
+* **Changed** Make reverse filter an alias for `sort(true)`.
+* **Added** Allow asyncronous `compileFile` and `renderFile` operations. [gh-283](https://github.com/paularmstrong/swig/issues/283)
+* **Added** Filter: `sort`.
+* **Added** Allow {% end[tag] tokens... %}. [gh-278](https://github.com/paularmstrong/swig/issues/278)
+* **Added** Built source map for minified browser source.
+* **Added** Contextual support for object method calls. [gh-275](https://github.com/paularmstrong/swig/issues/275)
+* **Added** `parser.on('start'|'end'...` options. [gh-274](https://github.com/paularmstrong/swig/issues/274)
+* **Added** Allow object prototypal inheritance. [gh-273](https://github.com/paularmstrong/swig/issues/273)
+* **Fixed** Prevent circular extends. [gh-282](https://github.com/paularmstrong/swig/issues/282)
+* **Fixed** Throw an error if reserved word is used as var. [gh-276](https://github.com/paularmstrong/swig/issues/276)
+* **Fixed** Add filename to errors if possible. [gh-280](https://github.com/paularmstrong/swig/issues/280)
+* **Fixed** Filters work over arrays/objects if possible. [gh-259](https://github.com/paularmstrong/swig/issues/259)
+* **Fixed** Allow {% parent %} to work in middle parent templates. [gh-277](https://github.com/paularmstrong/swig/issues/277)
+* **Fixed** Allow newlines in tags/vars/comments. [gh-272](https://github.com/paularmstrong/swig/issues/272)
 
 [1.0.0-pre1](https://github.com/paularmstrong/swig/tree/v1.0.0-pre1) / 2013-08-14
 ---------------------------------------------------------------------------------
