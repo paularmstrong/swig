@@ -32,6 +32,13 @@
       </tbody>
     </table>
     {% endif %}
+
+    {% if def.examples.length %}
+    <h3>Examples</h3>
+    {% for example in def.examples %}
+    <pre><code data-language="js">{{ example }}</code></pre>
+    {% endfor %}
+    {% endif %}
   </section>
 {% endfor %}
 
@@ -94,6 +101,9 @@
 
 {% block apisubnav %}
 <ol>
+{% for def in typedefs %}
+  <li><a href="#{{ def.name }}">Object: {{ def.name }}</a></li>
+{% endfor %}
 {% for fn in functions %}
   {% if fn.access !== "private" %}
   <li>
