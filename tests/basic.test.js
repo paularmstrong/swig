@@ -157,6 +157,10 @@ describe('separate instances', function () {
 });
 
 describe('swig.compileFile', function () {
+  // The following tests should *not* run in the browser
+  if (!fs || !fs.readFileSync) {
+    return;
+  }
   var test = __dirname + '/cases/extends_1.test.html';
 
   beforeEach(resetOptions);
@@ -176,6 +180,10 @@ describe('swig.compileFile', function () {
 });
 
 describe('swig.renderFile', function () {
+  // The following tests should *not* run in the browser
+  if (!fs || !fs.readFileSync) {
+    return;
+  }
   var test = __dirname + '/cases/extends_1.test.html',
     expectation = fs.readFileSync(test.replace('test.html', 'expectation.html'), 'utf8');
 
