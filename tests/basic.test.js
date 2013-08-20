@@ -209,10 +209,3 @@ describe('swig.renderFile', function () {
     });
   });
 });
-
-describe('Regressions', function () {
-  it('gh-285: preserves forward-slashes in text', function () {
-    expect(swig.render('foo\\ blah \\ and stuff'))
-      .to.equal('foo\\ blah \\ and stuff');
-  });
-});
