@@ -95,15 +95,31 @@
   {% endif %}{% endfor %}
 
   <section id="ends" class="doc">
-      <h3>ends</h3>
+    <h3>ends</h3>
 
-      <p>Controls whether or not a tag must have an <code data-language="swig">{% raw %}{% end[tagName] %}{% endraw %}</code> declared after usage in templates.</p>
+    <p>Controls whether or not a tag must have an <code data-language="swig">{% raw %}{% end[tagName] %}{% endraw %}</code> declared after usage in templates.</p>
 
-      <pre><code data-language="js">exports.ends = true;
+    <pre><code data-language="js">exports.ends = true;
 // => A template that fails to close this tag will throw an Error.</code></pre>
 
-      <pre><code data-language="js">exports.ends = false;
+    <pre><code data-language="js">exports.ends = false;
 // => A template attempts close this tag will throw an Error.</code></pre>
+   </section>
+
+   <section id="blockLevel" class="doc">
+     <h3>blockLevel</h3>
+
+     <p>Allow the tag to be written outside of <code data-language="swig">{% raw %}{% block &lt;name&gt; %}{% endblock %}{% endraw %}</code> tags when extending a parent template.</p>
+
+     <pre><code data-language="js">exports.blockLevel = true;</code></pre>
+     <pre><code data-language="swig">{% raw %}{% extends "foo" %}
+{% mytag foo bar baz %}
+// Normally this will be ignored, but since we allowed it to be block-level,
+// it will be included in the fully-parsed template.
+
+{% block content %}
+  ...
+{% endblock %}{% endraw %}</code></pre>
    </section>
 
   {% for prop in properties %}
@@ -159,6 +175,7 @@
       <li><a href="#parse">parse</a></li>
       <li><a href="#compile">compile</a></li>
       <li><a href="#ends">ends</a></li>
+      <li><a href="#blockLevel">blockLevel</a></li>
       <li><a href="#TYPES">Token Types</a></li>
     </ol>
   </li>
