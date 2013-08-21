@@ -17,6 +17,12 @@ Features
 * Extendable and customizable.
 * Great [code coverage](http://paularmstrong.github.io/swig/coverage.html).
 
+Need Help? Have Questions? Comments?
+------------------------------------
+
+* [Mailing List/Google Group](http://groups.google.com/forum/#!forum/swig-templates)
+* [StackOverflow](http://stackoverflow.com/questions/tagged/swig-template)
+
 Installation
 ------------
 
