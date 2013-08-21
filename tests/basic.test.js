@@ -172,10 +172,14 @@ describe('swig.compileFile', function () {
   });
 
   it('can run asynchronously', function (done) {
-    expect(swig.compileFile(test, {}, function (err, fn) {
+    // Run twice to ensure cached result uses the callback [gh-291]
+    swig.compileFile(test, {}, function (err, fn) {
       expect(fn).to.be.a(Function);
-      done();
-    }));
+      expect(swig.compileFile(test, {}, function (err, fn) {
+        expect(fn).to.be.a(Function);
+        done();
+      }));
+    });
   });
 });
 
