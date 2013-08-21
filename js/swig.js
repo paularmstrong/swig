@@ -212,7 +212,7 @@ exports.U = function (input) {
 };
 
 },{"./utils":23}],3:[function(require,module,exports){
-(function(){var utils = require('./utils'),
+var utils = require('./utils'),
   dateFormatter = require('./dateformatter');
 
 /**
@@ -767,7 +767,6 @@ exports.url_decode = function (input) {
   return decodeURIComponent(input);
 };
 
-})()
 },{"./dateformatter":2,"./utils":23}],4:[function(require,module,exports){
 var utils = require('./utils');
 
@@ -1756,7 +1755,7 @@ exports.compile = function (template, parents, options, blockName) {
 };
 
 },{"./lexer":4,"./utils":23}],6:[function(require,module,exports){
-(function(){var fs = require('fs'),
+var fs = require('fs'),
   path = require('path'),
   utils = require('./utils'),
   _tags = require('./tags'),
@@ -2412,7 +2411,6 @@ exports.renderFile = defaultInstance.renderFile;
 exports.run = defaultInstance.run;
 exports.invalidateCache = defaultInstance.invalidateCache;
 
-})()
 },{"./dateformatter":2,"./filters":3,"./parser":5,"./tags":7,"./utils":23,"fs":24,"path":25}],7:[function(require,module,exports){
 exports.autoescape = require('./tags/autoescape');
 exports.block = require('./tags/block');
@@ -2852,7 +2850,7 @@ exports.parse = function (str, line, parser, types) {
 exports.ends = true;
 
 },{}],16:[function(require,module,exports){
-(function(){var utils = require('../utils');
+var utils = require('../utils');
 
 /**
  * Allows you to import macros from another file directly into your current context.
@@ -2933,7 +2931,6 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 };
 
 
-})()
 },{"../swig":6,"../utils":23}],17:[function(require,module,exports){
 var ignore = 'ignore',
   missing = 'missing';
@@ -3174,7 +3171,7 @@ exports.parse = function (str, line, parser, types, stack) {
 exports.ends = true;
 
 },{}],21:[function(require,module,exports){
-(function(){/**
+/**
  * Set a variable for re-use in the current context.
  *
  * @alias set
@@ -3226,7 +3223,6 @@ exports.parse = function (str, line, parser, types, stack) {
 
 exports.block = true;
 
-})()
 },{}],22:[function(require,module,exports){
 var utils = require('../utils');
 
@@ -3457,7 +3453,7 @@ exports.throwError = function (message, line, file) {
 // nothing to see here... no file methods for the browser
 
 },{}],25:[function(require,module,exports){
-(function(process){function filter (xs, fn) {
+var process=require("__browserify_process");function filter (xs, fn) {
     var res = [];
     for (var i = 0; i < xs.length; i++) {
         if (fn(xs[i], i, xs)) res.push(xs[i]);
@@ -3633,7 +3629,8 @@ exports.relative = function(from, to) {
   return outputParts.join('/');
 };
 
-})(require("__browserify_process"))
+exports.sep = '/';
+
 },{"__browserify_process":26}],26:[function(require,module,exports){
 // shim for using process in browser
 
