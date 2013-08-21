@@ -75,7 +75,7 @@ test:
 test-browser: FORCE clean browser/test/tests.js
 	@${BIN}/mocha-phantomjs browser/test/index.html --reporter ${reporter}
 
-files := $(shell find . -name '*.js' ! -path "./node_modules/*" ! -path "./dist/*" ! -path "./browser*" ! -path "./docs*")
+files := $(shell find . -name '*.js' ! -path "./node_modules/*" ! -path "./dist/*" ! -path "./browser*" ! -path "./docs*" ! -path "./tmp*")
 lint:
 	@${BIN}/nodelint ${files} --config=scripts/config-lint.js
 
@@ -139,10 +139,10 @@ gh-pages: clean build build-docs
 	@${BIN}/still docs -o ${TMP} -i "layout" -i "json" -i "less" -v
 	@make coverage out=${TMP}/coverage.html
 	@cp dist/swig.* ${TMP}/js/
-ifeq (${THIS_BRANCH}, master)
 	@git checkout ${BRANCH}
 	@cp -r ${TMP}/* ./
 	@rm -rf ${TMP}
+ifeq (${THIS_BRANCH}, master)
 	@git add .
 	@git commit -n -am "Automated build from ${SHA}"
 	@git push ${REMOTE} ${BRANCH}
