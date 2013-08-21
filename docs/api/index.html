@@ -398,10 +398,12 @@ swig.setFilter(&#39;replaceMs&#39;, replaceMs);
       , parse
       , compile
       , ends
+      , blockLevel
       )
     </h2>
 
-    <p>Add a custom tag. To expose your own extensions to compiled template code, see <code data-language="js">swig.setExtension</code>.</p>
+    <p>Add a custom tag. To expose your own extensions to compiled template code, see <code data-language="js">swig.setExtension</code>.</p><p>
+For a more in-depth explanation of writing custom tags, see <a href="../extending/#tags">Custom Tags</a>.</p>
 
     
     <h3>Parameters</h3>
@@ -449,6 +451,14 @@ swig.setFilter(&#39;replaceMs&#39;, replaceMs);
           <td>Whether or not this tag requires an <i>end</i> tag.</td>
         </tr>
       
+        <tr>
+          <td><var data-language="js">blockLevel</var></td>
+          <td><code data-language="js">boolean</code></td>
+          <td>✔</td>
+          <td><code data-language="js">false</code></td>
+          <td>If false, this tag will not be compiled outside of <code>block</code> tags when extending a parent template.</td>
+        </tr>
+      
       </tbody>
     </table>
     
@@ -462,7 +472,7 @@ swig.setFilter(&#39;replaceMs&#39;, replaceMs);
     <h3>Examples</h3>
     
     <pre><code data-language="js">var tacotag = require(&#39;./tacotag&#39;);
-swig.setTag(&#39;tacos&#39;, tacotag.parse, tacotag.compile, tacotag.ends);
+swig.setTag(&#39;tacos&#39;, tacotag.parse, tacotag.compile, tacotag.ends, tacotag.blockLevel);
 // =&gt; {% tacos %}Make this be tacos.{% endtacos %}
 // =&gt; Tacos tacos tacos tacos.</code></pre>
     

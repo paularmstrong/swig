@@ -1,4 +1,4 @@
-/*! Swig v1.0.0-pre2 | https://paularmstrong.github.com/swig | https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.0.0-pre3 | https://paularmstrong.github.com/swig | https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -212,7 +212,7 @@ exports.U = function (input) {
 };
 
 },{"./utils":23}],3:[function(require,module,exports){
-var utils = require('./utils'),
+(function(){var utils = require('./utils'),
   dateFormatter = require('./dateformatter');
 
 /**
@@ -767,6 +767,7 @@ exports.url_decode = function (input) {
   return decodeURIComponent(input);
 };
 
+})()
 },{"./dateformatter":2,"./utils":23}],4:[function(require,module,exports){
 var utils = require('./utils');
 
@@ -1605,6 +1606,7 @@ exports.parse = function (source, opts, tags, filters) {
      * @property {string} name The name of this tag.
      */
     return {
+      block: !!tags[tagName].block,
       compile: tag.compile,
       args: args,
       content: [],
@@ -1647,13 +1649,12 @@ exports.parse = function (source, opts, tags, filters) {
       stripNext = tagStripAfter.test(chunk);
       token = parseTag(chunk.replace(tagStrip, ''), line);
       if (token) {
-        switch (token.name) {
-        case 'extends':
+        if (token.name === 'extends') {
           parent = token.args.join('').replace(/^\'|\'$/g, '').replace(/^\"|\"$/g, '');
-          break;
-        case 'block':
+        }
+
+        if (token.block) {
           blocks[token.args.join('')] = token;
-          break;
         }
       }
       if (inRaw && !token) {
@@ -1724,7 +1725,7 @@ exports.compile = function (template, parents, options, blockName) {
   utils.each(tokens, function (token, index) {
     var o;
     if (typeof token === 'string') {
-      out += '_output += "' + token.replace(/\n|\r/g, '\\n').replace(/"/g, '\\"') + '";\n';
+      out += '_output += "' + token.replace(/\\/g, '\\\\').replace(/\n|\r/g, '\\n').replace(/"/g, '\\"') + '";\n';
       return;
     }
 
@@ -1755,7 +1756,7 @@ exports.compile = function (template, parents, options, blockName) {
 };
 
 },{"./lexer":4,"./utils":23}],6:[function(require,module,exports){
-var fs = require('fs'),
+(function(){var fs = require('fs'),
   path = require('path'),
   utils = require('./utils'),
   _tags = require('./tags'),
@@ -1993,9 +1994,11 @@ exports.Swig = function (opts) {
   /**
    * Add a custom tag. To expose your own extensions to compiled template code, see <code data-language="js">swig.setExtension</code>.
    *
+   * For a more in-depth explanation of writing custom tags, see <a href="../extending/#tags">Custom Tags</a>.
+   *
    * @example
    * var tacotag = require('./tacotag');
-   * swig.setTag('tacos', tacotag.parse, tacotag.compile, tacotag.ends);
+   * swig.setTag('tacos', tacotag.parse, tacotag.compile, tacotag.ends, tacotag.blockLevel);
    * // => {% tacos %}Make this be tacos.{% endtacos %}
    * // => Tacos tacos tacos tacos.
    *
@@ -2003,9 +2006,10 @@ exports.Swig = function (opts) {
    * @param  {function} parse   Method for parsing tokens.
    * @param  {function} compile Method for compiling renderable output.
    * @param  {boolean} [ends=false]     Whether or not this tag requires an <i>end</i> tag.
+   * @param  {boolean} [blockLevel=false] If false, this tag will not be compiled outside of <code>block</code> tags when extending a parent template.
    * @return {undefined}
    */
-  this.setTag = function (name, parse, compile, ends) {
+  this.setTag = function (name, parse, compile, ends, blockLevel) {
     if (typeof parse !== 'function') {
       throw new Error('Tag "' + name + '" parse method is not a valid function.');
     }
@@ -2017,7 +2021,8 @@ exports.Swig = function (opts) {
     tags[name] = {
       parse: parse,
       compile: compile,
-      ends: ends || false
+      ends: ends || false,
+      block: !!blockLevel
     };
   };
 
@@ -2089,7 +2094,7 @@ exports.Swig = function (opts) {
     src = fs.readFileSync(pathname, 'utf8');
 
     if (!options.filename) {
-      options.filename = pathname;
+      options = utils.extend({ filename: pathname }, options);
     }
 
     return self.parse(src, options);
@@ -2103,6 +2108,11 @@ exports.Swig = function (opts) {
    * @private
    */
   function remapBlocks(blocks, tokens) {
+    utils.each(blocks, function (block) {
+      if (block.name !== 'block') {
+        tokens.unshift(block);
+      }
+    });
     return utils.map(tokens, function (token) {
       var args = token.args ? token.args.join('') : '';
       if (token.name === 'block' && blocks[args]) {
@@ -2332,11 +2342,15 @@ exports.Swig = function (opts) {
 
     pathname = (options.resolveFrom) ? path.resolve(path.dirname(options.resolveFrom), pathname) : pathname;
     if (!options.filename) {
-      options.filename = pathname;
+      options = utils.extend({ filename: pathname }, options);
     }
     cached = cacheGet(pathname);
 
     if (cached) {
+      if (cb) {
+        cb(null, cached);
+        return;
+      }
       return cached;
     }
 
@@ -2398,6 +2412,7 @@ exports.renderFile = defaultInstance.renderFile;
 exports.run = defaultInstance.run;
 exports.invalidateCache = defaultInstance.invalidateCache;
 
+})()
 },{"./dateformatter":2,"./filters":3,"./parser":5,"./tags":7,"./utils":23,"fs":24,"path":25}],7:[function(require,module,exports){
 exports.autoescape = require('./tags/autoescape');
 exports.block = require('./tags/block');
@@ -2484,6 +2499,7 @@ exports.parse = function (str, line, parser, types) {
 };
 
 exports.ends = true;
+exports.block = true;
 
 },{}],10:[function(require,module,exports){
 /**
@@ -2836,7 +2852,7 @@ exports.parse = function (str, line, parser, types) {
 exports.ends = true;
 
 },{}],16:[function(require,module,exports){
-var utils = require('../utils');
+(function(){var utils = require('../utils');
 
 /**
  * Allows you to import macros from another file directly into your current context.
@@ -2917,6 +2933,7 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 };
 
 
+})()
 },{"../swig":6,"../utils":23}],17:[function(require,module,exports){
 var ignore = 'ignore',
   missing = 'missing';
@@ -3157,7 +3174,7 @@ exports.parse = function (str, line, parser, types, stack) {
 exports.ends = true;
 
 },{}],21:[function(require,module,exports){
-/**
+(function(){/**
  * Set a variable for re-use in the current context.
  *
  * @alias set
@@ -3207,6 +3224,9 @@ exports.parse = function (str, line, parser, types, stack) {
   return true;
 };
 
+exports.block = true;
+
+})()
 },{}],22:[function(require,module,exports){
 var utils = require('../utils');
 
@@ -3437,7 +3457,7 @@ exports.throwError = function (message, line, file) {
 // nothing to see here... no file methods for the browser
 
 },{}],25:[function(require,module,exports){
-var process=require("__browserify_process");function filter (xs, fn) {
+(function(process){function filter (xs, fn) {
     var res = [];
     for (var i = 0; i < xs.length; i++) {
         if (fn(xs[i], i, xs)) res.push(xs[i]);
@@ -3613,8 +3633,7 @@ exports.relative = function(from, to) {
   return outputParts.join('/');
 };
 
-exports.sep = '/';
-
+})(require("__browserify_process"))
 },{"__browserify_process":26}],26:[function(require,module,exports){
 // shim for using process in browser
 
