@@ -1,3 +1,11 @@
+[1.0.0-pre3](https://github.com/paularmstrong/swig/tree/v1.0.0-pre3) / 2013-08-20
+---------------------------------------------------------------------------------
+
+* **Changed** Allow tags at block-level if specified. [gh-289](https://github.com/paularmstrong/swig/issues/289)
+* **Fixed** `swig.compileFile` runs callback template is found in cache. [gh-291](https://github.com/paularmstrong/swig/issues/291)
+* **Fixed** Accidental modification of Swig Options Object. [gh-287](https://github.com/paularmstrong/swig/issues/287)
+* **Fixed** Preserve forward-slashes in text chunks. [gh-285](https://github.com/paularmstrong/swig/issues/285)
+
 [1.0.0-pre2](https://github.com/paularmstrong/swig/tree/v1.0.0-pre2) / 2013-08-18
 ---------------------------------------------------------------------------------
 
