@@ -17,6 +17,35 @@ The swig codebase is [highly tested](http://paularmstrong.github.io/swig/coverag
 
 Here's an example of a great pull request that followed the above checklist: [Pull Request 273 - Added patch and test case for object prototypal inheritance](https://github.com/paularmstrong/swig/pull/273).
 
+Documentation
+-------------
+
+All documentation for Swig is generated from [JSDoc](http://usejsdoc.org) comments inline and Swig template files within the `./docs` folder. To make changes to any documentation, follow these steps and tips:
+
+```sh
+# Clone the repo
+$ git clone git@github.com:paularmstrong/swig.git
+$ cd swig
+```
+
+```sh
+# Get dependencies
+$ make
+```
+
+```sh
+# Run the documentation test environment
+$ make docs
+```
+
+* Once you have the documentation test environment running, your browser will open showing you the documentation site.
+* If you are making changes to HTML files in `./docs`, reload the page to see them reflected immediately.
+* If you are changing any content from the inline [JSDoc](http://usejsdoc.org) comments, run `make build-docs` to rebuild the JSON data files.
+
+### Important!
+
+Once your documentation pull request is accepted, the person merging your request will be responsible for pushing the changes to the live site. Any attempts to push to or run a pull request to the `gh-pages` branch will not be accepted.
+
 Build Tasks
 -----------
 
@@ -51,3 +80,7 @@ Builds documentation for `docs` and `gh-pages` tasks from jsdoc comments in `./l
 ### make gh-pages
 
 Builds documentation as static HTML files and pushes them to the `gh-pages` git branch.
+
+### make version
+
+Updates the package version number throughout the source files from the `version` key found in `package.json`.
