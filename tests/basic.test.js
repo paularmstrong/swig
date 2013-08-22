@@ -12,6 +12,12 @@ function resetOptions() {
   swig.invalidateCache();
 }
 
+describe('version', function () {
+  it('is 1.0.0-pre3', function () {
+    expect(swig.version).to.equal('1.0.0-pre3');
+  });
+});
+
 describe('options', function () {
   beforeEach(resetOptions);
   afterEach(resetOptions);
