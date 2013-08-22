@@ -21,6 +21,15 @@ var casefiles = fs.readdirSync(__dirname + '/cases/'),
     return f.split('.')[0];
   });
 
+describe('bin/swig -v', function () {
+  it('shows the version number', function (done) {
+    exec(bin + ' -v', function (err, stdout, stderr) {
+      expect((/^\d+\.\d+\.\d+/).test(stdout)).to.equal(true);
+      done();
+    });
+  });
+});
+
 describe('bin/swig render', function () {
   _.each(cases, function (files, c) {
     var test = _.find(files, isTest),

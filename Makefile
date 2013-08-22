@@ -1,6 +1,6 @@
 SHA := $(shell git rev-parse HEAD)
 THIS_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
-VERSION_REGEX = [0-9]*\.[0-9]*\.[0-9]*[^\" ]*
+VERSION_REGEX = [0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*[^\" ]*
 VERSION := $(shell npm ls | grep "swig@" |  grep -Eo "${VERSION_REGEX}" -m 1)
 
 TMP = 'tmp'
@@ -13,6 +13,14 @@ all:
 	@npm install -d
 	@cp scripts/githooks/* .git/hooks/
 	@chmod -R +x .git/hooks/
+
+.INTERMEDIATE version: \
+	browser/comments.js \
+	docs/index.json
+
+version:
+	@sed -i.bak 's/${VERSION_REGEX}/${VERSION}/' lib/swig.js
+	@rm lib/swig.js.bak
 
 browser/comments.js: FORCE
 	@sed -i.bak 's/v${VERSION_REGEX}/v${VERSION}/' $@
@@ -156,7 +164,7 @@ docs: build build-docs
 
 FORCE:
 
-.PHONY: all \
+.PHONY: all version \
 	build build-docs \
 	test test-browser lint coverage \
 	docs/index.json docs gh-pages

@@ -42,6 +42,21 @@
   </section>
 {% endfor %}
 
+{% for prop in properties %}
+  <section id="{{ prop.name }}" class="doc">
+    <h2>swig.{{ prop.name }}</h2>
+
+    <p>{{ prop.description|replace('\n', '</p><p>')|raw }}</p>
+
+    {% if prop.examples.length %}
+    <h3>Examples</h3>
+    {% for example in prop.examples %}
+    <pre><code data-language="js">{{ example }}</code></pre>
+    {% endfor %}
+    {% endif %}
+  </section>
+{% endfor %}
+
 {% for fn in functions %}
   {% if fn.access !== "private" %}
   <section id="{{ fn.name }}" class="doc">
@@ -103,6 +118,9 @@
 <ol>
 {% for def in typedefs %}
   <li><a href="#{{ def.name }}">Object: {{ def.name }}</a></li>
+{% endfor %}
+{% for prop in properties %}
+  <li><a href="#{{ prop.name }}">swig.{{ prop.name }}</a></li>
 {% endfor %}
 {% for fn in functions %}
   {% if fn.access !== "private" %}

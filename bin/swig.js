@@ -16,6 +16,7 @@ var command,
       '    $0 render [files] [options]\n'
       )
     .describe({
+      v: 'Show the Swig version number.',
       o: 'Output location.',
       h: 'Show this help screen.',
       j: 'Variable context as a JSON file.',
@@ -25,6 +26,7 @@ var command,
       'wrap-end': 'Template wrapper end for "compile".',
       'method-name': 'Method name to set template to and run from.'
     })
+    .alias('v', 'version')
     .alias('o', 'output')
     .default('o', 'stdout')
     .alias('h', 'help')
@@ -35,6 +37,10 @@ var command,
     .default('wrap-end', ';')
     .default('method-name', 'tpl')
     .check(function (argv) {
+      if (argv.v) {
+        return;
+      }
+
       if (!argv._.length) {
         throw new Error('');
       }
@@ -61,6 +67,11 @@ var command,
   anonymous,
   files,
   fn;
+
+if (argv.v) {
+  console.log(require('../package').version);
+  process.exit(0);
+}
 
 if (argv.j) {
   ctx = JSON.parse(fs.readFileSync(argv.j, 'utf8'));
