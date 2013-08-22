@@ -1,12 +1,14 @@
 {
   "name": "swig",
   "version": "1.0.0-pre3",
-  "description": "A fast django-like templating engine for node.js and browsers.",
+  "description": "A simple, powerful, and extendable templating engine for node.js and browsers, similar to Django, Jinja2, and Twig.",
   "keywords": [
     "template",
     "templating",
     "html",
     "django",
+    "jinja",
+    "twig",
     "express",
     "block"
   ],
