@@ -148,10 +148,11 @@ var n = new Swig(),
       { v: ['FOO', 'bAr'], e: 'foo,bar' },
       { c: 'v|lower|join("")', v: { foo: 'BAR' }, e: 'bar' }
     ],
-    raw: [
+    safe: [
+      { c: 'v|safe', v: '<&>', e: '<&>' },
       { c: 'v|raw', v: '<&>', e: '<&>' },
-      { c: 'v|first|raw', v: ['<&>'], e: '<&>' },
-      { c: 'v|raw|lower', v: '<&>fOo', e: '<&>foo' }
+      { c: 'v|first|safe', v: ['<&>'], e: '<&>' },
+      { c: 'v|safe|lower', v: '<&>fOo', e: '<&>foo' }
     ],
     replace: [
       { c: 'v|replace("o", "a")', v: 'foo', e: 'fao' },
