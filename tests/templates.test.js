@@ -17,6 +17,7 @@ function isExpectation(f) {
 describe('Templates', function () {
   var casefiles = [],
     locals = {
+      alpha: 'Nachos',
       first: 'Tacos',
       second: 'Burritos',
       includefile: "./includes.html"
