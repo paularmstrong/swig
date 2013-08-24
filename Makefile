@@ -10,7 +10,9 @@ BIN = node_modules/.bin
 PWD = $(shell pwd | sed -e 's/[\/&]/\\&/g')
 
 all:
-	@npm install -d
+	@echo "Installing packages"
+	@npm install --depth=100 --loglevel=error
+	@npm link &>/dev/null
 	@cp scripts/githooks/* .git/hooks/
 	@chmod -R +x .git/hooks/
 
