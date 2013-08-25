@@ -62,7 +62,7 @@ describe('bin/swig compile + run', function () {
     it(c, function (done) {
       var tmp = fixPath(__dirname + '/../tmp');
       exec('node ' + bin + ' compile ' + p + ' -j ' + locals + ' -o ' + tmp, function (err, stdout, stderr) {
-        var p = fixPath(tmp + '/' + test);
+        var p = fixPath(__dirname + '/../tmp/' + test);
         exec('node ' + bin + ' run ' + p + ' -c ' + locals, function (err, stdout, stdrr) {
           expect(stdout.replace(/\n$/, '')).to.equal(expectation);
           done();
