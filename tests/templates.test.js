@@ -50,6 +50,6 @@ describe('Templates', function () {
   it('throw if circular extends are found', function () {
     expect(function () {
       swig.compileFile(__dirname + '/cases-error/circular.test.html')();
-    }).to.throwError(/Illegal circular extends of "[\w\/\._\-]+"\./);
+    }).to.throwError(/Illegal circular extends of ".*/);
   });
 });
