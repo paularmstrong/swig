@@ -46,7 +46,8 @@ var cases = {
   'can execute functions': [
     { c: '{{ c() }}', e: 'foobar' },
     { c: '{{ c(1) }}', e: 'barfoo' },
-    { c: '{{ d(1)|default("tacos") }}', e: 'tacos' },
+    { c: '{{ d(1)|default("tacos")|replace("tac", "churr") }}', e: 'churros' },
+    { c: '{{ d()|default("tacos") }}', e: 'tacos' },
     { c: '{{ e.f(4, "blah") }}', e: 'eeeee' },
     { c: '{{ q.r(4, "blah") }}', e: '' },
     { c: '{{ e["f"](4, "blah") }}', e: 'eeeee' }
