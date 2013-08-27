@@ -1,4 +1,5 @@
-z{% extends "./layout.html" %}
+{% extends "./layout.html" %}
+{% import "./includes/macros.html" as docmacro %}
 
 {% block title %}{% parent %} &raquo; Tags{% endblock %}
 
@@ -10,7 +11,7 @@ z{% extends "./layout.html" %}
   <section id="{{ fn.name }}" class="doc">
     <h2>{{ fn.name }}</h2>
 
-    <p>{{ fn.description|replace('\n', '</p><p>')|raw }}</p>
+    {{ docmacro.description(fn) }}
 
     {% if fn.parameters.length %}
     <h3>Parameters</h3>

@@ -1,0 +1,5 @@
+{% macro description(el) %}
+{% if el.description %}
+  <p>{{ el.description|replace('\n', '</p><p>', 'g')|safe }}</p>
+{% endif %}
+{% endmacro %}

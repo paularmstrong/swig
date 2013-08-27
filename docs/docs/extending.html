@@ -1,12 +1,9 @@
 {% extends "./layout.html" %}
+{% import "./includes/macros.html" as docmacro %}
 
 {% block title %}{% parent %} &raquo; Extending Swig{% endblock %}
 
 {% block content %}
-
-{% macro description(el) %}
-  <p>{{ el.description|replace('\n', '</p><p>', 'g')|raw }}</p>
-{% endmacro %}
 
 <h1 id="extending">Extending Swig</h1>
 
@@ -15,7 +12,7 @@
 
   {% for t in typedefs %}{% if t.name === 'Filter' %}
   <section class="doc">
-    {{ description(t)|raw }}
+    {{ docmacro.description(t) }}
 
     <h4>Arguments</h4>
     <table>
@@ -35,7 +32,7 @@
         <td><code data-language="js">{{ p.type }}</code></td>
         <td>{% if p.optional %}✔{% endif %}</td>
         <td><samp data-language="js">{{ p.default }}</samp></td>
-        <td>{{ description(p)|raw }}</td>
+        <td>{{ docmacro.description(p) }}</td>
       </tr>
       {% endfor %}
       </tbody>
@@ -61,7 +58,7 @@
   <section id="{{ t.name }}" class="doc">
     <h3>{{ t.name }}({% for p in t.params %}{{ p.name }}{% if not loop.last %}, {% endif %}{% endfor %})</h3>
 
-    <p>{{ description(t)|raw }}</p>
+    <p>{{ docmacro.description(t) }}</p>
 
     <h4>Arguments</h4>
     <table>
@@ -81,7 +78,7 @@
         <td><code data-language="js">{{ p.type }}</code></td>
         <td>{% if p.optional %}✔{% endif %}</td>
         <td><samp data-language="js">{{ p.default }}</samp></td>
-        <td>{{ description(p)|raw }}</td>
+        <td>{{ docmacro.description(p) }}</td>
       </tr>
       {% endfor %}
       </tbody>
@@ -126,7 +123,7 @@
     {% if prop.isEnum %}
     <section id="{{ prop.name }}" class="doc">
       <h3>{{ prop.name }}</h3>
-      <p>{{ description(prop)|raw }}</p>
+      <p>{{ docmacro.description(prop) }}</p>
       <table>
         <thead>
           <tr>
@@ -155,7 +152,7 @@
         <tr>
           <td><samp data-language="js">{{ p.default }}</samp></td>
           <td><var data-language="js">types.{{ p.name }}</var></td>
-          <td>{{ p.description|raw }}</td>
+          <td>{{ docmacro.description(p) }}</td>
         </tr>
         {% endfor %}
         </tbody>

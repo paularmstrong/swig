@@ -1,4 +1,5 @@
 {% extends "./layout.html" %}
+{% import "./includes/macros.html" as docmacro %}
 
 {% block title %}{% parent %} &raquo; API{% endblock %}
 
@@ -9,7 +10,7 @@
   <section id="{{ def.name }}" class="doc">
     <h2>Object Type: {{ def.name }}</h2>
 
-    <p>{{ def.description|replace('\n', '</p><p>')|raw }}</p>
+    {{ docmacro.description(def) }}
 
     {% if def.properties.length %}
     <h3>Properties</h3>
@@ -46,7 +47,7 @@
   <section id="{{ prop.name }}" class="doc">
     <h2>swig.{{ prop.name }}</h2>
 
-    <p>{{ prop.description|replace('\n', '</p><p>')|raw }}</p>
+    {{ docmacro.description(prop) }}
 
     {% if prop.examples.length %}
     <h3>Examples</h3>
@@ -69,7 +70,7 @@
       )
     </h2>
 
-    <p>{{ fn.description|replace('\n', '</p><p>')|raw }}</p>
+    {{ docmacro.description(fn) }}
 
     {% if fn.parameters.length %}
     <h3>Parameters</h3>

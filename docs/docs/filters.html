@@ -1,4 +1,5 @@
 {% extends "./layout.html" %}
+{% import "./includes/macros.html" as docmacro %}
 
 {% block title %}{% parent %} &raquo; Filters{% endblock %}
 
@@ -29,7 +30,7 @@
       {%- endfor -%}
     </h2>
 
-    <p>{{ fn.description|replace('\n', '</p><p>')|raw }}</p>
+    {{ docmacro.description(fn) }}
 
     {% if fn.parameters.length > 1 %}
     <h3>Parameters</h3>
