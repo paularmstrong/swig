@@ -1,4 +1,6 @@
 {% import "./macros.html" as macros %}
 
+{% block foo %}
 {{ macros.burritos() }}
 {{ macros.tacos('Chicken', 'Spicy') }}
+{% endblock %}
