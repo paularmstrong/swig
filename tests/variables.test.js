@@ -102,7 +102,7 @@ describe('Variables', function () {
       }).to.throwError(/Unable to parse "a\(asdf" on line 1\./);
       expect(function () {
         swig.render('{{ a[foo }}');
-      }).to.throwError(/Mismatched nesting state on line 1\./);
+      }).to.throwError(/Unable to parse "a\[foo" on line 1\./);
     });
 
     it('with unknown filters', function () {
