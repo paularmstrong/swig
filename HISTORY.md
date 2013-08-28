@@ -1,3 +1,16 @@
+[1.0.0-rc1](https://github.com/paularmstrong/swig/tree/v1.0.0-rc1) / 2013-08-28
+-------------------------------------------------------------------------------
+
+* **Added** `include` tag now accepts `only` (and is preferred, if possible). gh-240
+* **Added** `swig.version` and `-v` to cli
+* **Changed** Deprecated `raw` filter. Use `safe`.
+* **Changed** Allow `import` and `macro` tags to be outside of blocks. gh-299
+* **Changed** Don't escape `macro` output. gh-297
+* **Changed** (Custom) Filters can be marked as `safe` to disable auto-escaping. gh-294
+* **Fixed** `{% for k,v ... %}` tag syntax assigned variables backwards.
+* **Fixed** Filters being applied to empty functions throwing errors. gh-296
+* **Fixed** `include` paths on windows. gh-295
+
 [1.0.0-pre3](https://github.com/paularmstrong/swig/tree/v1.0.0-pre3) / 2013-08-20
 ---------------------------------------------------------------------------------
 
