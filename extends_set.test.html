@@ -1,0 +1,14 @@
+var tpl = function (_swig,_ctx,_filters,_utils,_fn) {
+  var _ext = _swig.extensions,
+    _output = "";
+var foo = _ctx.foo;
+foo = "bar";
+_output += "Hi,\n\n";
+var foo = _ctx.foo;
+foo = "bar";
+_output += _filters["e"](((typeof foo !== "undefined") ? ((typeof foo !== "undefined") ? foo : "") : ((typeof _ctx.foo !== "undefined") ? _ctx.foo : "")));
+_output += "\n\nSincerely,\nMe\n";
+
+  return _output;
+
+};

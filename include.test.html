@@ -1,0 +1,19 @@
+var tpl = function (_swig,_ctx,_filters,_utils,_fn) {
+  var _ext = _swig.extensions,
+    _output = "";
+_output += _swig.compileFile("./includes.html", {resolveFrom: "/Users/paularms/Sites/swig/tests/cases/include.test.html"})(_ctx);
+_output += "\n\n";
+_output += _swig.compileFile("./includes.html", {resolveFrom: "/Users/paularms/Sites/swig/tests/cases/include.test.html"})(_utils.extend({}, _ctx, {first:'Churros', second:'Nachos'}));
+_output += "\n\n";
+_output += _swig.compileFile("./includes.html", {resolveFrom: "/Users/paularms/Sites/swig/tests/cases/include.test.html"})({first:'Churros', second:'Nachos'});
+_output += "\n\n";
+_output += _swig.compileFile(((typeof includefile !== "undefined") ? ((typeof includefile !== "undefined") ? includefile : "") : ((typeof _ctx.includefile !== "undefined") ? _ctx.includefile : "")), {resolveFrom: "/Users/paularms/Sites/swig/tests/cases/include.test.html"})(_ctx);
+_output += "\n\n";
+  try {
+_output += _swig.compileFile("./notreal", {resolveFrom: "/Users/paularms/Sites/swig/tests/cases/include.test.html"})(_ctx);
+} catch (e) {}
+_output += "\n";
+
+  return _output;
+
+};

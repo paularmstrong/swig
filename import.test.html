@@ -1,0 +1,36 @@
+var tpl = function (_swig,_ctx,_filters,_utils,_fn) {
+  var _ext = _swig.extensions,
+    _output = "";
+var macros = {};
+(function () {
+  var _output = "";
+macros.burritos = function burritos() {
+  var _output = "";
+_output += "\nI like burritos!<p>\n";
+
+  return _output;
+};
+macros.burritos.safe = true;
+macros.tacos = function tacos(meat, salsa) {
+  var _output = "";
+_output += "\nTaco\nMeat: ";
+_output += _filters["e"](((typeof meat !== "undefined") ? ((typeof meat !== "undefined") ? meat : "") : ((typeof _ctx.meat !== "undefined") ? _ctx.meat : "")));
+_output += "\nSalsa: ";
+_output += _filters["e"](((typeof salsa !== "undefined") ? ((typeof salsa !== "undefined") ? salsa : "") : ((typeof _ctx.salsa !== "undefined") ? _ctx.salsa : "")));
+_output += "\n";
+
+  return _output;
+};
+macros.tacos.safe = true;
+}());
+_output += "\n\n";
+_output += "\n";
+_output += (((typeof macros !== "undefined" && "burritos" in macros) ? ((typeof macros !== "undefined" && "burritos" in macros) ? macros.burritos : "") : ((typeof _ctx.macros !== "undefined" && "burritos" in _ctx.macros) ? _ctx.macros.burritos : "")) || _fn).call(((typeof macros !== "undefined") ? ((typeof macros !== "undefined") ? macros : "") : ((typeof _ctx.macros !== "undefined") ? _ctx.macros : "")));
+_output += "\n";
+_output += (((typeof macros !== "undefined" && "tacos" in macros) ? ((typeof macros !== "undefined" && "tacos" in macros) ? macros.tacos : "") : ((typeof _ctx.macros !== "undefined" && "tacos" in _ctx.macros) ? _ctx.macros.tacos : "")) || _fn).call(((typeof macros !== "undefined") ? ((typeof macros !== "undefined") ? macros : "") : ((typeof _ctx.macros !== "undefined") ? _ctx.macros : "")), 'Chicken', 'Spicy');
+_output += "\n";
+_output += "\n";
+
+  return _output;
+
+};

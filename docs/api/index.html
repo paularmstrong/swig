@@ -8,7 +8,7 @@
   <!--[if IE]>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <![endif]-->
-  <title> » Documentation &raquo; API</title>
+  <title>Swig » Documentation &raquo; API</title>
   
 
   
@@ -57,7 +57,11 @@
   <section id="SwigOpts" class="doc">
     <h2>Object Type: SwigOpts</h2>
 
-    <p>Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.</p>
+    
+
+  <p>Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.</p>
+
+
 
     
     <h3>Properties</h3>
@@ -117,7 +121,11 @@
   <section id="CacheOptions" class="doc">
     <h2>Object Type: CacheOptions</h2>
 
-    <p>Cache control for templates. Defaults to saving all templates into memory.</p>
+    
+
+  <p>Cache control for templates. Defaults to saving all templates into memory.</p>
+
+
 
     
 
@@ -143,6 +151,25 @@ swig.setDefaults({
 
 
 
+  <section id="version" class="doc">
+    <h2>swig.version</h2>
+
+    
+
+  <p>Swig version number as a string.</p>
+
+
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">if (swig.version === &quot;1.0.0-rc1&quot;) { ... }</code></pre>
+    
+    
+  </section>
+
+
+
   
 
   
@@ -155,7 +182,11 @@ swig.setDefaults({
       )
     </h2>
 
-    <p>Set defaults for the base and all new Swig environments.</p>
+    
+
+  <p>Set defaults for the base and all new Swig environments.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -211,7 +242,11 @@ swig.setDefaults({
       )
     </h2>
 
-    <p>Set the default TimeZone offset for date formatting via the date filter. This is a global setting and will affect all Swig environments, old or new.</p>
+    
+
+  <p>Set the default TimeZone offset for date formatting via the date filter. This is a global setting and will affect all Swig environments, old or new.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -256,7 +291,11 @@ swig.setDefaults({
       )
     </h2>
 
-    <p>Create a new, separate Swig compile/render environment.</p>
+    
+
+  <p>Create a new, separate Swig compile/render environment.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -310,7 +349,11 @@ swig.render(&#39;Tacos are &lt;%= tacos =&gt;!&#39;, { locals: { tacos: &#39;del
       )
     </h2>
 
-    <p>Clears the in-memory template cache.</p>
+    
+
+  <p>Clears the in-memory template cache.</p>
+
+
 
     
 
@@ -337,7 +380,11 @@ swig.render(&#39;Tacos are &lt;%= tacos =&gt;!&#39;, { locals: { tacos: &#39;del
       )
     </h2>
 
-    <p>Add a custom filter for swig variables.</p>
+    
+
+  <p>Add a custom filter for swig variables.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -402,8 +449,11 @@ swig.setFilter(&#39;replaceMs&#39;, replaceMs);
       )
     </h2>
 
-    <p>Add a custom tag. To expose your own extensions to compiled template code, see <code data-language="js">swig.setExtension</code>.</p><p>
-For a more in-depth explanation of writing custom tags, see <a href="../extending/#tags">Custom Tags</a>.</p>
+    
+
+  <p>Add a custom tag. To expose your own extensions to compiled template code, see <code data-language="js">swig.setExtension</code>.</p><p></p><p>For a more in-depth explanation of writing custom tags, see <a href="../extending/#tags">Custom Tags</a>.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -489,7 +539,11 @@ swig.setTag(&#39;tacos&#39;, tacotag.parse, tacotag.compile, tacotag.ends, tacot
       )
     </h2>
 
-    <p>Add extensions for custom tags. This allows any custom tag to access a globally available methods via a special globally available object, <var>_ext</var>, in templates.</p>
+    
+
+  <p>Add extensions for custom tags. This allows any custom tag to access a globally available methods via a special globally available object, <var>_ext</var>, in templates.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -556,7 +610,11 @@ swig.setTag(&#39;trans&#39;, parseTrans, compileTrans, true);</code></pre>
       )
     </h2>
 
-    <p>Pre-compile a source string into a cache-able template function.</p>
+    
+
+  <p>Pre-compile a source string into a cache-able template function.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -602,7 +660,7 @@ swig.setTag(&#39;trans&#39;, parseTrans, compileTrans, true);</code></pre>
     
     <pre><code data-language="js">swig.precompile(&#39;{{ tacos }}&#39;);
 // =&gt; {
-//      tpl: function (locals, filters, utils, efn) { ... },
+//      tpl: function (_swig, _locals, _filters, _utils, _fn) { ... },
 //      tokens: {
 //        name: undefined,
 //        parent: null,
@@ -626,7 +684,11 @@ In order to render a pre-compiled template, you must have access to filters and 
       )
     </h2>
 
-    <p>Compile and render a template string for final output.</p>
+    
+
+  <p>Compile and render a template string for final output.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -689,7 +751,11 @@ When rendering a source string, a file path should be specified in the options o
       )
     </h2>
 
-    <p>Compile and render a template file for final output. This is most useful for libraries like Express.js.</p>
+    
+
+  <p>Compile and render a template file for final output. This is most useful for libraries like Express.js.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -764,7 +830,11 @@ When rendering a source string, a file path should be specified in the options o
       )
     </h2>
 
-    <p>Compile string source into a renderable template function.</p>
+    
+
+  <p>Compile string source into a renderable template function.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -834,7 +904,11 @@ When compiling a source string, a file path should be specified in the options o
       )
     </h2>
 
-    <p>Compile a source file into a renderable template function.</p>
+    
+
+  <p>Compile a source file into a renderable template function.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -913,7 +987,11 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
       )
     </h2>
 
-    <p>Run a pre-compiled template function. This is most useful in the browser when you've pre-compiled your templates with the Swig command-line tool.</p>
+    
+
+  <p>Run a pre-compiled template function. This is most useful in the browser when you've pre-compiled your templates with the Swig command-line tool.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -996,6 +1074,9 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
   <li><a href="#SwigOpts">Object: SwigOpts</a></li>
 
   <li><a href="#CacheOptions">Object: CacheOptions</a></li>
+
+
+  <li><a href="#version">swig.version</a></li>
 
 
   

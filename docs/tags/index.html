@@ -8,7 +8,7 @@
   <!--[if IE]>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <![endif]-->
-  <title> » Documentation &raquo; Tags</title>
+  <title>Swig » Documentation &raquo; Tags</title>
   
 
   
@@ -58,7 +58,11 @@
   <section id="autoescape" class="doc">
     <h2>autoescape</h2>
 
-    <p>Control auto-escaping of variable output from within your templates.</p>
+    
+
+  <p>Control auto-escaping of variable output from within your templates.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -105,8 +109,11 @@
   <section id="block" class="doc">
     <h2>block</h2>
 
-    <p>Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.</p><p>
-See <a href="#inheritance">Template Inheritance</a> for more information.</p>
+    
+
+  <p>Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.</p><p></p><p>See <a href="#inheritance">Template Inheritance</a> for more information.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -149,7 +156,11 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
   <section id="else" class="doc">
     <h2>else</h2>
 
-    <p>Used within an <code data-language="swig">{% if %}</code> tag, the code block following this tag up until <code data-language="swig">{% endif %}</code> will be rendered if the <i>if</i> statement returns false.</p>
+    
+
+  <p>Used within an <code data-language="swig">{% if %}</code> tag, the code block following this tag up until <code data-language="swig">{% endif %}</code> will be rendered if the <i>if</i> statement returns false.</p>
+
+
 
     
 
@@ -173,7 +184,11 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
   <section id="elif" class="doc">
     <h2>elif</h2>
 
-    <p>Like <code data-language="swig">{% else %}</code>, except this tag can take more conditional statements.</p>
+    
+
+  <p>Like <code data-language="swig">{% else %}</code>, except this tag can take more conditional statements.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -223,8 +238,11 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
   <section id="extends" class="doc">
     <h2>extends</h2>
 
-    <p>Makes the current template extend a parent template. This tag must be the first item in your template.</p><p>
-See <a href="#inheritance">Template Inheritance</a> for more information.</p>
+    
+
+  <p>Makes the current template extend a parent template. This tag must be the first item in your template.</p><p></p><p>See <a href="#inheritance">Template Inheritance</a> for more information.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -267,7 +285,11 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
   <section id="filter" class="doc">
     <h2>filter</h2>
 
-    <p>Apply a filter to an entire block of template.</p>
+    
+
+  <p>Apply a filter to an entire block of template.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -314,7 +336,11 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
   <section id="for" class="doc">
     <h2>for</h2>
 
-    <p>Loop over objects and arrays.</p>
+    
+
+  <p>Loop over objects and arrays.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -402,8 +428,11 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
   <section id="if" class="doc">
     <h2>if</h2>
 
-    <p>Used to create conditional statements in templates. Accepts most JavaScript valid comparisons.</p><p>
-Can be used in conjunction with <a href="#elseif"><code data-language="swig">{% elseif ... %}</code></a> and <a href="#else"><code data-language="swig">{% else %}</code></a> tags.</p>
+    
+
+  <p>Used to create conditional statements in templates. Accepts most JavaScript valid comparisons.</p><p></p><p>Can be used in conjunction with <a href="#elseif"><code data-language="swig">{% elseif ... %}</code></a> and <a href="#else"><code data-language="swig">{% else %}</code></a> tags.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -470,8 +499,11 @@ Can be used in conjunction with <a href="#elseif"><code data-language="swig">{% 
   <section id="import" class="doc">
     <h2>import</h2>
 
-    <p>Allows you to import macros from another file directly into your current context.</p><p>
-The import tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.</p>
+    
+
+  <p>Allows you to import macros from another file directly into your current context.</p><p>The import tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.</p><p>It is highly recommended to import your macros directly into the template that they will be used in and <strong>not</strong> from the template's parent. Doing so may have unexpected escaping effects.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -536,7 +568,11 @@ The import tag is specifically designed for importing macros into your template 
   <section id="include" class="doc">
     <h2>include</h2>
 
-    <p>Includes a template partial in place. The template is rendered within the current locals variable context.</p>
+    
+
+  <p>Includes a template partial in place. The template is rendered within the current locals variable context.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -573,7 +609,15 @@ The import tag is specifically designed for importing macros into your template 
           <td><code data-language="js">object</code></td>
           <td>✔</td>
           <td><code data-language="js"></code></td>
-          <td>Restrict the local variable context in the file to this key-value object.</td>
+          <td>Local variable key-value object context to provide to the included file.</td>
+        </tr>
+      
+        <tr>
+          <td><var data-language="js">only</var></td>
+          <td><code data-language="js">literal</code></td>
+          <td>✔</td>
+          <td><code data-language="js"></code></td>
+          <td>Restricts to <strong>only</strong> passing the <code>with context</code> as local variables�the included template will not be aware of any other local variables in the parent template. For best performance, usage of this option is recommended if possible.</td>
         </tr>
       
         <tr>
@@ -599,7 +643,7 @@ The import tag is specifically designed for importing macros into your template 
 // =&gt; I like burritos and lemonade.</code></pre>
     
     <pre><code data-language="swig">// my_obj = { food: &#39;tacos&#39;, drink: &#39;horchata&#39; };
-{% include &quot;./partial.html&quot; with my_obj %}
+{% include &quot;./partial.html&quot; with my_obj only %}
 // =&gt; I like tacos and horchata.</code></pre>
     
     <pre><code data-language="swig">{% include &quot;/this/file/does/not/exist&quot; ignore missing %}
@@ -613,8 +657,11 @@ The import tag is specifically designed for importing macros into your template 
   <section id="macro" class="doc">
     <h2>macro</h2>
 
-    <p>Create custom, reusable snippets within your templates.</p><p>
-Can be imported from one template to another using the <a href="#import"><code data-language="swig">{% import ... %}</code></a> tag.</p>
+    
+
+  <p>Create custom, reusable snippets within your templates.</p><p>Can be imported from one template to another using the <a href="#import"><code data-language="swig">{% import ... %}</code></a> tag.</p><p>While macros may appear to work in child templates after having been defined in a parent template, they may not get properly escaped. It is recommended to always <a href="#import"><code data-language="swig">{% import ... %}</code></a> your macros directly into the template they'll be used in.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -647,7 +694,7 @@ Can be imported from one template to another using the <a href="#import"><code d
     
     <h3>Examples</h3>
     
-    <pre><code data-language="swig">{% macro input type name id label value error %}
+    <pre><code data-language="swig">{% macro input(type, name, id, label, value, error) %}
   &lt;label for=&quot;{{ name }}&quot;&gt;{{ label }}&lt;/label&gt;
   &lt;input type=&quot;{{ type }}&quot; name=&quot;{{ name }}&quot; id=&quot;{{ id }}&quot; value=&quot;{{ value }}&quot;{% if error %} class=&quot;error&quot;{% endif %}&gt;
 {% endmacro %}
@@ -664,8 +711,11 @@ Can be imported from one template to another using the <a href="#import"><code d
   <section id="parent" class="doc">
     <h2>parent</h2>
 
-    <p>Inject the content from the parent template's block of the same name into the current block.</p><p>
-See <a href="#inheritance">Template Inheritance</a> for more information.</p>
+    
+
+  <p>Inject the content from the parent template's block of the same name into the current block.</p><p></p><p>See <a href="#inheritance">Template Inheritance</a> for more information.</p>
+
+
 
     
 
@@ -688,7 +738,11 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
   <section id="raw" class="doc">
     <h2>raw</h2>
 
-    <p>Forces the content to not be auto-escaped. All swig instructions will be ignored and the content will be rendered exactly as it was given.</p>
+    
+
+  <p>Forces the content to not be auto-escaped. All swig instructions will be ignored and the content will be rendered exactly as it was given.</p>
+
+
 
     
 
@@ -709,7 +763,11 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
   <section id="set" class="doc">
     <h2>set</h2>
 
-    <p>Set a variable for re-use in the current context.</p>
+    
+
+  <p>Set a variable for re-use in the current context.</p>
+
+
 
     
     <h3>Parameters</h3>
@@ -775,7 +833,11 @@ See <a href="#inheritance">Template Inheritance</a> for more information.</p>
   <section id="spaceless" class="doc">
     <h2>spaceless</h2>
 
-    <p>Attempts to remove whitespace between HTML tags. Use at your own risk.</p>
+    
+
+  <p>Attempts to remove whitespace between HTML tags. Use at your own risk.</p>
+
+
 
     
 

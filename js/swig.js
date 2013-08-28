@@ -1,5 +1,5 @@
-/*! Swig v1.0.0-pre3 | https://paularmstrong.github.com/swig | https://github.com/paularmstrong/swig/blob/master/LICENSE */
-/*! DateZ (c) 2011 Tomo Universalis | https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
+/*! Swig v1.0.0-rc1 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
 
@@ -212,7 +212,7 @@ exports.U = function (input) {
 };
 
 },{"./utils":23}],3:[function(require,module,exports){
-var utils = require('./utils'),
+(function(){var utils = require('./utils'),
   dateFormatter = require('./dateformatter');
 
 /**
@@ -515,20 +515,12 @@ exports.lower = function (input) {
 };
 
 /**
- * Forces the input to not be auto-escaped. Use this only on content that you know is safe to be rendered on your page.
- *
- * @example
- * // my_var = "<p>Stuff</p>";
- * {{ my_var|raw }}
- * // => <p>Stuff</p>
- *
- * @param  {*}  input
- * @return {*}          Raw, un-escaped output.
+ * Deprecated in favor of <a href="#safe">safe</a>.
  */
 exports.raw = function (input) {
-  // This is a magic filter. Its logic is hard-coded into Swig's parser.
-  return input;
+  return exports.safe(input);
 };
+exports.raw.safe = true;
 
 /**
  * Returns a new string with the matched search pattern replaced by the given replacement string. Uses JavaScript's built-in String.replace() method.
@@ -573,6 +565,23 @@ exports.replace = function (input, search, replacement, flags) {
 exports.reverse = function (input) {
   return exports.sort(input, true);
 };
+
+/**
+ * Forces the input to not be auto-escaped. Use this only on content that you know is safe to be rendered on your page.
+ *
+ * @example
+ * // my_var = "<p>Stuff</p>";
+ * {{ my_var|safe }}
+ * // => <p>Stuff</p>
+ *
+ * @param  {*}  input
+ * @return {*}          The input exactly how it was given, regardless of autoescaping status.
+ */
+exports.safe = function (input) {
+  // This is a magic filter. Its logic is hard-coded into Swig's parser.
+  return input;
+};
+exports.safe.safe = true;
 
 /**
  * Sort the input in an ascending direction.
@@ -767,6 +776,7 @@ exports.url_decode = function (input) {
   return decodeURIComponent(input);
 };
 
+})()
 },{"./dateformatter":2,"./utils":23}],4:[function(require,module,exports){
 var utils = require('./utils');
 
@@ -794,50 +804,52 @@ var TYPES = {
     FILTEREMPTY: 3,
     /** Function */
     FUNCTION: 4,
+    /** Function with no arguments */
+    FUNCTIONEMPTY: 5,
     /** Open parenthesis */
-    PARENOPEN: 5,
+    PARENOPEN: 6,
     /** Close parenthesis */
-    PARENCLOSE: 6,
+    PARENCLOSE: 7,
     /** Comma */
-    COMMA: 7,
+    COMMA: 8,
     /** Variable */
-    VAR: 8,
+    VAR: 9,
     /** Number */
-    NUMBER: 9,
+    NUMBER: 10,
     /** Math operator */
-    OPERATOR: 10,
+    OPERATOR: 11,
     /** Open square bracket */
-    BRACKETOPEN: 11,
+    BRACKETOPEN: 12,
     /** Close square bracket */
-    BRACKETCLOSE: 12,
+    BRACKETCLOSE: 13,
     /** Key on an object using dot-notation */
-    DOTKEY: 13,
+    DOTKEY: 14,
     /** Start of an array */
-    ARRAYOPEN: 14,
+    ARRAYOPEN: 15,
     /** End of an array
      * Currently unused
-    ARRAYCLOSE: 15, */
+    ARRAYCLOSE: 16, */
     /** Open curly brace */
-    CURLYOPEN: 16,
+    CURLYOPEN: 17,
     /** Close curly brace */
-    CURLYCLOSE: 17,
+    CURLYCLOSE: 18,
     /** Colon (:) */
-    COLON: 18,
+    COLON: 19,
     /** JavaScript-valid comparator */
-    COMPARATOR: 19,
+    COMPARATOR: 20,
     /** Boolean logic */
-    LOGIC: 20,
+    LOGIC: 21,
     /** Boolean logic "not" */
-    NOT: 21,
+    NOT: 22,
     /** true or false */
-    BOOL: 22,
+    BOOL: 23,
     /** Variable assignment */
-    ASSIGNMENT: 23,
+    ASSIGNMENT: 24,
     /** Start of a method */
-    METHODOPEN: 24,
+    METHODOPEN: 25,
     /** End of a method
      * Currently unused
-    METHODEND: 25, */
+    METHODEND: 26, */
     /** Unknown type */
     UNKNOWN: 100
   },
@@ -868,6 +880,13 @@ var TYPES = {
       type: TYPES.FILTEREMPTY,
       regex: [
         /^\|\s*(\w+)/
+      ],
+      idx: 1
+    },
+    {
+      type: TYPES.FUNCTIONEMPTY,
+      regex: [
+        /^\s*(\w+)\(\)/
       ],
       idx: 1
     },
@@ -1064,7 +1083,7 @@ exports.read = function (str) {
 };
 
 },{"./utils":23}],5:[function(require,module,exports){
-var utils = require('./utils'),
+(function(){var utils = require('./utils'),
   lexer = require('./lexer');
 
 var _t = lexer.types,
@@ -1075,6 +1094,9 @@ var _t = lexer.types,
  * Filters are simply functions that perform transformations on their first input argument.
  * Filters are run at render time, so they may not directly modify the compiled template structure in any way.
  * All of Swig's built-in filters are written in this same way. For more examples, reference the `filters.js` file in Swig's source.
+ *
+ * To disable auto-escaping on a custom filter, simply add a property to the filter method `safe = true;` and the output from this will not be escaped, no matter what the global settings are for Swig.
+ *
  * @typedef {function} Filter
  *
  * @example
@@ -1086,6 +1108,14 @@ var _t = lexer.types,
  * // => {{ myvar|foobar(3) }}
  * // Since myvar[3] !== 'foobar', we render:
  * // => bazbop
+ *
+ * @example
+ * // This filter will disable auto-escaping on its output:
+ * function bazbop (input) { return input; }
+ * bazbop.safe = true;
+ * swig.setFilter('bazbop', bazbop);
+ * // => {{ "<p>"|bazbop }}
+ * // => <p>
  *
  * @param {*} input Input argument, automatically sent from Swig's built-in parser.
  * @param {...*} [args] All other arguments are defined by the Filter author.
@@ -1105,13 +1135,15 @@ function escapeRegExp(str) {
 /**
  * Parse strings of variables and tags into tokens for future compilation.
  * @class
- * @param {array}  tokens     Pre-split tokens read by the Lexer.
- * @param {object} filters    Keyed object of filters that may be applied to variables.
- * @param {number} line       Beginning line number for the first token.
- * @param {string} [filename] Name of the file being parsed.
+ * @param {array}   tokens     Pre-split tokens read by the Lexer.
+ * @param {object}  filters    Keyed object of filters that may be applied to variables.
+ * @param {array}   macros     List of macros registered in the template.
+ * @param {boolean} autoescape Whether or not this should be autoescaped.
+ * @param {number}  line       Beginning line number for the first token.
+ * @param {string}  [filename] Name of the file being parsed.
  * @private
  */
-function TokenParser(tokens, filters, line, filename) {
+function TokenParser(tokens, filters, macros, autoescape, line, filename) {
   this.out = [];
   this.state = [];
   this.filterApplyIdx = [];
@@ -1119,6 +1151,8 @@ function TokenParser(tokens, filters, line, filename) {
   this.line = line;
   this.filename = filename;
   this.filters = filters;
+  this.macros = macros;
+  this.escape = autoescape;
 
   this.parse = function () {
     var self = this;
@@ -1140,6 +1174,18 @@ function TokenParser(tokens, filters, line, filename) {
     });
     if (self._parsers.end) {
       self._parsers.end.call(self);
+    }
+
+    if (self.escape) {
+      self.filterApplyIdx = [0];
+      if (typeof self.escape === 'string') {
+        self.parseToken({ type: _t.FILTER, match: 'e' });
+        self.parseToken({ type: _t.COMMA, match: ',' });
+        self.parseToken({ type: _t.STRING, match: String(autoescape) });
+        self.parseToken({ type: _t.PARENCLOSE, match: ')'});
+      } else {
+        self.parseToken({ type: _t.FILTEREMPTY, match: 'e' });
+      }
     }
 
     return self.out;
@@ -1190,7 +1236,7 @@ TokenParser.prototype = {
       }
     }
 
-    if (lastState &&
+    if (lastState && prevToken &&
         lastState === _t.FILTER &&
         prevToken.type === _t.FILTER &&
         token.type !== _t.PARENCLOSE &&
@@ -1213,36 +1259,48 @@ TokenParser.prototype = {
       break;
 
     case _t.STRING:
+      self.filterApplyIdx.push(self.out.length);
       self.out.push(match.replace(/\\/g, '\\\\'));
-      self.filterApplyIdx.push(self.out.length - 1);
       break;
 
     case _t.NUMBER:
+      self.filterApplyIdx.push(self.out.length);
       self.out.push(match);
-      self.filterApplyIdx.push(self.out.length - 1);
       break;
 
     case _t.FILTER:
       if (!self.filters.hasOwnProperty(match) || typeof self.filters[match] !== "function") {
         utils.throwError('Invalid filter "' + match + '"', self.line, self.filename);
       }
-      self.out.splice(self.filterApplyIdx[self.filterApplyIdx.length - 1], 0, '_filters["' + match + '"](');
+      self.escape = self.filters[match].safe ? false : self.escape;
+      temp = self.filterApplyIdx.pop();
+      self.out.splice(temp, 0, '_filters["' + match + '"](');
       self.state.push(token.type);
+      self.filterApplyIdx.push(temp);
       break;
 
     case _t.FILTEREMPTY:
       if (!self.filters.hasOwnProperty(match) || typeof self.filters[match] !== "function") {
         utils.throwError('Invalid filter "' + match + '"', self.line, self.filename);
       }
+      self.escape = self.filters[match].safe ? false : self.escape;
       self.out.splice(self.filterApplyIdx[self.filterApplyIdx.length - 1], 0, '_filters["' + match + '"](');
       self.out.push(')');
       break;
 
     case _t.FUNCTION:
-      self.state.push(token.type);
+    case _t.FUNCTIONEMPTY:
       self.out.push('((typeof ' + match + ' !== "undefined") ? ' + match +
         ' : ((typeof _ctx.' + match + ' !== "undefined") ? _ctx.' + match +
         ' : _fn))(');
+      if (self.macros.indexOf(match) !== -1) {
+        self.escape = false;
+      }
+      if (token.type === _t.FUNCTIONEMPTY) {
+        self.out[self.out.length - 1] = self.out[self.out.length - 1] + ')';
+      } else {
+        self.state.push(token.type);
+      }
       self.filterApplyIdx.push(self.out.length - 1);
       break;
 
@@ -1254,6 +1312,9 @@ TokenParser.prototype = {
           temp = prevToken.match.split('.').slice(0, -1);
           self.out.push(' || _fn).call(' + self.checkMatch(temp));
           self.state.push(_t.METHODOPEN);
+          if (self.macros.indexOf(prevToken.match) !== -1) {
+            self.escape = false;
+          }
         } else {
           self.out.push(' || _fn)(');
         }
@@ -1334,7 +1395,7 @@ TokenParser.prototype = {
       break;
 
     case _t.DOTKEY:
-      if (prevToken.type !== _t.VAR && prevToken.type !== _t.BRACKETCLOSE && prevToken.type !== _t.DOTKEY) {
+      if (!prevToken || (prevToken.type !== _t.VAR && prevToken.type !== _t.BRACKETCLOSE && prevToken.type !== _t.DOTKEY)) {
         utils.throwError('Unexpected key "' + match + '"', self.line, self.filename);
       }
       self.out.push('.' + match);
@@ -1459,6 +1520,7 @@ exports.parse = function (source, opts, tags, filters) {
     parent = null,
     tokens = [],
     blocks = {},
+    macros = [],
     inRaw = false,
     stripNext;
 
@@ -1472,28 +1534,9 @@ exports.parse = function (source, opts, tags, filters) {
   function parseVariable(str, line) {
     var tokens = lexer.read(utils.strip(str)),
       parser,
-      addescape,
       out;
 
-    addescape = escape && !(utils.some(tokens, function (token) {
-      return (token.type === _t.FILTEREMPTY || token.type === _t.FILTER) && token.match === 'raw';
-    }));
-
-    if (addescape) {
-      tokens.unshift({ type: _t.PARENOPEN, match: '(' });
-      tokens.push({ type: _t.PARENCLOSE, match: ')' });
-      if (typeof escape === 'string') {
-        tokens = tokens.concat([
-          { type: _t.FILTER, match: 'e' },
-          { type: _t.STRING, match: String(escape) },
-          { type: _t.PARENCLOSE, match: ')'}
-        ]);
-      } else {
-        tokens.push({ type: _t.FILTEREMPTY, match: 'e' });
-      }
-    }
-
-    parser = new TokenParser(tokens, filters, line, opts.filename);
+    parser = new TokenParser(tokens, filters, macros, escape, line, opts.filename);
     out = parser.parse().join('');
 
     if (parser.state.length) {
@@ -1555,7 +1598,7 @@ exports.parse = function (source, opts, tags, filters) {
     }
 
     tokens = lexer.read(utils.strip(chunks.join(' ')));
-    parser = new TokenParser(tokens, filters, line, opts.filename);
+    parser = new TokenParser(tokens, filters, macros, false, line, opts.filename);
     tag = tags[tagName];
 
     /**
@@ -1652,8 +1695,12 @@ exports.parse = function (source, opts, tags, filters) {
           parent = token.args.join('').replace(/^\'|\'$/g, '').replace(/^\"|\"$/g, '');
         }
 
-        if (token.block) {
+        if (token.block && (!stack.length || token.name === 'block')) {
           blocks[token.args.join('')] = token;
+        }
+
+        if (token.name === 'macro') {
+          macros.push(token.args[0]);
         }
       }
       if (inRaw && !token) {
@@ -1747,21 +1794,31 @@ exports.compile = function (template, parents, options, blockName) {
      * @param {SwigOpts} [options] Swig Options Object
      * @param {string} [blockName] Name of the direct block parent, if any.
      */
-    o = token.compile(exports.compile, token.args, token.content, parents, options, blockName);
+    o = token.compile(exports.compile, token.args ? token.args.slice(0) : [], token.content ? token.content.slice(0) : [], parents, options, blockName);
     out += o || '';
   });
 
   return out;
 };
 
+})()
 },{"./lexer":4,"./utils":23}],6:[function(require,module,exports){
-var fs = require('fs'),
+(function(){var fs = require('fs'),
   path = require('path'),
   utils = require('./utils'),
   _tags = require('./tags'),
   _filters = require('./filters'),
   parser = require('./parser'),
   dateformatter = require('./dateformatter');
+
+/**
+ * Swig version number as a string.
+ * @example
+ * if (swig.version === "1.0.0-rc1") { ... }
+ *
+ * @type {String}
+ */
+exports.version = "1.0.0-rc1";
 
 /**
  * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
@@ -2174,7 +2231,7 @@ exports.Swig = function (opts) {
    * @example
    * swig.precompile('{{ tacos }}');
    * // => {
-   * //      tpl: function (locals, filters, utils, efn) { ... },
+   * //      tpl: function (_swig, _locals, _filters, _utils, _fn) { ... },
    * //      tokens: {
    * //        name: undefined,
    * //        parent: null,
@@ -2199,12 +2256,12 @@ exports.Swig = function (opts) {
       tokens.tokens = remapBlocks(tokens.blocks, parents[0].tokens);
     }
 
-    tpl = new Function('_swig', '_ctx', '_filters', 'utils', '_fn', [
-      '  var _ext = _swig.extensions,\n',
-      '    _output = "";',
-      parser.compile(tokens, parents, options),
-      '  return _output;',
-    ].join('\n  '));
+    tpl = new Function('_swig', '_ctx', '_filters', '_utils', '_fn',
+      '  var _ext = _swig.extensions,\n' +
+      '    _output = "";\n' +
+      parser.compile(tokens, parents, options) + '\n' +
+      '  return _output;\n'
+      );
 
     return { tpl: tpl, tokens: tokens };
   };
@@ -2411,6 +2468,7 @@ exports.renderFile = defaultInstance.renderFile;
 exports.run = defaultInstance.run;
 exports.invalidateCache = defaultInstance.invalidateCache;
 
+})()
 },{"./dateformatter":2,"./filters":3,"./parser":5,"./tags":7,"./utils":23,"fs":24,"path":25}],7:[function(require,module,exports){
 exports.autoescape = require('./tags/autoescape');
 exports.block = require('./tags/block');
@@ -2695,7 +2753,8 @@ exports.compile = function (compiler, args, content) {
 
   if (args[0] && args[0] === ',') {
     args.shift();
-    key = args.shift();
+    key = val;
+    val = args.shift();
   }
 
   last = args.join('');
@@ -2705,7 +2764,7 @@ exports.compile = function (compiler, args, content) {
     '  var __l = ' + last + ';\n',
     '  if (!__l) { return; }\n',
     '  var loop = { first: false, index: 1, index0: 0, revindex: __l.length, revindex0: __l.length - 1, length: __l.length, last: false };\n',
-    '  utils.each(__l, function (' + val + ', ' + key + ') {\n',
+    '  _utils.each(__l, function (' + val + ', ' + key + ') {\n',
     '    loop.key = ' + key + ';\n',
     '    loop.first = (loop.index0 === 0);\n',
     '    loop.last = (loop.revindex0 === 0);\n',
@@ -2850,12 +2909,12 @@ exports.parse = function (str, line, parser, types) {
 exports.ends = true;
 
 },{}],16:[function(require,module,exports){
-var utils = require('../utils');
+(function(){var utils = require('../utils');
 
 /**
  * Allows you to import macros from another file directly into your current context.
- *
  * The import tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.
+ * It is highly recommended to import your macros directly into the template that they will be used in and <strong>not</strong> from the template's parent. Doing so may have unexpected escaping effects.
  *
  * @alias import
  *
@@ -2874,35 +2933,47 @@ var utils = require('../utils');
  * @param {literal}     varname   Local-accessible object name to assign the macros to.
  */
 exports.compile = function (compiler, args, content, parents, options) {
-  var parentFile = args.shift(),
-    parseFile = require('../swig').parseFile,
-    file = args.shift(),
-    ctx = args.shift(),
+  var ctx = args.pop(),
     out = 'var ' + ctx + ' = {};\n' +
       '(function () {\n' +
       '  var _output = "";\n',
     tokens;
 
-  tokens = parseFile(file.replace(/^("|')|("|')$/g, ''), { resolveFrom: options.filename }).tokens;
-  utils.each(tokens, function (token) {
-    var fn;
-    if (!token || token.name !== 'macro' || !token.compile) {
-      return;
-    }
-    out += ctx + '.' + token.args[0] + ' = ' + token.compile(compiler, token.args, token.content, parents, utils.extend({}, options, { resolveFrom: parentFile }));
-  });
-
-  out += '})();\n';
+  out += utils.map(args, function (arg) {
+    return arg.replace(/__ctx__/g, ctx);
+  }).join('');
+  out += '}());\n';
 
   return out;
 };
 
 exports.parse = function (str, line, parser, types, stack, opts) {
-  var file, ctx;
+  var parseFile = require('../swig').parseFile,
+    compiler = require('../parser').compile,
+    parseOpts = { resolveFrom: opts.filename },
+    compileOpts = utils.extend({}, opts, parseOpts),
+    macros = [],
+    tokens,
+    ctx;
+
   parser.on(types.STRING, function (token) {
-    if (!file) {
-      file = token.match;
-      this.out.push(file);
+    var self = this;
+    if (!tokens) {
+      tokens = parseFile(token.match.replace(/^("|')|("|')$/g, ''), parseOpts).tokens;
+      utils.each(tokens, function (token) {
+        var out = '',
+          macroName,
+          safe;
+        if (!token || token.name !== 'macro' || !token.compile) {
+          return;
+        }
+        macroName = token.args[0];
+        out += '__ctx__.' + macroName + ' = ' + token.compile(compiler, token.args, token.content, [], compileOpts);
+        safe = macroName + '\\.safe ';
+        out = out.replace(new RegExp(safe), '__ctx__.' + safe.replace(/\\/g, ''));
+        macros.push(macroName);
+        self.out.push(out);
+      });
       return;
     }
 
@@ -2910,7 +2981,8 @@ exports.parse = function (str, line, parser, types, stack, opts) {
   });
 
   parser.on(types.VAR, function (token) {
-    if (!file || ctx) {
+    var self = this;
+    if (!tokens || ctx) {
       throw new Error('Unexpected variable "' + token.match + '" on line ' + line + '.');
     }
 
@@ -2919,21 +2991,24 @@ exports.parse = function (str, line, parser, types, stack, opts) {
     }
 
     ctx = token.match;
-    this.out.push(ctx);
+    self.out.push(ctx);
+    utils.each(macros, function (macro) {
+      self.macros.push(ctx + '.' + macro);
+    });
 
     return false;
-  });
-  parser.on('start', function () {
-    this.out.push(opts.filename);
   });
 
   return true;
 };
 
+exports.block = true;
 
-},{"../swig":6,"../utils":23}],17:[function(require,module,exports){
+})()
+},{"../parser":5,"../swig":6,"../utils":23}],17:[function(require,module,exports){
 var ignore = 'ignore',
-  missing = 'missing';
+  missing = 'missing',
+  only = 'only';
 
 /**
  * Includes a template partial in place. The template is rendered within the current locals variable context.
@@ -2948,7 +3023,7 @@ var ignore = 'ignore',
  *
  * @example
  * // my_obj = { food: 'tacos', drink: 'horchata' };
- * {% include "./partial.html" with my_obj %}
+ * {% include "./partial.html" with my_obj only %}
  * // => I like tacos and horchata.
  *
  * @example
@@ -2957,22 +3032,25 @@ var ignore = 'ignore',
  *
  * @param {string|var}  file      The path, relative to the template root, to render into the current context.
  * @param {literal}     [with]    Literally, "with".
- * @param {object}      [context] Restrict the local variable context in the file to this key-value object.
- * @param {literal} [ignore missing] Will output empty string if not found instead of throwing an error.
+ * @param {object}      [context] Local variable key-value object context to provide to the included file.
+ * @param {literal}     [only]    Restricts to <strong>only</strong> passing the <code>with context</code> as local variables–the included template will not be aware of any other local variables in the parent template. For best performance, usage of this option is recommended if possible.
+ * @param {literal}     [ignore missing] Will output empty string if not found instead of throwing an error.
  */
 exports.compile = function (compiler, args, content, parents, options) {
   var file = args.shift(),
-    parentFile = args.pop(),
+    onlyIdx = args.indexOf(only),
+    onlyCtx = onlyIdx !== -1 ? args.splice(onlyIdx, 1) : false,
+    parentFile = args.pop().replace(/\\/g, '\\\\'),
     ignore = args[args.length - 1] === missing ? (args.pop()) : false,
     w = args.join('');
 
-  return '(function () {\n' +
-    (ignore ? '  try {\n' : '') +
-    '    _output += _swig.compileFile(' + file + ', {' +
+  return (ignore ? '  try {\n' : '') +
+    '_output += _swig.compileFile(' + file + ', {' +
     'resolveFrom: "' + parentFile + '"' +
-    '})(' + (w || '_ctx') + ');\n' +
-    (ignore ? '} catch (e) {}\n' : '') +
-    '})();\n';
+    '})(' +
+    ((onlyCtx && w) ? w : (!w ? '_ctx' : '_utils.extend({}, _ctx, ' + w + ')')) +
+    ');\n' +
+    (ignore ? '} catch (e) {}\n' : '');
 };
 
 exports.parse = function (str, line, parser, types, stack, opts) {
@@ -2998,6 +3076,11 @@ exports.parse = function (str, line, parser, types, stack, opts) {
       return;
     }
 
+    if (w && token.match === only && this.prevToken.match !== 'with') {
+      this.out.push(token.match);
+      return;
+    }
+
     if (token.match === ignore) {
       return false;
     }
@@ -3018,7 +3101,7 @@ exports.parse = function (str, line, parser, types, stack, opts) {
   });
 
   parser.on('end', function () {
-    this.out.push(opts.filename);
+    this.out.push(opts.filename || null);
   });
 
   return true;
@@ -3027,13 +3110,13 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 },{}],18:[function(require,module,exports){
 /**
  * Create custom, reusable snippets within your templates.
- *
  * Can be imported from one template to another using the <a href="#import"><code data-language="swig">{% import ... %}</code></a> tag.
+ * While macros may appear to work in child templates after having been defined in a parent template, they may not get properly escaped. It is recommended to always <a href="#import"><code data-language="swig">{% import ... %}</code></a> your macros directly into the template they'll be used in.
  *
  * @alias macro
  *
  * @example
- * {% macro input type name id label value error %}
+ * {% macro input(type, name, id, label, value, error) %}
  *   <label for="{{ name }}">{{ label }}</label>
  *   <input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}"{% if error %} class="error"{% endif %}>
  * {% endmacro %}
@@ -3044,14 +3127,15 @@ exports.parse = function (str, line, parser, types, stack, opts) {
  *
  * @param {...arguments} arguments  User-defined arguments.
  */
-exports.compile = function (compiler, args, content) {
+exports.compile = function (compiler, args, content, parents, options, blockName) {
   var fnName = args.shift();
 
   return 'function ' + fnName + '(' + args.join('') + ') {\n' +
     '  var _output = "";\n' +
-    compiler(content) + '\n' +
+    compiler(content, parents, options, blockName) + '\n' +
     '  return _output;\n' +
-    '}\n';
+    '};\n' +
+    fnName + '.safe = true;\n';
 };
 
 exports.parse = function (str, line, parser, types, stack) {
@@ -3069,6 +3153,13 @@ exports.parse = function (str, line, parser, types, stack) {
       name = token.match;
       this.out.push(name);
       this.state.push(types.FUNCTION);
+    }
+  });
+
+  parser.on(types.FUNCTIONEMPTY, function (token) {
+    if (!name) {
+      name = token.match;
+      this.out.push(name);
     }
   });
 
@@ -3171,7 +3262,7 @@ exports.parse = function (str, line, parser, types, stack) {
 exports.ends = true;
 
 },{}],21:[function(require,module,exports){
-/**
+(function(){/**
  * Set a variable for re-use in the current context.
  *
  * @alias set
@@ -3223,6 +3314,7 @@ exports.parse = function (str, line, parser, types, stack) {
 
 exports.block = true;
 
+})()
 },{}],22:[function(require,module,exports){
 var utils = require('../utils');
 
@@ -3453,7 +3545,7 @@ exports.throwError = function (message, line, file) {
 // nothing to see here... no file methods for the browser
 
 },{}],25:[function(require,module,exports){
-var process=require("__browserify_process");function filter (xs, fn) {
+(function(process){function filter (xs, fn) {
     var res = [];
     for (var i = 0; i < xs.length; i++) {
         if (fn(xs[i], i, xs)) res.push(xs[i]);
@@ -3629,8 +3721,7 @@ exports.relative = function(from, to) {
   return outputParts.join('/');
 };
 
-exports.sep = '/';
-
+})(require("__browserify_process"))
 },{"__browserify_process":26}],26:[function(require,module,exports){
 // shim for using process in browser
 

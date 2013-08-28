@@ -8,7 +8,7 @@
   <!--[if IE]>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <![endif]-->
-  <title> » Documentation &raquo; Extending Swig</title>
+  <title>Swig » Documentation &raquo; Extending Swig</title>
   
 
   
@@ -52,8 +52,6 @@
   <div class="span9">
   
 
-
-
 <h1 id="extending">Extending Swig</h1>
 
 <section id="filters">
@@ -62,7 +60,9 @@
   
   <section class="doc">
     
-  <p>Filters are simply functions that perform transformations on their first input argument.</p><p>Filters are run at render time, so they may not directly modify the compiled template structure in any way.</p><p>All of Swig's built-in filters are written in this same way. For more examples, reference the `filters.js` file in Swig's source.</p>
+
+  <p>Filters are simply functions that perform transformations on their first input argument.</p><p>Filters are run at render time, so they may not directly modify the compiled template structure in any way.</p><p>All of Swig's built-in filters are written in this same way. For more examples, reference the `filters.js` file in Swig's source.</p><p></p><p>To disable auto-escaping on a custom filter, simply add a property to the filter method `safe = true;` and the output from this will not be escaped, no matter what the global settings are for Swig.</p>
+
 
 
     <h4>Arguments</h4>
@@ -84,7 +84,9 @@
         <td></td>
         <td><samp data-language="js"></samp></td>
         <td>
+
   <p>Input argument, automatically sent from Swig's built-in parser.</p>
+
 </td>
       </tr>
       
@@ -94,7 +96,9 @@
         <td>✔</td>
         <td><samp data-language="js"></samp></td>
         <td>
+
   <p>All other arguments are defined by the Filter author.</p>
+
 </td>
       </tr>
       
@@ -110,6 +114,13 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
 // =&gt; {{ myvar|foobar(3) }}
 // Since myvar[3] !== &#39;foobar&#39;, we render:
 // =&gt; bazbop</code></pre>
+    
+    <pre><code data-language="js">// This filter will disable auto-escaping on its output:
+function bazbop (input) { return input; }
+bazbop.safe = true;
+swig.setFilter(&#39;bazbop&#39;, bazbop);
+// =&gt; {{ &quot;&lt;p&gt;&quot;|bazbop }}
+// =&gt; &lt;p&gt;</code></pre>
     
   </section>
   
@@ -129,7 +140,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
     <h3>parse(str, line, parser, types, stack, options)</h3>
 
     <p>
+
   <p>Define custom parsing methods for your tag.</p>
+
 </p>
 
     <h4>Arguments</h4>
@@ -151,7 +164,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
         <td></td>
         <td><samp data-language="js"></samp></td>
         <td>
+
   <p>The full token string of the tag.</p>
+
 </td>
       </tr>
       
@@ -161,7 +176,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
         <td></td>
         <td><samp data-language="js"></samp></td>
         <td>
+
   <p>The line number that this tag appears on.</p>
+
 </td>
       </tr>
       
@@ -171,7 +188,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
         <td></td>
         <td><samp data-language="js"></samp></td>
         <td>
+
   <p>A TokenParser instance.</p>
+
 </td>
       </tr>
       
@@ -181,7 +200,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
         <td></td>
         <td><samp data-language="js"></samp></td>
         <td>
+
   <p>Lexer token type enum.</p>
+
 </td>
       </tr>
       
@@ -191,7 +212,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
         <td></td>
         <td><samp data-language="js"></samp></td>
         <td>
+
   <p>The current stack of open tags.</p>
+
 </td>
       </tr>
       
@@ -201,7 +224,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
         <td></td>
         <td><samp data-language="js"></samp></td>
         <td>
+
   <p>Swig Options Object.</p>
+
 </td>
       </tr>
       
@@ -225,7 +250,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
     <h3>compile(compiler, args, content, parents, options, blockName)</h3>
 
     <p>
+
   <p>Compile callback for VarToken and TagToken objects.</p>
+
 </p>
 
     <h4>Arguments</h4>
@@ -247,7 +274,7 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
         <td></td>
         <td><samp data-language="js"></samp></td>
         <td>
-  <p></p>
+
 </td>
       </tr>
       
@@ -257,7 +284,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
         <td>✔</td>
         <td><samp data-language="js"></samp></td>
         <td>
+
   <p>Array of parsed arguments on the for the token.</p>
+
 </td>
       </tr>
       
@@ -267,7 +296,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
         <td>✔</td>
         <td><samp data-language="js"></samp></td>
         <td>
+
   <p>Array of content within the token.</p>
+
 </td>
       </tr>
       
@@ -277,7 +308,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
         <td>✔</td>
         <td><samp data-language="js"></samp></td>
         <td>
+
   <p>Array of parent templates for the current template context.</p>
+
 </td>
       </tr>
       
@@ -287,7 +320,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
         <td>✔</td>
         <td><samp data-language="js"></samp></td>
         <td>
+
   <p>Swig Options Object</p>
+
 </td>
       </tr>
       
@@ -297,7 +332,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
         <td>✔</td>
         <td><samp data-language="js"></samp></td>
         <td>
+
   <p>Name of the direct block parent, if any.</p>
+
 </td>
       </tr>
       
@@ -349,7 +386,9 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
     <section id="TYPES" class="doc">
       <h3>TYPES</h3>
       <p>
+
   <p>Enum for token types.</p>
+
 </p>
       <table>
         <thead>
@@ -379,151 +418,261 @@ swig.setFilter(&#39;foobar&#39;, function (input, idx) {
         <tr>
           <td><samp data-language="js">0</samp></td>
           <td><var data-language="js">types.WHITESPACE</var></td>
-          <td>Whitespace</td>
+          <td>
+
+  <p>Whitespace</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">1</samp></td>
           <td><var data-language="js">types.STRING</var></td>
-          <td>Plain string</td>
+          <td>
+
+  <p>Plain string</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">2</samp></td>
           <td><var data-language="js">types.FILTER</var></td>
-          <td>Variable filter</td>
+          <td>
+
+  <p>Variable filter</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">3</samp></td>
           <td><var data-language="js">types.FILTEREMPTY</var></td>
-          <td>Empty variable filter</td>
+          <td>
+
+  <p>Empty variable filter</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">4</samp></td>
           <td><var data-language="js">types.FUNCTION</var></td>
-          <td>Function</td>
+          <td>
+
+  <p>Function</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">5</samp></td>
-          <td><var data-language="js">types.PARENOPEN</var></td>
-          <td>Open parenthesis</td>
+          <td><var data-language="js">types.FUNCTIONEMPTY</var></td>
+          <td>
+
+  <p>Function with no arguments</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">6</samp></td>
-          <td><var data-language="js">types.PARENCLOSE</var></td>
-          <td>Close parenthesis</td>
+          <td><var data-language="js">types.PARENOPEN</var></td>
+          <td>
+
+  <p>Open parenthesis</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">7</samp></td>
-          <td><var data-language="js">types.COMMA</var></td>
-          <td>Comma</td>
+          <td><var data-language="js">types.PARENCLOSE</var></td>
+          <td>
+
+  <p>Close parenthesis</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">8</samp></td>
-          <td><var data-language="js">types.VAR</var></td>
-          <td>Variable</td>
+          <td><var data-language="js">types.COMMA</var></td>
+          <td>
+
+  <p>Comma</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">9</samp></td>
-          <td><var data-language="js">types.NUMBER</var></td>
-          <td>Number</td>
+          <td><var data-language="js">types.VAR</var></td>
+          <td>
+
+  <p>Variable</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">10</samp></td>
-          <td><var data-language="js">types.OPERATOR</var></td>
-          <td>Math operator</td>
+          <td><var data-language="js">types.NUMBER</var></td>
+          <td>
+
+  <p>Number</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">11</samp></td>
-          <td><var data-language="js">types.BRACKETOPEN</var></td>
-          <td>Open square bracket</td>
+          <td><var data-language="js">types.OPERATOR</var></td>
+          <td>
+
+  <p>Math operator</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">12</samp></td>
-          <td><var data-language="js">types.BRACKETCLOSE</var></td>
-          <td>Close square bracket</td>
+          <td><var data-language="js">types.BRACKETOPEN</var></td>
+          <td>
+
+  <p>Open square bracket</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">13</samp></td>
-          <td><var data-language="js">types.DOTKEY</var></td>
-          <td>Key on an object using dot-notation</td>
+          <td><var data-language="js">types.BRACKETCLOSE</var></td>
+          <td>
+
+  <p>Close square bracket</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">14</samp></td>
-          <td><var data-language="js">types.ARRAYOPEN</var></td>
-          <td>Start of an array</td>
+          <td><var data-language="js">types.DOTKEY</var></td>
+          <td>
+
+  <p>Key on an object using dot-notation</p>
+
+</td>
         </tr>
         
         <tr>
-          <td><samp data-language="js">16</samp></td>
-          <td><var data-language="js">types.CURLYOPEN</var></td>
-          <td>Open curly brace</td>
+          <td><samp data-language="js">15</samp></td>
+          <td><var data-language="js">types.ARRAYOPEN</var></td>
+          <td>
+
+  <p>Start of an array</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">17</samp></td>
-          <td><var data-language="js">types.CURLYCLOSE</var></td>
-          <td>Close curly brace</td>
+          <td><var data-language="js">types.CURLYOPEN</var></td>
+          <td>
+
+  <p>Open curly brace</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">18</samp></td>
-          <td><var data-language="js">types.COLON</var></td>
-          <td>Colon (:)</td>
+          <td><var data-language="js">types.CURLYCLOSE</var></td>
+          <td>
+
+  <p>Close curly brace</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">19</samp></td>
-          <td><var data-language="js">types.COMPARATOR</var></td>
-          <td>JavaScript-valid comparator</td>
+          <td><var data-language="js">types.COLON</var></td>
+          <td>
+
+  <p>Colon (:)</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">20</samp></td>
-          <td><var data-language="js">types.LOGIC</var></td>
-          <td>Boolean logic</td>
+          <td><var data-language="js">types.COMPARATOR</var></td>
+          <td>
+
+  <p>JavaScript-valid comparator</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">21</samp></td>
-          <td><var data-language="js">types.NOT</var></td>
-          <td>Boolean logic "not"</td>
+          <td><var data-language="js">types.LOGIC</var></td>
+          <td>
+
+  <p>Boolean logic</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">22</samp></td>
-          <td><var data-language="js">types.BOOL</var></td>
-          <td>true or false</td>
+          <td><var data-language="js">types.NOT</var></td>
+          <td>
+
+  <p>Boolean logic "not"</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">23</samp></td>
-          <td><var data-language="js">types.ASSIGNMENT</var></td>
-          <td>Variable assignment</td>
+          <td><var data-language="js">types.BOOL</var></td>
+          <td>
+
+  <p>true or false</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">24</samp></td>
+          <td><var data-language="js">types.ASSIGNMENT</var></td>
+          <td>
+
+  <p>Variable assignment</p>
+
+</td>
+        </tr>
+        
+        <tr>
+          <td><samp data-language="js">25</samp></td>
           <td><var data-language="js">types.METHODOPEN</var></td>
-          <td>Start of a method</td>
+          <td>
+
+  <p>Start of a method</p>
+
+</td>
         </tr>
         
         <tr>
           <td><samp data-language="js">100</samp></td>
           <td><var data-language="js">types.UNKNOWN</var></td>
-          <td>Unknown type</td>
+          <td>
+
+  <p>Unknown type</p>
+
+</td>
         </tr>
         
         </tbody>
