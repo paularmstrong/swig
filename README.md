@@ -14,7 +14,7 @@ Features
 * Automatically escapes all output for safe HTML rendering.
 * Lots of iteration and conditionals supported.
 * Robust without the bloat.
-* Extendable and customizable.
+* Extendable and customizable. See [Swig-Extras](https://github.com/paularmstrong/swig-extras) for some examples.
 * Great [code coverage](http://paularmstrong.github.io/swig/coverage.html).
 
 Need Help? Have Questions? Comments?

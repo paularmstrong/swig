@@ -1,0 +1,11 @@
+{% extends "./extends_layouts/extends_bare.html" %}
+
+{% import "./macros.html" as m %}
+{% macro burritos() %}
+I like burritos!
+{% endmacro %}
+
+{% block content %}
+{{ burritos() }}
+{{ m.burritos() }}
+{% endblock %}
