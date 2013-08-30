@@ -38,30 +38,36 @@ Basic Example
 
 ### Template code
 
-    <h1>{{ pagename|title }}</h1>
-    <ul>
-    {% for author in authors %}
-        <li{% if loop.first %} class="first"{% endif %}>{{ author }}</li>
-    {% endfor %}
-    </ul>
+```html
+<h1>{{ pagename|title }}</h1>
+<ul>
+{% for author in authors %}
+    <li{% if loop.first %} class="first"{% endif %}>{{ author }}</li>
+{% endfor %}
+</ul>
+```
 
 ### node.js code
 
-    var swig  = require('swig');
-    var tpl = template.compileFile('/absolute/path/to/template.html');
-    tpl({
-        pagename: 'awesome people',
-        authors: ['Paul', 'Jim', 'Jane']
-    });
+```js
+var swig  = require('swig');
+var tpl = template.compileFile('/absolute/path/to/template.html');
+tpl({
+    pagename: 'awesome people',
+    authors: ['Paul', 'Jim', 'Jane']
+});
+```
 
 ### Output
 
-    <h1>Awesome People</h1>
-    <ul>
-        <li class="first">Paul</li>
-        <li>Jim</li>
-        <li>Jane</li>
-    </ul>
+```html
+<h1>Awesome People</h1>
+<ul>
+    <li class="first">Paul</li>
+    <li>Jim</li>
+    <li>Jane</li>
+</ul>
+```
 
 How it works
 ------------
