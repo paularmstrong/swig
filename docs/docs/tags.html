@@ -6,14 +6,16 @@
 {% block content %}
 <h1 id="tags">Tags</h1>
 
-{% for fn in functions %}
-  {% if fn.access !== "private" %}
+{% for fn in tags %}
+  {% if fn.access !== "private" and fn.kind === 'function' and fn.undocumented !== true %}
   <section id="{{ fn.name }}" class="doc">
     <h2>{{ fn.name }}</h2>
 
+    {{ docmacro.source(fn) }}
+
     {{ docmacro.description(fn) }}
 
-    {% if fn.parameters.length %}
+    {% if fn.params.length %}
     <h3>Parameters</h3>
     <table>
       <thead>
@@ -26,11 +28,11 @@
         </tr>
       </thead>
       <tbody>
-      {% for param in fn.parameters %}
+      {% for param in fn.params %}
         <tr>
           <td><var data-language="js">{{ param.name }}</var></td>
-          <td><code data-language="js">{{ param.type|join(" or ") }}</code></td>
-          <td>{% if param.optional %}✔{% endif %}</td>
+          <td><code data-language="js">{{ param.type.names|join(" or ") }}</code></td>
+          <td>{% if param.optional === true %}✔{% endif %}</td>
           <td><code data-language="js">{{ param.default }}</code></td>
           <td>{{ param.description|raw }}</td>
         </tr>
@@ -41,7 +43,9 @@
 
     {% if fn.returns %}
     <h3>Returns</h3>
-      <p><samp data-language="js">{{ fn.returns.type }}</samp>: {{ fn.returns.description|raw }}</p>
+    {% for ret in fn.returns %}
+    <p><samp data-language="js">{{ ret.type.names|join(', ') }}</samp>: {{ ret.description|raw }}</p>
+    {% endfor %}
     {% endif %}
 
     {% if fn.examples.length %}
@@ -57,8 +61,8 @@
 
 {% block tagsubnav %}
 <ol>
-  {% for fn in functions %}
-  {% if fn.access !== "private" %}
+  {% for fn in tags %}
+  {% if fn.access !== "private" and fn.kind === 'function' and fn.undocumented !== true %}
     <li>
       <a href="#{{ fn.name }}">{{ fn.name }}</a>
     </li>

@@ -32,7 +32,7 @@
       {%- endfor -%}
     </h2>
 
-    <p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/{{ version }}/{{ fn.meta.path }}/{{ fn.meta.filename }}#L{{ fn.meta.lineno }}">{{ fn.meta.path }}/{{ fn.meta.filename }}#L{{ fn.meta.lineno }}</a></p>
+    {{ docmacro.source(fn, 1) }}
 
     {{ docmacro.description(fn) }}
 
@@ -53,7 +53,7 @@
         {% if param.name !== 'input' %}
         <tr>
           <td><var data-language="js">{{ param.name }}</var></td>
-          <td><code data-language="js">{{ param.type|join(" or ") }}</code></td>
+          <td><code data-language="js">{{ param.type.names|join(" or ") }}</code></td>
           <td>{% if param.optional === true %}✔{% endif %}</td>
           <td><code data-language="js">{{ param.default }}</code></td>
           <td>{{ param.description|raw }}</td>

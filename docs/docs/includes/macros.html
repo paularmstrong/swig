@@ -3,3 +3,7 @@
   <p>{{ el.description|replace('\n', '</p><p>', 'g')|safe }}</p>
 {% endif %}
 {% endmacro %}
+
+{% macro source(fn, line) %}
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/{{ version }}/{{ fn.meta.path }}/{{ fn.meta.filename }}{% if line %}#L{{ fn.meta.lineno }}{% endif %}">{{ fn.meta.path }}/{{ fn.meta.filename }}{% if line %}#L{{ fn.meta.lineno }}{% endif %}</a></p>
+{% endmacro %}
