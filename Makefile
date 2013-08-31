@@ -120,7 +120,9 @@ docs/coverage.html: FORCE
 
 docs/docs/api.json: FORCE
 	@echo "Building $@..."
-	@${BIN}/jsdoc lib/swig.js ${JSDOCOPTS} > $@
+	@echo '{ "api": ' > $@
+	@${BIN}/jsdoc lib/swig.js -X >> $@
+	@echo '}' >> $@
 
 docs/docs/filters.json: FORCE
 	@echo "Building $@..."

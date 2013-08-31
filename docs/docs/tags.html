@@ -33,7 +33,7 @@
           <td><var data-language="js">{{ param.name }}</var></td>
           <td><code data-language="js">{{ param.type.names|join(" or ") }}</code></td>
           <td>{% if param.optional === true %}✔{% endif %}</td>
-          <td><code data-language="js">{{ param.default }}</code></td>
+          <td><code data-language="js">{{ param.defaultvalue }}</code></td>
           <td>{{ param.description|raw }}</td>
         </tr>
       {% endfor %}

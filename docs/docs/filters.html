@@ -19,7 +19,7 @@
 <hr>
 
 {% for fn in filters %}
-  {% if fn.access !== "private" and fn.kind === 'function' %}
+  {% if fn.access !== "private" and fn.kind === 'function' and fn.undocumented !== true %}
   <section id="{{ fn.name }}" class="doc">
     <h2>
       {{ fn.name -}}
@@ -55,7 +55,7 @@
           <td><var data-language="js">{{ param.name }}</var></td>
           <td><code data-language="js">{{ param.type.names|join(" or ") }}</code></td>
           <td>{% if param.optional === true %}✔{% endif %}</td>
-          <td><code data-language="js">{{ param.default }}</code></td>
+          <td><code data-language="js">{{ param.defaultvalue }}</code></td>
           <td>{{ param.description|raw }}</td>
         </tr>
         {% endif %}

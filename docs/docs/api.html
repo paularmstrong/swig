@@ -6,9 +6,11 @@
 {% block content %}
 <h1>Swig API</h1>
 
-{% for def in typedefs %}
+{% for def in api %}
+{% if def.kind === 'typedef' and def.undocumented !== true %}
   <section id="{{ def.name }}" class="doc">
     <h2>Object Type: {{ def.name }}</h2>
+    {{ docmacro.source(def, 1) }}
 
     {{ docmacro.description(def) }}
 
@@ -41,11 +43,14 @@
     {% endfor %}
     {% endif %}
   </section>
+{% endif %}
 {% endfor %}
 
-{% for prop in properties %}
+{% for prop in api %}
+{% if prop.kind === 'member' and prop.undocumented !== true %}
   <section id="{{ prop.name }}" class="doc">
     <h2>swig.{{ prop.name }}</h2>
+    {{ docmacro.source(prop, 1) }}
 
     {{ docmacro.description(prop) }}
 
@@ -56,23 +61,26 @@
     {% endfor %}
     {% endif %}
   </section>
+{% endif %}
 {% endfor %}
 
-{% for fn in functions %}
-  {% if fn.access !== "private" %}
+{% for fn in api %}
+  {% if fn.access !== "private" and fn.kind === 'function' and fn.undocumented !== true %}
   <section id="{{ fn.name }}" class="doc">
     <h2>
       swig.{{ fn.name }}(
-      {%- for p in fn.parameters -%}
+      {%- for p in fn.params -%}
       {{ p.name }}
       {%- if not loop.last %}, {% endif -%}
       {%- endfor -%}
       )
     </h2>
 
+    {{ docmacro.source(fn, 1) }}
+
     {{ docmacro.description(fn) }}
 
-    {% if fn.parameters.length %}
+    {% if fn.params.length %}
     <h3>Parameters</h3>
     <table>
       <thead>
@@ -85,12 +93,12 @@
         </tr>
       </thead>
       <tbody>
-      {% for param in fn.parameters %}
+      {% for param in fn.params %}
         <tr>
           <td><var data-language="js">{{ param.name }}</var></td>
           <td><code data-language="js">{{ param.type|join(" or ") }}</code></td>
-          <td>{% if param.optional %}✔{% endif %}</td>
-          <td><code data-language="js">{{ param.default }}</code></td>
+          <td>{% if param.optional === true %}✔{% endif %}</td>
+          <td><code data-language="js">{{ param.defaultvalue }}</code></td>
           <td>{{ param.description|raw }}</td>
         </tr>
       {% endfor %}
@@ -100,7 +108,9 @@
 
     {% if fn.returns %}
     <h3>Returns</h3>
-      <p><samp data-language="js">{{ fn.returns.type }}</samp>: {{ fn.returns.description|raw }}</p>
+    {% for ret in fn.returns %}
+    <p><samp data-language="js">{{ ret.type.names|join(', ') }}</samp>: {{ ret.description|raw }}</p>
+    {% endfor %}
     {% endif %}
 
     {% if fn.examples.length %}
@@ -117,18 +127,10 @@
 
 {% block apisubnav %}
 <ol>
-{% for def in typedefs %}
-  <li><a href="#{{ def.name }}">Object: {{ def.name }}</a></li>
-{% endfor %}
-{% for prop in properties %}
-  <li><a href="#{{ prop.name }}">swig.{{ prop.name }}</a></li>
-{% endfor %}
-{% for fn in functions %}
-  {% if fn.access !== "private" %}
-  <li>
-    <a href="#{{ fn.name }}">swig.{{ fn.name }}</a>
-  </li>
-  {% endif %}
+{% for obj in api %}
+{% if obj.access !== "private" and obj.undocumented !== true and obj.kind !== 'package' %}
+  <li><a href="#{{ obj.name }}">{% if obj.kind === 'typedef' %}Object: {% elif obj.kind === 'function' or obj.kind === 'member' %}swig.{% endif %}{{ obj.name }}</a></li>
+{% endif %}
 {% endfor %}
 </ol>
 {% endblock %}
