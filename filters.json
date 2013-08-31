@@ -1,0 +1,2367 @@
+[
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                4,
+                30
+            ],
+            "filename": "filters.js",
+            "lineno": 1,
+            "path": "lib",
+            "code": {
+                "id": "astnode1253685456",
+                "name": "utils",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "utils",
+        "kind": "member",
+        "longname": "utils",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                34,
+                76
+            ],
+            "filename": "filters.js",
+            "lineno": 2,
+            "path": "lib",
+            "code": {
+                "id": "astnode766911323",
+                "name": "dateFormatter",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "dateFormatter",
+        "kind": "member",
+        "longname": "dateFormatter",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Backslash-escape characters that need to be escaped.\n *\n * @example\n * {{ \"\\\"quoted string\\\"\"|addslashes }}\n * // => \\\"quoted string\\\"\n *\n * @param  {*}  input\n * @return {*}        Backslash-escaped string.\n */",
+        "meta": {
+            "range": [
+                298,
+                579
+            ],
+            "filename": "filters.js",
+            "lineno": 14,
+            "path": "lib",
+            "code": {
+                "id": "astnode1921615168",
+                "name": "exports.addslashes",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            },
+            "vars": {
+                "": false
+            }
+        },
+        "description": "Backslash-escape characters that need to be escaped.",
+        "examples": [
+            "{{ \"\\\"quoted string\\\"\"|addslashes }}\n// => \\\"quoted string\\\""
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Backslash-escaped string."
+            }
+        ],
+        "name": "addslashes",
+        "kind": "function",
+        "longname": "addslashes",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                425,
+                463
+            ],
+            "filename": "filters.js",
+            "lineno": 17,
+            "path": "lib",
+            "code": {
+                "id": "astnode157438507",
+                "name": "input[key]",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "input[key]",
+        "kind": "member",
+        "longname": "input[key]",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Upper-case the first letter of the input and lower-case the rest.\n *\n * @example\n * {{ \"i like Burritos\"|capitalize }}\n * // => I like burritos\n *\n * @param  {*} input  If given an array or object, each string member will be run through the filter individually.\n * @return {*}        Returns the same type as the input.\n */",
+        "meta": {
+            "range": [
+                913,
+                1205
+            ],
+            "filename": "filters.js",
+            "lineno": 34,
+            "path": "lib",
+            "code": {
+                "id": "astnode989279323",
+                "name": "exports.capitalize",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            },
+            "vars": {
+                "": false
+            }
+        },
+        "description": "Upper-case the first letter of the input and lower-case the rest.",
+        "examples": [
+            "{{ \"i like Burritos\"|capitalize }}\n// => I like burritos"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "If given an array or object, each string member will be run through the filter individually.",
+                "name": "input"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Returns the same type as the input."
+            }
+        ],
+        "name": "capitalize",
+        "kind": "function",
+        "longname": "capitalize",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1040,
+                1078
+            ],
+            "filename": "filters.js",
+            "lineno": 37,
+            "path": "lib",
+            "code": {
+                "id": "astnode1099677525",
+                "name": "input[key]",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "input[key]",
+        "kind": "member",
+        "longname": "input[key]",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Format a date or Date-compatible string.\n *\n * @example\n * // now = new Date();\n * {{ now|date('Y-m-d') }}\n * // => 2013-08-14\n *\n * @param  {?(string|date)} input\n * @param  {string} format  PHP-style date format compatible string.\n * @param  {number=} offset Timezone offset from GMT in minutes.\n * @param  {string=} abbr   Timezone abbreviation. Used for output only.\n * @return {string}         Formatted date string.\n */",
+        "meta": {
+            "range": [
+                1641,
+                2072
+            ],
+            "filename": "filters.js",
+            "lineno": 58,
+            "path": "lib",
+            "code": {
+                "id": "astnode82681671",
+                "name": "exports.date",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input",
+                    "format",
+                    "offset",
+                    "abbr"
+                ]
+            },
+            "vars": {
+                "l": false,
+                "date": false,
+                "cur": false,
+                "i": false,
+                "out": false
+            }
+        },
+        "description": "Format a date or Date-compatible string.",
+        "examples": [
+            "// now = new Date();\n{{ now|date('Y-m-d') }}\n// => 2013-08-14"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "string",
+                        "date"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": true,
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "PHP-style date format compatible string.",
+                "name": "format"
+            },
+            {
+                "type": {
+                    "names": [
+                        "number"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Timezone offset from GMT in minutes.",
+                "name": "offset"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Timezone abbreviation. Used for output only.",
+                "name": "abbr"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Formatted date string."
+            }
+        ],
+        "name": "date",
+        "kind": "function",
+        "longname": "date",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1703,
+                1720
+            ],
+            "filename": "filters.js",
+            "lineno": 59,
+            "path": "lib",
+            "code": {
+                "id": "astnode1031151655",
+                "name": "l",
+                "type": "GETPROP",
+                "node": "<Object>",
+                "value": "format.length"
+            }
+        },
+        "undocumented": true,
+        "name": "l",
+        "kind": "member",
+        "memberof": "date",
+        "longname": "date~l",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1726,
+                1763
+            ],
+            "filename": "filters.js",
+            "lineno": 60,
+            "path": "lib",
+            "code": {
+                "id": "astnode2016197766",
+                "name": "date",
+                "type": "NEW",
+                "node": "<Object>",
+                "value": "NEW"
+            }
+        },
+        "undocumented": true,
+        "name": "date",
+        "kind": "member",
+        "memberof": "date",
+        "longname": "date~date",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1769,
+                1772
+            ],
+            "filename": "filters.js",
+            "lineno": 61,
+            "path": "lib",
+            "code": {
+                "id": "astnode1864890269",
+                "name": "cur",
+                "type": "undefined",
+                "node": "<Object>",
+                "value": "cur"
+            }
+        },
+        "undocumented": true,
+        "name": "cur",
+        "kind": "member",
+        "memberof": "date",
+        "longname": "date~cur",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1778,
+                1783
+            ],
+            "filename": "filters.js",
+            "lineno": 62,
+            "path": "lib",
+            "code": {
+                "id": "astnode244757954",
+                "name": "i",
+                "type": "NUMBER",
+                "node": "<Object>",
+                "value": "0"
+            }
+        },
+        "undocumented": true,
+        "name": "i",
+        "kind": "member",
+        "memberof": "date",
+        "longname": "date~i",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1789,
+                1797
+            ],
+            "filename": "filters.js",
+            "lineno": 63,
+            "path": "lib",
+            "code": {
+                "id": "astnode1914295983",
+                "name": "out",
+                "type": "STRING",
+                "node": "<Object>"
+            }
+        },
+        "undocumented": true,
+        "name": "out",
+        "kind": "member",
+        "memberof": "date",
+        "longname": "date~out",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1894,
+                1916
+            ],
+            "filename": "filters.js",
+            "lineno": 70,
+            "path": "lib",
+            "code": {
+                "id": "astnode1779859946",
+                "name": "cur",
+                "type": "CALL",
+                "node": "<Object>",
+                "funcscope": "date",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "cur",
+        "kind": "member",
+        "longname": "date~cur",
+        "memberof": "date",
+        "scope": "inner"
+    },
+    {
+        "comment": "/**\n * If the input is `undefined`, `null`, or `false`, a default return value can be specified.\n *\n * @example\n * {{ null_value|default('Tacos') }}\n * // => Tacos\n *\n * @example\n * {{ \"Burritos\"|default(\"Tacos\") }}\n * // => Burritos\n *\n * @param  {*}  input\n * @param  {*}  def     Value to return if `input` is `undefined`, `null`, or `false`.\n * @return {*}          `input` or `def` value.\n */",
+        "meta": {
+            "range": [
+                2473,
+                2611
+            ],
+            "filename": "filters.js",
+            "lineno": 95,
+            "path": "lib",
+            "code": {
+                "id": "astnode81955115",
+                "name": "exports.default",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input",
+                    "def"
+                ]
+            }
+        },
+        "description": "If the input is `undefined`, `null`, or `false`, a default return value can be specified.",
+        "examples": [
+            "{{ null_value|default('Tacos') }}\n// => Tacos",
+            "{{ \"Burritos\"|default(\"Tacos\") }}\n// => Burritos"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            },
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Value to return if `input` is `undefined`, `null`, or `false`.",
+                "name": "def"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "`input` or `def` value."
+            }
+        ],
+        "name": "default",
+        "kind": "function",
+        "longname": "default",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Force escape the output of the variable. Optionally use `e` as a shortcut filter name. This filter will be applied by default if autoescape is turned on.\n *\n * @example\n * {{ \"<blah>\"|escape }}\n * // => &lt;blah&gt;\n *\n * @example\n * {{ \"<blah>\"|e(\"js\") }}\n * // => \\u003Cblah\\u003E\n *\n * @param  {*} input\n * @param  {string} [type='html']   If you pass the string js in as the type, output will be escaped so that it is safe for JavaScript execution.\n * @return {string}         Escaped string.\n */",
+        "meta": {
+            "range": [
+                3122,
+                4245
+            ],
+            "filename": "filters.js",
+            "lineno": 114,
+            "path": "lib",
+            "code": {
+                "id": "astnode2054478636",
+                "name": "exports.escape",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input",
+                    "type"
+                ]
+            },
+            "vars": {
+                "": false,
+                "i": false,
+                "out": false,
+                "code": false
+            }
+        },
+        "description": "Force escape the output of the variable. Optionally use `e` as a shortcut filter name. This filter will be applied by default if autoescape is turned on.",
+        "examples": [
+            "{{ \"<blah>\"|escape }}\n// => &lt;blah&gt;",
+            "{{ \"<blah>\"|e(\"js\") }}\n// => \\u003Cblah\\u003E"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "'html'",
+                "description": "If you pass the string js in as the type, output will be escaped so that it is safe for JavaScript execution.",
+                "name": "type"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Escaped string."
+            }
+        ],
+        "name": "escape",
+        "kind": "function",
+        "longname": "escape",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                3251,
+                3285
+            ],
+            "filename": "filters.js",
+            "lineno": 117,
+            "path": "lib",
+            "code": {
+                "id": "astnode1002885402",
+                "name": "input[key]",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "input[key]",
+        "kind": "member",
+        "longname": "input[key]",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                3382,
+                3387
+            ],
+            "filename": "filters.js",
+            "lineno": 126,
+            "path": "lib",
+            "code": {
+                "id": "astnode650484437",
+                "name": "i",
+                "type": "NUMBER",
+                "node": "<Object>",
+                "value": "0"
+            }
+        },
+        "undocumented": true,
+        "name": "i",
+        "kind": "member",
+        "memberof": "escape",
+        "longname": "escape~i",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                3393,
+                3401
+            ],
+            "filename": "filters.js",
+            "lineno": 127,
+            "path": "lib",
+            "code": {
+                "id": "astnode138583065",
+                "name": "out",
+                "type": "STRING",
+                "node": "<Object>"
+            }
+        },
+        "undocumented": true,
+        "name": "out",
+        "kind": "member",
+        "memberof": "escape",
+        "longname": "escape~out",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                3407,
+                3411
+            ],
+            "filename": "filters.js",
+            "lineno": 128,
+            "path": "lib",
+            "code": {
+                "id": "astnode1031007398",
+                "name": "code",
+                "type": "undefined",
+                "node": "<Object>",
+                "value": "code"
+            }
+        },
+        "undocumented": true,
+        "name": "code",
+        "kind": "member",
+        "memberof": "escape",
+        "longname": "escape~code",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                3449,
+                3488
+            ],
+            "filename": "filters.js",
+            "lineno": 132,
+            "path": "lib",
+            "code": {
+                "id": "astnode2070864876",
+                "name": "input",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "input",
+        "kind": "member",
+        "longname": "input",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                3536,
+                3562
+            ],
+            "filename": "filters.js",
+            "lineno": 134,
+            "path": "lib",
+            "code": {
+                "id": "astnode1830423861",
+                "name": "code",
+                "type": "CALL",
+                "node": "<Object>",
+                "funcscope": "escape",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "code",
+        "kind": "member",
+        "longname": "escape~code",
+        "memberof": "escape",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                3595,
+                3633
+            ],
+            "filename": "filters.js",
+            "lineno": 136,
+            "path": "lib",
+            "code": {
+                "id": "astnode524805736",
+                "name": "code",
+                "type": "CALL",
+                "node": "<Object>",
+                "funcscope": "escape",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "code",
+        "kind": "member",
+        "longname": "escape~code",
+        "memberof": "escape",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                3643,
+                3687
+            ],
+            "filename": "filters.js",
+            "lineno": 137,
+            "path": "lib",
+            "code": {
+                "id": "astnode515571199",
+                "name": "code",
+                "type": "HOOK",
+                "node": "<Object>",
+                "funcscope": "escape",
+                "value": "HOOK"
+            }
+        },
+        "undocumented": true,
+        "name": "code",
+        "kind": "member",
+        "longname": "escape~code",
+        "memberof": "escape",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                4247,
+                4273
+            ],
+            "filename": "filters.js",
+            "lineno": 160,
+            "path": "lib",
+            "code": {
+                "id": "astnode817138449",
+                "name": "exports.e",
+                "type": "GETPROP",
+                "node": "<Object>",
+                "value": "exports.escape"
+            }
+        },
+        "undocumented": true,
+        "name": "e",
+        "kind": "member",
+        "longname": "e",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Get the first item in an array or character in a string. All other objects will attempt to return the first value available.\n *\n * @example\n * // my_arr = ['a', 'b', 'c']\n * {{ my_arr|first }}\n * // => a\n *\n * @example\n * // my_val = 'Tacos'\n * {{ my_val|first }}\n * // T\n *\n * @param  {*} input\n * @return {*}        The first item of the array or first character of the string input.\n */",
+        "meta": {
+            "range": [
+                4673,
+                4925
+            ],
+            "filename": "filters.js",
+            "lineno": 178,
+            "path": "lib",
+            "code": {
+                "id": "astnode931090363",
+                "name": "exports.first",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            },
+            "vars": {
+                "keys": false
+            }
+        },
+        "description": "Get the first item in an array or character in a string. All other objects will attempt to return the first value available.",
+        "examples": [
+            "// my_arr = ['a', 'b', 'c']\n{{ my_arr|first }}\n// => a",
+            "// my_val = 'Tacos'\n{{ my_val|first }}\n// T"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "The first item of the array or first character of the string input."
+            }
+        ],
+        "name": "first",
+        "kind": "function",
+        "longname": "first",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                4776,
+                4800
+            ],
+            "filename": "filters.js",
+            "lineno": 180,
+            "path": "lib",
+            "code": {
+                "id": "astnode1766524955",
+                "name": "keys",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "keys",
+        "kind": "member",
+        "memberof": "first",
+        "longname": "first~keys",
+        "scope": "inner"
+    },
+    {
+        "comment": "/**\n * Join the input with a string.\n *\n * @example\n * // my_array = ['foo', 'bar', 'baz']\n * {{ my_array|join(', ') }}\n * // => foo, bar, baz\n *\n * @example\n * // my_key_object = { a: 'foo', b: 'bar', c: 'baz' }\n * {{ my_key_object|join(' and ') }}\n * // => foo and bar and baz\n *\n * @param  {*}  input\n * @param  {string} glue    String value to join items together.\n * @return {string}\n */",
+        "meta": {
+            "range": [
+                5321,
+                5598
+            ],
+            "filename": "filters.js",
+            "lineno": 208,
+            "path": "lib",
+            "code": {
+                "id": "astnode1692950636",
+                "name": "exports.join",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input",
+                    "glue"
+                ]
+            },
+            "vars": {
+                "out": false,
+                "": false
+            }
+        },
+        "description": "Join the input with a string.",
+        "examples": [
+            "// my_array = ['foo', 'bar', 'baz']\n{{ my_array|join(', ') }}\n// => foo, bar, baz",
+            "// my_key_object = { a: 'foo', b: 'bar', c: 'baz' }\n{{ my_key_object|join(' and ') }}\n// => foo and bar and baz"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "String value to join items together.",
+                "name": "glue"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined"
+            }
+        ],
+        "name": "join",
+        "kind": "function",
+        "longname": "join",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                5468,
+                5476
+            ],
+            "filename": "filters.js",
+            "lineno": 214,
+            "path": "lib",
+            "code": {
+                "id": "astnode2134123845",
+                "name": "out",
+                "type": "ARRAYLIT",
+                "node": "<Object>",
+                "value": "ARRAYLIT"
+            }
+        },
+        "undocumented": true,
+        "name": "out",
+        "kind": "member",
+        "memberof": "join",
+        "longname": "join~out",
+        "scope": "inner"
+    },
+    {
+        "comment": "/**\n * Return a string representation of an JavaScript object.\n *\n * Backwards compatible with swig@0.x.x using `json_encode`.\n *\n * @example\n * // val = { a: 'b' }\n * {{ val|json }}\n * // => {\"a\":\"b\"}\n *\n * @example\n * // val = { a: 'b' }\n * {{ val|json(4) }}\n * // => {\n * //        \"a\": \"b\"\n * //    }\n *\n * @param  {*}    input\n * @param  {number}  [indent]  Number of spaces to indent for pretty-formatting.\n * @return {string}           A valid JSON string.\n */",
+        "meta": {
+            "range": [
+                6069,
+                6163
+            ],
+            "filename": "filters.js",
+            "lineno": 244,
+            "path": "lib",
+            "code": {
+                "id": "astnode421092395",
+                "name": "exports.json",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input",
+                    "indent"
+                ]
+            }
+        },
+        "description": "Return a string representation of an JavaScript object.\n\nBackwards compatible with swig@0.x.x using `json_encode`.",
+        "examples": [
+            "// val = { a: 'b' }\n{{ val|json }}\n// => {\"a\":\"b\"}",
+            "// val = { a: 'b' }\n{{ val|json(4) }}\n// => {\n//        \"a\": \"b\"\n//    }"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            },
+            {
+                "type": {
+                    "names": [
+                        "number"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Number of spaces to indent for pretty-formatting.",
+                "name": "indent"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "A valid JSON string."
+            }
+        ],
+        "name": "json",
+        "kind": "function",
+        "longname": "json",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                6165,
+                6199
+            ],
+            "filename": "filters.js",
+            "lineno": 247,
+            "path": "lib",
+            "code": {
+                "id": "astnode382567384",
+                "name": "exports.json_encode",
+                "type": "GETPROP",
+                "node": "<Object>",
+                "value": "exports.json"
+            }
+        },
+        "undocumented": true,
+        "name": "json_encode",
+        "kind": "member",
+        "longname": "json_encode",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Get the last item in an array or character in a string. All other objects will attempt to return the last value available.\n *\n * @example\n * // my_arr = ['a', 'b', 'c']\n * {{ my_arr|last }}\n * // => c\n *\n * @example\n * // my_val = 'Tacos'\n * {{ my_val|last }}\n * // s\n *\n * @param  {*} input\n * @return {*}          The last item of the array or last character of the string.input.\n */",
+        "meta": {
+            "range": [
+                6595,
+                6887
+            ],
+            "filename": "filters.js",
+            "lineno": 265,
+            "path": "lib",
+            "code": {
+                "id": "astnode303243765",
+                "name": "exports.last",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            },
+            "vars": {
+                "keys": false
+            }
+        },
+        "description": "Get the last item in an array or character in a string. All other objects will attempt to return the last value available.",
+        "examples": [
+            "// my_arr = ['a', 'b', 'c']\n{{ my_arr|last }}\n// => c",
+            "// my_val = 'Tacos'\n{{ my_val|last }}\n// s"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "The last item of the array or last character of the string.input."
+            }
+        ],
+        "name": "last",
+        "kind": "function",
+        "longname": "last",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                6697,
+                6721
+            ],
+            "filename": "filters.js",
+            "lineno": 267,
+            "path": "lib",
+            "code": {
+                "id": "astnode1624485351",
+                "name": "keys",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "keys",
+        "kind": "member",
+        "memberof": "last",
+        "longname": "last~keys",
+        "scope": "inner"
+    },
+    {
+        "comment": "/**\n * Return the input in all lowercase letters.\n *\n * @example\n * {{ \"FOOBAR\"|lower }}\n * // => foobar\n *\n * @example\n * // myObj = { a: 'FOO', b: 'BAR' }\n * {{ myObj|lower|join('') }}\n * // => foobar\n *\n * @param  {*}  input\n * @return {*}          Returns the same type as the input.\n */",
+        "meta": {
+            "range": [
+                7182,
+                7411
+            ],
+            "filename": "filters.js",
+            "lineno": 293,
+            "path": "lib",
+            "code": {
+                "id": "astnode2021888176",
+                "name": "exports.lower",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            },
+            "vars": {
+                "": false
+            }
+        },
+        "description": "Return the input in all lowercase letters.",
+        "examples": [
+            "{{ \"FOOBAR\"|lower }}\n// => foobar",
+            "// myObj = { a: 'FOO', b: 'BAR' }\n{{ myObj|lower|join('') }}\n// => foobar"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Returns the same type as the input."
+            }
+        ],
+        "name": "lower",
+        "kind": "function",
+        "longname": "lower",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                7304,
+                7337
+            ],
+            "filename": "filters.js",
+            "lineno": 296,
+            "path": "lib",
+            "code": {
+                "id": "astnode1410600942",
+                "name": "input[key]",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "input[key]",
+        "kind": "member",
+        "longname": "input[key]",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Deprecated in favor of <a href=\"#safe\">safe</a>.\n */",
+        "meta": {
+            "range": [
+                7474,
+                7538
+            ],
+            "filename": "filters.js",
+            "lineno": 306,
+            "path": "lib",
+            "code": {
+                "id": "astnode576658153",
+                "name": "exports.raw",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            }
+        },
+        "description": "Deprecated in favor of <a href=\"#safe\">safe</a>.",
+        "name": "raw",
+        "kind": "function",
+        "longname": "raw",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                7540,
+                7563
+            ],
+            "filename": "filters.js",
+            "lineno": 309,
+            "path": "lib",
+            "code": {
+                "id": "astnode1062659565",
+                "name": "exports.raw.safe",
+                "type": "TRUE",
+                "node": "<Object>",
+                "value": "true"
+            }
+        },
+        "undocumented": true,
+        "name": "safe",
+        "kind": "member",
+        "memberof": "raw",
+        "longname": "raw.safe",
+        "scope": "static"
+    },
+    {
+        "comment": "/**\n * Returns a new string with the matched search pattern replaced by the given replacement string. Uses JavaScript's built-in String.replace() method.\n *\n * @example\n * // my_var = 'foobar';\n * {{ my_var|replace('o', 'e', 'g') }}\n * // => feebar\n *\n * @example\n * // my_var = \"farfegnugen\";\n * {{ my_var|replace('^f', 'p') }}\n * // => parfegnugen\n *\n * @example\n * // my_var = 'a1b2c3';\n * {{ my_var|replace('\\w', '0', 'g') }}\n * // => 010203\n *\n * @param  {string} input\n * @param  {string} search      String or pattern to replace from the input.\n * @param  {string} replacement String to replace matched pattern.\n * @param  {string} [flags]      Regular Expression flags. 'g': global match, 'i': ignore case, 'm': match over multiple lines\n * @return {string}             Replaced string.\n */",
+        "meta": {
+            "range": [
+                8365,
+                8508
+            ],
+            "filename": "filters.js",
+            "lineno": 335,
+            "path": "lib",
+            "code": {
+                "id": "astnode1494997449",
+                "name": "exports.replace",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input",
+                    "search",
+                    "replacement",
+                    "flags"
+                ]
+            },
+            "vars": {
+                "r": false
+            }
+        },
+        "description": "Returns a new string with the matched search pattern replaced by the given replacement string. Uses JavaScript's built-in String.replace() method.",
+        "examples": [
+            "// my_var = 'foobar';\n{{ my_var|replace('o', 'e', 'g') }}\n// => feebar",
+            "// my_var = \"farfegnugen\";\n{{ my_var|replace('^f', 'p') }}\n// => parfegnugen",
+            "// my_var = 'a1b2c3';\n{{ my_var|replace('\\w', '0', 'g') }}\n// => 010203"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "String or pattern to replace from the input.",
+                "name": "search"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "String to replace matched pattern.",
+                "name": "replacement"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Regular Expression flags. 'g': global match, 'i': ignore case, 'm': match over multiple lines",
+                "name": "flags"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Replaced string."
+            }
+        ],
+        "name": "replace",
+        "kind": "function",
+        "longname": "replace",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                8436,
+                8465
+            ],
+            "filename": "filters.js",
+            "lineno": 336,
+            "path": "lib",
+            "code": {
+                "id": "astnode493579349",
+                "name": "r",
+                "type": "NEW",
+                "node": "<Object>",
+                "value": "NEW"
+            }
+        },
+        "undocumented": true,
+        "name": "r",
+        "kind": "member",
+        "memberof": "replace",
+        "longname": "replace~r",
+        "scope": "inner"
+    },
+    {
+        "comment": "/**\n * Reverse sort the input. This is an alias for <code data-language=\"swig\">{{ input|sort(true) }}</code>.\n *\n * @example\n * // val = [1, 2, 3];\n * {{ val|reverse }}\n * // => 3,2,1\n *\n * @param  {array}  input\n * @return {array}        Reversed array. The original input object is returned if it was not an array.\n */",
+        "meta": {
+            "range": [
+                8832,
+                8906
+            ],
+            "filename": "filters.js",
+            "lineno": 351,
+            "path": "lib",
+            "code": {
+                "id": "astnode1145768891",
+                "name": "exports.reverse",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            }
+        },
+        "description": "Reverse sort the input. This is an alias for <code data-language=\"swig\">{{ input|sort(true) }}</code>.",
+        "examples": [
+            "// val = [1, 2, 3];\n{{ val|reverse }}\n// => 3,2,1"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "array"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "array"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Reversed array. The original input object is returned if it was not an array."
+            }
+        ],
+        "name": "reverse",
+        "kind": "function",
+        "longname": "reverse",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Forces the input to not be auto-escaped. Use this only on content that you know is safe to be rendered on your page.\n *\n * @example\n * // my_var = \"<p>Stuff</p>\";\n * {{ my_var|safe }}\n * // => <p>Stuff</p>\n *\n * @param  {*}  input\n * @return {*}          The input exactly how it was given, regardless of autoescaping status.\n */",
+        "meta": {
+            "range": [
+                9246,
+                9370
+            ],
+            "filename": "filters.js",
+            "lineno": 366,
+            "path": "lib",
+            "code": {
+                "id": "astnode200571624",
+                "name": "exports.safe",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            }
+        },
+        "description": "Forces the input to not be auto-escaped. Use this only on content that you know is safe to be rendered on your page.",
+        "examples": [
+            "// my_var = \"<p>Stuff</p>\";\n{{ my_var|safe }}\n// => <p>Stuff</p>"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "The input exactly how it was given, regardless of autoescaping status."
+            }
+        ],
+        "name": "safe",
+        "kind": "function",
+        "longname": "safe",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                9372,
+                9396
+            ],
+            "filename": "filters.js",
+            "lineno": 370,
+            "path": "lib",
+            "code": {
+                "id": "astnode1236308610",
+                "name": "exports.safe.safe",
+                "type": "TRUE",
+                "node": "<Object>",
+                "value": "true"
+            }
+        },
+        "undocumented": true,
+        "name": "safe",
+        "kind": "member",
+        "memberof": "safe",
+        "longname": "safe.safe",
+        "scope": "static"
+    },
+    {
+        "comment": "/**\n * Sort the input in an ascending direction.\n * If given an object, will return the keys as a sorted array.\n * If given a string, each character will be sorted individually.\n *\n * @example\n * // val = [2, 6, 4];\n * {{ val|sort }}\n * // => 2,4,6\n *\n * @example\n * // val = 'zaq';\n * {{ val|sort }}\n * // => aqz\n *\n * @example\n * // val = { bar: 1, foo: 2 }\n * {{ val|sort(true) }}\n * // => foo,bar\n *\n * @param  {*} input\n * @param {boolean} [reverse=false] Output is given reverse-sorted if true.\n * @return {*}        Sorted array;\n */",
+        "meta": {
+            "range": [
+                9940,
+                10397
+            ],
+            "filename": "filters.js",
+            "lineno": 396,
+            "path": "lib",
+            "code": {
+                "id": "astnode1270330375",
+                "name": "exports.sort",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input",
+                    "reverse"
+                ]
+            },
+            "vars": {
+                "out": false
+            }
+        },
+        "description": "Sort the input in an ascending direction.\nIf given an object, will return the keys as a sorted array.\nIf given a string, each character will be sorted individually.",
+        "examples": [
+            "// val = [2, 6, 4];\n{{ val|sort }}\n// => 2,4,6",
+            "// val = 'zaq';\n{{ val|sort }}\n// => aqz",
+            "// val = { bar: 1, foo: 2 }\n{{ val|sort(true) }}\n// => foo,bar"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            },
+            {
+                "type": {
+                    "names": [
+                        "boolean"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "false",
+                "description": "Output is given reverse-sorted if true.",
+                "name": "reverse"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Sorted array;"
+            }
+        ],
+        "name": "sort",
+        "kind": "function",
+        "longname": "sort",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                9989,
+                9992
+            ],
+            "filename": "filters.js",
+            "lineno": 397,
+            "path": "lib",
+            "code": {
+                "id": "astnode635681751",
+                "name": "out",
+                "type": "undefined",
+                "node": "<Object>",
+                "value": "out"
+            }
+        },
+        "undocumented": true,
+        "name": "out",
+        "kind": "member",
+        "memberof": "sort",
+        "longname": "sort~out",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                10028,
+                10046
+            ],
+            "filename": "filters.js",
+            "lineno": 399,
+            "path": "lib",
+            "code": {
+                "id": "astnode1051225362",
+                "name": "out",
+                "type": "CALL",
+                "node": "<Object>",
+                "funcscope": "sort",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "out",
+        "kind": "member",
+        "longname": "sort~out",
+        "memberof": "sort",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                10112,
+                10142
+            ],
+            "filename": "filters.js",
+            "lineno": 403,
+            "path": "lib",
+            "code": {
+                "id": "astnode759351160",
+                "name": "out",
+                "type": "CALL",
+                "node": "<Object>",
+                "funcscope": "sort",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "out",
+        "kind": "member",
+        "longname": "sort~out",
+        "memberof": "sort",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                10182,
+                10203
+            ],
+            "filename": "filters.js",
+            "lineno": 406,
+            "path": "lib",
+            "code": {
+                "id": "astnode1525194957",
+                "name": "out",
+                "type": "CALL",
+                "node": "<Object>",
+                "funcscope": "sort",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "out",
+        "kind": "member",
+        "longname": "sort~out",
+        "memberof": "sort",
+        "scope": "inner"
+    },
+    {
+        "comment": "/**\n * Strip HTML tags.\n *\n * @example\n * // stuff = '<p>foobar</p>';\n * {{ stuff|striptags }}\n * // => foobar\n *\n * @param  {*}  input\n * @return {*}        Returns the same object as the input, but with all string values stripped of tags.\n */",
+        "meta": {
+            "range": [
+                10645,
+                10897
+            ],
+            "filename": "filters.js",
+            "lineno": 432,
+            "path": "lib",
+            "code": {
+                "id": "astnode1920333239",
+                "name": "exports.striptags",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            },
+            "vars": {
+                "": false
+            }
+        },
+        "description": "Strip HTML tags.",
+        "examples": [
+            "// stuff = '<p>foobar</p>';\n{{ stuff|striptags }}\n// => foobar"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Returns the same object as the input, but with all string values stripped of tags."
+            }
+        ],
+        "name": "striptags",
+        "kind": "function",
+        "longname": "striptags",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                10771,
+                10808
+            ],
+            "filename": "filters.js",
+            "lineno": 435,
+            "path": "lib",
+            "code": {
+                "id": "astnode1052752867",
+                "name": "input[key]",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "input[key]",
+        "kind": "member",
+        "longname": "input[key]",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Capitalizes every word given and lower-cases all other letters.\n *\n * @example\n * // my_str = 'this is soMe text';\n * {{ my_str|title }}\n * // => This Is Some Text\n *\n * @example\n * // my_arr = ['hi', 'this', 'is', 'an', 'array'];\n * {{ my_arr|title|join(' ') }}\n * // => Hi This Is An Array\n *\n * @param  {*}  input\n * @return {*}        Returns the same object as the input, but with all words in strings title-cased.\n */",
+        "meta": {
+            "range": [
+                11331,
+                11656
+            ],
+            "filename": "filters.js",
+            "lineno": 458,
+            "path": "lib",
+            "code": {
+                "id": "astnode561094448",
+                "name": "exports.title",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            },
+            "vars": {
+                "": false
+            }
+        },
+        "description": "Capitalizes every word given and lower-cases all other letters.",
+        "examples": [
+            "// my_str = 'this is soMe text';\n{{ my_str|title }}\n// => This Is Some Text",
+            "// my_arr = ['hi', 'this', 'is', 'an', 'array'];\n{{ my_arr|title|join(' ') }}\n// => Hi This Is An Array"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Returns the same object as the input, but with all words in strings title-cased."
+            }
+        ],
+        "name": "title",
+        "kind": "function",
+        "longname": "title",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                11453,
+                11486
+            ],
+            "filename": "filters.js",
+            "lineno": 461,
+            "path": "lib",
+            "code": {
+                "id": "astnode1281435610",
+                "name": "input[key]",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "input[key]",
+        "kind": "member",
+        "longname": "input[key]",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Remove all duplicate items from an array.\n *\n * @example\n * // my_arr = [1, 2, 3, 4, 4, 3, 2, 1];\n * {{ my_arr|uniq|join(',') }}\n * // => 1,2,3,4\n *\n * @param  {array}  input\n * @return {array}        Array with unique items. If input was not an array, the original item is returned untouched.\n */",
+        "meta": {
+            "range": [
+                11964,
+                12212
+            ],
+            "filename": "filters.js",
+            "lineno": 481,
+            "path": "lib",
+            "code": {
+                "id": "astnode1241043063",
+                "name": "exports.uniq",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            },
+            "vars": {
+                "result": false,
+                "": false
+            }
+        },
+        "description": "Remove all duplicate items from an array.",
+        "examples": [
+            "// my_arr = [1, 2, 3, 4, 4, 3, 2, 1];\n{{ my_arr|uniq|join(',') }}\n// => 1,2,3,4"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "array"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "array"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Array with unique items. If input was not an array, the original item is returned untouched."
+            }
+        ],
+        "name": "uniq",
+        "kind": "function",
+        "longname": "uniq",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                12004,
+                12010
+            ],
+            "filename": "filters.js",
+            "lineno": 482,
+            "path": "lib",
+            "code": {
+                "id": "astnode395237242",
+                "name": "result",
+                "type": "undefined",
+                "node": "<Object>",
+                "value": "result"
+            }
+        },
+        "undocumented": true,
+        "name": "result",
+        "kind": "member",
+        "memberof": "uniq",
+        "longname": "uniq~result",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                12076,
+                12087
+            ],
+            "filename": "filters.js",
+            "lineno": 488,
+            "path": "lib",
+            "code": {
+                "id": "astnode1298122354",
+                "name": "result",
+                "type": "ARRAYLIT",
+                "node": "<Object>",
+                "funcscope": "uniq",
+                "value": "ARRAYLIT"
+            }
+        },
+        "undocumented": true,
+        "name": "result",
+        "kind": "member",
+        "longname": "uniq~result",
+        "memberof": "uniq",
+        "scope": "inner"
+    },
+    {
+        "comment": "/**\n * Convert the input to all uppercase letters. If an object or array is provided, all values will be uppercased.\n *\n * @example\n * // my_str = 'tacos';\n * {{ my_str|upper }}\n * // => TACOS\n *\n * @example\n * // my_arr = ['tacos', 'burritos'];\n * {{ my_arr|upper|join(' & ') }}\n * // => TACOS & BURRITOS\n *\n * @param  {*}  input\n * @return {*}        Returns the same type as the input, with all strings upper-cased.\n */",
+        "meta": {
+            "range": [
+                12638,
+                12867
+            ],
+            "filename": "filters.js",
+            "lineno": 513,
+            "path": "lib",
+            "code": {
+                "id": "astnode1964686696",
+                "name": "exports.upper",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            },
+            "vars": {
+                "": false
+            }
+        },
+        "description": "Convert the input to all uppercase letters. If an object or array is provided, all values will be uppercased.",
+        "examples": [
+            "// my_str = 'tacos';\n{{ my_str|upper }}\n// => TACOS",
+            "// my_arr = ['tacos', 'burritos'];\n{{ my_arr|upper|join(' & ') }}\n// => TACOS & BURRITOS"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Returns the same type as the input, with all strings upper-cased."
+            }
+        ],
+        "name": "upper",
+        "kind": "function",
+        "longname": "upper",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                12760,
+                12793
+            ],
+            "filename": "filters.js",
+            "lineno": 516,
+            "path": "lib",
+            "code": {
+                "id": "astnode662811604",
+                "name": "input[key]",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "input[key]",
+        "kind": "member",
+        "longname": "input[key]",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * URL-encode a string. If an object or array is passed, all values will be URL-encoded.\n *\n * @example\n * // my_str = 'param=1&anotherParam=2';\n * {{ my_str|url_encode }}\n * // => param%3D1%26anotherParam%3D2\n *\n * @param  {*} input\n * @return {*}       URL-encoded string.\n */",
+        "meta": {
+            "range": [
+                13153,
+                13387
+            ],
+            "filename": "filters.js",
+            "lineno": 534,
+            "path": "lib",
+            "code": {
+                "id": "astnode1277810267",
+                "name": "exports.url_encode",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            },
+            "vars": {
+                "": false
+            }
+        },
+        "description": "URL-encode a string. If an object or array is passed, all values will be URL-encoded.",
+        "examples": [
+            "// my_str = 'param=1&anotherParam=2';\n{{ my_str|url_encode }}\n// => param%3D1%26anotherParam%3D2"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "URL-encoded string."
+            }
+        ],
+        "name": "url_encode",
+        "kind": "function",
+        "longname": "url_encode",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                13280,
+                13318
+            ],
+            "filename": "filters.js",
+            "lineno": 537,
+            "path": "lib",
+            "code": {
+                "id": "astnode1301257077",
+                "name": "input[key]",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "input[key]",
+        "kind": "member",
+        "longname": "input[key]",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * URL-decode a string. If an object or array is passed, all values will be URL-decoded.\n *\n * @example\n * // my_str = 'param%3D1%26anotherParam%3D2';\n * {{ my_str|url_decode }}\n * // => param=1&anotherParam=2\n *\n * @param  {*} input\n * @return {*}       URL-decoded string.\n */",
+        "meta": {
+            "range": [
+                13673,
+                13907
+            ],
+            "filename": "filters.js",
+            "lineno": 555,
+            "path": "lib",
+            "code": {
+                "id": "astnode1986749137",
+                "name": "exports.url_decode",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "input"
+                ]
+            },
+            "vars": {
+                "": false
+            }
+        },
+        "description": "URL-decode a string. If an object or array is passed, all values will be URL-decoded.",
+        "examples": [
+            "// my_str = 'param%3D1%26anotherParam%3D2';\n{{ my_str|url_decode }}\n// => param=1&anotherParam=2"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "name": "input"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "*"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "URL-decoded string."
+            }
+        ],
+        "name": "url_decode",
+        "kind": "function",
+        "longname": "url_decode",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                13800,
+                13838
+            ],
+            "filename": "filters.js",
+            "lineno": 558,
+            "path": "lib",
+            "code": {
+                "id": "astnode1683302955",
+                "name": "input[key]",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "input[key]",
+        "kind": "member",
+        "longname": "input[key]",
+        "scope": "global"
+    },
+    {
+        "files": [
+            "lib/filters.js"
+        ],
+        "kind": "package",
+        "name": "undefined",
+        "longname": "package:undefined",
+        "description": "undefined",
+        "version": "undefined",
+        "licenses": "undefined"
+    }
+]

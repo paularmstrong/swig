@@ -16,23 +16,27 @@
 
 <p>Swig comes pre-loaded with a set of useful filters:</p>
 
-{% for fn in functions %}
-  {% if fn.access !== "private" %}
+<hr>
+
+{% for fn in filters %}
+  {% if fn.access !== "private" and fn.kind === 'function' %}
   <section id="{{ fn.name }}" class="doc">
     <h2>
-      {{ fn.name }}
-      {%- for p in fn.parameters -%}
-      {% if loop.index === 2 %}({% endif -%}
-      {% if loop.index > 1 -%}
-        {{ p.name }}
-        {%- if not loop.last %}, {% else -%}){% endif %}
-      {% endif %}
+      {{ fn.name -}}
+      {%- for p in fn.params -%}
+      {%- if loop.index === 2 %}({% endif -%}
+      {%- if loop.index > 1 -%}
+        {{- p.name -}}
+        {%- if not loop.last %}, {% else -%}){% endif -%}
+      {%- endif -%}
       {%- endfor -%}
     </h2>
 
+    <p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/{{ version }}/{{ fn.meta.path }}/{{ fn.meta.filename }}#L{{ fn.meta.lineno }}">{{ fn.meta.path }}/{{ fn.meta.filename }}#L{{ fn.meta.lineno }}</a></p>
+
     {{ docmacro.description(fn) }}
 
-    {% if fn.parameters.length > 1 %}
+    {% if fn.params.length > 1 %}
     <h3>Parameters</h3>
     <table>
       <thead>
@@ -45,12 +49,12 @@
         </tr>
       </thead>
       <tbody>
-      {% for param in fn.parameters %}
+      {% for param in fn.params %}
         {% if param.name !== 'input' %}
         <tr>
           <td><var data-language="js">{{ param.name }}</var></td>
           <td><code data-language="js">{{ param.type|join(" or ") }}</code></td>
-          <td>{% if param.optional %}✔{% endif %}</td>
+          <td>{% if param.optional === true %}✔{% endif %}</td>
           <td><code data-language="js">{{ param.default }}</code></td>
           <td>{{ param.description|raw }}</td>
         </tr>
@@ -62,7 +66,9 @@
 
     {% if fn.returns %}
     <h3>Returns</h3>
-      <p><samp data-language="js">{{ fn.returns.type }}</samp>: {{ fn.returns.description|raw }}</p>
+    {% for ret in fn.returns %}
+    <p><samp data-language="js">{{ ret.type.names.join(', ') }}</samp>: {{ ret.description|raw }}</p>
+    {% endfor %}
     {% endif %}
 
     {% if fn.examples.length %}
@@ -71,6 +77,7 @@
     <pre><code data-language="swig">{{ example }}</code></pre>
     {% endfor %}
     {% endif %}
+
   </section>
   {% endif %}
 {% endfor %}
@@ -79,10 +86,12 @@
 
 {% block filtersubnav %}
 <ol>
-{% for fn in functions %}
+{% for fn in filters %}
+  {% if fn.access !== "private" and fn.kind === 'function' %}
   <li>
     <a href="#{{ fn.name }}">{{ fn.name }}</a>
   </li>
+  {% endif %}
 {% endfor %}
 </ol>
 {% endblock %}

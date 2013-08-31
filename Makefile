@@ -109,6 +109,11 @@ docs/index.json: FORCE
 	@sed -i.bak 's/v${VERSION_REGEX}/v${VERSION}/' $@
 	@rm $@.bak
 
+docs/docs.json: FORCE
+	@echo "Building $@..."
+	@sed -i.bak 's/v${VERSION_REGEX}/v${VERSION}/' $@
+	@rm $@.bak
+
 docs/coverage.html: FORCE
 	@echo "Building $@..."
 	@make coverage out=$@
@@ -119,18 +124,21 @@ docs/docs/api.json: FORCE
 
 docs/docs/filters.json: FORCE
 	@echo "Building $@..."
-	@${BIN}/jsdoc lib/filters.js ${JSDOCOPTS} > $@
+	@echo '{ "filters": ' > $@
+	@${BIN}/jsdoc lib/filters.js -X >> $@
+	@echo '}' >> $@
 
 docs/docs/tags.json: FORCE
 	@echo "Building $@..."
-	@${BIN}/jsdoc lib/tags/ ${JSDOCOPTS} > $@
+	@${BIN}/jsdoc lib/tags/ ${JSDOCOPTS} >> $@
 
 docs/docs/extending.json: FORCE
 	@echo "Building $@..."
 	@${BIN}/jsdoc lib/parser.js lib/lexer.js ${JSDOCOPTS} > $@
 
 .SECONDARY build-docs: \
-	docs/index.json
+	docs/index.json \
+	docs/docs.json
 
 .INTERMDIATE build-docs: \
 	docs/docs/api.json \
@@ -169,4 +177,4 @@ FORCE:
 .PHONY: all version \
 	build build-docs \
 	test test-browser lint coverage \
-	docs/index.json docs gh-pages
+	docs gh-pages
