@@ -10,7 +10,8 @@
 <section id="filters">
   <h2>Custom Filters</h2>
 
-  {% for t in typedefs %}{% if t.name === 'Filter' %}
+  {% for t in ext %}
+  {% if t.kind === 'typedef' and t.undocumented !== true and t.name === 'Filter' %}
   <section class="doc">
     {{ docmacro.description(t) }}
 
@@ -29,9 +30,9 @@
       {% for p in t.params %}
       <tr>
         <td><var data-language="js">{{ p.name }}</var></td>
-        <td><code data-language="js">{{ p.type }}</code></td>
-        <td>{% if p.optional %}✔{% endif %}</td>
-        <td><samp data-language="js">{{ p.default }}</samp></td>
+        <td><code data-language="js">{{ p.type.names.join(', ') }}</code></td>
+        <td>{% if p.optional === true %}✔{% endif %}</td>
+        <td><samp data-language="js">{{ p.defaultvalue }}</samp></td>
         <td>{{ docmacro.description(p) }}</td>
       </tr>
       {% endfor %}
@@ -54,7 +55,7 @@
 
   <p>All of Swig's tags are written using the same api (with a few exceptions for core modules, like <var>extends</var> and <var>block</var>). View a tag's source to see more examples to write your own custom tags.</p>
 
-  {% for t in typedefs %}{% if t.name === 'parse' or t.name === 'compile' %}
+  {% for t in ext %}{% if t.undocumented !== true and (t.name === 'parse' or t.name === 'compile') and t.kind === 'typedef' %}
   <section id="{{ t.name }}" class="doc">
     <h3>{{ t.name }}({% for p in t.params %}{{ p.name }}{% if not loop.last %}, {% endif %}{% endfor %})</h3>
 
@@ -75,9 +76,9 @@
       {% for p in t.params %}
       <tr>
         <td><var data-language="js">{{ p.name }}</var></td>
-        <td><code data-language="js">{{ p.type }}</code></td>
-        <td>{% if p.optional %}✔{% endif %}</td>
-        <td><samp data-language="js">{{ p.default }}</samp></td>
+        <td><code data-language="js">{{ p.type.names.join(', ') }}</code></td>
+        <td>{% if p.optional === true %}✔{% endif %}</td>
+        <td><samp data-language="js">{{ p.defaultvalue }}</samp></td>
         <td>{{ docmacro.description(p) }}</td>
       </tr>
       {% endfor %}
@@ -119,11 +120,12 @@
 {% endblock %}{% endraw %}</code></pre>
    </section>
 
-  {% for prop in properties %}
+  {% for prop in ext %}
     {% if prop.isEnum %}
     <section id="{{ prop.name }}" class="doc">
       <h3>{{ prop.name }}</h3>
-      <p>{{ docmacro.description(prop) }}</p>
+      {{ docmacro.source(prop, 1) }}
+      {{ docmacro.description(prop) }}
       <table>
         <thead>
           <tr>
@@ -150,7 +152,7 @@
         </tr>
         {% for p in prop.properties %}
         <tr>
-          <td><samp data-language="js">{{ p.default }}</samp></td>
+          <td><samp data-language="js">{{ p.defaultvalue }}</samp></td>
           <td><var data-language="js">types.{{ p.name }}</var></td>
           <td>{{ docmacro.description(p) }}</td>
         </tr>

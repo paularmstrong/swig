@@ -103,7 +103,6 @@ else
 	@echo
 endif
 
-JSDOCOPTS=-t scripts/jsdoc-json/
 docs/index.json: FORCE
 	@echo "Building $@..."
 	@sed -i.bak 's/v${VERSION_REGEX}/v${VERSION}/' $@
@@ -138,7 +137,9 @@ docs/docs/tags.json: FORCE
 
 docs/docs/extending.json: FORCE
 	@echo "Building $@..."
-	@${BIN}/jsdoc lib/parser.js lib/lexer.js ${JSDOCOPTS} > $@
+	@echo '{ "ext": ' > $@
+	@${BIN}/jsdoc lib/parser.js lib/lexer.js -X >> $@
+	@echo '}' >> $@
 
 .SECONDARY build-docs: \
 	docs/index.json \
