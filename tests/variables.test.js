@@ -35,7 +35,8 @@ var cases = {
     { c: '{{ Object.keys({ 0: 1, a: "b" }) }}', e: '0,a' },
     { c: '{{ o.foo() }}', e: 'bar'},
     { c: '{{ o2.foo() }}', e: 'bar'},
-    { c: '{{ o2.foo("foobar") }}', e: 'foobar'}
+    { c: '{{ o2.foo("foobar") }}', e: 'foobar'},
+    { c: '{{ o2.bar }}', e: ''}
   ],
   'can include arrays': [
     { c: '{{ [0, 1, 3] }}', e: '0,1,3' }
