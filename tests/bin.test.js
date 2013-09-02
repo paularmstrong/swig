@@ -26,7 +26,8 @@ var casefiles = fs.readdirSync(__dirname + '/cases/'),
   expectations = _.filter(casefiles, isExpectation),
   cases = _.groupBy(tests.concat(expectations), function (f) {
     return f.split('.')[0];
-  });
+  }),
+  keys = _.keys(cases);
 
 describe('bin/swig -v', function () {
   it('shows the version number', function (done) {
@@ -38,35 +39,36 @@ describe('bin/swig -v', function () {
 });
 
 describe('bin/swig render', function () {
-  var locals = fixPath(__dirname + '/bin.locals.json');
-  _.each(cases, function (files, c) {
-    var test = fixPath(__dirname + '/cases/' + _.find(files, isTest)),
-      expectation = fs.readFileSync(path.normalize(__dirname + '/cases/' + _.find(files, isExpectation)), 'utf8');
+  var locals = fixPath(__dirname + '/bin.locals.json'),
+    key = keys[_.random(keys.length - 1)],
+    testcase = cases[key],
+    test = fixPath(__dirname + '/cases/' + _.find(testcase, isTest)),
+    expectation = fs.readFileSync(path.normalize(__dirname + '/cases/' + _.find(testcase, isExpectation)), 'utf8');
 
-    it(c, function (done) {
-      exec('node ' + bin + ' render ' + test + ' -j ' + locals, function (err, stdout, stderr) {
-        expect(stdout.replace(/\n$/, '')).to.equal(expectation);
-        done();
-      });
+  it(key, function (done) {
+    exec('node ' + bin + ' render ' + test + ' -j ' + locals, function (err, stdout, stderr) {
+      expect(stdout.replace(/\n$/, '')).to.equal(expectation);
+      done();
     });
   });
 });
 
 describe('bin/swig compile + run', function () {
-  var locals = fixPath(__dirname + '/bin.locals.json');
-  _.each(cases, function (files, c) {
-    var test = _.find(files, isTest),
-      p = fixPath(__dirname + '/cases/' + test),
-      expectation = fs.readFileSync(path.normalize(__dirname + '/cases/' + _.find(files, isExpectation)), 'utf8');
+  var locals = fixPath(__dirname + '/bin.locals.json'),
+    key = keys[_.random(keys.length - 1)],
+    testcase = cases[key],
+    test = _.find(testcase, isTest),
+    p = fixPath(__dirname + '/cases/' + test),
+    expectation = fs.readFileSync(path.normalize(__dirname + '/cases/' + _.find(testcase, isExpectation)), 'utf8');
 
-    it(c, function (done) {
-      var tmp = fixPath(__dirname + '/../tmp');
-      exec('node ' + bin + ' compile ' + p + ' -j ' + locals + ' -o ' + tmp, function (err, stdout, stderr) {
-        var p = fixPath(__dirname + '/../tmp/' + test);
-        exec('node ' + bin + ' run ' + p + ' -c ' + locals, function (err, stdout, stdrr) {
-          expect(stdout.replace(/\n$/, '')).to.equal(expectation);
-          done();
-        });
+  it(key, function (done) {
+    var tmp = fixPath(__dirname + '/../tmp');
+    exec('node ' + bin + ' compile ' + p + ' -j ' + locals + ' -o ' + tmp, function (err, stdout, stderr) {
+      var p = fixPath(__dirname + '/../tmp/' + test),
+        locals = fixPath(__dirname + '/bin.locals.js');
+      exec('node ' + bin + ' run ' + p + ' -c ' + locals, function (err, stdout, stdrr) {
+        expect(stdout.replace(/\n$/, '')).to.equal(expectation);
+        done();
       });
     });
   });
