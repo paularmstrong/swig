@@ -8,6 +8,12 @@ describe('Regressions', function () {
       .to.equal('foo\\ blah \\ and stuff');
   });
 
+  it('gh-303: sets work in loops', function () {
+    var opts = { locals: { b: [1] }};
+    expect(swig.render('{% set foo = "old" %}{% for a in b %}{% if a %}{% set foo = "new" %}{% endif %}{% endfor %}{{ foo }}', opts))
+      .to.equal('new');
+  });
+
   // The following tests should *not* run in the browser
   if (!fs || !fs.readFileSync) {
     return;
