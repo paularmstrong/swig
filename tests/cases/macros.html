@@ -13,3 +13,7 @@ Salsa: {{ salsa }}
 {% autoescape false %}
 Hahahahahah!
 {% endautoescape %}
+
+{% macro nested(salsa) %}
+{{ tacos('Pork', salsa) }}
+{% endmacro %}
