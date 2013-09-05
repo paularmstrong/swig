@@ -221,9 +221,9 @@ describe('Filters:', function () {
 
   it('defaultTZOffset affects date filter', function () {
     swig.setDefaultTZOffset(240);
-    var d = makeDate(240, 2011, 8, 23);
-    expect(swig.render('{{ v|date("H:i a") }}', { locals: { v: d }}))
-      .to.equal('04:00 am');
+    var d = 1316761200000;
+    expect(swig.render('{{ v|date("Y-m-d H:i a") }}', { locals: { v: d }}))
+      .to.equal('2011-09-23 03:00 am');
     swig.setDefaultTZOffset(0);
   });
 
