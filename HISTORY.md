@@ -1,3 +1,14 @@
+[1.0.0-rc2](https://github.com/paularmstrong/swig/tree/v1.0.0-rc2) / 2013-09-06
+-------------------------------------------------------------------------------
+
+* **Changed** Function output from `variable` blocks are no longer auto-escaped. gh-309
+* **Fixed** Allow nested macros to work when importing. gh-310
+* **Fixed** swig.setDefaultTZOffset. gh-311
+* **Changed** `set` tag assigns to the local context, allowing setting within `for` loops, etc. gh-303
+* **Fixed** Standardize variable undefined checking. gh-301
+* **Fixed** Remove multiple redefinition of block-level tags in compiled templates.
+* **Fixed** Performance issue with compile if no default locals are defined.
+
 [1.0.0-rc1](https://github.com/paularmstrong/swig/tree/v1.0.0-rc1) / 2013-08-28
 -------------------------------------------------------------------------------
 
