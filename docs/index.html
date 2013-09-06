@@ -64,7 +64,7 @@
 <section id="usage" class="doc">
   <h2>Basic Usage</h2>
 
-  <p>Swig has multiple ways to compile and render templates. Check the <a href="/docs/api/">API documentation</a> for more detailed information and usage.</p>
+  <p>Swig has multiple ways to compile and render templates. Check the <a href="/swig/docs/api/">API documentation</a> for more detailed information and usage.</p>
 
   <pre><code data-language="js">var swig = require('swig');
 
@@ -80,7 +80,7 @@ console.log(swig.render('{% if foo %}Hooray!{% endif %}', { locals: { foo: true 
 <section id="variables" class="doc">
   <h2>Variables</h2>
 
-  <p>Variables that are passed to templates can be output using double-curly-brackets: <code data-language="swig"></code>.</p>
+  <p>Variables that are passed to templates can be output using double-curly-brackets: <code data-language="swig"></code>. All variable output is automatically <strong>autoescaped</strong>, with the exception of <a href="#variable-functions">function output</a>.</p>
 
   <h3>Notation</h3>
   <p>Accessing properties of objects can be done using either dot-notation or bracket-notation. The following examples are equivalent:</p>
@@ -99,14 +99,26 @@ console.log(swig.render('{% if foo %}Hooray!{% endif %}', { locals: { foo: true 
   <h4>Good!</h4>
   <pre><code data-language="swig">{{ foo['chicken-tacos'] }}</code></pre>
 
-  <h3>Undefined and Falsy Values</h3>
+  <h3>Undefined vs Falsy Values</h3>
   <p>If a variable is not defined, don't worry, your template won't explode. Instead, an empty-string will be output in its place. However, falsy values like <code data-language="js">null, false, 0</code> will be rendered as they are.</p>
 
   <h3>Filters</h3>
-  <p>Variables can be modified using using special, chainable control structures called <a href="#filters">Filters</a>:</p>
+  <p>Variables can be modified using using special, chainable control structures called <a href="/swig/docs/filters/">Filters</a>:</p>
 
   <pre><code data-language="swig">{{ name|title }} was born on {{ birthday|date('F jS, Y') }}</code>
 // => <samp>Jane was born on July 6th, 1985</samp></pre>
+
+  <h3 id="variable-functions">Functions</h3>
+  <p>Variables can also be JavaScript functions. It is important to note that, regardless of your <a href="/swig/docs/api/#SwigOpts">autoescape setting</a>, functions will <em>not</em> be auto-escaped.</p>
+
+  <pre><code data-language="js">var locals = { mystuff: function mystuff() { return '<p>Things!</p>'; } };
+swig.render('{{ mystuff() }}', { locals: locals });
+// => &lt;p&gt;Things!&lt;/p&gt;</code></pre>
+
+  <p>If you want to enforce escaping output on functions, just pipe them to the <a href="/swig/docs/filters/#escape">escape filter</a>.</p>
+
+  <pre><code data-language="swig">{{ mystuff()|escape }}
+// => &amp;lt;p&amp;gt;Things&amp;lt;/p&amp;gt;</code></pre>
 </section>
 
 <section id="tags" class="doc">
@@ -215,9 +227,14 @@ app.engine('html', swig.renderFile);
 
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
+
 // Swig will cache templates for you, but you can disable
-// that and use Express's caching instead, if you like.
+// that and use Express's caching instead, if you like:
 app.set('view cache', false);
+// To disable Swig's cache, do the following:
+swig.setDefaults({ cache: false });
+// NOTE: You should always cache templates in a production environment.
+// Don't leave both of these to `false` in production!
 
 app.get('/', function (req, res) {
   res.render('index', { /* template locals context */ });

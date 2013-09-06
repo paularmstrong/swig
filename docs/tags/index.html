@@ -55,8 +55,18 @@
 
 
   
+
+  
+
+  
+
+  
   <section id="autoescape" class="doc">
     <h2>autoescape</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/autoescape.js">lib/tags/autoescape.js</a></p>
+
 
     
 
@@ -82,7 +92,7 @@
           <td><var data-language="js">control</var></td>
           <td><code data-language="js">boolean or string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>One of `true`, `false`, `"js"` or `"html"`.</td>
         </tr>
       
@@ -106,8 +116,20 @@
   
 
   
+
+  
+
+  
+
+  
+
+  
   <section id="block" class="doc">
     <h2>block</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/block.js">lib/tags/block.js</a></p>
+
 
     
 
@@ -133,7 +155,7 @@
           <td><var data-language="js">name</var></td>
           <td><code data-language="js">literal</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Name of the block for use in parent and extended templates.</td>
         </tr>
       
@@ -153,8 +175,18 @@
   
 
   
+
+  
+
+  
+
+  
   <section id="else" class="doc">
     <h2>else</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/else.js">lib/tags/else.js</a></p>
+
 
     
 
@@ -181,8 +213,16 @@
   
 
   
+
+  
+
+  
   <section id="elif" class="doc">
     <h2>elif</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/elseif.js">lib/tags/elseif.js</a></p>
+
 
     
 
@@ -208,7 +248,7 @@
           <td><var data-language="js">conditional</var></td>
           <td><code data-language="js">mixed</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Conditional statement that returns a truthy or falsy value.</td>
         </tr>
       
@@ -235,8 +275,16 @@
   
 
   
+
+  
+
+  
   <section id="extends" class="doc">
     <h2>extends</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/extends.js">lib/tags/extends.js</a></p>
+
 
     
 
@@ -262,7 +310,7 @@
           <td><var data-language="js">parentFile</var></td>
           <td><code data-language="js">string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Relative path to the file that this template extends.</td>
         </tr>
       
@@ -282,8 +330,18 @@
   
 
   
+
+  
+
+  
+
+  
   <section id="filter" class="doc">
     <h2>filter</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/filter.js">lib/tags/filter.js</a></p>
+
 
     
 
@@ -309,7 +367,7 @@
           <td><var data-language="js">filter</var></td>
           <td><code data-language="js">function</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>The filter that should be applied to the contents of the tag.</td>
         </tr>
       
@@ -333,8 +391,30 @@
   
 
   
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
   <section id="for" class="doc">
     <h2>for</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/for.js">lib/tags/for.js</a></p>
+
 
     
 
@@ -360,7 +440,7 @@
           <td><var data-language="js">key</var></td>
           <td><code data-language="js">literal</code></td>
           <td>✔</td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>A shortcut to the index of the array or current key accessor.</td>
         </tr>
       
@@ -368,7 +448,7 @@
           <td><var data-language="js">variable</var></td>
           <td><code data-language="js">literal</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>The current value will be assigned to this variable name temporarily. The variable will be reset upon ending the for tag.</td>
         </tr>
       
@@ -376,7 +456,7 @@
           <td><var data-language="js">in</var></td>
           <td><code data-language="js">literal</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Literally, "in". This token is required.</td>
         </tr>
       
@@ -384,7 +464,7 @@
           <td><var data-language="js">object</var></td>
           <td><code data-language="js">object</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>An enumerable object that will be iterated over.</td>
         </tr>
       
@@ -394,7 +474,21 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">loop.index</samp>: The current iteration of the loop (1-indexed)</p>
+    
+    <p><samp data-language="js">loop.index</samp>: The current iteration of the loop (1-indexed)</p>
+    
+    <p><samp data-language="js">loop.index0</samp>: The current iteration of the loop (0-indexed)</p>
+    
+    <p><samp data-language="js">loop.revindex</samp>: The number of iterations from the end of the loop (1-indexed)</p>
+    
+    <p><samp data-language="js">loop.revindex0</samp>: The number of iterations from the end of the loop (0-indexed)</p>
+    
+    <p><samp data-language="js">loop.key</samp>: If the iterator is an object, this will be the key of the current item, otherwise it will be the same as the loop.index.</p>
+    
+    <p><samp data-language="js">loop.first</samp>: True if the current object is the first in the object or array.</p>
+    
+    <p><samp data-language="js">loop.last</samp>: True if the current object is the last in the object or array.</p>
+    
     
 
     
@@ -425,8 +519,38 @@
   
 
   
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
   <section id="if" class="doc">
     <h2>if</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/if.js">lib/tags/if.js</a></p>
+
 
     
 
@@ -452,7 +576,7 @@
           <td><var data-language="js">conditional</var></td>
           <td><code data-language="js">mixed</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Conditional statement that returns a truthy or falsy value.</td>
         </tr>
       
@@ -496,8 +620,18 @@
   
 
   
+
+  
+
+  
+
+  
   <section id="import" class="doc">
     <h2>import</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/import.js">lib/tags/import.js</a></p>
+
 
     
 
@@ -523,7 +657,7 @@
           <td><var data-language="js">file</var></td>
           <td><code data-language="js">string or var</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Relative path from the current template file to the file to import macros from.</td>
         </tr>
       
@@ -531,7 +665,7 @@
           <td><var data-language="js">as</var></td>
           <td><code data-language="js">literal</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Literally, "as".</td>
         </tr>
       
@@ -539,7 +673,7 @@
           <td><var data-language="js">varname</var></td>
           <td><code data-language="js">literal</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Local-accessible object name to assign the macros to.</td>
         </tr>
       
@@ -565,8 +699,56 @@
   
 
   
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
   <section id="include" class="doc">
     <h2>include</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/include.js">lib/tags/include.js</a></p>
+
 
     
 
@@ -592,7 +774,7 @@
           <td><var data-language="js">file</var></td>
           <td><code data-language="js">string or var</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>The path, relative to the template root, to render into the current context.</td>
         </tr>
       
@@ -600,7 +782,7 @@
           <td><var data-language="js">with</var></td>
           <td><code data-language="js">literal</code></td>
           <td>✔</td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Literally, "with".</td>
         </tr>
       
@@ -608,7 +790,7 @@
           <td><var data-language="js">context</var></td>
           <td><code data-language="js">object</code></td>
           <td>✔</td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Local variable key-value object context to provide to the included file.</td>
         </tr>
       
@@ -616,7 +798,7 @@
           <td><var data-language="js">only</var></td>
           <td><code data-language="js">literal</code></td>
           <td>✔</td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Restricts to <strong>only</strong> passing the <code>with context</code> as local variables�the included template will not be aware of any other local variables in the parent template. For best performance, usage of this option is recommended if possible.</td>
         </tr>
       
@@ -624,7 +806,7 @@
           <td><var data-language="js">ignore missing</var></td>
           <td><code data-language="js">literal</code></td>
           <td>✔</td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Will output empty string if not found instead of throwing an error.</td>
         </tr>
       
@@ -654,8 +836,36 @@
   
 
   
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
   <section id="macro" class="doc">
     <h2>macro</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/macro.js">lib/tags/macro.js</a></p>
+
 
     
 
@@ -681,7 +891,7 @@
           <td><var data-language="js">arguments</var></td>
           <td><code data-language="js">arguments</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>User-defined arguments.</td>
         </tr>
       
@@ -708,8 +918,26 @@
   
 
   
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
   <section id="parent" class="doc">
     <h2>parent</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/parent.js">lib/tags/parent.js</a></p>
+
 
     
 
@@ -735,8 +963,30 @@
   
 
   
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
   <section id="raw" class="doc">
     <h2>raw</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/raw.js">lib/tags/raw.js</a></p>
+
 
     
 
@@ -760,12 +1010,20 @@
   
 
   
+
+  
+
+  
   <section id="set" class="doc">
     <h2>set</h2>
 
     
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/set.js">lib/tags/set.js</a></p>
 
-  <p>Set a variable for re-use in the current context.</p>
+
+    
+
+  <p>Set a variable for re-use in the current context. This will over-write any value already set to the context for the given <var>varname</var>.</p>
 
 
 
@@ -787,7 +1045,7 @@
           <td><var data-language="js">varname</var></td>
           <td><code data-language="js">literal</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>The variable name to assign the value to.</td>
         </tr>
       
@@ -795,7 +1053,7 @@
           <td><var data-language="js">assignement</var></td>
           <td><code data-language="js">literal</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Any valid JavaScript assignement. <code data-language="js">=, +=, *=, /=, -=</code></td>
         </tr>
       
@@ -803,7 +1061,7 @@
           <td><var data-language="js">value</var></td>
           <td><code data-language="js">*</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Valid variable output.</td>
         </tr>
       
@@ -830,8 +1088,22 @@
   
 
   
+
+  
+
+  
+
+  
+
+  
+
+  
   <section id="spaceless" class="doc">
     <h2>spaceless</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/spaceless.js">lib/tags/spaceless.js</a></p>
+
 
     
 
@@ -855,6 +1127,16 @@
     
     
   </section>
+  
+
+  
+
+  
+
+  
+
+  
+
   
 
 
@@ -881,9 +1163,23 @@
 <ol>
   
   
+  
+  
+  
+  
+  
+  
     <li>
       <a href="#autoescape">autoescape</a>
     </li>
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   
@@ -893,9 +1189,19 @@
   
   
   
+  
+  
+  
+  
+  
+  
     <li>
       <a href="#else">else</a>
     </li>
+  
+  
+  
+  
   
   
   
@@ -905,9 +1211,19 @@
   
   
   
+  
+  
+  
+  
     <li>
       <a href="#extends">extends</a>
     </li>
+  
+  
+  
+  
+  
+  
   
   
   
@@ -917,9 +1233,53 @@
   
   
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
     <li>
       <a href="#for">for</a>
     </li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   
@@ -929,9 +1289,59 @@
   
   
   
+  
+  
+  
+  
+  
+  
     <li>
       <a href="#import">import</a>
     </li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   
@@ -941,9 +1351,47 @@
   
   
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
     <li>
       <a href="#macro">macro</a>
     </li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   
@@ -953,9 +1401,31 @@
   
   
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
     <li>
       <a href="#raw">raw</a>
     </li>
+  
+  
+  
+  
   
   
   
@@ -965,9 +1435,29 @@
   
   
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
     <li>
       <a href="#spaceless">spaceless</a>
     </li>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
 </ol>

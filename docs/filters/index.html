@@ -63,13 +63,21 @@
 
 <p>Swig comes pre-loaded with a set of useful filters:</p>
 
+<hr>
+
+
+  
+
+  
 
   
   <section id="addslashes" class="doc">
     <h2>
-      addslashes
-      
-      </h2>
+      addslashes</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L14">lib/filters.js#L14</a></p>
+
 
     
 
@@ -81,7 +89,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">*</samp>: Backslash-escaped string.</p>
+    
+    <p><samp data-language="js">*</samp>: Backslash-escaped string.</p>
+    
     
 
     
@@ -91,15 +101,20 @@
 // =&gt; \&quot;quoted string\&quot;</code></pre>
     
     
+
   </section>
+  
+
   
 
   
   <section id="capitalize" class="doc">
     <h2>
-      capitalize
-      
-      </h2>
+      capitalize</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L34">lib/filters.js#L34</a></p>
+
 
     
 
@@ -111,7 +126,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">*</samp>: Returns the same type as the input.</p>
+    
+    <p><samp data-language="js">*</samp>: Returns the same type as the input.</p>
+    
     
 
     
@@ -121,24 +138,20 @@
 // =&gt; I like burritos</code></pre>
     
     
+
   </section>
+  
+
   
 
   
   <section id="date" class="doc">
     <h2>
-      date
-      
-      (format
-        , 
-      
-      offset
-        , 
-      
-      abbr
-        )
-      
-      </h2>
+      date(format, offset, abbr)</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L58">lib/filters.js#L58</a></p>
+
 
     
 
@@ -167,7 +180,7 @@
           <td><var data-language="js">format</var></td>
           <td><code data-language="js">string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>PHP-style date format compatible string.</td>
         </tr>
         
@@ -177,7 +190,7 @@
           <td><var data-language="js">offset</var></td>
           <td><code data-language="js">number</code></td>
           <td>✔</td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Timezone offset from GMT in minutes.</td>
         </tr>
         
@@ -187,7 +200,7 @@
           <td><var data-language="js">abbr</var></td>
           <td><code data-language="js">string</code></td>
           <td>✔</td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Timezone abbreviation. Used for output only.</td>
         </tr>
         
@@ -198,7 +211,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">string</samp>: Formatted date string.</p>
+    
+    <p><samp data-language="js">string</samp>: Formatted date string.</p>
+    
     
 
     
@@ -209,18 +224,30 @@
 // =&gt; 2013-08-14</code></pre>
     
     
+
   </section>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
   
 
   
   <section id="default" class="doc">
     <h2>
-      default
-      
-      (def
-        )
-      
-      </h2>
+      default(def)</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L95">lib/filters.js#L95</a></p>
+
 
     
 
@@ -249,7 +276,7 @@
           <td><var data-language="js">def</var></td>
           <td><code data-language="js">*</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Value to return if `input` is `undefined`, `null`, or `false`.</td>
         </tr>
         
@@ -260,7 +287,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">*</samp>: `input` or `def` value.</p>
+    
+    <p><samp data-language="js">*</samp>: `input` or `def` value.</p>
+    
     
 
     
@@ -273,18 +302,18 @@
 // =&gt; Burritos</code></pre>
     
     
+
   </section>
   
 
   
   <section id="escape" class="doc">
     <h2>
-      escape
-      
-      (type
-        )
-      
-      </h2>
+      escape(type)</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L114">lib/filters.js#L114</a></p>
+
 
     
 
@@ -324,7 +353,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">string</samp>: Escaped string.</p>
+    
+    <p><samp data-language="js">string</samp>: Escaped string.</p>
+    
     
 
     
@@ -337,15 +368,36 @@
 // =&gt; \u003Cblah\u003E</code></pre>
     
     
+
   </section>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
   
 
   
   <section id="first" class="doc">
     <h2>
-      first
-      
-      </h2>
+      first</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L178">lib/filters.js#L178</a></p>
+
 
     
 
@@ -357,7 +409,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">*</samp>: The first item of the array or first character of the string input.</p>
+    
+    <p><samp data-language="js">*</samp>: The first item of the array or first character of the string input.</p>
+    
     
 
     
@@ -372,18 +426,20 @@
 // T</code></pre>
     
     
+
   </section>
+  
+
   
 
   
   <section id="join" class="doc">
     <h2>
-      join
-      
-      (glue
-        )
-      
-      </h2>
+      join(glue)</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L208">lib/filters.js#L208</a></p>
+
 
     
 
@@ -412,7 +468,7 @@
           <td><var data-language="js">glue</var></td>
           <td><code data-language="js">string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>String value to join items together.</td>
         </tr>
         
@@ -423,7 +479,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">string</samp>: </p>
+    
+    <p><samp data-language="js">string</samp>: </p>
+    
     
 
     
@@ -438,18 +496,20 @@
 // =&gt; foo and bar and baz</code></pre>
     
     
+
   </section>
+  
+
   
 
   
   <section id="json" class="doc">
     <h2>
-      json
-      
-      (indent
-        )
-      
-      </h2>
+      json(indent)</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L244">lib/filters.js#L244</a></p>
+
 
     
 
@@ -478,7 +538,7 @@
           <td><var data-language="js">indent</var></td>
           <td><code data-language="js">number</code></td>
           <td>✔</td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Number of spaces to indent for pretty-formatting.</td>
         </tr>
         
@@ -489,7 +549,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">string</samp>: A valid JSON string.</p>
+    
+    <p><samp data-language="js">string</samp>: A valid JSON string.</p>
+    
     
 
     
@@ -506,15 +568,20 @@
 //    }</code></pre>
     
     
+
   </section>
+  
+
   
 
   
   <section id="last" class="doc">
     <h2>
-      last
-      
-      </h2>
+      last</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L265">lib/filters.js#L265</a></p>
+
 
     
 
@@ -526,7 +593,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">*</samp>: The last item of the array or last character of the string.input.</p>
+    
+    <p><samp data-language="js">*</samp>: The last item of the array or last character of the string.input.</p>
+    
     
 
     
@@ -541,15 +610,20 @@
 // s</code></pre>
     
     
+
   </section>
+  
+
   
 
   
   <section id="lower" class="doc">
     <h2>
-      lower
-      
-      </h2>
+      lower</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L293">lib/filters.js#L293</a></p>
+
 
     
 
@@ -561,7 +635,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">*</samp>: Returns the same type as the input.</p>
+    
+    <p><samp data-language="js">*</samp>: Returns the same type as the input.</p>
+    
     
 
     
@@ -575,14 +651,20 @@
 // =&gt; foobar</code></pre>
     
     
+
   </section>
+  
+
   
 
   
   <section id="raw" class="doc">
     <h2>
-      raw
-      </h2>
+      raw</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L306">lib/filters.js#L306</a></p>
+
 
     
 
@@ -595,24 +677,20 @@
     
 
     
+
   </section>
+  
+
   
 
   
   <section id="replace" class="doc">
     <h2>
-      replace
-      
-      (search
-        , 
-      
-      replacement
-        , 
-      
-      flags
-        )
-      
-      </h2>
+      replace(search, replacement, flags)</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L335">lib/filters.js#L335</a></p>
+
 
     
 
@@ -641,7 +719,7 @@
           <td><var data-language="js">search</var></td>
           <td><code data-language="js">string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>String or pattern to replace from the input.</td>
         </tr>
         
@@ -651,7 +729,7 @@
           <td><var data-language="js">replacement</var></td>
           <td><code data-language="js">string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>String to replace matched pattern.</td>
         </tr>
         
@@ -661,7 +739,7 @@
           <td><var data-language="js">flags</var></td>
           <td><code data-language="js">string</code></td>
           <td>✔</td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Regular Expression flags. 'g': global match, 'i': ignore case, 'm': match over multiple lines</td>
         </tr>
         
@@ -672,7 +750,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">string</samp>: Replaced string.</p>
+    
+    <p><samp data-language="js">string</samp>: Replaced string.</p>
+    
     
 
     
@@ -691,15 +771,20 @@
 // =&gt; 010203</code></pre>
     
     
+
   </section>
+  
+
   
 
   
   <section id="reverse" class="doc">
     <h2>
-      reverse
-      
-      </h2>
+      reverse</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L351">lib/filters.js#L351</a></p>
+
 
     
 
@@ -711,7 +796,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">array</samp>: Reversed array. The original input object is returned if it was not an array.</p>
+    
+    <p><samp data-language="js">array</samp>: Reversed array. The original input object is returned if it was not an array.</p>
+    
     
 
     
@@ -722,15 +809,18 @@
 // =&gt; 3,2,1</code></pre>
     
     
+
   </section>
   
 
   
   <section id="safe" class="doc">
     <h2>
-      safe
-      
-      </h2>
+      safe</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L366">lib/filters.js#L366</a></p>
+
 
     
 
@@ -742,7 +832,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">*</samp>: The input exactly how it was given, regardless of autoescaping status.</p>
+    
+    <p><samp data-language="js">*</samp>: The input exactly how it was given, regardless of autoescaping status.</p>
+    
     
 
     
@@ -753,18 +845,20 @@
 // =&gt; &lt;p&gt;Stuff&lt;/p&gt;</code></pre>
     
     
+
   </section>
+  
+
   
 
   
   <section id="sort" class="doc">
     <h2>
-      sort
-      
-      (reverse
-        )
-      
-      </h2>
+      sort(reverse)</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L396">lib/filters.js#L396</a></p>
+
 
     
 
@@ -804,7 +898,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">*</samp>: Sorted array;</p>
+    
+    <p><samp data-language="js">*</samp>: Sorted array;</p>
+    
     
 
     
@@ -823,15 +919,26 @@
 // =&gt; foo,bar</code></pre>
     
     
+
   </section>
+  
+
+  
+
+  
+
+  
+
   
 
   
   <section id="striptags" class="doc">
     <h2>
-      striptags
-      
-      </h2>
+      striptags</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L432">lib/filters.js#L432</a></p>
+
 
     
 
@@ -843,7 +950,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">*</samp>: Returns the same object as the input, but with all string values stripped of tags.</p>
+    
+    <p><samp data-language="js">*</samp>: Returns the same object as the input, but with all string values stripped of tags.</p>
+    
     
 
     
@@ -854,15 +963,20 @@
 // =&gt; foobar</code></pre>
     
     
+
   </section>
+  
+
   
 
   
   <section id="title" class="doc">
     <h2>
-      title
-      
-      </h2>
+      title</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L458">lib/filters.js#L458</a></p>
+
 
     
 
@@ -874,7 +988,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">*</samp>: Returns the same object as the input, but with all words in strings title-cased.</p>
+    
+    <p><samp data-language="js">*</samp>: Returns the same object as the input, but with all words in strings title-cased.</p>
+    
     
 
     
@@ -889,15 +1005,20 @@
 // =&gt; Hi This Is An Array</code></pre>
     
     
+
   </section>
+  
+
   
 
   
   <section id="uniq" class="doc">
     <h2>
-      uniq
-      
-      </h2>
+      uniq</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L481">lib/filters.js#L481</a></p>
+
 
     
 
@@ -909,7 +1030,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">array</samp>: Array with unique items. If input was not an array, the original item is returned untouched.</p>
+    
+    <p><samp data-language="js">array</samp>: Array with unique items. If input was not an array, the original item is returned untouched.</p>
+    
     
 
     
@@ -920,15 +1043,22 @@
 // =&gt; 1,2,3,4</code></pre>
     
     
+
   </section>
+  
+
+  
+
   
 
   
   <section id="upper" class="doc">
     <h2>
-      upper
-      
-      </h2>
+      upper</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L513">lib/filters.js#L513</a></p>
+
 
     
 
@@ -940,7 +1070,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">*</samp>: Returns the same type as the input, with all strings upper-cased.</p>
+    
+    <p><samp data-language="js">*</samp>: Returns the same type as the input, with all strings upper-cased.</p>
+    
     
 
     
@@ -955,15 +1087,20 @@
 // =&gt; TACOS &amp; BURRITOS</code></pre>
     
     
+
   </section>
+  
+
   
 
   
   <section id="url_encode" class="doc">
     <h2>
-      url_encode
-      
-      </h2>
+      url_encode</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L534">lib/filters.js#L534</a></p>
+
 
     
 
@@ -975,7 +1112,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">*</samp>: URL-encoded string.</p>
+    
+    <p><samp data-language="js">*</samp>: URL-encoded string.</p>
+    
     
 
     
@@ -986,15 +1125,20 @@
 // =&gt; param%3D1%26anotherParam%3D2</code></pre>
     
     
+
   </section>
+  
+
   
 
   
   <section id="url_decode" class="doc">
     <h2>
-      url_decode
-      
-      </h2>
+      url_decode</h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/filters.js#L555">lib/filters.js#L555</a></p>
+
 
     
 
@@ -1006,7 +1150,9 @@
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">*</samp>: URL-decoded string.</p>
+    
+    <p><samp data-language="js">*</samp>: URL-decoded string.</p>
+    
     
 
     
@@ -1017,7 +1163,12 @@
 // =&gt; param=1&amp;anotherParam=2</code></pre>
     
     
+
   </section>
+  
+
+  
+
   
 
 
@@ -1040,89 +1191,209 @@
       
 <ol>
 
+  
+
+  
+
+  
   <li>
     <a href="#addslashes">addslashes</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#capitalize">capitalize</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#date">date</a>
   </li>
+  
 
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
   <li>
     <a href="#default">default</a>
   </li>
+  
 
+  
   <li>
     <a href="#escape">escape</a>
   </li>
+  
 
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
   <li>
     <a href="#first">first</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#join">join</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#json">json</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#last">last</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#lower">lower</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#raw">raw</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#replace">replace</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#reverse">reverse</a>
   </li>
+  
 
+  
   <li>
     <a href="#safe">safe</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#sort">sort</a>
   </li>
+  
 
+  
+
+  
+
+  
+
+  
+
+  
   <li>
     <a href="#striptags">striptags</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#title">title</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#uniq">uniq</a>
   </li>
+  
 
+  
+
+  
+
+  
   <li>
     <a href="#upper">upper</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#url_encode">url_encode</a>
   </li>
+  
 
+  
+
+  
   <li>
     <a href="#url_decode">url_decode</a>
   </li>
+  
+
+  
+
+  
 
 </ol>
 

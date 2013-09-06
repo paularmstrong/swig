@@ -1,6 +1,6 @@
-/*! Swig v1.0.0-rc1 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.0.0-rc2 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
-;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
+;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
 
 if (typeof window.define === 'function' && typeof window.define.amd === 'object') {
@@ -31,7 +31,7 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-exports.defaultTZOffset = 0;
+exports.tzOffset = 0;
 exports.DateZ = function () {
   var members = {
       'default': ['getUTCDate', 'getUTCDay', 'getUTCFullYear', 'getUTCHours', 'getUTCMilliseconds', 'getUTCMinutes', 'getUTCMonth', 'getUTCSeconds', 'toISOString', 'toGMTString', 'toUTCString', 'valueOf', 'getTime'],
@@ -54,7 +54,7 @@ exports.DateZ = function () {
     };
   });
 
-  this.setTimezoneOffset(exports.defaultTZOffset);
+  this.setTimezoneOffset(exports.tzOffset);
 };
 exports.DateZ.prototype = {
   getTimezoneOffset: function () {
@@ -212,7 +212,7 @@ exports.U = function (input) {
 };
 
 },{"./utils":23}],3:[function(require,module,exports){
-(function(){var utils = require('./utils'),
+var utils = require('./utils'),
   dateFormatter = require('./dateformatter');
 
 /**
@@ -776,7 +776,6 @@ exports.url_decode = function (input) {
   return decodeURIComponent(input);
 };
 
-})()
 },{"./dateformatter":2,"./utils":23}],4:[function(require,module,exports){
 var utils = require('./utils');
 
@@ -1083,7 +1082,7 @@ exports.read = function (str) {
 };
 
 },{"./utils":23}],5:[function(require,module,exports){
-(function(){var utils = require('./utils'),
+var utils = require('./utils'),
   lexer = require('./lexer');
 
 var _t = lexer.types,
@@ -1137,13 +1136,12 @@ function escapeRegExp(str) {
  * @class
  * @param {array}   tokens     Pre-split tokens read by the Lexer.
  * @param {object}  filters    Keyed object of filters that may be applied to variables.
- * @param {array}   macros     List of macros registered in the template.
  * @param {boolean} autoescape Whether or not this should be autoescaped.
  * @param {number}  line       Beginning line number for the first token.
  * @param {string}  [filename] Name of the file being parsed.
  * @private
  */
-function TokenParser(tokens, filters, macros, autoescape, line, filename) {
+function TokenParser(tokens, filters, autoescape, line, filename) {
   this.out = [];
   this.state = [];
   this.filterApplyIdx = [];
@@ -1151,7 +1149,6 @@ function TokenParser(tokens, filters, macros, autoescape, line, filename) {
   this.line = line;
   this.filename = filename;
   this.filters = filters;
-  this.macros = macros;
   this.escape = autoescape;
 
   this.parse = function () {
@@ -1293,9 +1290,7 @@ TokenParser.prototype = {
       self.out.push('((typeof ' + match + ' !== "undefined") ? ' + match +
         ' : ((typeof _ctx.' + match + ' !== "undefined") ? _ctx.' + match +
         ' : _fn))(');
-      if (self.macros.indexOf(match) !== -1) {
-        self.escape = false;
-      }
+      self.escape = false;
       if (token.type === _t.FUNCTIONEMPTY) {
         self.out[self.out.length - 1] = self.out[self.out.length - 1] + ')';
       } else {
@@ -1312,9 +1307,7 @@ TokenParser.prototype = {
           temp = prevToken.match.split('.').slice(0, -1);
           self.out.push(' || _fn).call(' + self.checkMatch(temp));
           self.state.push(_t.METHODOPEN);
-          if (self.macros.indexOf(prevToken.match) !== -1) {
-            self.escape = false;
-          }
+          self.escape = false;
         } else {
           self.out.push(' || _fn)(');
         }
@@ -1457,7 +1450,7 @@ TokenParser.prototype = {
         if (i === 0) {
           return;
         }
-        build += ' && "' + v + '" in ' + c;
+        build += ' && ' + c + '.' + v + ' !== undefined';
         c += '.' + v;
       });
       build += ')';
@@ -1520,7 +1513,6 @@ exports.parse = function (source, opts, tags, filters) {
     parent = null,
     tokens = [],
     blocks = {},
-    macros = [],
     inRaw = false,
     stripNext;
 
@@ -1536,7 +1528,7 @@ exports.parse = function (source, opts, tags, filters) {
       parser,
       out;
 
-    parser = new TokenParser(tokens, filters, macros, escape, line, opts.filename);
+    parser = new TokenParser(tokens, filters, escape, line, opts.filename);
     out = parser.parse().join('');
 
     if (parser.state.length) {
@@ -1598,7 +1590,7 @@ exports.parse = function (source, opts, tags, filters) {
     }
 
     tokens = lexer.read(utils.strip(chunks.join(' ')));
-    parser = new TokenParser(tokens, filters, macros, false, line, opts.filename);
+    parser = new TokenParser(tokens, filters, false, line, opts.filename);
     tag = tags[tagName];
 
     /**
@@ -1697,10 +1689,6 @@ exports.parse = function (source, opts, tags, filters) {
 
         if (token.block && (!stack.length || token.name === 'block')) {
           blocks[token.args.join('')] = token;
-        }
-
-        if (token.name === 'macro') {
-          macros.push(token.args[0]);
         }
       }
       if (inRaw && !token) {
@@ -1801,9 +1789,8 @@ exports.compile = function (template, parents, options, blockName) {
   return out;
 };
 
-})()
 },{"./lexer":4,"./utils":23}],6:[function(require,module,exports){
-(function(){var fs = require('fs'),
+var fs = require('fs'),
   path = require('path'),
   utils = require('./utils'),
   _tags = require('./tags'),
@@ -1814,16 +1801,16 @@ exports.compile = function (template, parents, options, blockName) {
 /**
  * Swig version number as a string.
  * @example
- * if (swig.version === "1.0.0-rc1") { ... }
+ * if (swig.version === "1.0.0-rc2") { ... }
  *
  * @type {String}
  */
-exports.version = "1.0.0-rc1";
+exports.version = "1.0.0-rc2";
 
 /**
  * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
  * @typedef {Object} SwigOpts
- * @property {boolean} autoescape  Controls whether or not variable output will automatically be escaped for safe HTML output. Defaults to <code data-language="js">true</code>.
+ * @property {boolean} autoescape  Controls whether or not variable output will automatically be escaped for safe HTML output. Defaults to <code data-language="js">true</code>. Functions executed in variable statements will not be auto-escaped. Your application/functions should take care of their own auto-escaping.
  * @property {array}   varControls Open and close controls for variables. Defaults to <code data-language="js">['{{', '}}']</code>.
  * @property {array}   tagControls Open and close controls for tags. Defaults to <code data-language="js">['{%', '%}']</code>.
  * @property {array}   cmtControls Open and close controls for comments. Defaults to <code data-language="js">['{#', '#}']</code>.
@@ -2164,11 +2151,6 @@ exports.Swig = function (opts) {
    * @private
    */
   function remapBlocks(blocks, tokens) {
-    utils.each(blocks, function (block) {
-      if (block.name !== 'block') {
-        tokens.unshift(block);
-      }
-    });
     return utils.map(tokens, function (token) {
       var args = token.args ? token.args.join('') : '';
       if (token.name === 'block' && blocks[args]) {
@@ -2178,6 +2160,21 @@ exports.Swig = function (opts) {
         token.content = remapBlocks(blocks, token.content);
       }
       return token;
+    });
+  }
+
+  /**
+   * Import block-level tags to the token list that are not actual block tags.
+   * @param  {array} blocks List of block-level tags.
+   * @param  {array} tokens List of tokens to render.
+   * @return {undefined}
+   * @private
+   */
+  function importNonBlocks(blocks, tokens) {
+    utils.each(blocks, function (block) {
+      if (block.name !== 'block') {
+        tokens.unshift(block);
+      }
     });
   }
 
@@ -2220,6 +2217,7 @@ exports.Swig = function (opts) {
     l = parents.length;
     for (l = parents.length - 2; l >= 0; l -= 1) {
       parents[l].tokens = remapBlocks(parents[l].blocks, parents[l + 1].tokens);
+      importNonBlocks(parents[l].blocks, parents[l].tokens);
     }
 
     return parents;
@@ -2254,6 +2252,7 @@ exports.Swig = function (opts) {
     if (parents.length) {
       // Remap the templates first-parent's tokens using this template's blocks.
       tokens.tokens = remapBlocks(tokens.blocks, parents[0].tokens);
+      importNonBlocks(tokens.blocks, tokens.tokens);
     }
 
     tpl = new Function('_swig', '_ctx', '_filters', '_utils', '_fn',
@@ -2343,6 +2342,7 @@ exports.Swig = function (opts) {
     var key = options ? options.filename : null,
       cached = key ? cacheGet(key) : null,
       context,
+      contextLength,
       pre,
       tpl;
 
@@ -2351,10 +2351,21 @@ exports.Swig = function (opts) {
     }
 
     context = getLocals(options);
+    contextLength = utils.keys(context).length;
     pre = this.precompile(source, options);
 
     function compiled(locals) {
-      return pre.tpl(self, utils.extend({}, context, locals || {}), filters, utils, efn);
+      var lcls;
+      if (locals && contextLength) {
+        lcls = utils.extend({}, context, locals);
+      } else if (locals && !contextLength) {
+        lcls = locals;
+      } else if (!locals && contextLength) {
+        lcls = context;
+      } else {
+        lcls = {};
+      }
+      return pre.tpl(self, lcls, filters, utils, efn);
     }
 
     utils.extend(compiled, pre.tokens);
@@ -2468,7 +2479,6 @@ exports.renderFile = defaultInstance.renderFile;
 exports.run = defaultInstance.run;
 exports.invalidateCache = defaultInstance.invalidateCache;
 
-})()
 },{"./dateformatter":2,"./filters":3,"./parser":5,"./tags":7,"./utils":23,"fs":24,"path":25}],7:[function(require,module,exports){
 exports.autoescape = require('./tags/autoescape');
 exports.block = require('./tags/block');
@@ -2909,7 +2919,7 @@ exports.parse = function (str, line, parser, types) {
 exports.ends = true;
 
 },{}],16:[function(require,module,exports){
-(function(){var utils = require('../utils');
+var utils = require('../utils');
 
 /**
  * Allows you to import macros from another file directly into your current context.
@@ -2935,14 +2945,12 @@ exports.ends = true;
 exports.compile = function (compiler, args, content, parents, options) {
   var ctx = args.pop(),
     out = 'var ' + ctx + ' = {};\n' +
-      '(function () {\n' +
+      '(function (exports) {\n' +
       '  var _output = "";\n',
     tokens;
 
-  out += utils.map(args, function (arg) {
-    return arg.replace(/__ctx__/g, ctx);
-  }).join('');
-  out += '}());\n';
+  out += args.join('');
+  out += '}(' + ctx + '));\n';
 
   return out;
 };
@@ -2952,7 +2960,6 @@ exports.parse = function (str, line, parser, types, stack, opts) {
     compiler = require('../parser').compile,
     parseOpts = { resolveFrom: opts.filename },
     compileOpts = utils.extend({}, opts, parseOpts),
-    macros = [],
     tokens,
     ctx;
 
@@ -2962,16 +2969,13 @@ exports.parse = function (str, line, parser, types, stack, opts) {
       tokens = parseFile(token.match.replace(/^("|')|("|')$/g, ''), parseOpts).tokens;
       utils.each(tokens, function (token) {
         var out = '',
-          macroName,
-          safe;
+          macroName;
         if (!token || token.name !== 'macro' || !token.compile) {
           return;
         }
         macroName = token.args[0];
-        out += '__ctx__.' + macroName + ' = ' + token.compile(compiler, token.args, token.content, [], compileOpts);
-        safe = macroName + '\\.safe ';
-        out = out.replace(new RegExp(safe), '__ctx__.' + safe.replace(/\\/g, ''));
-        macros.push(macroName);
+        out += token.compile(compiler, token.args, token.content, [], compileOpts) + '\n';
+        out += 'exports.' + macroName + ' = ' + macroName + ';\n';
         self.out.push(out);
       });
       return;
@@ -2992,10 +2996,6 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 
     ctx = token.match;
     self.out.push(ctx);
-    utils.each(macros, function (macro) {
-      self.macros.push(ctx + '.' + macro);
-    });
-
     return false;
   });
 
@@ -3004,7 +3004,6 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 
 exports.block = true;
 
-})()
 },{"../parser":5,"../swig":6,"../utils":23}],17:[function(require,module,exports){
 var ignore = 'ignore',
   missing = 'missing',
@@ -3182,6 +3181,7 @@ exports.parse = function (str, line, parser, types, stack) {
 };
 
 exports.ends = true;
+exports.block = true;
 
 },{}],19:[function(require,module,exports){
 /**
@@ -3262,8 +3262,8 @@ exports.parse = function (str, line, parser, types, stack) {
 exports.ends = true;
 
 },{}],21:[function(require,module,exports){
-(function(){/**
- * Set a variable for re-use in the current context.
+/**
+ * Set a variable for re-use in the current context. This will over-write any value already set to the context for the given <var>varname</var>.
  *
  * @alias set
  *
@@ -3293,7 +3293,7 @@ exports.parse = function (str, line, parser, types, stack) {
       nameSet = token.match;
       this.out.push(
         // Prevent the set from spilling into global scope
-        'var ' + nameSet + ' = _ctx.' + nameSet + ';\n' + nameSet
+        '_ctx.' + nameSet
       );
       return;
     }
@@ -3314,7 +3314,6 @@ exports.parse = function (str, line, parser, types, stack) {
 
 exports.block = true;
 
-})()
 },{}],22:[function(require,module,exports){
 var utils = require('../utils');
 
@@ -3545,7 +3544,7 @@ exports.throwError = function (message, line, file) {
 // nothing to see here... no file methods for the browser
 
 },{}],25:[function(require,module,exports){
-(function(process){function filter (xs, fn) {
+var process=require("__browserify_process");function filter (xs, fn) {
     var res = [];
     for (var i = 0; i < xs.length; i++) {
         if (fn(xs[i], i, xs)) res.push(xs[i]);
@@ -3721,7 +3720,8 @@ exports.relative = function(from, to) {
   return outputParts.join('/');
 };
 
-})(require("__browserify_process"))
+exports.sep = '/';
+
 },{"__browserify_process":26}],26:[function(require,module,exports){
 // shim for using process in browser
 

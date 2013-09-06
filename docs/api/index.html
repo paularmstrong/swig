@@ -54,8 +54,12 @@
 <h1>Swig API</h1>
 
 
+
   <section id="SwigOpts" class="doc">
     <h2>Object Type: SwigOpts</h2>
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L18">lib/swig.js#L18</a></p>
+
 
     
 
@@ -78,7 +82,7 @@
         <tr>
           <td><var data-language="js">autoescape</var></td>
           <td><code data-language="js">boolean</code></td>
-          <td>Controls whether or not variable output will automatically be escaped for safe HTML output. Defaults to <code data-language="js">true</code>.</td>
+          <td>Controls whether or not variable output will automatically be escaped for safe HTML output. Defaults to <code data-language="js">true</code>. Functions executed in variable statements will not be auto-escaped. Your application/functions should take care of their own auto-escaping.</td>
         </tr>
       
         <tr>
@@ -118,8 +122,13 @@
     
   </section>
 
+
+
   <section id="CacheOptions" class="doc">
     <h2>Object Type: CacheOptions</h2>
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L34">lib/swig.js#L34</a></p>
+
 
     
 
@@ -151,8 +160,299 @@ swig.setDefaults({
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <section id="version" class="doc">
     <h2>swig.version</h2>
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L16">lib/swig.js#L16</a></p>
+
 
     
 
@@ -163,12 +463,301 @@ swig.setDefaults({
     
     <h3>Examples</h3>
     
-    <pre><code data-language="js">if (swig.version === &quot;1.0.0-rc1&quot;) { ... }</code></pre>
+    <pre><code data-language="js">if (swig.version === &quot;1.0.0-rc2&quot;) { ... }</code></pre>
     
     
   </section>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 
   
 
@@ -181,6 +770,10 @@ swig.setDefaults({
       options
       )
     </h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L116">lib/swig.js#L116</a></p>
+
 
     
 
@@ -216,7 +809,9 @@ swig.setDefaults({
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">undefined</samp>: </p>
+    
+    <p><samp data-language="js">undefined</samp>: </p>
+    
     
 
     
@@ -235,12 +830,22 @@ swig.setDefaults({
   
 
   
+
+  
+
+  
+
+  
   <section id="setDefaultTZOffset" class="doc">
     <h2>
       swig.setDefaultTZOffset(
       offset
       )
     </h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L132">lib/swig.js#L132</a></p>
+
 
     
 
@@ -266,7 +871,7 @@ swig.setDefaults({
           <td><var data-language="js">offset</var></td>
           <td><code data-language="js">number</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Offset from GMT, in minutes.</td>
         </tr>
       
@@ -276,11 +881,15 @@ swig.setDefaults({
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">undefined</samp>: </p>
+    
+    <p><samp data-language="js">undefined</samp>: </p>
+    
     
 
     
   </section>
+  
+
   
 
   
@@ -290,6 +899,10 @@ swig.setDefaults({
       opts
       )
     </h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L150">lib/swig.js#L150</a></p>
+
 
     
 
@@ -325,7 +938,9 @@ swig.setDefaults({
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">object</samp>: New Swig environment.</p>
+    
+    <p><samp data-language="js">object</samp>: New Swig environment.</p>
+    
     
 
     
@@ -343,11 +958,35 @@ swig.render(&#39;Tacos are &lt;%= tacos =&gt;!&#39;, { locals: { tacos: &#39;del
   
 
   
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
   <section id="invalidateCache" class="doc">
     <h2>
       swig.invalidateCache(
       )
     </h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L219">lib/swig.js#L219</a></p>
+
 
     
 
@@ -359,7 +998,9 @@ swig.render(&#39;Tacos are &lt;%= tacos =&gt;!&#39;, { locals: { tacos: &#39;del
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">undefined</samp>: </p>
+    
+    <p><samp data-language="js">undefined</samp>: </p>
+    
     
 
     
@@ -372,6 +1013,8 @@ swig.render(&#39;Tacos are &lt;%= tacos =&gt;!&#39;, { locals: { tacos: &#39;del
   
 
   
+
+  
   <section id="setFilter" class="doc">
     <h2>
       swig.setFilter(
@@ -379,6 +1022,10 @@ swig.render(&#39;Tacos are &lt;%= tacos =&gt;!&#39;, { locals: { tacos: &#39;del
       , method
       )
     </h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L238">lib/swig.js#L238</a></p>
+
 
     
 
@@ -404,7 +1051,7 @@ swig.render(&#39;Tacos are &lt;%= tacos =&gt;!&#39;, { locals: { tacos: &#39;del
           <td><var data-language="js">name</var></td>
           <td><code data-language="js">string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Name of filter, used in templates. <strong>Will</strong> overwrite previously defined filters, if using the same name.</td>
         </tr>
       
@@ -412,7 +1059,7 @@ swig.render(&#39;Tacos are &lt;%= tacos =&gt;!&#39;, { locals: { tacos: &#39;del
           <td><var data-language="js">method</var></td>
           <td><code data-language="js">function</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Function that acts against the input. See <a href="/docs/filters/#custom">Custom Filters</a> for more information.</td>
         </tr>
       
@@ -422,7 +1069,9 @@ swig.render(&#39;Tacos are &lt;%= tacos =&gt;!&#39;, { locals: { tacos: &#39;del
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">undefined</samp>: </p>
+    
+    <p><samp data-language="js">undefined</samp>: </p>
+    
     
 
     
@@ -438,6 +1087,8 @@ swig.setFilter(&#39;replaceMs&#39;, replaceMs);
   
 
   
+
+  
   <section id="setTag" class="doc">
     <h2>
       swig.setTag(
@@ -448,6 +1099,10 @@ swig.setFilter(&#39;replaceMs&#39;, replaceMs);
       , blockLevel
       )
     </h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L263">lib/swig.js#L263</a></p>
+
 
     
 
@@ -473,7 +1128,7 @@ swig.setFilter(&#39;replaceMs&#39;, replaceMs);
           <td><var data-language="js">name</var></td>
           <td><code data-language="js">string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Tag name.</td>
         </tr>
       
@@ -481,7 +1136,7 @@ swig.setFilter(&#39;replaceMs&#39;, replaceMs);
           <td><var data-language="js">parse</var></td>
           <td><code data-language="js">function</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Method for parsing tokens.</td>
         </tr>
       
@@ -489,7 +1144,7 @@ swig.setFilter(&#39;replaceMs&#39;, replaceMs);
           <td><var data-language="js">compile</var></td>
           <td><code data-language="js">function</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Method for compiling renderable output.</td>
         </tr>
       
@@ -515,7 +1170,9 @@ swig.setFilter(&#39;replaceMs&#39;, replaceMs);
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">undefined</samp>: </p>
+    
+    <p><samp data-language="js">undefined</samp>: </p>
+    
     
 
     
@@ -531,6 +1188,16 @@ swig.setTag(&#39;tacos&#39;, tacotag.parse, tacotag.compile, tacotag.ends, tacot
   
 
   
+
+  
+
+  
+
+  
+
+  
+
+  
   <section id="setExtension" class="doc">
     <h2>
       swig.setExtension(
@@ -538,6 +1205,10 @@ swig.setTag(&#39;tacos&#39;, tacotag.parse, tacotag.compile, tacotag.ends, tacot
       , object
       )
     </h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L294">lib/swig.js#L294</a></p>
+
 
     
 
@@ -563,7 +1234,7 @@ swig.setTag(&#39;tacos&#39;, tacotag.parse, tacotag.compile, tacotag.ends, tacot
           <td><var data-language="js">name</var></td>
           <td><code data-language="js">string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Key name of the extension. Accessed via <code data-language="js">_ext[name]</code>.</td>
         </tr>
       
@@ -571,7 +1242,7 @@ swig.setTag(&#39;tacos&#39;, tacotag.parse, tacotag.compile, tacotag.ends, tacot
           <td><var data-language="js">object</var></td>
           <td><code data-language="js">*</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>The method, value, or object that should be available via the given name.</td>
         </tr>
       
@@ -581,7 +1252,9 @@ swig.setTag(&#39;tacos&#39;, tacotag.parse, tacotag.compile, tacotag.ends, tacot
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">undefined</samp>: </p>
+    
+    <p><samp data-language="js">undefined</samp>: </p>
+    
     
 
     
@@ -602,6 +1275,74 @@ swig.setTag(&#39;trans&#39;, parseTrans, compileTrans, true);</code></pre>
   
 
   
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
   <section id="precompile" class="doc">
     <h2>
       swig.precompile(
@@ -609,6 +1350,10 @@ swig.setTag(&#39;trans&#39;, parseTrans, compileTrans, true);</code></pre>
       , options
       )
     </h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L455">lib/swig.js#L455</a></p>
+
 
     
 
@@ -634,7 +1379,7 @@ swig.setTag(&#39;trans&#39;, parseTrans, compileTrans, true);</code></pre>
           <td><var data-language="js">source</var></td>
           <td><code data-language="js">string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Swig template source string.</td>
         </tr>
       
@@ -652,7 +1397,9 @@ swig.setTag(&#39;trans&#39;, parseTrans, compileTrans, true);</code></pre>
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">object</samp>: Renderable function and tokens object.</p>
+    
+    <p><samp data-language="js">object</samp>: Renderable function and tokens object.</p>
+    
     
 
     
@@ -676,6 +1423,20 @@ In order to render a pre-compiled template, you must have access to filters and 
   
 
   
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
   <section id="render" class="doc">
     <h2>
       swig.render(
@@ -683,6 +1444,10 @@ In order to render a pre-compiled template, you must have access to filters and 
       , options
       )
     </h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L489">lib/swig.js#L489</a></p>
+
 
     
 
@@ -708,7 +1473,7 @@ In order to render a pre-compiled template, you must have access to filters and 
           <td><var data-language="js">source</var></td>
           <td><code data-language="js">string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Swig template source string.</td>
         </tr>
       
@@ -726,7 +1491,9 @@ In order to render a pre-compiled template, you must have access to filters and 
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">string</samp>: Rendered output.</p>
+    
+    <p><samp data-language="js">string</samp>: Rendered output.</p>
+    
     
 
     
@@ -752,6 +1519,10 @@ When rendering a source string, a file path should be specified in the options o
     </h2>
 
     
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L513">lib/swig.js#L513</a></p>
+
+
+    
 
   <p>Compile and render a template file for final output. This is most useful for libraries like Express.js.</p>
 
@@ -775,7 +1546,7 @@ When rendering a source string, a file path should be specified in the options o
           <td><var data-language="js">pathName</var></td>
           <td><code data-language="js">string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>File location.</td>
         </tr>
       
@@ -791,7 +1562,7 @@ When rendering a source string, a file path should be specified in the options o
           <td><var data-language="js">cb</var></td>
           <td><code data-language="js">Function</code></td>
           <td>✔</td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Asyncronous callback function. If not provided, <var>compileFile</var> will run syncronously.</td>
         </tr>
       
@@ -801,7 +1572,9 @@ When rendering a source string, a file path should be specified in the options o
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">string</samp>: Rendered output.</p>
+    
+    <p><samp data-language="js">string</samp>: Rendered output.</p>
+    
     
 
     
@@ -822,6 +1595,8 @@ When rendering a source string, a file path should be specified in the options o
   
 
   
+
+  
   <section id="compile" class="doc">
     <h2>
       swig.compile(
@@ -829,6 +1604,10 @@ When rendering a source string, a file path should be specified in the options o
       , options
       )
     </h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L549">lib/swig.js#L549</a></p>
+
 
     
 
@@ -854,7 +1633,7 @@ When rendering a source string, a file path should be specified in the options o
           <td><var data-language="js">source</var></td>
           <td><code data-language="js">string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Swig template source string.</td>
         </tr>
       
@@ -872,7 +1651,9 @@ When rendering a source string, a file path should be specified in the options o
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">function</samp>: Renderable function with keys for parent, blocks, and tokens.</p>
+    
+    <p><samp data-language="js">function</samp>: Renderable function with keys for parent, blocks, and tokens.</p>
+    
     
 
     
@@ -895,6 +1676,36 @@ When compiling a source string, a file path should be specified in the options o
   
 
   
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
   <section id="compileFile" class="doc">
     <h2>
       swig.compileFile(
@@ -903,6 +1714,10 @@ When compiling a source string, a file path should be specified in the options o
       , cb
       )
     </h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L611">lib/swig.js#L611</a></p>
+
 
     
 
@@ -928,7 +1743,7 @@ When compiling a source string, a file path should be specified in the options o
           <td><var data-language="js">pathname</var></td>
           <td><code data-language="js">string</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>File location.</td>
         </tr>
       
@@ -944,7 +1759,7 @@ When compiling a source string, a file path should be specified in the options o
           <td><var data-language="js">cb</var></td>
           <td><code data-language="js">Function</code></td>
           <td>✔</td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Asyncronous callback function. If not provided, <var>compileFile</var> will run syncronously.</td>
         </tr>
       
@@ -954,7 +1769,9 @@ When compiling a source string, a file path should be specified in the options o
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">function</samp>: Renderable function with keys for parent, blocks, and tokens.</p>
+    
+    <p><samp data-language="js">function</samp>: Renderable function with keys for parent, blocks, and tokens.</p>
+    
     
 
     
@@ -978,6 +1795,22 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
   
 
   
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
   <section id="run" class="doc">
     <h2>
       swig.run(
@@ -986,6 +1819,10 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
       , pathName
       )
     </h2>
+
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/swig.js#L668">lib/swig.js#L668</a></p>
+
 
     
 
@@ -1011,7 +1848,7 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
           <td><var data-language="js">tpl</var></td>
           <td><code data-language="js">function</code></td>
           <td></td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Pre-compiled Swig template function. Use the Swig CLI to compile your templates.</td>
         </tr>
       
@@ -1027,7 +1864,7 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
           <td><var data-language="js">pathName</var></td>
           <td><code data-language="js">string</code></td>
           <td>✔</td>
-          <td><code data-language="js"></code></td>
+          <td><code data-language="js">undefined</code></td>
           <td>Path of the file. Used for relative include lookups.</td>
         </tr>
       
@@ -1037,7 +1874,9 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
 
     
     <h3>Returns</h3>
-      <p><samp data-language="js">string</samp>: Rendered output.</p>
+    
+    <p><samp data-language="js">string</samp>: Rendered output.</p>
+    
     
 
     
@@ -1053,6 +1892,36 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
     
     
   </section>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
   
 
 
@@ -1071,99 +1940,309 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
       
 <ol>
 
+
   <li><a href="#SwigOpts">Object: SwigOpts</a></li>
 
+
+
   <li><a href="#CacheOptions">Object: CacheOptions</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   <li><a href="#version">swig.version</a></li>
 
 
-  
 
-  
 
-  
-  <li>
-    <a href="#setDefaults">swig.setDefaults</a>
-  </li>
-  
 
-  
-  <li>
-    <a href="#setDefaultTZOffset">swig.setDefaultTZOffset</a>
-  </li>
-  
 
-  
-  <li>
-    <a href="#Swig">swig.Swig</a>
-  </li>
-  
 
-  
-  <li>
-    <a href="#invalidateCache">swig.invalidateCache</a>
-  </li>
-  
 
-  
-  <li>
-    <a href="#setFilter">swig.setFilter</a>
-  </li>
-  
 
-  
-  <li>
-    <a href="#setTag">swig.setTag</a>
-  </li>
-  
 
-  
-  <li>
-    <a href="#setExtension">swig.setExtension</a>
-  </li>
-  
 
-  
 
-  
 
-  
-  <li>
-    <a href="#precompile">swig.precompile</a>
-  </li>
-  
 
-  
-  <li>
-    <a href="#render">swig.render</a>
-  </li>
-  
 
-  
-  <li>
-    <a href="#renderFile">swig.renderFile</a>
-  </li>
-  
 
-  
-  <li>
-    <a href="#compile">swig.compile</a>
-  </li>
-  
 
-  
-  <li>
-    <a href="#compileFile">swig.compileFile</a>
-  </li>
-  
 
-  
-  <li>
-    <a href="#run">swig.run</a>
-  </li>
-  
+
+
+
+
+
+  <li><a href="#setDefaults">swig.setDefaults</a></li>
+
+
+
+
+
+
+
+
+
+  <li><a href="#setDefaultTZOffset">swig.setDefaultTZOffset</a></li>
+
+
+
+
+
+  <li><a href="#Swig">swig.Swig</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="#invalidateCache">swig.invalidateCache</a></li>
+
+
+
+
+
+  <li><a href="#setFilter">swig.setFilter</a></li>
+
+
+
+
+
+  <li><a href="#setTag">swig.setTag</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="#setExtension">swig.setExtension</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="#precompile">swig.precompile</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="#render">swig.render</a></li>
+
+
+
+  <li><a href="#renderFile">swig.renderFile</a></li>
+
+
+
+
+
+  <li><a href="#compile">swig.compile</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="#compileFile">swig.compileFile</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="#run">swig.run</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </ol>
 
