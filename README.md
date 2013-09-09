@@ -1,4 +1,3 @@
-
 Swig [![Build Status](https://secure.travis-ci.org/paularmstrong/swig.png?branch=master)](http://travis-ci.org/paularmstrong/swig) [![Dependency Status](https://gemnasium.com/paularmstrong/swig.png)](https://gemnasium.com/paularmstrong/swig) [![NPM version](https://badge.fury.io/js/swig.png)](http://badge.fury.io/js/swig)
 ====
 
@@ -51,8 +50,8 @@ Basic Example
 
 ```js
 var swig  = require('swig');
-var tpl = template.compileFile('/absolute/path/to/template.html');
-tpl({
+var template = swig.compileFile('/absolute/path/to/template.html');
+var output = template({
     pagename: 'awesome people',
     authors: ['Paul', 'Jim', 'Jane']
 });
@@ -68,6 +67,8 @@ tpl({
     <li>Jane</li>
 </ul>
 ```
+
+For working example see [examples/basic](https://github.com/paularmstrong/swig/tree/master/examples/basic)
 
 How it works
 ------------
