@@ -65,7 +65,7 @@
     <h2>autoescape</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/autoescape.js">lib/tags/autoescape.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/autoescape.js">lib/tags/autoescape.js</a></p>
 
 
     
@@ -128,7 +128,7 @@
     <h2>block</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/block.js">lib/tags/block.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/block.js">lib/tags/block.js</a></p>
 
 
     
@@ -185,7 +185,7 @@
     <h2>else</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/else.js">lib/tags/else.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/else.js">lib/tags/else.js</a></p>
 
 
     
@@ -221,7 +221,7 @@
     <h2>elif</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/elseif.js">lib/tags/elseif.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/elseif.js">lib/tags/elseif.js</a></p>
 
 
     
@@ -283,7 +283,7 @@
     <h2>extends</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/extends.js">lib/tags/extends.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/extends.js">lib/tags/extends.js</a></p>
 
 
     
@@ -340,7 +340,7 @@
     <h2>filter</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/filter.js">lib/tags/filter.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/filter.js">lib/tags/filter.js</a></p>
 
 
     
@@ -413,7 +413,7 @@
     <h2>for</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/for.js">lib/tags/for.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/for.js">lib/tags/for.js</a></p>
 
 
     
@@ -549,7 +549,7 @@
     <h2>if</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/if.js">lib/tags/if.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/if.js">lib/tags/if.js</a></p>
 
 
     
@@ -630,12 +630,12 @@
     <h2>import</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/import.js">lib/tags/import.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/import.js">lib/tags/import.js</a></p>
 
 
     
 
-  <p>Allows you to import macros from another file directly into your current context.</p><p>The import tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.</p><p>It is highly recommended to import your macros directly into the template that they will be used in and <strong>not</strong> from the template's parent. Doing so may have unexpected escaping effects.</p>
+  <p>Allows you to import macros from another file directly into your current context.</p><p>The import tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.</p>
 
 
 
@@ -747,7 +747,7 @@
     <h2>include</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/include.js">lib/tags/include.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/include.js">lib/tags/include.js</a></p>
 
 
     
@@ -864,12 +864,12 @@
     <h2>macro</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/macro.js">lib/tags/macro.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/macro.js">lib/tags/macro.js</a></p>
 
 
     
 
-  <p>Create custom, reusable snippets within your templates.</p><p>Can be imported from one template to another using the <a href="#import"><code data-language="swig">{% import ... %}</code></a> tag.</p><p>While macros may appear to work in child templates after having been defined in a parent template, they may not get properly escaped. It is recommended to always <a href="#import"><code data-language="swig">{% import ... %}</code></a> your macros directly into the template they'll be used in.</p>
+  <p>Create custom, reusable snippets within your templates.</p><p>Can be imported from one template to another using the <a href="#import"><code data-language="swig">{% import ... %}</code></a> tag.</p>
 
 
 
@@ -936,7 +936,7 @@
     <h2>parent</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/parent.js">lib/tags/parent.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/parent.js">lib/tags/parent.js</a></p>
 
 
     
@@ -985,7 +985,7 @@
     <h2>raw</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/raw.js">lib/tags/raw.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/raw.js">lib/tags/raw.js</a></p>
 
 
     
@@ -1018,7 +1018,7 @@
     <h2>set</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/set.js">lib/tags/set.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/set.js">lib/tags/set.js</a></p>
 
 
     
@@ -1102,7 +1102,7 @@
     <h2>spaceless</h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc2/lib/tags/spaceless.js">lib/tags/spaceless.js</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.0.0-rc3/lib/tags/spaceless.js">lib/tags/spaceless.js</a></p>
 
 
     

@@ -1,4 +1,4 @@
-/*! Swig v1.0.0-rc2 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.0.0-rc3 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -917,7 +917,8 @@ var TYPES = {
     {
       type: TYPES.LOGIC,
       regex: [
-        /^(&&|\|\||and|or)\s*/
+        /^(&&|\|\|)\s*/,
+        /^(and|or)\s+/
       ],
       idx: 1,
       replace: {
@@ -1261,6 +1262,7 @@ TokenParser.prototype = {
       break;
 
     case _t.NUMBER:
+    case _t.BOOL:
       self.filterApplyIdx.push(self.out.length);
       self.out.push(match);
       break;
@@ -1331,8 +1333,12 @@ TokenParser.prototype = {
           lastState !== _t.FILTER &&
           lastState !== _t.ARRAYOPEN &&
           lastState !== _t.CURLYOPEN &&
-          lastState !== _t.PARENOPEN) {
+          lastState !== _t.PARENOPEN &&
+          lastState !== _t.COLON) {
         utils.throwError('Unexpected comma', self.line, self.filename);
+      }
+      if (lastState === _t.COLON) {
+        self.state.pop();
       }
       self.out.push(', ');
       self.filterApplyIdx.pop();
@@ -1374,11 +1380,15 @@ TokenParser.prototype = {
       if (lastState !== _t.CURLYOPEN) {
         utils.throwError('Unexpected colon', self.line, self.filename);
       }
+      self.state.push(token.type);
       self.out.push(':');
       self.filterApplyIdx.pop();
       break;
 
     case _t.CURLYCLOSE:
+      if (lastState === _t.COLON) {
+        self.state.pop();
+      }
       if (self.state.pop() !== _t.CURLYOPEN) {
         utils.throwError('Unexpected closing curly brace', self.line, self.filename);
       }
@@ -1801,11 +1811,11 @@ var fs = require('fs'),
 /**
  * Swig version number as a string.
  * @example
- * if (swig.version === "1.0.0-rc2") { ... }
+ * if (swig.version === "1.0.0-rc3") { ... }
  *
  * @type {String}
  */
-exports.version = "1.0.0-rc2";
+exports.version = "1.0.0-rc3";
 
 /**
  * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
@@ -2924,7 +2934,6 @@ var utils = require('../utils');
 /**
  * Allows you to import macros from another file directly into your current context.
  * The import tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.
- * It is highly recommended to import your macros directly into the template that they will be used in and <strong>not</strong> from the template's parent. Doing so may have unexpected escaping effects.
  *
  * @alias import
  *
@@ -3110,7 +3119,6 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 /**
  * Create custom, reusable snippets within your templates.
  * Can be imported from one template to another using the <a href="#import"><code data-language="swig">{% import ... %}</code></a> tag.
- * While macros may appear to work in child templates after having been defined in a parent template, they may not get properly escaped. It is recommended to always <a href="#import"><code data-language="swig">{% import ... %}</code></a> your macros directly into the template they'll be used in.
  *
  * @alias macro
  *
@@ -3217,7 +3225,7 @@ exports.compile = function (compiler, args, content, parents, options, blockName
       continue;
     }
     // Silly JSLint "Strange Loop" requires return to be in a conditional
-    if (breaker) {
+    if (breaker && parentFile !== parent.name) {
       block = parent.blocks[blockName];
       return block.compile(compiler, [blockName], block.content, parents.slice(i + 1), options) + '\n';
     }
