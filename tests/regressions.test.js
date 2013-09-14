@@ -19,6 +19,12 @@ describe('Regressions', function () {
     expect(swig.render('{{ andif }}', { locals: { andif: 'foo' }})).to.equal('foo');
   });
 
+  it('gh-323: stuff', function () {
+    var tpl = "{% set foo = {label:'account.label',value:page.code} %}",
+      opts = { locals: { page: { code: 'tacos' }}};
+    expect(swig.render(tpl + '{{ foo.value }}', opts)).to.equal('tacos');
+  });
+
   // The following tests should *not* run in the browser
   if (!fs || !fs.readFileSync) {
     return;
