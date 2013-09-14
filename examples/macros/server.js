@@ -1,13 +1,9 @@
 var http = require('http'),
   swig = require(__dirname + '/../../index');
 
-swig.init({
-  root: __dirname
-});
-
 http.createServer(function (req, res) {
-  var tmpl = swig.compileFile('index.html'),
-    renderedHtml = tmpl.render({
+  var tmpl = swig.compileFile(__dirname + '/index.html'),
+    renderedHtml = tmpl({
       people: [
         { name: 'Paul', age: 28 },
         { name: 'Jane', age: 26 },

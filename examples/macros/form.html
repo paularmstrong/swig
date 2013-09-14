@@ -1,4 +1,4 @@
-{% macro input type name label %}
+{% macro input(type, name, label) %}
 <label for="{{ name }}">{{ label }}</label>
 <input type="{{ type }}" name="{{ name }}" id="{{ name }}">
 {% endmacro %}
