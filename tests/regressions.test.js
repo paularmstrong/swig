@@ -14,6 +14,11 @@ describe('Regressions', function () {
       .to.equal('new');
   });
 
+  it('gh-322: logic words are not partially matched', function () {
+    expect(swig.render('{{ org }}', { locals: { org: 'foo' }})).to.equal('foo');
+    expect(swig.render('{{ andif }}', { locals: { andif: 'foo' }})).to.equal('foo');
+  });
+
   // The following tests should *not* run in the browser
   if (!fs || !fs.readFileSync) {
     return;
