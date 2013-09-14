@@ -18,7 +18,8 @@ var cases = {
   'can be string and number literals': [
     { c: '{{ "a" }}', e: 'a' },
     { c: '{{ 1 }}', e: '1' },
-    { c: '{{ 1.5 }}', e: '1.5' }
+    { c: '{{ 1.5 }}', e: '1.5' },
+    { c: '{{ true }}', e: 'true' }
   ],
   'return empty string if undefined': [
     { c: '"{{ u }}"', e: '""' }
