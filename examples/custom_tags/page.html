@@ -1,3 +1,6 @@
-{% for person in people %}
-    {% input "text" person.id 'Name' person.name %}
-{% endfor %}
+<nav>
+  <ul>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'settings' %}">Settings</a></li>
+  </ul>
+</nav>

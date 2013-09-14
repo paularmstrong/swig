@@ -1,24 +1,22 @@
 var http = require('http'),
-  swig = require(__dirname + '/../../index');
+  swig = require('../../index'),
+  urltag = require('./tag-url');
 
-swig.init({
-  root: __dirname,
-  tags: require('./custom_tags')
+swig.setExtension('url', function (urlname) {
+  var urls = {
+    dashboard: '/dashboard/',
+    settings: '/settings/'
+  };
+  return urls[urlname];
 });
 
+swig.setTag('url', urltag.parse, urltag.compile, urltag.ends, urltag.blockLevel);
+
 http.createServer(function (req, res) {
-  var tmpl = swig.compileFile('page.html'),
-    renderedHtml = tmpl.render({
-      people: [
-        { id: 'person0', name: 'Paul', age: 28 },
-        { id: 'person1', name: 'Jane', age: 26 },
-        { id: 'person2', name: 'Jimmy', age: 45 }
-      ],
-      title: 'Basic Example'
-    });
+  var output = swig.compileFile(__dirname + '/page.html')();
 
   res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.end(renderedHtml);
+  res.end(output);
 }).listen(1337);
 
 console.log('Application Started on http://localhost:1337/');
