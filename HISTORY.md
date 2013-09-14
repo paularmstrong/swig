@@ -1,3 +1,11 @@
+[1.0.0-rc3](https://github.com/paularmstrong/swig/tree/v1.0.0-rc3) / 2013-09-14
+-------------------------------------------------------------------------------
+
+* **Fixed** Allow bools in token parser by default. gh-321
+* **Fixed** Allow variables as object values. gh-323
+* **Fixed** Don't partially match logic words. gh-322
+* **Fixed** Parent tag in parent's block with no local block edge case. gh-316
+
 [1.0.0-rc2](https://github.com/paularmstrong/swig/tree/v1.0.0-rc2) / 2013-09-06
 -------------------------------------------------------------------------------
 
