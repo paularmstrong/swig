@@ -1,7 +1,9 @@
 {% extends "./extends_1.test.html" %}
 
 {% block body %}Foobar
+{%- if true %}
 {% parent %}
+{%- endif -%}
 {% endblock %}
 
 {% block nonexistent %}hi{% parent %}{% endblock %}
