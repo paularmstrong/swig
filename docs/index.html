@@ -11,16 +11,20 @@
 
 <section class="content">
   <h1>Swig</h1>
-  <p>A Node.js and Browser-based JavaScript Template Engine</p>
 
-  <p>Current Version: {{ version }}</p>
+  <div class="row guttered">
+    <p class="span6">A simple, powerful, and extendable JavaScript Template Engine.</p>
+    <p class="span6">Current Version: <strong>{{ version }}</strong>. <a href="{{ baseurl }}/docs/previous/">Looking for an older version?</a></p>
+  </div>
 
   <hr class="small">
 
   <div class="row guttered">
 
     <section class="span6">
-      <h2>Get Started</h2>
+      <h2>Super Quick Start</h2>
+
+      <p>For a more in-depth intro, check out the <a href="{{ baseurl }}/docs/">Getting Started docs</a>.</p>
 
       <h3>Install Swig</h3>
       <pre><code>npm install swig --save</code></pre>
@@ -55,6 +59,7 @@ swig.renderFile('/path/to/template.html', {
       <h2>Features</h2>
       <ul>
         <li>Available for node.js <em>and</em> major web browsers!</li>
+        <li>Uses similar methodologies as Django, Jinja2, and Twig template engines.</li>
         <li><a href="http://expressjs.com/">Express</a> compatible.</li>
         <li>Object-Oriented template inheritance.</li>
         <li>Apply filters and transformations to output in your templates.</li>
