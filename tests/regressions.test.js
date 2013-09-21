@@ -17,6 +17,9 @@ describe('Regressions', function () {
   it('gh-322: logic words are not partially matched', function () {
     expect(swig.render('{{ org }}', { locals: { org: 'foo' }})).to.equal('foo');
     expect(swig.render('{{ andif }}', { locals: { andif: 'foo' }})).to.equal('foo');
+    expect(swig.render('{{ note }}', { locals: { note: 'foo' }})).to.equal('foo');
+    expect(swig.render('{{ truestuff }}', { locals: { truestuff: 'foo' }})).to.equal('foo');
+    expect(swig.render('{{ falsey }}', { locals: { falsey: 'foo' }})).to.equal('foo');
   });
 
   it('gh-323: stuff', function () {
