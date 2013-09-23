@@ -21,6 +21,7 @@ Need Help? Have Questions? Comments?
 
 * [Mailing List/Google Group](http://groups.google.com/forum/#!forum/swig-templates)
 * [StackOverflow](http://stackoverflow.com/questions/tagged/swig-template)
+* [Migration Guide](https://github.com/paularmstrong/swig/wiki/Migrating-from-v0.x.x-to-v1.0.0)
 
 Installation
 ------------
