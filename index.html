@@ -40,10 +40,6 @@
     </nav>
   
   </div>
-
-  <div class="content">
-    <p class="warning">This documentation is for a pre-release version and may be missing information.</p>
-  </div>
 </header>
 
 
@@ -51,16 +47,20 @@
 
 <section class="content">
   <h1>Swig</h1>
-  <p>A Node.js and Browser-based JavaScript Template Engine</p>
 
-  <p>Current Version: v1.0.0-rc3</p>
+  <div class="row guttered">
+    <p class="span6">A simple, powerful, and extendable JavaScript Template Engine.</p>
+    <p class="span6">Current Version: <strong>v1.0.0</strong>. <a href="/swig/docs/previous/">Looking for an older version?</a></p>
+  </div>
 
   <hr class="small">
 
   <div class="row guttered">
 
     <section class="span6">
-      <h2>Get Started</h2>
+      <h2>Super Quick Start</h2>
+
+      <p>For a more in-depth intro, check out the <a href="/swig/docs/">Getting Started docs</a>.</p>
 
       <h3>Install Swig</h3>
       <pre><code>npm install swig --save</code></pre>
@@ -95,6 +95,7 @@ swig.renderFile('/path/to/template.html', {
       <h2>Features</h2>
       <ul>
         <li>Available for node.js <em>and</em> major web browsers!</li>
+        <li>Uses similar methodologies as Django, Jinja2, and Twig template engines.</li>
         <li><a href="http://expressjs.com/">Express</a> compatible.</li>
         <li>Object-Oriented template inheritance.</li>
         <li>Apply filters and transformations to output in your templates.</li>
@@ -110,7 +111,7 @@ swig.renderFile('/path/to/template.html', {
       <h2>Download For the Browser</h2>
       <p>Swig also works in all major browsers. Just download the following file and follow the <a href="/swig/docs/#browser">Documentation</a>.</p>
       <p class="download">
-        <a href="/swig/js/swig.min.js" class="btn">Download v1.0.0-rc3</a><br><br>
+        <a href="/swig/js/swig.min.js" class="btn">Download v1.0.0</a><br><br>
         <a href="/swig/js/swig.js">Development</a> | <a href="/swig/js/swig.min.js">Production</a> (<a href="/swig/js/swig.js.map">source map</a>)
       </p>
 
@@ -123,6 +124,7 @@ swig.renderFile('/path/to/template.html', {
          <li><a href="https://travis-ci.org/paularmstrong/swig/builds">Travis CI Build History</a></li>
          <li><a href="https://github.com/paularmstrong/swig/issues">Bug Reports</a></li>
          <li><a href="http://stackoverflow.com/questions/tagged/swig-template">Stack Overflow Questions</a></li>
+         <li><a href="https://github.com/jonschlinkert/sublime-swig">Syntax Highlighting for Sublime Text</a></li>
        </ul>
 
     </section>
@@ -131,7 +133,11 @@ swig.renderFile('/path/to/template.html', {
 </section>
 
 
-<a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
+<footer class="content">
+  <hr class="small">
+  <p>Swig is copyright &copy;2013 <a href="http://paularmstrongdesigns.com">Paul Armstrong</a>, licensed for use under the permissive MIT Open Source License.</p>
+  <a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
+</footer>
 
 
   

@@ -1,4 +1,4 @@
-/*! Swig v1.0.0-rc3 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.0.0 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -948,9 +948,9 @@ var TYPES = {
     {
       type: TYPES.NOT,
       regex: [
-        /^(not|\!)\s*/
+        /^\!\s*/,
+        /^not\s+/
       ],
-      idx: 1,
       replace: {
         'not': '!'
       }
@@ -958,8 +958,10 @@ var TYPES = {
     {
       type: TYPES.BOOL,
       regex: [
-        /^(true|false)/
-      ]
+        /^(true|false)\s+/,
+        /^(true|false)$/
+      ],
+      idx: 1
     },
     {
       type: TYPES.VAR,
@@ -1345,7 +1347,7 @@ TokenParser.prototype = {
       break;
 
     case _t.VAR:
-      self.parseVar(token, match, lastState, prevToken);
+      self.parseVar(token, match, lastState);
       break;
 
     case _t.BRACKETOPEN:
@@ -1416,13 +1418,11 @@ TokenParser.prototype = {
    * @param  {{match: string, type: number, line: number}} token      Lexer token object.
    * @param  {string} match       Shortcut for token.match
    * @param  {number} lastState   Lexer token type state.
-   * @param  {{match: string, type: number, line: number}} prevToken  Lexer token object.
    * @return {undefined}
    * @private
    */
-  parseVar: function (token, match, lastState, prevToken) {
-    var self = this,
-      isReserved;
+  parseVar: function (token, match, lastState) {
+    var self = this;
 
     match = match.split('.');
 
@@ -1766,7 +1766,7 @@ exports.compile = function (template, parents, options, blockName) {
   var out = '',
     tokens = utils.isArray(template) ? template : template.tokens;
 
-  utils.each(tokens, function (token, index) {
+  utils.each(tokens, function (token) {
     var o;
     if (typeof token === 'string') {
       out += '_output += "' + token.replace(/\\/g, '\\\\').replace(/\n|\r/g, '\\n').replace(/"/g, '\\"') + '";\n';
@@ -1811,11 +1811,11 @@ var fs = require('fs'),
 /**
  * Swig version number as a string.
  * @example
- * if (swig.version === "1.0.0-rc3") { ... }
+ * if (swig.version === "1.0.0") { ... }
  *
  * @type {String}
  */
-exports.version = "1.0.0-rc3";
+exports.version = "1.0.0";
 
 /**
  * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
@@ -2197,8 +2197,7 @@ exports.Swig = function (opts) {
    * @private
    */
   function getParents(tokens, options) {
-    var blocks = {},
-      parentName = tokens.parent,
+    var parentName = tokens.parent,
       parentFiles = [],
       parents = [],
       parentFile,
@@ -2313,7 +2312,6 @@ exports.Swig = function (opts) {
    * @return {string}             Rendered output.
    */
   this.renderFile = function (pathName, locals, cb) {
-    var out;
     if (cb) {
       exports.compileFile(pathName, {}, function (err, fn) {
         if (err) {
@@ -2353,8 +2351,7 @@ exports.Swig = function (opts) {
       cached = key ? cacheGet(key) : null,
       context,
       contextLength,
-      pre,
-      tpl;
+      pre;
 
     if (cached) {
       return cached;
@@ -2464,10 +2461,9 @@ exports.Swig = function (opts) {
    *
    * @param  {function} tpl       Pre-compiled Swig template function. Use the Swig CLI to compile your templates.
    * @param  {object} [locals={}] Template variable context.
-   * @param  {string} [pathName]  Path of the file. Used for relative include lookups.
    * @return {string}             Rendered output.
    */
-  this.run = function (tpl, locals, pathName) {
+  this.run = function (tpl, locals) {
     var context = getLocals({ locals: locals });
     return tpl(self, context, filters, utils, efn);
   };
@@ -2509,7 +2505,6 @@ exports.spaceless = require('./tags/spaceless');
 
 },{"./tags/autoescape":8,"./tags/block":9,"./tags/else":10,"./tags/elseif":11,"./tags/extends":12,"./tags/filter":13,"./tags/for":14,"./tags/if":15,"./tags/import":16,"./tags/include":17,"./tags/macro":18,"./tags/parent":19,"./tags/raw":20,"./tags/set":21,"./tags/spaceless":22}],8:[function(require,module,exports){
 var utils = require('../utils'),
-  bools = ['false', 'true'],
   strings = ['html', 'js'];
 
 /**
@@ -2526,8 +2521,8 @@ var utils = require('../utils'),
  *
  * @param {boolean|string} control One of `true`, `false`, `"js"` or `"html"`.
  */
-exports.compile = function (compiler, args, content) {
-  return compiler(content);
+exports.compile = function (compiler, args, content, parents, options, blockName) {
+  return compiler(content, parents, options, blockName);
 };
 exports.parse = function (str, line, parser, types, stack, opts) {
   var matched;
@@ -2567,7 +2562,7 @@ exports.compile = function (compiler, args, content, parents, options) {
   return compiler(content, parents, options, args.join(''));
 };
 
-exports.parse = function (str, line, parser, types) {
+exports.parse = function (str, line, parser) {
   parser.on('*', function (token) {
     this.out.push(token.match);
   });
@@ -2592,7 +2587,7 @@ exports.block = true;
  * // => statement2
  *
  */
-exports.compile = function (compiler, args, content) {
+exports.compile = function () {
   return '} else {\n';
 };
 
@@ -2625,7 +2620,7 @@ var ifparser = require('./if').parse;
  *
  * @param {...mixed} conditional  Conditional statement that returns a truthy or falsy value.
  */
-exports.compile = function (compiler, args, content) {
+exports.compile = function (compiler, args) {
   return '} else if (' + args.join(' ') + ') {\n';
 };
 
@@ -2674,11 +2669,11 @@ var filters = require('../filters');
  * @param {function} filter  The filter that should be applied to the contents of the tag.
  */
 
-exports.compile = function (compiler, args, content, parents, options) {
+exports.compile = function (compiler, args, content, parents, options, blockName) {
   var filter = args.shift().replace(/\($/, ''),
     val = '(function () {\n' +
       '  var _output = "";\n' +
-      compiler(content, parents, options) +
+      compiler(content, parents, options, blockName) +
       '  return _output;\n' +
       '})()';
 
@@ -2766,7 +2761,7 @@ exports.ends = true;
  * @return {loop.first} True if the current object is the first in the object or array.
  * @return {loop.last} True if the current object is the last in the object or array.
  */
-exports.compile = function (compiler, args, content) {
+exports.compile = function (compiler, args, content, parents, options, blockName) {
   var val = args.shift(),
     key = '__k',
     last;
@@ -2788,14 +2783,14 @@ exports.compile = function (compiler, args, content) {
     '    loop.key = ' + key + ';\n',
     '    loop.first = (loop.index0 === 0);\n',
     '    loop.last = (loop.revindex0 === 0);\n',
-    '    ' + compiler(content),
+    '    ' + compiler(content, parents, options, blockName),
     '    loop.index += 1; loop.index0 += 1; loop.revindex -= 1; loop.revindex0 -= 1;\n',
     '  });\n',
     '})();\n'
   ].join('');
 };
 
-exports.parse = function (str, line, parser, types, stack) {
+exports.parse = function (str, line, parser, types) {
   var firstVar, ready;
 
   parser.on(types.NUMBER, function (token) {
@@ -2887,9 +2882,9 @@ exports.ends = true;
  *
  * @param {...mixed} conditional Conditional statement that returns a truthy or falsy value.
  */
-exports.compile = function (compiler, args, content) {
+exports.compile = function (compiler, args, content, parents, options, blockName) {
   return 'if (' + args.join(' ') + ') { \n' +
-    compiler(content) + '\n' +
+    compiler(content, parents, options, blockName) + '\n' +
     '}';
 };
 
@@ -2951,12 +2946,11 @@ var utils = require('../utils');
  * @param {literal}     as        Literally, "as".
  * @param {literal}     varname   Local-accessible object name to assign the macros to.
  */
-exports.compile = function (compiler, args, content, parents, options) {
+exports.compile = function (compiler, args) {
   var ctx = args.pop(),
     out = 'var ' + ctx + ' = {};\n' +
       '(function (exports) {\n' +
-      '  var _output = "";\n',
-    tokens;
+      '  var _output = "";\n';
 
   out += args.join('');
   out += '}(' + ctx + '));\n';
@@ -3044,7 +3038,7 @@ var ignore = 'ignore',
  * @param {literal}     [only]    Restricts to <strong>only</strong> passing the <code>with context</code> as local variables–the included template will not be aware of any other local variables in the parent template. For best performance, usage of this option is recommended if possible.
  * @param {literal}     [ignore missing] Will output empty string if not found instead of throwing an error.
  */
-exports.compile = function (compiler, args, content, parents, options) {
+exports.compile = function (compiler, args) {
   var file = args.shift(),
     onlyIdx = args.indexOf(only),
     onlyCtx = onlyIdx !== -1 ? args.splice(onlyIdx, 1) : false,
@@ -3145,7 +3139,7 @@ exports.compile = function (compiler, args, content, parents, options, blockName
     fnName + '.safe = true;\n';
 };
 
-exports.parse = function (str, line, parser, types, stack) {
+exports.parse = function (str, line, parser, types) {
   var name;
 
   parser.on(types.VAR, function (token) {
@@ -3170,18 +3164,18 @@ exports.parse = function (str, line, parser, types, stack) {
     }
   });
 
-  parser.on(types.PARENCLOSE, function (token) {
+  parser.on(types.PARENCLOSE, function () {
     if (this.isLast) {
       return;
     }
     throw new Error('Unexpected parenthesis close on line ' + line + '.');
   });
 
-  parser.on(types.COMMA, function (token) {
+  parser.on(types.COMMA, function () {
     return true;
   });
 
-  parser.on('*', function (token) {
+  parser.on('*', function () {
     return;
   });
 
@@ -3258,10 +3252,10 @@ exports.parse = function (str, line, parser, types, stack, opts) {
  * // => {{ foobar }}
  *
  */
-exports.compile = function (compiler, args, content) {
-  return compiler(content);
+exports.compile = function (compiler, args, content, parents, options, blockName) {
+  return compiler(content, parents, options, blockName);
 };
-exports.parse = function (str, line, parser, types, stack) {
+exports.parse = function (str, line, parser) {
   parser.on('*', function (token) {
     throw new Error('Unexpected token "' + token.match + '" in raw tag on line ' + line + '.');
   });
@@ -3290,11 +3284,11 @@ exports.ends = true;
  * @param {literal} assignement   Any valid JavaScript assignement. <code data-language="js">=, +=, *=, /=, -=</code>
  * @param {*}   value     Valid variable output.
  */
-exports.compile = function (compiler, args, content) {
+exports.compile = function (compiler, args) {
   return args.join(' ') + ';\n';
 };
 
-exports.parse = function (str, line, parser, types, stack) {
+exports.parse = function (str, line, parser, types) {
   var nameSet;
   parser.on(types.VAR, function (token) {
     if (!this.out.length) {
@@ -3339,7 +3333,7 @@ var utils = require('../utils');
  * // => <li>1</li><li>2</li><li>3</li>
  *
  */
-exports.compile = function (compiler, args, content, parents, options) {
+exports.compile = function (compiler, args, content, parents, options, blockName) {
   function stripWhitespace(tokens) {
     return utils.map(tokens, function (token) {
       if (token.content) {
@@ -3353,10 +3347,10 @@ exports.compile = function (compiler, args, content, parents, options) {
     });
   }
 
-  return compiler(stripWhitespace(content), parents, options);
+  return compiler(stripWhitespace(content), parents, options, blockName);
 };
 
-exports.parse = function (str, line, parser, types) {
+exports.parse = function (str, line, parser) {
   parser.on('*', function (token) {
     throw new Error('Unexpected token "' + token.match + '" on line ' + line + '.');
   });
@@ -3457,7 +3451,7 @@ exports.some = function (obj, fn) {
       }
     }
   } else {
-    exports.each(obj, function (value, index, collection) {
+    exports.each(obj, function (value, index) {
       result = fn(value, index, obj);
       return !(result);
     });

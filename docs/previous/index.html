@@ -8,7 +8,7 @@
   <!--[if IE]>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <![endif]-->
-  <title>Swig » Documentation &raquo; Browser Usage</title>
+  <title>Swig » Documentation &raquo; Older Versions of Swig</title>
   
 
   
@@ -47,36 +47,25 @@
 <div class="content row guttered">
   <div class="span9">
   
-<h1>Swig in the Browser</h1>
+<h1>Looking For Old Versions Or Documentation?</h1>
+<p>Become self-sufficient! All of Swig is open source and available on GitHub at <a href="https://github.com/paularmstrong/swig/">paularmstrong/swig</a>. Just clone the repo, check out the tag of your desired version, and build, review, and change to your liking!</p>
 
-<p>Most of Swig works in the browser in the same way that Swig works within node.js. The only exception to this is that Swig is unable to look up files by their path name, unless you directly tell Swig what each template's path name is before hand.</p>
-
-<p>In short, Swig cannot resolve the directive <code data-language="swig">{% extends "./myfile.html" %}</code> and <code data-language="swig">{% include "./myfile.html" %}</code> without first having already been told about <var>./myfile.html</var>.</p>
-
-<p>The best way to work around this is to first pre-compile your templates using the Swig <a href="/swig/docs/cli/">command-line interface</a>.</p>
-
-<ol>
-  <li>
-    <p>Compile each template into JavaScript files. Assign a method name to the output that will be globally available in your browser.</p>
-    <pre><code data-language="sh">$ swig compile myfile.html --method-name=myfile > myfile.js</code></pre>
-  </li>
-  <li>
-    <p>Include Swig and your <samp>myfile.js</samp> in your web page.</p>
-    <pre><code data-language="html">&lt;script src="swig.min.js"&gt;&lt;/script&gt;
-&lt;script src="myfile.js"&gt;&lt;/script&gt;
+<h2>Clone the Repo</h2>
+<pre><code data-language="sh">$ git clone git@github.com:paularmstrong/swig.git
+$ cd swig
 </code></pre>
-  </li>
-  <li>
-    <p>Pre-run the template to prime Swig's cache.</p>
-    <pre><code data-language="js">swig.run(myfile, {}, '/myfile.html');</code></pre>
-  </li>
-  <li>
-    <p>Now, you are ready to render a template in-browser that can extend <samp>myfile.html</samp></p>
-    <pre><code data-language="js">var tpl = '{% extends "./myfile.html" %}{% block content %}{{ stuff }}{% endblock %}';
-var output = swig.render(tpl, { filename: '/tpl', locals: { stuff: 'awesome' }});
-document.querySelector('#foo').innerHTML = output;</code></pre>
-  </li>
-</ol>
+
+<h2>List Versions</h2>
+<p>Every Swig version that has been published has a corresponding Git tag.</p>
+<pre><code data-language="sh">$ git tag --list</code></pre>
+
+<h2>Check Out Your Desired Version And Pull All Dependencies</h2>
+<pre><code data-language="sh">$ git checkout v0.14.0
+$ make</code></pre>
+
+<h2>Review The Targets In Makefile To See How To Build Documentation Or Packages</h2>
+<p>The target available sometimes change from version to version, so it's a good idea to review what's available.</p>
+<pre><code data-language="sh">$ make -pn | perl -F: -ane 'print "$F[0]\n" if /^\w+\s*:/' | sort</code></pre>
 
   </div>
 
