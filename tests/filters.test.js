@@ -257,4 +257,10 @@ describe('Filters:', function () {
     });
   });
 
+  it('gh-337: does not overwrite original data', function () {
+    var obj = { a: '<hi>' };
+    swig.render('{{ a }}', { locals: { a: obj } });
+    expect(obj.a).to.equal('<hi>');
+  });
+
 });
