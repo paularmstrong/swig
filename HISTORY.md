@@ -1,3 +1,10 @@
+[1.1.0](https://github.com/paularmstrong/swig/tree/v1.1.0) / 2013-10-02
+-------------------------------------------------------------------------------
+
+* **Added** Allow logic in default parsing. gh-326
+* **Fixed** Error when attempting to wrap spaceless tag around macro/function output. gh-336
+* **Fixed** Don't overwrite keys on the locals object. gh-337
+
 [1.0.0](https://github.com/paularmstrong/swig/tree/v1.0.0) / 2013-09-23
 -------------------------------------------------------------------------------
 
