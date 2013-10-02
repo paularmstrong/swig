@@ -64,6 +64,11 @@ var cases = {
     { c: '{{ food.a }}', e: 'tacos' },
     { c: '{{ food["a"] }}', e: 'tacos' },
     { c: '{{ g[0][h.g.i]["c"].b[i] }}', e: 'hi!' },
+  ],
+  'can do some logical operations': [
+    { c: '{{ ap === "apples" }}', e: 'true' },
+    { c: '{{ not a }}', e: 'false' },
+    { c: '{{ a <= 4 }}', e: 'true' }
   ]
 };
 
@@ -148,12 +153,18 @@ describe('Variables', function () {
       }).to.throwError(/Unexpected comma on line 1\./);
     });
 
-    it('throws for reserved JS words', function () {
+    it('reserved JS words', function () {
       _.each(['break', 'case', 'catch', 'continue', 'debugger', 'default', 'delete', 'do', 'else', 'finally', 'for', 'function', 'if', 'in', 'instanceof', 'new', 'return', 'switch', 'this', 'throw', 'try', 'typeof', 'var', 'void', 'while', 'with'], function (r) {
         expect(function () {
           swig.render('{{ ' + r + ' }}', { filename: r + '.html' });
         }).to.throwError(/Reserved keyword "\w+" attempted to be used as a variable on line 1 in file \w+\.html\./);
       });
+    });
+
+    it('invalid logic', function () {
+      expect(function () {
+        swig.render('{{ === foo }}');
+      }).to.throwError(/Unexpected logic on line 1\./);
     });
   });
 });
