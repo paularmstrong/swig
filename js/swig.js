@@ -1,4 +1,4 @@
-/*! Swig v1.0.0 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.1.0 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -216,6 +216,32 @@ var utils = require('./utils'),
   dateFormatter = require('./dateformatter');
 
 /**
+ * Helper method to recursively run a filter across an object/array and apply it to all of the object/array's values.
+ * @param  {*} input
+ * @return {*}
+ * @private
+ */
+function iterateFilter(input) {
+  var self = this,
+    out = {};
+
+  if (utils.isArray(input)) {
+    return utils.map(input, function (value) {
+      return self.apply(null, arguments);
+    });
+  }
+
+  if (typeof input === 'object') {
+    utils.each(input, function (value, key) {
+      out[key] = self.apply(null, arguments);
+    });
+    return out;
+  }
+
+  return;
+}
+
+/**
  * Backslash-escape characters that need to be escaped.
  *
  * @example
@@ -226,12 +252,11 @@ var utils = require('./utils'),
  * @return {*}        Backslash-escaped string.
  */
 exports.addslashes = function (input) {
-  if (typeof input === 'object') {
-    utils.each(input, function (value, key) {
-      input[key] = exports.addslashes(value);
-    });
-    return input;
+  var out = iterateFilter.apply(exports.addslashes, arguments);
+  if (out !== undefined) {
+    return out;
   }
+
   return input.replace(/\\/g, '\\\\').replace(/\'/g, "\\'").replace(/\"/g, '\\"');
 };
 
@@ -246,12 +271,11 @@ exports.addslashes = function (input) {
  * @return {*}        Returns the same type as the input.
  */
 exports.capitalize = function (input) {
-  if (typeof input === 'object') {
-    utils.each(input, function (value, key) {
-      input[key] = exports.capitalize(value);
-    });
-    return input;
+  var out = iterateFilter.apply(exports.capitalize, arguments);
+  if (out !== undefined) {
+    return out;
   }
+
   return input.toString().charAt(0).toUpperCase() + input.toString().substr(1).toLowerCase();
 };
 
@@ -326,32 +350,32 @@ exports.default = function (input, def) {
  * @return {string}         Escaped string.
  */
 exports.escape = function (input, type) {
-  if (typeof input === 'object') {
-    utils.each(input, function (value, key) {
-      input[key] = exports.escape(value);
-    });
-    return input;
+  var out = iterateFilter.apply(exports.escape, arguments),
+    inp = input,
+    i = 0,
+    code;
+
+  if (out !== undefined) {
+    return out;
   }
 
   if (typeof input !== 'string') {
     return input;
   }
 
-  var i = 0,
-    out = '',
-    code;
+  out = '';
 
   switch (type) {
   case 'js':
-    input = input.replace(/\\/g, '\\u005C');
-    for (i; i < input.length; i += 1) {
-      code = input.charCodeAt(i);
+    inp = inp.replace(/\\/g, '\\u005C');
+    for (i; i < inp.length; i += 1) {
+      code = inp.charCodeAt(i);
       if (code < 32) {
         code = code.toString(16).toUpperCase();
         code = (code.length < 2) ? '0' + code : code;
         out += '\\u00' + code;
       } else {
-        out += input[i];
+        out += inp[i];
       }
     }
     return out.replace(/&/g, '\\u0026')
@@ -364,7 +388,7 @@ exports.escape = function (input, type) {
       .replace(/;/g, '\\u003B');
 
   default:
-    return input.replace(/&(?!amp;|lt;|gt;|quot;|#39;)/g, '&amp;')
+    return inp.replace(/&(?!amp;|lt;|gt;|quot;|#39;)/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
@@ -505,12 +529,11 @@ exports.last = function (input) {
  * @return {*}          Returns the same type as the input.
  */
 exports.lower = function (input) {
-  if (typeof input === 'object') {
-    utils.each(input, function (value, key) {
-      input[key] = exports.lower(value);
-    });
-    return input;
+  var out = iterateFilter.apply(exports.lower, arguments);
+  if (out !== undefined) {
+    return out;
   }
+
   return input.toString().toLowerCase();
 };
 
@@ -644,12 +667,11 @@ exports.sort = function (input, reverse) {
  * @return {*}        Returns the same object as the input, but with all string values stripped of tags.
  */
 exports.striptags = function (input) {
-  if (typeof input === 'object') {
-    utils.each(input, function (value, key) {
-      input[key] = exports.striptags(value);
-    });
-    return input;
+  var out = iterateFilter.apply(exports.striptags, arguments);
+  if (out !== undefined) {
+    return out;
   }
+
   return input.toString().replace(/(<([^>]+)>)/ig, '');
 };
 
@@ -670,12 +692,11 @@ exports.striptags = function (input) {
  * @return {*}        Returns the same object as the input, but with all words in strings title-cased.
  */
 exports.title = function (input) {
-  if (typeof input === 'object') {
-    utils.each(input, function (value, key) {
-      input[key] = exports.title(value);
-    });
-    return input;
+  var out = iterateFilter.apply(exports.title, arguments);
+  if (out !== undefined) {
+    return out;
   }
+
   return input.toString().replace(/\w\S*/g, function (str) {
     return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase();
   });
@@ -725,12 +746,11 @@ exports.uniq = function (input) {
  * @return {*}        Returns the same type as the input, with all strings upper-cased.
  */
 exports.upper = function (input) {
-  if (typeof input === 'object') {
-    utils.each(input, function (value, key) {
-      input[key] = exports.upper(value);
-    });
-    return input;
+  var out = iterateFilter.apply(exports.upper, arguments);
+  if (out !== undefined) {
+    return out;
   }
+
   return input.toString().toUpperCase();
 };
 
@@ -746,11 +766,9 @@ exports.upper = function (input) {
  * @return {*}       URL-encoded string.
  */
 exports.url_encode = function (input) {
-  if (typeof input === 'object') {
-    utils.each(input, function (value, key) {
-      input[key] = exports.url_encode(value);
-    });
-    return input;
+  var out = iterateFilter.apply(exports.url_encode, arguments);
+  if (out !== undefined) {
+    return out;
   }
   return encodeURIComponent(input);
 };
@@ -767,11 +785,9 @@ exports.url_encode = function (input) {
  * @return {*}       URL-decoded string.
  */
 exports.url_decode = function (input) {
-  if (typeof input === 'object') {
-    utils.each(input, function (value, key) {
-      input[key] = exports.url_decode(value);
-    });
-    return input;
+  var out = iterateFilter.apply(exports.url_decode, arguments);
+  if (out !== undefined) {
+    return out;
   }
   return decodeURIComponent(input);
 };
@@ -1346,6 +1362,24 @@ TokenParser.prototype = {
       self.filterApplyIdx.pop();
       break;
 
+    case _t.LOGIC:
+    case _t.COMPARATOR:
+      if (!prevToken ||
+          prevToken.type === _t.COMMA ||
+          prevToken.type === token.type ||
+          prevToken.type === _t.BRACKETOPEN ||
+          prevToken.type === _t.CURLYOPEN ||
+          prevToken.type === _t.PARENOPEN ||
+          prevToken.type === _t.FUNCTION) {
+        utils.throwError('Unexpected logic', self.line, self.filename);
+      }
+      self.out.push(token.match);
+      break;
+
+    case _t.NOT:
+      self.out.push(token.match);
+      break;
+
     case _t.VAR:
       self.parseVar(token, match, lastState);
       break;
@@ -1811,11 +1845,11 @@ var fs = require('fs'),
 /**
  * Swig version number as a string.
  * @example
- * if (swig.version === "1.0.0") { ... }
+ * if (swig.version === "1.1.0") { ... }
  *
  * @type {String}
  */
-exports.version = "1.0.0";
+exports.version = "1.1.0";
 
 /**
  * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
@@ -3336,7 +3370,7 @@ var utils = require('../utils');
 exports.compile = function (compiler, args, content, parents, options, blockName) {
   function stripWhitespace(tokens) {
     return utils.map(tokens, function (token) {
-      if (token.content) {
+      if (token.content || typeof token !== 'string') {
         token.content = stripWhitespace(token.content);
         return token;
       }
