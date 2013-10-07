@@ -142,6 +142,10 @@ var n = new Swig(),
       { v: '123', e: '3' },
       { v: { foo: 'blah', bar: 'nope' }, e: 'nope'}
     ],
+    length: [
+      { v: 'foobar', e: '6' },
+      { v: [1, 2, 3, 4], e: '4'}
+    ],
     lower: [
       { v: 'BaR', e: 'bar' },
       { v: '345', e: '345' },
@@ -163,6 +167,12 @@ var n = new Swig(),
       { v: [1, 2, 3], e: '3,2,1' },
       { v: 'asdf', e: 'fdsa' },
       { v: { baz: 'bop', foo: 'bar' }, e: 'foo,baz' }
+    ],
+    slice: [
+      { c: 'v|slice(1,3)', v: '12345', e: '23' },
+      { c: 'v|slice(1)', v: '12345', e: '2345' },
+      { c: 'v|slice(1,3)', v: [1, 2, 3, 4, 5], e: '2,3' },
+      { c: 'v|slice(1)', v: [1, 2, 3, 4, 5], e: '2,3,4,5' }
     ],
     sort: [
       { v: [3, 1, 4], e: '1,3,4' },
