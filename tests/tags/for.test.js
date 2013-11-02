@@ -34,6 +34,11 @@ describe('Tag: for', function () {
     });
   });
 
+  it('resets loop and vars', function () {
+    expect(swig.render('{% for a, b in c %}{% endfor %}{{ a }}{{ b }}{{ loop }}', { locals: { loop: 'z', a: 'x', b: 'y', c: { d: 'e', f: 'g' }}}))
+      .to.equal('xyz');
+  });
+
   it('throws on numbers as any argument', function () {
     expect(function () {
       swig.render('{% for a in 32 %}{% endfor %}');
