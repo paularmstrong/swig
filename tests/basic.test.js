@@ -104,6 +104,15 @@ describe('options', function () {
       expect(swig.compile(tpl, { locals: { c: 3 }})()).to.equal('123');
       expect(swig.render(tpl, { locals: { c: 3 }})).to.equal('123');
     });
+
+    it('use local-context first for output', function () {
+      var tpl = '{{ foo }}';
+      expect(swig.render(tpl, { locals: { foo: 'bar' }})).to.equal('bar');
+      global.foo = 'foo';
+      expect(swig.render(tpl, { locals: {}})).to.equal('foo');
+      delete global.foo;
+      expect(swig.render(tpl, { locals: {}})).to.equal('');
+    });
   });
 
   describe('cache', function () {
