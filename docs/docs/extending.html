@@ -51,7 +51,7 @@
 <section id="tags">
   <h2>Custom Tags</h2>
 
-  <p>Swig can be extended to handle custom tags that will perform operations on full blocks of your templates. Use <a href="{{ baseurl }}/docs/api/#addTag"><code data-language="js">swig.addTag(name, parse, compile, ends)</code></a> to add your custom tag.</p>
+  <p>Swig can be extended to handle custom tags that will perform operations on full blocks of your templates. Use <a href="{{ baseurl }}/docs/api/#setTag"><code data-language="js">swig.setTag(name, parse, compile, ends, blockLevel)</code></a> to add your custom tag.</p>
 
   <p>All of Swig's tags are written using the same api (with a few exceptions for core modules, like <var>extends</var> and <var>block</var>). View a tag's source to see more examples to write your own custom tags.</p>
 
