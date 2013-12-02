@@ -7,3 +7,7 @@
 {% include includefile %}
 
 {% include "./notreal" ignore missing %}
+
+{% for a in bar %}
+  {% include "./include_bar.html" %}
+{% endfor %}

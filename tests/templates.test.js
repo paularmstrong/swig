@@ -20,7 +20,8 @@ describe('Templates', function () {
       alpha: 'Nachos',
       first: 'Tacos',
       second: 'Burritos',
-      includefile: "./includes.html"
+      includefile: "./includes.html",
+      bar: ["a", "b", "c"]
     },
     tests,
     expectations,
