@@ -1,3 +1,14 @@
+[1.2.0](https://github.com/paularmstrong/swig/tree/v1.2.0) / 2013-12-01
+-------------------------------------------------------------------------------
+
+* **Added** Filepath parameter can be passed to swig.run to allow extends in-browser. gh-349
+* **Changed** Use local-context first for var lookups. gh-344, gh-347
+* **Changed** Allow DOTKEY after functions/objects/filters. gh-355
+* **Changed** Context of for-tags carries into includes. gh-356
+* **Changed** When a callback is passed into compileFile, catch all errors thrown by compile and pass the error to callback. gh-340
+* **Fixed** Instances of Swig retain their options properly. gh-351
+* **Fixed** Fix misc documentation issues. gh-359, gh-358
+
 [1.1.0](https://github.com/paularmstrong/swig/tree/v1.1.0) / 2013-10-02
 -------------------------------------------------------------------------------
 
