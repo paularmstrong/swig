@@ -169,6 +169,14 @@ describe('separate instances', function () {
     expect(a.options.varControls[0]).to.equal('<%');
     expect(b.options.varControls[0]).to.equal('{{');
   });
+
+  it('properly autoescapes', function () {
+    var a = new Swig({ autoescape: false }),
+      b = new Swig();
+    expect(swig.render('{{ foo }}', { locals: { foo: '<h1>' }})).to.equal('&lt;h1&gt;');
+    expect(a.render('{{ foo }}', { locals: { foo: '<h1>' }})).to.equal('<h1>');
+    expect(b.render('{{ foo }}', { locals: { foo: '<h1>' }})).to.equal('&lt;h1&gt;');
+  });
 });
 
 describe('swig.compileFile', function () {
