@@ -52,7 +52,9 @@ var cases = {
     { c: '{{ d()|default("tacos") }}', e: 'tacos' },
     { c: '{{ e.f(4, "blah") }}', e: 'eeeee' },
     { c: '{{ q.r(4, "blah") }}', e: '' },
-    { c: '{{ e["f"](4, "blah") }}', e: 'eeeee' }
+    { c: '{{ e["f"](4, "blah") }}', e: 'eeeee' },
+    { c: '{{ chalupa().bar() }}', e: 'chalupas' },
+    { c: '{{ { foo: "bar" }.foo }}', e: 'bar' }
   ],
   'can run multiple filters': [
     { c: '{{ a|default("")|default(1) }}', e: '1' }
@@ -78,6 +80,7 @@ describe('Variables', function () {
     bu: 'burritos',
     a: 1,
     foo: '<blah>',
+    chalupa: function () { return { bar: function () { return 'chalupas'; }}; },
     c: function (b) { return (b) ? 'barfoo' : 'foobar'; },
     d: function (c) { return; },
     e: { f: function () { return 'eeeee'; } },
