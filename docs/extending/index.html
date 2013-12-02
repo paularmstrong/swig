@@ -394,6 +394,7 @@ swig.setFilter(&#39;bazbop&#39;, bazbop);
   
   
   
+  
 </section>
 
 <hr>
@@ -401,7 +402,7 @@ swig.setFilter(&#39;bazbop&#39;, bazbop);
 <section id="tags">
   <h2>Custom Tags</h2>
 
-  <p>Swig can be extended to handle custom tags that will perform operations on full blocks of your templates. Use <a href="/swig/docs/api/#addTag"><code data-language="js">swig.addTag(name, parse, compile, ends)</code></a> to add your custom tag.</p>
+  <p>Swig can be extended to handle custom tags that will perform operations on full blocks of your templates. Use <a href="/swig/docs/api/#setTag"><code data-language="js">swig.setTag(name, parse, compile, ends, blockLevel)</code></a> to add your custom tag.</p>
 
   <p>All of Swig's tags are written using the same api (with a few exceptions for core modules, like <var>extends</var> and <var>block</var>). View a tag's source to see more examples to write your own custom tags.</p>
 
@@ -971,10 +972,12 @@ swig.setFilter(&#39;bazbop&#39;, bazbop);
     
   
     
+  
+    
     <section id="TYPES" class="doc">
       <h3>TYPES</h3>
       
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.1.0/lib/lexer.js#L16">lib/lexer.js#L16</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob//lib/lexer.js#L16">lib/lexer.js#L16</a></p>
 
       
 

@@ -1,6 +1,6 @@
-/*! Swig v1.1.0 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.2.0 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
-;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
 
 if (typeof window.define === 'function' && typeof window.define.amd === 'object') {
@@ -212,7 +212,7 @@ exports.U = function (input) {
 };
 
 },{"./utils":23}],3:[function(require,module,exports){
-var utils = require('./utils'),
+(function(){var utils = require('./utils'),
   dateFormatter = require('./dateformatter');
 
 /**
@@ -792,6 +792,7 @@ exports.url_decode = function (input) {
   return decodeURIComponent(input);
 };
 
+})()
 },{"./dateformatter":2,"./utils":23}],4:[function(require,module,exports){
 var utils = require('./utils');
 
@@ -1101,7 +1102,7 @@ exports.read = function (str) {
 };
 
 },{"./utils":23}],5:[function(require,module,exports){
-var utils = require('./utils'),
+(function(){var utils = require('./utils'),
   lexer = require('./lexer');
 
 var _t = lexer.types,
@@ -1243,6 +1244,7 @@ TokenParser.prototype = {
       fn = self._parsers[token.type] || self._parsers['*'],
       match = token.match,
       prevToken = self.prevToken,
+      prevTokenType = prevToken ? prevToken.type : null,
       lastState = (self.state.length) ? self.state[self.state.length - 1] : null,
       temp;
 
@@ -1254,7 +1256,7 @@ TokenParser.prototype = {
 
     if (lastState && prevToken &&
         lastState === _t.FILTER &&
-        prevToken.type === _t.FILTER &&
+        prevTokenType === _t.FILTER &&
         token.type !== _t.PARENCLOSE &&
         token.type !== _t.COMMA &&
         token.type !== _t.OPERATOR &&
@@ -1307,8 +1309,8 @@ TokenParser.prototype = {
 
     case _t.FUNCTION:
     case _t.FUNCTIONEMPTY:
-      self.out.push('((typeof ' + match + ' !== "undefined") ? ' + match +
-        ' : ((typeof _ctx.' + match + ' !== "undefined") ? _ctx.' + match +
+      self.out.push('((typeof _ctx.' + match + ' !== "undefined") ? _ctx.' + match +
+        ' : ((typeof ' + match + ' !== "undefined") ? ' + match +
         ' : _fn))(');
       self.escape = false;
       if (token.type === _t.FUNCTIONEMPTY) {
@@ -1323,7 +1325,7 @@ TokenParser.prototype = {
       self.state.push(token.type);
       if (self.filterApplyIdx.length) {
         self.out.splice(self.filterApplyIdx[self.filterApplyIdx.length - 1], 0, '(');
-        if (prevToken && prevToken.type === _t.VAR) {
+        if (prevToken && prevTokenType === _t.VAR) {
           temp = prevToken.match.split('.').slice(0, -1);
           self.out.push(' || _fn).call(' + self.checkMatch(temp));
           self.state.push(_t.METHODOPEN);
@@ -1365,12 +1367,12 @@ TokenParser.prototype = {
     case _t.LOGIC:
     case _t.COMPARATOR:
       if (!prevToken ||
-          prevToken.type === _t.COMMA ||
-          prevToken.type === token.type ||
-          prevToken.type === _t.BRACKETOPEN ||
-          prevToken.type === _t.CURLYOPEN ||
-          prevToken.type === _t.PARENOPEN ||
-          prevToken.type === _t.FUNCTION) {
+          prevTokenType === _t.COMMA ||
+          prevTokenType === token.type ||
+          prevTokenType === _t.BRACKETOPEN ||
+          prevTokenType === _t.CURLYOPEN ||
+          prevTokenType === _t.PARENOPEN ||
+          prevTokenType === _t.FUNCTION) {
         utils.throwError('Unexpected logic', self.line, self.filename);
       }
       self.out.push(token.match);
@@ -1386,9 +1388,9 @@ TokenParser.prototype = {
 
     case _t.BRACKETOPEN:
       if (!prevToken ||
-          (prevToken.type !== _t.VAR &&
-            prevToken.type !== _t.BRACKETCLOSE &&
-            prevToken.type !== _t.PARENCLOSE)) {
+          (prevTokenType !== _t.VAR &&
+            prevTokenType !== _t.BRACKETCLOSE &&
+            prevTokenType !== _t.PARENCLOSE)) {
         self.state.push(_t.ARRAYOPEN);
         self.filterApplyIdx.push(self.out.length);
       } else {
@@ -1434,7 +1436,15 @@ TokenParser.prototype = {
       break;
 
     case _t.DOTKEY:
-      if (!prevToken || (prevToken.type !== _t.VAR && prevToken.type !== _t.BRACKETCLOSE && prevToken.type !== _t.DOTKEY)) {
+      if (!prevToken || (
+          prevTokenType !== _t.VAR &&
+          prevTokenType !== _t.BRACKETCLOSE &&
+          prevTokenType !== _t.DOTKEY &&
+          prevTokenType !== _t.PARENCLOSE &&
+          prevTokenType !== _t.FUNCTIONEMPTY &&
+          prevTokenType !== _t.FILTEREMPTY &&
+          prevTokenType !== _t.CURLYCLOSE
+        )) {
         utils.throwError('Unexpected key "' + match + '"', self.line, self.filename);
       }
       self.out.push('.' + match);
@@ -1506,7 +1516,7 @@ TokenParser.prototype = {
       return '(' + checkDot(ctx) + ' ? ' + ctx + match.join('.') + ' : "")';
     }
 
-    return '(' + checkDot('') + ' ? ' + buildDot('') + ' : ' + buildDot('_ctx.') + ')';
+    return '(' + checkDot('_ctx.') + ' ? ' + buildDot('_ctx.') + ' : ' + buildDot('') + ')';
   }
 };
 
@@ -1833,8 +1843,9 @@ exports.compile = function (template, parents, options, blockName) {
   return out;
 };
 
+})()
 },{"./lexer":4,"./utils":23}],6:[function(require,module,exports){
-var fs = require('fs'),
+(function(){var fs = require('fs'),
   path = require('path'),
   utils = require('./utils'),
   _tags = require('./tags'),
@@ -1845,11 +1856,11 @@ var fs = require('fs'),
 /**
  * Swig version number as a string.
  * @example
- * if (swig.version === "1.1.0") { ... }
+ * if (swig.version === "1.2.0") { ... }
  *
  * @type {String}
  */
-exports.version = "1.1.0";
+exports.version = "1.2.0";
 
 /**
  * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
@@ -2311,18 +2322,18 @@ exports.Swig = function (opts) {
   /**
    * Compile and render a template string for final output.
    *
+   * When rendering a source string, a file path should be specified in the options object in order for <var>extends</var>, <var>include</var>, and <var>import</var> to work properly. Do this by adding <code data-language="js">{ filename: '/absolute/path/to/mytpl.html' }</code> to the options argument.
+   *
    * @example
    * swig.render('{{ tacos }}', { locals: { tacos: 'Tacos!!!!' }});
    * // => Tacos!!!!
-   *
-   * When rendering a source string, a file path should be specified in the options object in order for <var>extends</var>, <var>include</var>, and <var>import</var> to work properly. Do this by adding <code data-language="js">{ filename: '/absolute/path/to/mytpl.html' }</code> to the options argument.
    *
    * @param  {string} source    Swig template source string.
    * @param  {SwigOpts} [options={}] Swig options object.
    * @return {string}           Rendered output.
    */
   this.render = function (source, options) {
-    return exports.compile(source, options)();
+    return this.compile(source, options)();
   };
 
   /**
@@ -2347,7 +2358,7 @@ exports.Swig = function (opts) {
    */
   this.renderFile = function (pathName, locals, cb) {
     if (cb) {
-      exports.compileFile(pathName, {}, function (err, fn) {
+      this.compileFile(pathName, {}, function (err, fn) {
         if (err) {
           cb(err);
           return;
@@ -2357,7 +2368,7 @@ exports.Swig = function (opts) {
       return;
     }
 
-    return exports.compileFile(pathName)(locals);
+    return this.compileFile(pathName)(locals);
   };
 
   /**
@@ -2472,7 +2483,16 @@ exports.Swig = function (opts) {
           cb(err);
           return;
         }
-        cb(err, self.compile(src, options));
+        var compiled;
+
+        try {
+          compiled = self.compile(src, options);
+        } catch (err2) {
+          cb(err2);
+          return;
+        }
+
+        cb(err, compiled);
       });
       return;
     }
@@ -2495,10 +2515,12 @@ exports.Swig = function (opts) {
    *
    * @param  {function} tpl       Pre-compiled Swig template function. Use the Swig CLI to compile your templates.
    * @param  {object} [locals={}] Template variable context.
+   * @param  {string} filepath    Filename used for caching the template.
    * @return {string}             Rendered output.
    */
-  this.run = function (tpl, locals) {
+  this.run = function (tpl, locals, filepath) {
     var context = getLocals({ locals: locals });
+    cacheSet(filepath, tpl);
     return tpl(self, context, filters, utils, efn);
   };
 };
@@ -2519,6 +2541,7 @@ exports.renderFile = defaultInstance.renderFile;
 exports.run = defaultInstance.run;
 exports.invalidateCache = defaultInstance.invalidateCache;
 
+})()
 },{"./dateformatter":2,"./filters":3,"./parser":5,"./tags":7,"./utils":23,"fs":24,"path":25}],7:[function(require,module,exports){
 exports.autoescape = require('./tags/autoescape');
 exports.block = require('./tags/block');
@@ -2755,6 +2778,10 @@ exports.parse = function (str, line, parser, types) {
 exports.ends = true;
 
 },{"../filters":3}],14:[function(require,module,exports){
+var ctx = '_ctx.',
+  ctxloop = ctx + 'loop',
+  ctxloopcache = ctx + '___loopcache';
+
 /**
  * Loop over objects and arrays.
  *
@@ -2812,14 +2839,20 @@ exports.compile = function (compiler, args, content, parents, options, blockName
     '(function () {\n',
     '  var __l = ' + last + ';\n',
     '  if (!__l) { return; }\n',
-    '  var loop = { first: false, index: 1, index0: 0, revindex: __l.length, revindex0: __l.length - 1, length: __l.length, last: false };\n',
+    '  ' + ctxloopcache + ' = { loop: ' + ctxloop + ', ' + val + ': ' + ctx + val + ', ' + key + ': ' + ctx + key + ' };\n',
+    '  ' + ctxloop + ' = { first: false, index: 1, index0: 0, revindex: __l.length, revindex0: __l.length - 1, length: __l.length, last: false };\n',
     '  _utils.each(__l, function (' + val + ', ' + key + ') {\n',
-    '    loop.key = ' + key + ';\n',
-    '    loop.first = (loop.index0 === 0);\n',
-    '    loop.last = (loop.revindex0 === 0);\n',
+    '    ' + ctx + val + ' = ' + val + ';\n',
+    '    ' + ctx + key + ' = ' + key + ';\n',
+    '    ' + ctxloop + '.key = ' + key + ';\n',
+    '    ' + ctxloop + '.first = (' + ctxloop + '.index0 === 0);\n',
+    '    ' + ctxloop + '.last = (' + ctxloop + '.revindex0 === 0);\n',
     '    ' + compiler(content, parents, options, blockName),
-    '    loop.index += 1; loop.index0 += 1; loop.revindex -= 1; loop.revindex0 -= 1;\n',
+    '    ' + ctxloop + '.index += 1; ' + ctxloop + '.index0 += 1; ' + ctxloop + '.revindex -= 1; ' + ctxloop + '.revindex0 -= 1;\n',
     '  });\n',
+    '  ' + ctxloop + ' = ' + ctxloopcache + '.loop;\n',
+    '  ' + ctx + val + ' = ' + ctxloopcache + '.' + val + ';\n',
+    '  ' + ctx + key + ' = ' + ctxloopcache + '.' + key + ';\n',
     '})();\n'
   ].join('');
 };
@@ -2958,7 +2991,7 @@ exports.parse = function (str, line, parser, types) {
 exports.ends = true;
 
 },{}],16:[function(require,module,exports){
-var utils = require('../utils');
+(function(){var utils = require('../utils');
 
 /**
  * Allows you to import macros from another file directly into your current context.
@@ -2982,12 +3015,12 @@ var utils = require('../utils');
  */
 exports.compile = function (compiler, args) {
   var ctx = args.pop(),
-    out = 'var ' + ctx + ' = {};\n' +
-      '(function (exports) {\n' +
+    out = '_ctx.' + ctx + ' = {};\n' +
+      '(function (_ctx) {\n' +
       '  var _output = "";\n';
 
   out += args.join('');
-  out += '}(' + ctx + '));\n';
+  out += '}(_ctx.' + ctx + '));\n';
 
   return out;
 };
@@ -3012,7 +3045,6 @@ exports.parse = function (str, line, parser, types, stack, opts) {
         }
         macroName = token.args[0];
         out += token.compile(compiler, token.args, token.content, [], compileOpts) + '\n';
-        out += 'exports.' + macroName + ' = ' + macroName + ';\n';
         self.out.push(out);
       });
       return;
@@ -3041,6 +3073,7 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 
 exports.block = true;
 
+})()
 },{"../parser":5,"../swig":6,"../utils":23}],17:[function(require,module,exports){
 var ignore = 'ignore',
   missing = 'missing',
@@ -3165,12 +3198,12 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 exports.compile = function (compiler, args, content, parents, options, blockName) {
   var fnName = args.shift();
 
-  return 'function ' + fnName + '(' + args.join('') + ') {\n' +
+  return '_ctx.' + fnName + ' = function (' + args.join('') + ') {\n' +
     '  var _output = "";\n' +
     compiler(content, parents, options, blockName) + '\n' +
     '  return _output;\n' +
     '};\n' +
-    fnName + '.safe = true;\n';
+    '_ctx.' + fnName + '.safe = true;\n';
 };
 
 exports.parse = function (str, line, parser, types) {
@@ -3298,7 +3331,7 @@ exports.parse = function (str, line, parser) {
 exports.ends = true;
 
 },{}],21:[function(require,module,exports){
-/**
+(function(){/**
  * Set a variable for re-use in the current context. This will over-write any value already set to the context for the given <var>varname</var>.
  *
  * @alias set
@@ -3350,6 +3383,7 @@ exports.parse = function (str, line, parser, types) {
 
 exports.block = true;
 
+})()
 },{}],22:[function(require,module,exports){
 var utils = require('../utils');
 
@@ -3580,7 +3614,7 @@ exports.throwError = function (message, line, file) {
 // nothing to see here... no file methods for the browser
 
 },{}],25:[function(require,module,exports){
-var process=require("__browserify_process");function filter (xs, fn) {
+(function(process){function filter (xs, fn) {
     var res = [];
     for (var i = 0; i < xs.length; i++) {
         if (fn(xs[i], i, xs)) res.push(xs[i]);
@@ -3756,8 +3790,7 @@ exports.relative = function(from, to) {
   return outputParts.join('/');
 };
 
-exports.sep = '/';
-
+})(require("__browserify_process"))
 },{"__browserify_process":26}],26:[function(require,module,exports){
 // shim for using process in browser
 
