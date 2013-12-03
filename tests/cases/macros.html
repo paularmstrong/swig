@@ -17,3 +17,7 @@ Hahahahahah!
 {% macro nested(salsa) %}
 {{ tacos('Pork', salsa) }}
 {% endmacro %}
+
+{% macro global_ctx() %}
+{{ first }}
+{% endmacro %}
