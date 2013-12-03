@@ -1,7 +1,12 @@
+[1.2.2](https://github.com/paularmstrong/swig/tree/v1.2.2) / 2013-12-02
+-----------------------------------------------------------------------
+
+* **Fixed** CTX var output in imported macros. gh-363
+
 [1.2.1](https://github.com/paularmstrong/swig/tree/v1.2.1) / 2013-12-02
 -----------------------------------------------------------------------
 
-* Fix scoping for Express. gh-363
+* **Fixed** Scoping for Express. gh-363
 
 [1.2.0](https://github.com/paularmstrong/swig/tree/v1.2.0) / 2013-12-01
 -----------------------------------------------------------------------
