@@ -7,11 +7,32 @@ _output += _swig.compileFile("./includes.html", {resolveFrom: "/Users/paularms/S
 _output += "\n\n";
 _output += _swig.compileFile("./includes.html", {resolveFrom: "/Users/paularms/Sites/swig/tests/cases/include.test.html"})({first:'Churros', second:'Nachos'});
 _output += "\n\n";
-_output += _swig.compileFile(((typeof includefile !== "undefined") ? ((typeof includefile !== "undefined") ? includefile : "") : ((typeof _ctx.includefile !== "undefined") ? _ctx.includefile : "")), {resolveFrom: "/Users/paularms/Sites/swig/tests/cases/include.test.html"})(_ctx);
+_output += _swig.compileFile(((typeof _ctx.includefile !== "undefined") ? ((typeof _ctx.includefile !== "undefined") ? _ctx.includefile : "") : ((typeof includefile !== "undefined") ? includefile : "")), {resolveFrom: "/Users/paularms/Sites/swig/tests/cases/include.test.html"})(_ctx);
 _output += "\n\n";
   try {
 _output += _swig.compileFile("./notreal", {resolveFrom: "/Users/paularms/Sites/swig/tests/cases/include.test.html"})(_ctx);
 } catch (e) {}
+_output += "\n\n";
+(function () {
+  var __l = ((typeof _ctx.bar !== "undefined") ? ((typeof _ctx.bar !== "undefined") ? _ctx.bar : "") : ((typeof bar !== "undefined") ? bar : ""));
+  if (!__l) { return; }
+  _ctx.___loopcache = { loop: _ctx.loop, a: _ctx.a, __k: _ctx.__k };
+  _ctx.loop = { first: false, index: 1, index0: 0, revindex: __l.length, revindex0: __l.length - 1, length: __l.length, last: false };
+  _utils.each(__l, function (a, __k) {
+    _ctx.a = a;
+    _ctx.__k = __k;
+    _ctx.loop.key = __k;
+    _ctx.loop.first = (_ctx.loop.index0 === 0);
+    _ctx.loop.last = (_ctx.loop.revindex0 === 0);
+    _output += "\n  ";
+_output += _swig.compileFile("./include_bar.html", {resolveFrom: "/Users/paularms/Sites/swig/tests/cases/include.test.html"})(_ctx);
+_output += "\n";
+    _ctx.loop.index += 1; _ctx.loop.index0 += 1; _ctx.loop.revindex -= 1; _ctx.loop.revindex0 -= 1;
+  });
+  _ctx.loop = _ctx.___loopcache.loop;
+  _ctx.a = _ctx.___loopcache.a;
+  _ctx.__k = _ctx.___loopcache.__k;
+})();
 _output += "\n";
 
   return _output;

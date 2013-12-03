@@ -1,4 +1,4 @@
-/*! Swig v1.2.0 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.2.1 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -1856,11 +1856,11 @@ exports.compile = function (template, parents, options, blockName) {
 /**
  * Swig version number as a string.
  * @example
- * if (swig.version === "1.2.0") { ... }
+ * if (swig.version === "1.2.1") { ... }
  *
  * @type {String}
  */
-exports.version = "1.2.0";
+exports.version = "1.2.1";
 
 /**
  * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
@@ -2333,7 +2333,7 @@ exports.Swig = function (opts) {
    * @return {string}           Rendered output.
    */
   this.render = function (source, options) {
-    return this.compile(source, options)();
+    return self.compile(source, options)();
   };
 
   /**
@@ -2358,7 +2358,7 @@ exports.Swig = function (opts) {
    */
   this.renderFile = function (pathName, locals, cb) {
     if (cb) {
-      this.compileFile(pathName, {}, function (err, fn) {
+      self.compileFile(pathName, {}, function (err, fn) {
         if (err) {
           cb(err);
           return;
@@ -2368,7 +2368,7 @@ exports.Swig = function (opts) {
       return;
     }
 
-    return this.compileFile(pathName)(locals);
+    return self.compileFile(pathName)(locals);
   };
 
   /**
