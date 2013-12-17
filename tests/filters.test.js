@@ -126,6 +126,11 @@ var n = new Swig(),
       { v: '213', e: '2' },
       { v: { foo: 'blah' }, e: 'blah' }
     ],
+    indent: [
+      { c: 'v|indent', v:'foo', e: '    foo'},
+      { c: 'v|indent(6)', v:'foo', e: '      foo'},
+      { c: 'v|indent(2, "a")',v:'foo', e: 'aafoo'}
+    ],
     join: [
       { c: 'v|join("+")', v: [1, 2, 3], e: '1+2+3' },
       { c: 'v|join(" * ")', v: [1, 2, 3], e: '1 * 2 * 3' },
