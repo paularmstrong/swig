@@ -7,7 +7,7 @@ var swig = require('../lib/swig'),
 
 
 describe('loaders', function () {
-  it('is working', function () {
+  it('is working with extends', function () {
     var templates, s, html;
 
     templates = {
@@ -21,4 +21,21 @@ describe('loaders', function () {
 
     expect(html).to.equal('<html>Hello world!</html>');
   });
+
+  it('is working with include', function () {
+    var templates, s, html;
+
+    templates = {
+      'page.html': '<html>{% include "content.html" %}</html>',
+      'content.html': 'Hello {{ name }}!'
+    };
+
+    s = new Swig({ loader: new loaders.MemoryLoader(templates) });
+
+    html = s.renderFile('page.html', {name: 'world'});
+
+    expect(html).to.equal('<html>Hello world!</html>');
+  });
 });
+
+
