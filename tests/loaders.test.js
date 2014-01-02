@@ -1,41 +1,47 @@
 var swig = require('../lib/swig'),
-  loaders = require('../lib/loaders'),
   expect = require('expect.js'),
-  fs = require('fs'),
-  _ = require('lodash'),
-  Swig = swig.Swig;
+  path = require('path'),
+  fs = require('fs');
 
 
-describe('loaders', function () {
-  it('is working with extends', function () {
-    var templates, s, html;
+describe('swig.loaders', function () {
 
-    templates = {
-      'layout.html': '<html>{% block content %}{% endblock %}</html>',
-      'page.html': '{% extends "layout.html" %}{% block content %}Hello {{ name }}!{% endblock %}'
-    };
+  describe('Memory', function () {
+    it('can use extends', function () {
+      var templates, html, s;
 
-    s = new Swig({ loader: new loaders.MemoryLoader(templates) });
+      templates = {
+        'page.html': '{% extends "layout.html" %}{% block content %}Hello {{ name }}!{% endblock %}'
+      };
+      templates[path.sep + 'layout.html'] = '<html>{% block content %}{% endblock %}</html>';
 
-    html = s.renderFile('page.html', {name: 'world'});
+      s = new swig.Swig({ loader: new swig.loaders.Memory(templates) });
+      html = s.renderFile('page.html', {name: 'world'});
+      expect(html).to.equal('<html>Hello world!</html>');
+    });
 
-    expect(html).to.equal('<html>Hello world!</html>');
+    it('can use include', function () {
+      var templates, s, html;
+
+      templates = {
+        'page.html': '<html>{% include "content.html" %}</html>',
+        'content.html': 'Hello {{ name }}!'
+      };
+
+      s = new swig.Swig({ loader: new swig.loaders.Memory(templates) });
+      html = s.renderFile('page.html', {name: 'world'});
+      expect(html).to.equal('<html>Hello world!</html>');
+    });
   });
 
-  it('is working with include', function () {
-    var templates, s, html;
+  // The following tests should *not* run in the browser
+  if (!fs || !fs.readFileSync) {
+    return;
+  }
+  describe('FileSystem', function () {
 
-    templates = {
-      'page.html': '<html>{% include "content.html" %}</html>',
-      'content.html': 'Hello {{ name }}!'
-    };
-
-    s = new Swig({ loader: new loaders.MemoryLoader(templates) });
-
-    html = s.renderFile('page.html', {name: 'world'});
-
-    expect(html).to.equal('<html>Hello world!</html>');
   });
+
 });
 
 
