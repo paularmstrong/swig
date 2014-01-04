@@ -25,9 +25,26 @@ describe('Tag: raw', function () {
       .to.equal('{# foo #}');
   });
 
-  it('does not accept arguments', function () {
-    expect(function () {
-      swig.render('{% raw foobar %}foo{% endraw %}');
-    }).to.throwError(/Unexpected token "foobar" in raw tag on line 1\./);
+  it('{% raw true %}{{ foo }}{% endraw %}', function () {
+    expect(swig.render('{% raw true %}{{ foo }}{% endraw %}'))
+      .to.equal('{{ foo }}');
+  });
+
+  it('{% raw false %}{{ foo }}{% endraw %}', function () {
+    expect(swig.render('{% raw false %}{{ foo }}{% endraw %}', {
+      locals: { foo: 'foobar' }
+    })).to.equal('foobar');
+  });
+
+  it('{% raw bool %}{{ foo }}{% endraw %}', function () {
+    expect(swig.render('{% raw true %}{{ foo }}{% endraw %}', {
+      locals: { bool: true }
+    })).to.equal('{{ foo }}');
+  });
+
+  it('{% raw bool %}{{ foo }}{% endraw %}', function () {
+    expect(swig.render('{% raw false %}{{ foo }}{% endraw %}', {
+      locals: { foo: 'foobar', bool: false }
+    })).to.equal('foobar');
   });
 });
