@@ -135,6 +135,12 @@ docs/docs/tags.json: FORCE
 	@${BIN}/jsdoc lib/tags/ -X >> $@
 	@echo '}' >> $@
 
+docs/docs/loaders.json: FORCE
+	@echo "Building $@..."
+	@echo '{ "loaders": ' > $@
+	@${BIN}/jsdoc lib/loaders/ -X >> $@
+	@echo '}' >> $@
+
 docs/docs/extending.json: FORCE
 	@echo "Building $@..."
 	@echo '{ "ext": ' > $@
