@@ -1,0 +1,11 @@
+{% extends "./layout.html" %}
+
+{% block title %}{% parent %} &raquo; Template Loaders{% endblock %}
+
+{% block content %}
+<h1>Template Loaders</h1>
+
+<pre>
+  {{ loaders|json(4) }}
+</pre>
+{% endblock %}
