@@ -126,6 +126,10 @@ var n = new Swig(),
       { v: '213', e: '2' },
       { v: { foo: 'blah' }, e: 'blah' }
     ],
+    groupBy: [
+      { c: 'v|groupBy("name")|json', v: [{ name: 'a', a: 1 }, { name: 'a', a: 2 }, { name: 'b', a: 3 }], e: JSON.stringify({a: [{a: 1}, {a: 2}], b: [{a: 3}]}).replace(/"/g, '&quot;') },
+      { c: 'v|groupBy("name")', v: 'foo', e: 'foo' }
+    ],
     join: [
       { c: 'v|join("+")', v: [1, 2, 3], e: '1+2+3' },
       { c: 'v|join(" * ")', v: [1, 2, 3], e: '1 * 2 * 3' },
