@@ -39,7 +39,16 @@ describe('swig.loaders', function () {
     return;
   }
   describe('FileSystem', function () {
+    it('is the default', function () {
+      var s = new swig.Swig(),
+        file = s.options.loader.load(__dirname + '/cases/macros.html');
+      expect(typeof file).to.be.a('string');
+    });
 
+    it('can take a base path', function () {
+      var s = new swig.Swig({ loader: swig.loaders.FileSystem(__dirname + '/cases') });
+      expect(s.renderFile('macros.html')).to.equal('\n\nasfdasdf\n\n\n\n\nHahahahahah!\n\n\n\n\n\n');
+    });
   });
 
 });
