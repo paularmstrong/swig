@@ -3,7 +3,17 @@ var swig = require('../../lib/swig'),
   _ = require('lodash'),
   Swig = swig.Swig;
 
-var cases = [
+var leftCases = [
+  'foo[bar]',
+  'foo[\'bar\']',
+  'foo["bar"]',
+  'foo[\'bar.baz\']',
+  'foo["bar.baz"]',
+  'foo[\'bar=baz\']',
+  'foo["bar=baz"]'
+];
+
+var rightCases = [
   { code: '= 1', result: '1' },
   { code: '= "burritos"', result: 'burritos' },
   { code: '= 1 + 3', result: '4' },
@@ -18,7 +28,14 @@ var cases = [
 
 describe('Tag: set', function () {
 
-  _.each(cases, function (c) {
+  _.each(leftCases, function (c) {
+    var s = '{% set bar = "bar" %}{% set ' + c + ' = "con queso" %}';
+    it(s, function () {
+      expect(swig.render(s + '{{ ' + c + ' }}', { locals: { foo: {} }})).to.equal('con queso');
+    });
+  });
+
+  _.each(rightCases, function (c) {
     var s = '{% set foo ' + c.code + ' %}';
     it(s, function () {
       expect(swig.render(s + '{{ foo }}', { locals: { foo: 1 }})).to.equal(c.result);
