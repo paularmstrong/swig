@@ -32,6 +32,19 @@ describe('swig.loaders', function () {
       html = s.renderFile('page.html', {name: 'world'});
       expect(html).to.equal('<html>Hello world!</html>');
     });
+
+    it('can use base paths', function () {
+      var templates, s, html;
+
+      templates = {
+        '/baz/bar/page.html': '<html>{% include "content.html" %}</html>',
+        '/baz/content.html': 'Hello {{ name }}!'
+      };
+
+      s = new swig.Swig({ loader: new swig.loaders.memory(templates, '/baz') });
+      html = s.renderFile('bar/page.html', {name: 'world'});
+      expect(html).to.equal('<html>Hello world!</html>');
+    });
   });
 
   // The following tests should *not* run in the browser
