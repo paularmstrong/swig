@@ -15,7 +15,7 @@ describe('swig.loaders', function () {
       };
       templates[path.sep + 'layout.html'] = '<html>{% block content %}{% endblock %}</html>';
 
-      s = new swig.Swig({ loader: new swig.loaders.Memory(templates) });
+      s = new swig.Swig({ loader: new swig.loaders.memory(templates) });
       html = s.renderFile('page.html', {name: 'world'});
       expect(html).to.equal('<html>Hello world!</html>');
     });
@@ -28,7 +28,7 @@ describe('swig.loaders', function () {
         'content.html': 'Hello {{ name }}!'
       };
 
-      s = new swig.Swig({ loader: new swig.loaders.Memory(templates) });
+      s = new swig.Swig({ loader: new swig.loaders.memory(templates) });
       html = s.renderFile('page.html', {name: 'world'});
       expect(html).to.equal('<html>Hello world!</html>');
     });
@@ -46,7 +46,7 @@ describe('swig.loaders', function () {
     });
 
     it('can take a base path', function () {
-      var s = new swig.Swig({ loader: swig.loaders.FileSystem(__dirname + '/cases') });
+      var s = new swig.Swig({ loader: swig.loaders.fs(__dirname + '/cases') });
       expect(s.renderFile('macros.html')).to.equal('\n\nasfdasdf\n\n\n\n\nHahahahahah!\n\n\n\n\n\n');
     });
   });
