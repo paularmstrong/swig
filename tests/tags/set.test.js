@@ -10,7 +10,10 @@ var leftCases = [
   'foo[\'bar.baz\']',
   'foo["bar.baz"]',
   'foo[\'bar=baz\']',
-  'foo["bar=baz"]'
+  'foo["bar=baz"]',
+  'baz.bar',
+  'baz.bar.baz',
+  'baz["bar"].baz'
 ];
 
 var rightCases = [
@@ -31,7 +34,7 @@ describe('Tag: set', function () {
   _.each(leftCases, function (c) {
     var s = '{% set bar = "bar" %}{% set ' + c + ' = "con queso" %}';
     it(s, function () {
-      expect(swig.render(s + '{{ ' + c + ' }}', { locals: { foo: {} }})).to.equal('con queso');
+      expect(swig.render(s + '{{ ' + c + ' }}', { locals: { foo: {}, baz: { bar: {}} }})).to.equal('con queso');
     });
   });
 
