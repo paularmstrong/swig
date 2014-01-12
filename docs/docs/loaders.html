@@ -1,0 +1,106 @@
+{% extends "./layout.html" %}
+{% import "./includes/macros.html" as docmacro %}
+
+{% block title %}{% parent %} &raquo; Template Loaders{% endblock %}
+
+{% block content %}
+<h1>Template Loaders</h1>
+
+  {% set members = loaders|groupBy('memberof') %}
+
+  <section id="builtin" class="doc">
+    <h2>Built-In Loaders</h2>
+    {% set builtin = members['swig.loaders'] %}
+    {% for l in builtin %}
+      <section id="{{ name }}">
+        <h3>{{ l.longname }}({{ l.meta.code.paramnames|join(', ') }})</h3>
+
+        {{ docmacro.source(l) }}
+
+        {{ docmacro.description(l) }}
+
+        <h4>Arguments</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Optional</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for p in l.params %}
+          <tr>
+            <td><var data-language="js">{{ p.name }}</var></td>
+            <td><code data-language="js">{{ p.type.names.join(', ') }}</code></td>
+            <td>{% if p.optional === true %}✔{% endif %}</td>
+            <td><samp data-language="js">{% if p.defaultvalue !== 'undefined' %}{{ p.defaultvalue }}{% endif %}</samp></td>
+            <td>{{ docmacro.description(p) }}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
+        {% for ex in l.examples %}
+        <pre><code data-language="js">{{ ex }}</code></pre>
+        {% endfor %}
+
+      </section>
+    {% endfor %}
+  </section>
+
+  <section id="custom" class="doc">
+    {% set customloader = loaders|groupBy('kind')['namespace'][0] %}
+    <h2>Custom Loaders</h2>
+
+    {{ docmacro.description(customloader) }}
+
+    {% for m in members['TemplateLoader'] %}
+    <section id="{{ m.name }}">
+      <h3>{{ m.name }}({% for p in m.params %}{{ p.name }}{% if not loop.last %}, {% endif %}{% endfor %})</h3>
+      {{ docmacro.description(m) }}
+
+        <h4>Arguments</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for p in m.params %}
+          <tr>
+            <td><var data-language="js">{{ p.name }}</var></td>
+            <td><code data-language="js">{{ p.type.names.join(', ') }}</code></td>
+            <td>{{ docmacro.description(p) }}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+    </section>
+    {% endfor %}
+
+    <h4>Examples</h4>
+    {% for ex in customloader.examples %}
+      <pre><code data-language="js">{{ ex }}</code></pre>
+    {% endfor %}
+
+  </section>
+{% endblock %}
+
+{% block loaderssubnav %}
+<ol>
+  <li><a href="#builtin">Built-Ins</a></li>
+  <li>
+    <a href="#custom">Custom Loaders</a>
+    <ol>
+      <li><a href="#resolve">resolve</a></li>
+      <li><a href="#load">load</a></li>
+    </ol>
+  </li>
+</ol>
+{% endblock %}
