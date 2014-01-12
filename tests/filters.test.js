@@ -268,4 +268,18 @@ describe('Filters:', function () {
     expect(obj.a).to.equal('<hi>');
   });
 
+  it('gh-365: filters applied to functions after dotkey', function () {
+    var locals = {
+      w: {
+        g: function () { return 'foo'; },
+        r: function () { return [1, 2, 3]; }
+      },
+      b: function () { return 'bar'; }
+    };
+    expect(swig.render('{{ w.g("a")|replace("f", w.r().length) }}', { locals: locals })).to.equal('3oo');
+    expect(swig.render('{{ "foo"|replace(w.g("a"), "bar") }}', { locals: locals })).to.equal('bar');
+    expect(swig.render('{{ "3"|replace(w.g("a").length, "bar") }}', { locals: locals })).to.equal('bar');
+    expect(swig.render('{{ "bar"|replace(b("a"), "foo") }}', { locals: locals })).to.equal('foo');
+  });
+
 });
