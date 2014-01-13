@@ -41,7 +41,8 @@ var n = new Swig(),
       { c: 'v|date("D")', v: d, e: 'Tue' },
       { c: 'v|date("j")', v: d, e: '6' },
       { c: 'v|date("l")', v: d, e: 'Tuesday' },
-      { c: 'v|date("N")', v: d, e: '3' },
+      { c: 'v|date("N")', v: d, e: '2' },
+      { c: 'v|date("N")', v: makeDate(420, 2011, 8, 4), e: '7'},
       { c: 'v|date("S")', v: d, e: 'th' },
       { c: 'v|date("w")', v: d, e: '2' },
       { c: 'v|date("z")', v: d, e: '248' },
@@ -265,6 +266,20 @@ describe('Filters:', function () {
     var obj = { a: '<hi>' };
     swig.render('{{ a }}', { locals: { a: obj } });
     expect(obj.a).to.equal('<hi>');
+  });
+
+  it('gh-365: filters applied to functions after dotkey', function () {
+    var locals = {
+      w: {
+        g: function () { return 'foo'; },
+        r: function () { return [1, 2, 3]; }
+      },
+      b: function () { return 'bar'; }
+    };
+    expect(swig.render('{{ w.g("a")|replace("f", w.r().length) }}', { locals: locals })).to.equal('3oo');
+    expect(swig.render('{{ "foo"|replace(w.g("a"), "bar") }}', { locals: locals })).to.equal('bar');
+    expect(swig.render('{{ "3"|replace(w.g("a").length, "bar") }}', { locals: locals })).to.equal('bar');
+    expect(swig.render('{{ "bar"|replace(b("a"), "foo") }}', { locals: locals })).to.equal('foo');
   });
 
 });
