@@ -33,7 +33,7 @@ var command,
     .alias('h', 'help')
     .alias('j', 'json')
     .alias('c', 'context')
-    .alias('i', 'context')
+    .alias('i', 'init')
     .alias('m', 'minify')
     .default('wrap-start', 'var tpl = ')
     .default('wrap-end', ';')
