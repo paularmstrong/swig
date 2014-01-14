@@ -99,3 +99,22 @@ describe('bin/swig compile & run from swig', function () {
     });
   });
 });
+
+describe('bin/swig compile & run with pre initialize', function () {
+  var tmp = fixPath(__dirname + '/../tmp');
+
+  it('works with pre init swig module', function (done) {
+    var init = fixPath(__dirname + '/bin.swig-init.js'),
+      template = '{% mytag %}hello{% endmytag %}',
+      p = tmp + '/init.test.html';
+    fs.writeFile(p, template, function () {
+      exec('node ' + bin + ' compile ' + p + ' --i ' + init + ' -o ' + tmp, function (err, stdout, stderr) {
+        var locals = fixPath(__dirname + '/bin.locals.json');
+        exec('node ' + bin + ' run ' + p + ' -j ' + locals, function (err, stdout, stdrr) {
+          expect(stdout.replace(/\n$/, '')).to.equal('hello world!');
+          done();
+        });
+      });
+    });
+  });
+});
