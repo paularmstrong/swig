@@ -21,6 +21,7 @@ var command,
       h: 'Show this help screen.',
       j: 'Variable context as a JSON file.',
       c: 'Variable context as a CommonJS-style file. Used only if option `j` is not provided.',
+      i: 'Pre initialize swig module. Used only js file.',
       m: 'Minify compiled functions with uglify-js',
       'wrap-start': 'Template wrapper beginning for "compile".',
       'wrap-end': 'Template wrapper end for "compile".',
@@ -32,6 +33,7 @@ var command,
     .alias('h', 'help')
     .alias('j', 'json')
     .alias('c', 'context')
+    .alias('i', 'init')
     .alias('m', 'minify')
     .default('wrap-start', 'var tpl = ')
     .default('wrap-end', ';')
@@ -96,6 +98,14 @@ if (argv.o !== 'stdout') {
     fs.writeFileSync(argv.o + file, str);
     console.log('Wrote', argv.o + file);
   };
+}
+
+if (argv.i) {
+  if (path.extname(argv.i) === '.js') {
+    require(argv.i)(swig);
+  } else {
+    throw new Error('Invalid pre initialize file.');
+  }
 }
 
 switch (command) {
