@@ -99,3 +99,38 @@ describe('bin/swig compile & run from swig', function () {
     });
   });
 });
+
+describe('bin/swig compile & run with custom extensions', function () {
+  var tmp = fixPath(__dirname + '/../tmp');
+
+  it('works with custom filters', function (done) {
+    var filters = fixPath(__dirname + '/bin.filters.js'),
+      template = 'I want {{ alpha|benice }}',
+      p = tmp + '/filter.test.html';
+
+    fs.writeFile(p, template, function () {
+      exec('node ' + bin + ' compile ' + p + ' --filters ' + filters + ' -o ' + tmp, function (err, stdout, stderr) {
+        var locals = fixPath(__dirname + '/bin.locals.json');
+        exec('node ' + bin + ' run ' + p + ' -j ' + locals + ' --filters ' + filters, function (err, stdout, stdrr) {
+          expect(stdout.replace(/\n$/, '')).to.equal('I want Nachos please!');
+          done();
+        });
+      });
+    });
+  });
+
+  it('works with custom tags', function (done) {
+    var tags = fixPath(__dirname + '/bin.tags.js'),
+      template = '{% tortilla %}flour{% endtortilla %}',
+      p = tmp + '/tag.test.html';
+
+    fs.writeFile(p, template, function () {
+      exec('node ' + bin + ' compile ' + p + ' --tags ' + tags + ' -o ' + tmp, function (err, stdout, stderr) {
+        exec('node ' + bin + ' run ' + p, function (err, stdout, stdrr) {
+          expect(stdout.replace(/\n$/, '')).to.equal('flour tortilla!');
+          done();
+        });
+      });
+    });
+  });
+});
