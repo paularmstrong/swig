@@ -1,10 +1,11 @@
 var fs = require('fs'),
   exec = require('child_process').exec,
-  swig = require('../lib/swig'),
   expect = require('expect.js'),
   _ = require('lodash'),
   path = require('path'),
-  bin = __dirname + '/../bin/swig.js';
+  swig = require('../../lib/swig'),
+  bin = __dirname + '/../../bin/swig.js',
+  casedir = __dirname + '/../cases/';
 
 function fixPath(p) {
   p = path.normalize(p);
@@ -21,7 +22,7 @@ function isExpectation(f) {
   return (/\.expectation\.html$/).test(f);
 }
 
-var casefiles = fs.readdirSync(__dirname + '/cases/'),
+var casefiles = fs.readdirSync(casedir),
   tests = _.filter(casefiles, isTest),
   expectations = _.filter(casefiles, isExpectation),
   cases = _.groupBy(tests.concat(expectations), function (f) {
@@ -42,8 +43,8 @@ describe('bin/swig render', function () {
   var locals = fixPath(__dirname + '/bin.locals.json'),
     key = keys[_.random(keys.length - 1)],
     testcase = cases[key],
-    test = fixPath(__dirname + '/cases/' + _.find(testcase, isTest)),
-    expectation = fs.readFileSync(path.normalize(__dirname + '/cases/' + _.find(testcase, isExpectation)), 'utf8');
+    test = fixPath(casedir + _.find(testcase, isTest)),
+    expectation = fs.readFileSync(path.normalize(casedir + _.find(testcase, isExpectation)), 'utf8');
 
   it(key, function (done) {
     exec('node ' + bin + ' render ' + test + ' -j ' + locals, function (err, stdout, stderr) {
@@ -58,8 +59,8 @@ describe('bin/swig compile + run', function () {
     key = keys[_.random(keys.length - 1)],
     testcase = cases[key],
     test = _.find(testcase, isTest),
-    p = fixPath(__dirname + '/cases/' + test),
-    expectation = fs.readFileSync(path.normalize(__dirname + '/cases/' + _.find(testcase, isExpectation)), 'utf8');
+    p = fixPath(casedir + test),
+    expectation = fs.readFileSync(path.normalize(casedir + _.find(testcase, isExpectation)), 'utf8');
 
   it(key, function (done) {
     var tmp = fixPath(__dirname + '/../tmp');
@@ -76,7 +77,7 @@ describe('bin/swig compile + run', function () {
 
 describe('bin/swig compile -m', function () {
   it('minifies output', function (done) {
-    var p = fixPath(__dirname + '/cases/extends_1.test.html');
+    var p = fixPath(casedir + '/extends_1.test.html');
     exec('node ' + bin + ' compile ' + p + ' -m', function (err, stdout, stderr) {
       expect(stdout).to.equal('var tpl=function(n){var e=(n.extensions,"");return e+="Hi,\\n\\n",e+="This is the body.",e+="\\n\\nSincerely,\\nMe\\n"};\n');
       done();
@@ -86,8 +87,8 @@ describe('bin/swig compile -m', function () {
 
 describe('bin/swig compile & run from swig', function () {
   it('can be run', function (done) {
-    var expectation = fs.readFileSync(__dirname + '/cases/extends_1.expectation.html', 'utf8'),
-      p = fixPath(__dirname + '/cases/extends_1.test.html'),
+    var expectation = fs.readFileSync(casedir + '/extends_1.expectation.html', 'utf8'),
+      p = fixPath(casedir + '/extends_1.test.html'),
       tmp = fixPath(__dirname + '/../tmp');
     exec('node ' + bin + ' compile ' + p + ' -o ' + tmp + ' --wrap-start="var foo = "', function (err, stdout, stderr) {
       fs.readFile(path.normalize(__dirname + '/../tmp/extends_1.test.html'), 'utf8', function (err, stdout, stderr) {
