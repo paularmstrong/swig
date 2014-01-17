@@ -70,11 +70,13 @@ var command,
   files,
   fn;
 
+// What version?
 if (argv.v) {
   console.log(require('../package').version);
   process.exit(0);
 }
 
+// Pull in any context data provided
 if (argv.j) {
   ctx = JSON.parse(fs.readFileSync(argv.j, 'utf8'));
 } else if (argv.c) {
@@ -100,36 +102,18 @@ if (argv.o !== 'stdout') {
   };
 }
 
+// Set any custom filters
 if (argv.filters) {
-  var cfilters,
-    k;
-
-  argv.filters = path.resolve(argv.filters);
-  cfilters = require(argv.filters);
-
-  for (k in cfilters) {
-    if (cfilters.hasOwnProperty(k)) {
-      swig.setFilter(k, cfilters[k]);
-    }
-  }
+  utils.each(require(path.resolve(argv.filters)), function (filter, name) {
+    swig.setFilter(name, filter);
+  });
 }
 
+// Set any custom tags
 if (argv.tags) {
-  var ctags,
-    k;
-
-  argv.tags = path.resolve(argv.tags);
-  ctags = require(argv.tags);
-
-  for (k in ctags) {
-    if (ctags.hasOwnProperty(k)) {
-      var parse = ctags[k].parse,
-        compile = ctags[k].compile,
-        ends = ctags[k].ends,
-        block = ctags[k].blockLevel;
-      swig.setTag(k, parse, compile, ends, block);
-    }
-  }
+  utils.each(require(path.resolve(argv.tags)), function (tag, name) {
+    swig.setTag(name, tag.parse, tag.compile, tag.ends, tag.block);
+  });
 }
 
 switch (command) {
