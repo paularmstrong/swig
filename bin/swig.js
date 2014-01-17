@@ -22,6 +22,8 @@ var command,
       j: 'Variable context as a JSON file.',
       c: 'Variable context as a CommonJS-style file. Used only if option `j` is not provided.',
       m: 'Minify compiled functions with uglify-js',
+      'filters': 'Custom filters as a CommonJS-style file',
+      'tags': 'Custom tags as a CommonJS-style file',
       'wrap-start': 'Template wrapper beginning for "compile".',
       'wrap-end': 'Template wrapper end for "compile".',
       'method-name': 'Method name to set template to and run from.'
@@ -96,6 +98,38 @@ if (argv.o !== 'stdout') {
     fs.writeFileSync(argv.o + file, str);
     console.log('Wrote', argv.o + file);
   };
+}
+
+if (argv.filters) {
+  var cfilters,
+    k;
+
+  argv.filters = path.resolve(argv.filters);
+  cfilters = require(argv.filters);
+
+  for (k in cfilters) {
+    if (cfilters.hasOwnProperty(k)) {
+      swig.setFilter(k, cfilters[k]);
+    }
+  }
+}
+
+if (argv.tags) {
+  var ctags,
+    k;
+
+  argv.tags = path.resolve(argv.tags);
+  ctags = require(argv.tags);
+
+  for (k in ctags) {
+    if (ctags.hasOwnProperty(k)) {
+      var parse = ctags[k].parse,
+        compile = ctags[k].compile,
+        ends = ctags[k].ends,
+        block = ctags[k].blockLevel;
+      swig.setTag(k, parse, compile, ends, block);
+    }
+  }
 }
 
 switch (command) {
