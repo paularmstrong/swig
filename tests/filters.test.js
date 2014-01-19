@@ -282,4 +282,14 @@ describe('Filters:', function () {
     expect(swig.render('{{ "bar"|replace(b("a"), "foo") }}', { locals: locals })).to.equal('foo');
   });
 
+  it('gh-397: Filter index applied to functions with arguments is one-off', function () {
+    var locals = {
+      r: function () { return [1, 2, 3]; },
+      u: 'Tacos',
+      t: 'L N'
+    };
+
+    expect(swig.render("{{ t|replace('L', r('items').length)|replace('N', u) }}", { locals: locals })).to.equal('3 Tacos');
+  });
+
 });
