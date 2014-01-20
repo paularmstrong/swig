@@ -1,10 +1,27 @@
 var swig = require('../lib/swig'),
   expect = require('expect.js'),
   path = require('path'),
-  fs = require('fs');
+  fs = require('fs'),
+  efn = function () {};
 
 
 describe('swig.loaders', function () {
+
+  describe('API', function () {
+    it('requires load and resolve methods', function () {
+      expect(function () {
+        swig.setDefaults({ loader: 'foobar' });
+      }).to.throwError(/Invalid loader option "foobar" found\..*/);
+
+      expect(function () {
+        swig.setDefaults({ loader: { load: efn } });
+      }).to.throwError(/Invalid loader option \{\} found\..*/);
+
+      expect(function () {
+        swig.setDefaults({ loader: { resolve: efn } });
+      }).to.throwError(/Invalid loader option \{\} found\..*/);
+    });
+  });
 
   describe('Memory', function () {
     it('can use extends', function () {
@@ -15,7 +32,7 @@ describe('swig.loaders', function () {
       };
       templates[path.sep + 'layout.html'] = '<html>{% block content %}{% endblock %}</html>';
 
-      s = new swig.Swig({ loader: new swig.loaders.memory(templates) });
+      s = new swig.Swig({ loader: swig.loaders.memory(templates) });
       html = s.renderFile('page.html', {name: 'world'});
       expect(html).to.equal('<html>Hello world!</html>');
     });
@@ -28,7 +45,7 @@ describe('swig.loaders', function () {
         'content.html': 'Hello {{ name }}!'
       };
 
-      s = new swig.Swig({ loader: new swig.loaders.memory(templates) });
+      s = new swig.Swig({ loader: swig.loaders.memory(templates) });
       html = s.renderFile('page.html', {name: 'world'});
       expect(html).to.equal('<html>Hello world!</html>');
     });
@@ -41,9 +58,25 @@ describe('swig.loaders', function () {
         '/baz/content.html': 'Hello {{ name }}!'
       };
 
-      s = new swig.Swig({ loader: new swig.loaders.memory(templates, '/baz') });
+      s = new swig.Swig({ loader: swig.loaders.memory(templates, '/baz') });
       html = s.renderFile('bar/page.html', {name: 'world'});
       expect(html).to.equal('<html>Hello world!</html>');
+    });
+
+    it('throws on undefined template', function () {
+      var s = new swig.Swig({ loader: swig.loaders.memory({}) });
+      expect(function () {
+        s.renderFile('foobar');
+      }).to.throwError(/Unable to find template "\/foobar"\./);
+    });
+
+    it('will run asynchronously', function (done) {
+      var t = { 'content.html': 'Hello {{ name }}!' },
+        s = new swig.Swig({ loader: swig.loaders.memory(t) });
+      s.renderFile('/content.html', { name: 'Tacos' }, function (err, out) {
+        expect(out).to.equal('Hello Tacos!');
+        done();
+      });
     });
   });
 
@@ -52,6 +85,7 @@ describe('swig.loaders', function () {
     return;
   }
   describe('FileSystem', function () {
+    var macroExpectation = '\n\nasfdasdf\n\n\n\n\nHahahahahah!\n\n\n\n\n\n';
     it('is the default', function () {
       var s = new swig.Swig(),
         file = s.options.loader.load(__dirname + '/cases/macros.html');
@@ -60,7 +94,16 @@ describe('swig.loaders', function () {
 
     it('can take a base path', function () {
       var s = new swig.Swig({ loader: swig.loaders.fs(__dirname + '/cases') });
-      expect(s.renderFile('macros.html')).to.equal('\n\nasfdasdf\n\n\n\n\nHahahahahah!\n\n\n\n\n\n');
+      expect(s.renderFile('macros.html')).to.equal(macroExpectation);
+    });
+
+    it('will run asynchronously', function (done) {
+      var t = { 'content.html': 'Hello {{ name }}!' },
+        s = new swig.Swig({ loader: swig.loaders.fs(__dirname + '/cases') });
+      s.renderFile('macros.html', {}, function (err, out) {
+        expect(out).to.equal(macroExpectation);
+        done();
+      });
     });
   });
 

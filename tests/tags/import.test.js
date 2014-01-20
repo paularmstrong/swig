@@ -8,5 +8,8 @@ describe('Tag: import', function () {
     expect(function () {
       swig.render('{% import bar %}');
     }).to.throwError(/Unexpected variable "bar" on line 1\./);
+    expect(function () {
+      swig.render('{% import "' + __dirname + '/../cases/import.test.html' + '" "bar" %}');
+    }).to.throwError(/Unexpected string "bar" on line 1\./);
   });
 });
