@@ -71,6 +71,8 @@ $ swig run [file...] [options]</code></pre>
 -j, --json     Variable context as a JSON file.
 -c, --context  Variable context as a CommonJS-style file. Used only if option `j` is not provided.
 -m, --minify   Minify compiled functions with uglify-js
+--filters      Custom filters as a CommonJS-style file
+--tags         Custom tags as a CommonJS-style file
 --wrap-start   Template wrapper beginning for "compile". [default: "var tpl = "]
 --wrap-end     Template wrapper end for "compile". [default: ";"]
 --method-name  Method name to set template to and run from. [default: "tpl"]</pre>
@@ -117,6 +119,10 @@ $ swig run [file...] [options]</code></pre>
       
     </li>
     <li>
+      <a href="/swig/docs/loaders/">Template Loaders</a>
+      
+    </li>
+    <li>
       <a href="/swig/docs/cli/">Command-Line</a>
       
 <ol>
@@ -143,7 +149,7 @@ $ swig run [file...] [options]</code></pre>
 
 <footer class="content">
   <hr class="small">
-  <p>Swig is copyright &copy;2013 <a href="http://paularmstrongdesigns.com">Paul Armstrong</a>, licensed for use under the permissive MIT Open Source License.</p>
+  <p>Swig is copyright &copy;2014 <a href="http://paularmstrongdesigns.com">Paul Armstrong</a>, licensed for use under the permissive MIT Open Source License.</p>
   <a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
 </footer>
 

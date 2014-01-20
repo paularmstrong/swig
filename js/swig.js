@@ -1,4 +1,4 @@
-/*! Swig v1.2.2 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.3.0 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -11,7 +11,7 @@ if (typeof window.define === 'function' && typeof window.define.amd === 'object'
   window.swig = swig;
 }
 
-},{"../lib/swig":6}],2:[function(require,module,exports){
+},{"../lib/swig":9}],2:[function(require,module,exports){
 var utils = require('./utils');
 
 var _months = {
@@ -82,7 +82,7 @@ exports.l = function (input) {
 };
 exports.N = function (input) {
   var d = input.getDay();
-  return (d >= 1) ? d + 1 : 7;
+  return (d >= 1) ? d : 7;
 };
 exports.S = function (input) {
   var d = input.getDate();
@@ -211,7 +211,7 @@ exports.U = function (input) {
   return input.getTime() / 1000;
 };
 
-},{"./utils":23}],3:[function(require,module,exports){
+},{"./utils":26}],3:[function(require,module,exports){
 (function(){var utils = require('./utils'),
   dateFormatter = require('./dateformatter');
 
@@ -424,6 +424,50 @@ exports.first = function (input) {
   }
 
   return input[0];
+};
+
+/**
+ * Group an array of objects by a common key. If an array is not provided, the input value will be returned untouched.
+ *
+ * @example
+ * // people = [{ age: 23, name: 'Paul' }, { age: 26, name: 'Jane' }, { age: 23, name: 'Jim' }];
+ * {% for agegroup in people|groupBy('age') %}
+ *   <h2>{{ loop.key }}</h2>
+ *   <ul>
+ *     {% for person in agegroup %}
+ *     <li>{{ person.name }}</li>
+ *     {% endfor %}
+ *   </ul>
+ * {% endfor %}
+ *
+ * @param  {*}      input Input object.
+ * @param  {string} key   Key to group by.
+ * @return {object}       Grouped arrays by given key.
+ */
+exports.groupBy = function (input, key) {
+  if (!utils.isArray(input)) {
+    return input;
+  }
+
+  var out = {};
+
+  utils.each(input, function (value) {
+    if (!value.hasOwnProperty(key)) {
+      return;
+    }
+
+    var keyname = value[key],
+      newVal = utils.extend({}, value);
+    delete value[key];
+
+    if (!out[keyname]) {
+      out[keyname] = [];
+    }
+
+    out[keyname].push(value);
+  });
+
+  return out;
 };
 
 /**
@@ -793,7 +837,7 @@ exports.url_decode = function (input) {
 };
 
 })()
-},{"./dateformatter":2,"./utils":23}],4:[function(require,module,exports){
+},{"./dateformatter":2,"./utils":26}],4:[function(require,module,exports){
 var utils = require('./utils');
 
 /**
@@ -1101,7 +1145,189 @@ exports.read = function (str) {
   return tokens;
 };
 
-},{"./utils":23}],5:[function(require,module,exports){
+},{"./utils":26}],5:[function(require,module,exports){
+(function(){var fs = require('fs'),
+  path = require('path');
+
+/**
+ * Loads templates from the file system.
+ * @alias swig.loaders.fs
+ * @example
+ * swig.setDefaults({ loader: swig.loaders.fs() });
+ * @example
+ * // Load Templates from a specific directory (does not require using relative paths in your templates)
+ * swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/templates' )});
+ * @param {string}   [basepath='']     Path to the templates as string. Assigning this value allows you to use semi-absolute paths to templates instead of relative paths.
+ * @param {string}   [encoding='utf8']   Template encoding
+ */
+module.exports = function (basepath, encoding) {
+  var ret = {};
+
+  encoding = encoding || 'utf8';
+  basepath = (basepath) ? path.normalize(basepath) : null;
+
+  /**
+   * Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.
+   * @alias resolve
+   * @param  {string} to        Non-absolute identifier or pathname to a file.
+   * @param  {string} [from]    If given, should attempt to find the <var>to</var> path in relation to this given, known path.
+   * @return {string}
+   */
+  ret.resolve = function (to, from) {
+    if (basepath) {
+      from = basepath;
+    } else {
+      from = (from) ? path.dirname(from) : '/';
+    }
+    return path.resolve(from, to);
+  };
+
+  /**
+   * Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.
+   * @alias load
+   * @param  {string}   identifier  Unique identifier of a template (possibly an absolute path).
+   * @param  {function} [cb]        Asynchronous callback function. If not provided, this method should run synchronously.
+   * @return {string}               Template source string.
+   */
+  ret.load = function (identifier, cb) {
+    if (!fs || (cb && !fs.readFile) || !fs.readFileSync) {
+      throw new Error('Unable to find file ' + identifier + ' because there is no filesystem to read from.');
+    }
+
+    identifier = ret.resolve(identifier);
+
+    if (cb) {
+      fs.readFile(identifier, encoding, cb);
+      return;
+    }
+    return fs.readFileSync(identifier, encoding);
+  };
+
+  return ret;
+};
+
+})()
+},{"fs":27,"path":28}],6:[function(require,module,exports){
+/**
+ * @namespace TemplateLoader
+ * @description Swig is able to accept custom template loaders written by you, so that your templates can come from your favorite storage medium without needing to be part of the core library.
+ * A template loader consists of two methods: <var>resolve</var> and <var>load</var>. Each method is used internally by Swig to find and load the source of the template before attempting to parse and compile it.
+ * @example
+ * // A theoretical memcached loader
+ * var path = require('path'),
+ *   Memcached = require('memcached');
+ * function memcachedLoader(locations, options) {
+ *   var memcached = new Memcached(locations, options);
+ *   return {
+ *     resolve: function (to, from) {
+ *       return path.resolve(from, to);
+ *     },
+ *     load: function (identifier, cb) {
+ *       memcached.get(identifier, function (err, data) {
+ *         // if (!data) { load from filesystem; }
+ *         cb(err, data);
+ *       });
+ *     }
+ *   };
+ * };
+ * // Tell swig about the loader:
+ * swig.setDefaults({ loader: memcachedLoader(['192.168.0.2']) });
+ */
+
+/**
+ * @function
+ * @name resolve
+ * @memberof TemplateLoader
+ * @description
+ * Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.
+ * @param  {string} to        Non-absolute identifier or pathname to a file.
+ * @param  {string} [from]    If given, should attempt to find the <var>to</var> path in relation to this given, known path.
+ * @return {string}
+ */
+
+/**
+ * @function
+ * @name load
+ * @memberof TemplateLoader
+ * @description
+ * Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.
+ * @param  {string}   identifier  Unique identifier of a template (possibly an absolute path).
+ * @param  {function} [cb]        Asynchronous callback function. If not provided, this method should run synchronously.
+ * @return {string}               Template source string.
+ */
+
+/**
+ * @private
+ */
+exports.fs = require('./filesystem');
+exports.memory = require('./memory');
+
+},{"./filesystem":5,"./memory":7}],7:[function(require,module,exports){
+var path = require('path'),
+  utils = require('../utils');
+
+/**
+ * Loads templates from a provided object mapping.
+ * @alias swig.loaders.memory
+ * @example
+ * var templates = {
+ *   "layout": "{% block content %}{% endblock %}",
+ *   "home.html": "{% extends 'layout.html' %}{% block content %}...{% endblock %}"
+ * };
+ * swig.setDefaults({ loader: swig.loaders.memory(templates) });
+ *
+ * @param {object} mapping Hash object with template paths as keys and template sources as values.
+ * @param {string} [basepath] Path to the templates as string. Assigning this value allows you to use semi-absolute paths to templates instead of relative paths.
+ */
+module.exports = function (mapping, basepath) {
+  var ret = {};
+
+  basepath = (basepath) ? path.normalize(basepath) : null;
+
+  /**
+   * Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.
+   * @alias resolve
+   * @param  {string} to        Non-absolute identifier or pathname to a file.
+   * @param  {string} [from]    If given, should attempt to find the <var>to</var> path in relation to this given, known path.
+   * @return {string}
+   */
+  ret.resolve = function (to, from) {
+    if (basepath) {
+      from = basepath;
+    } else {
+      from = (from) ? path.dirname(from) : '/';
+    }
+    return path.resolve(from, to);
+  };
+
+  /**
+   * Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.
+   * @alias load
+   * @param  {string}   identifier  Unique identifier of a template (possibly an absolute path).
+   * @param  {function} [cb]        Asynchronous callback function. If not provided, this method should run synchronously.
+   * @return {string}               Template source string.
+   */
+  ret.load = function (pathname, cb) {
+    var src, paths;
+
+    paths = [pathname, pathname.replace(/^(\/|\\)/, '')];
+
+    src = mapping[paths[0]] || mapping[paths[1]];
+    if (!src) {
+      utils.throwError('Unable to find template "' + pathname + '".');
+    }
+
+    if (cb) {
+      cb(null, src);
+      return;
+    }
+    return src;
+  };
+
+  return ret;
+};
+
+},{"../utils":26,"path":28}],8:[function(require,module,exports){
 (function(){var utils = require('./utils'),
   lexer = require('./lexer');
 
@@ -1333,10 +1559,11 @@ TokenParser.prototype = {
         } else {
           self.out.push(' || _fn)(');
         }
+        self.filterApplyIdx.push(self.out.length - 3);
       } else {
         self.out.push('(');
+        self.filterApplyIdx.push(self.out.length - 1);
       }
-      self.filterApplyIdx.push(self.out.length - 1);
       break;
 
     case _t.PARENCLOSE:
@@ -1345,6 +1572,9 @@ TokenParser.prototype = {
         utils.throwError('Mismatched nesting state', self.line, self.filename);
       }
       self.out.push(')');
+      // Once off the previous entry
+      self.filterApplyIdx.pop();
+      // Once for the open paren
       self.filterApplyIdx.pop();
       break;
 
@@ -1844,23 +2074,22 @@ exports.compile = function (template, parents, options, blockName) {
 };
 
 })()
-},{"./lexer":4,"./utils":23}],6:[function(require,module,exports){
-(function(){var fs = require('fs'),
-  path = require('path'),
-  utils = require('./utils'),
+},{"./lexer":4,"./utils":26}],9:[function(require,module,exports){
+(function(){var utils = require('./utils'),
   _tags = require('./tags'),
   _filters = require('./filters'),
   parser = require('./parser'),
-  dateformatter = require('./dateformatter');
+  dateformatter = require('./dateformatter'),
+  loaders = require('./loaders');
 
 /**
  * Swig version number as a string.
  * @example
- * if (swig.version === "1.2.2") { ... }
+ * if (swig.version === "1.3.0") { ... }
  *
  * @type {String}
  */
-exports.version = "1.2.2";
+exports.version = "1.3.0";
 
 /**
  * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
@@ -1871,6 +2100,7 @@ exports.version = "1.2.2";
  * @property {array}   cmtControls Open and close controls for comments. Defaults to <code data-language="js">['{#', '#}']</code>.
  * @property {object}  locals      Default variable context to be passed to <strong>all</strong> templates.
  * @property {CacheOptions} cache Cache control for templates. Defaults to saving in <code data-language="js">'memory'</code>. Send <code data-language="js">false</code> to disable. Send an object with <code data-language="js">get</code> and <code data-language="js">set</code> functions to customize.
+ * @property {TemplateLoader} loader The method that Swig will use to load templates. Defaults to <var>swig.loaders.fs</var>.
  */
 var defaultOptions = {
     autoescape: true,
@@ -1896,7 +2126,26 @@ var defaultOptions = {
      *   }
      * });
      */
-    cache: 'memory'
+    cache: 'memory',
+    /**
+     * Configure Swig to use either the <var>swig.loaders.fs</var> or <var>swig.loaders.memory</var> template loader. Or, you can write your own!
+     * For more information, please see the <a href="../loaders/">Template Loaders documentation</a>.
+     * @typedef {class} TemplateLoader
+     * @example
+     * // Default, FileSystem loader
+     * swig.setDefaults({ loader: swig.loaders.fs() });
+     * @example
+     * // FileSystem loader allowing a base path
+     * // With this, you don't use relative URLs in your template references
+     * swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/templates') });
+     * @example
+     * // Memory Loader
+     * swig.setDefaults({ loader: swig.loaders.memory({
+     *   layout: '{% block foo %}{% endblock %}',
+     *   page1: '{% extends "layout" %}{% block foo %}Tacos!{% endblock %}'
+     * })});
+     */
+    loader: loaders.fs()
   },
   defaultInstance;
 
@@ -1942,6 +2191,14 @@ function validateOptions(options) {
       }
     }
   }
+  if (options.hasOwnProperty('loader')) {
+    if (options.loader) {
+      if (!options.loader.load || !options.loader.resolve) {
+        throw new Error('Invalid loader option ' + JSON.stringify(options.loader) + ' found. Expected { load: function (pathname, cb) { ... }, resolve: function (to, from) { ... } }.');
+      }
+    }
+  }
+
 }
 
 /**
@@ -2184,12 +2441,9 @@ exports.Swig = function (opts) {
       options = {};
     }
 
-    pathname = (options.resolveFrom) ? path.resolve(path.dirname(options.resolveFrom), pathname) : pathname;
+    pathname = self.options.loader.resolve(pathname, options.resolveFrom);
 
-    if (!fs || !fs.readFileSync) {
-      throw new Error('Unable to find file ' + pathname + ' because there is no filesystem to read from.');
-    }
-    src = fs.readFileSync(pathname, 'utf8');
+    src = self.options.loader.load(pathname);
 
     if (!options.filename) {
       options = utils.extend({ filename: pathname }, options);
@@ -2255,8 +2509,8 @@ exports.Swig = function (opts) {
       }
 
       parentFile = parentFile || options.filename;
-      parentFile = path.resolve(path.dirname(parentFile), parentName);
-      parent = self.parseFile(parentFile, utils.extend({}, options, { filename: parentFile }));
+      parentFile = self.options.loader.resolve(parentName, parentFile);
+      parent = cacheGet(parentFile) || self.parseFile(parentFile, utils.extend({}, options, { filename: parentFile }));
       parentName = parent.parent;
 
       if (parentFiles.indexOf(parentFile) !== -1) {
@@ -2459,7 +2713,7 @@ exports.Swig = function (opts) {
       options = {};
     }
 
-    pathname = (options.resolveFrom) ? path.resolve(path.dirname(options.resolveFrom), pathname) : pathname;
+    pathname = self.options.loader.resolve(pathname, options.resolveFrom);
     if (!options.filename) {
       options = utils.extend({ filename: pathname }, options);
     }
@@ -2473,12 +2727,8 @@ exports.Swig = function (opts) {
       return cached;
     }
 
-    if (!fs || !fs.readFileSync) {
-      throw new Error('Unable to find file ' + pathname + ' because there is no filesystem to read from.');
-    }
-
     if (cb) {
-      fs.readFile(pathname, 'utf8', function (err, src) {
+      self.options.loader.load(pathname, function (err, src) {
         if (err) {
           cb(err);
           return;
@@ -2497,7 +2747,7 @@ exports.Swig = function (opts) {
       return;
     }
 
-    src = fs.readFileSync(pathname, 'utf8');
+    src = self.options.loader.load(pathname);
     return self.compile(src, options);
   };
 
@@ -2515,12 +2765,14 @@ exports.Swig = function (opts) {
    *
    * @param  {function} tpl       Pre-compiled Swig template function. Use the Swig CLI to compile your templates.
    * @param  {object} [locals={}] Template variable context.
-   * @param  {string} filepath    Filename used for caching the template.
+   * @param  {string} [filepath]  Filename used for caching the template.
    * @return {string}             Rendered output.
    */
   this.run = function (tpl, locals, filepath) {
     var context = getLocals({ locals: locals });
-    cacheSet(filepath, tpl);
+    if (filepath) {
+      cacheSet(filepath, tpl);
+    }
     return tpl(self, context, filters, utils, efn);
   };
 };
@@ -2540,27 +2792,10 @@ exports.render = defaultInstance.render;
 exports.renderFile = defaultInstance.renderFile;
 exports.run = defaultInstance.run;
 exports.invalidateCache = defaultInstance.invalidateCache;
+exports.loaders = loaders;
 
 })()
-},{"./dateformatter":2,"./filters":3,"./parser":5,"./tags":7,"./utils":23,"fs":24,"path":25}],7:[function(require,module,exports){
-exports.autoescape = require('./tags/autoescape');
-exports.block = require('./tags/block');
-exports.else = require('./tags/else');
-exports.elseif = require('./tags/elseif');
-exports.elif = exports.elseif;
-exports.extends = require('./tags/extends');
-exports.filter = require('./tags/filter');
-exports.for = require('./tags/for');
-exports.if = require('./tags/if');
-exports.import = require('./tags/import');
-exports.include = require('./tags/include');
-exports.macro = require('./tags/macro');
-exports.parent = require('./tags/parent');
-exports.raw = require('./tags/raw');
-exports.set = require('./tags/set');
-exports.spaceless = require('./tags/spaceless');
-
-},{"./tags/autoescape":8,"./tags/block":9,"./tags/else":10,"./tags/elseif":11,"./tags/extends":12,"./tags/filter":13,"./tags/for":14,"./tags/if":15,"./tags/import":16,"./tags/include":17,"./tags/macro":18,"./tags/parent":19,"./tags/raw":20,"./tags/set":21,"./tags/spaceless":22}],8:[function(require,module,exports){
+},{"./dateformatter":2,"./filters":3,"./loaders":6,"./parser":8,"./tags":20,"./utils":26}],10:[function(require,module,exports){
 var utils = require('../utils'),
   strings = ['html', 'js'];
 
@@ -2584,9 +2819,6 @@ exports.compile = function (compiler, args, content, parents, options, blockName
 exports.parse = function (str, line, parser, types, stack, opts) {
   var matched;
   parser.on('*', function (token) {
-    if (token.type === types.WHITESPACE) {
-      return;
-    }
     if (!matched &&
         (token.type === types.BOOL ||
           (token.type === types.STRING && strings.indexOf(token.match) === -1))
@@ -2602,7 +2834,7 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 };
 exports.ends = true;
 
-},{"../utils":23}],9:[function(require,module,exports){
+},{"../utils":26}],11:[function(require,module,exports){
 /**
  * Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.
  *
@@ -2629,7 +2861,7 @@ exports.parse = function (str, line, parser) {
 exports.ends = true;
 exports.block = true;
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
  * Used within an <code data-language="swig">{% if %}</code> tag, the code block following this tag up until <code data-language="swig">{% endif %}</code> will be rendered if the <i>if</i> statement returns false.
  *
@@ -2656,7 +2888,7 @@ exports.parse = function (str, line, parser, types, stack) {
   return (stack.length && stack[stack.length - 1].name === 'if');
 };
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var ifparser = require('./if').parse;
 
 /**
@@ -2686,7 +2918,7 @@ exports.parse = function (str, line, parser, types, stack) {
   return okay && (stack.length && stack[stack.length - 1].name === 'if');
 };
 
-},{"./if":15}],12:[function(require,module,exports){
+},{"./if":17}],14:[function(require,module,exports){
 /**
  * Makes the current template extend a parent template. This tag must be the first item in your template.
  *
@@ -2707,7 +2939,7 @@ exports.parse = function () {
 
 exports.ends = false;
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var filters = require('../filters');
 
 /**
@@ -2777,7 +3009,7 @@ exports.parse = function (str, line, parser, types) {
 
 exports.ends = true;
 
-},{"../filters":3}],14:[function(require,module,exports){
+},{"../filters":3}],16:[function(require,module,exports){
 var ctx = '_ctx.',
   ctxloop = ctx + 'loop',
   ctxloopcache = ctx + '___loopcache';
@@ -2907,7 +3139,7 @@ exports.parse = function (str, line, parser, types) {
 
 exports.ends = true;
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /**
  * Used to create conditional statements in templates. Accepts most JavaScript valid comparisons.
  *
@@ -2990,7 +3222,7 @@ exports.parse = function (str, line, parser, types) {
 
 exports.ends = true;
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function(){var utils = require('../utils');
 
 /**
@@ -3085,7 +3317,7 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 exports.block = true;
 
 })()
-},{"../parser":5,"../swig":6,"../utils":23}],17:[function(require,module,exports){
+},{"../parser":8,"../swig":9,"../utils":26}],19:[function(require,module,exports){
 var ignore = 'ignore',
   missing = 'missing',
   only = 'only';
@@ -3187,7 +3419,25 @@ exports.parse = function (str, line, parser, types, stack, opts) {
   return true;
 };
 
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
+exports.autoescape = require('./autoescape');
+exports.block = require('./block');
+exports.else = require('./else');
+exports.elseif = require('./elseif');
+exports.elif = exports.elseif;
+exports.extends = require('./extends');
+exports.filter = require('./filter');
+exports.for = require('./for');
+exports.if = require('./if');
+exports.import = require('./import');
+exports.include = require('./include');
+exports.macro = require('./macro');
+exports.parent = require('./parent');
+exports.raw = require('./raw');
+exports.set = require('./set');
+exports.spaceless = require('./spaceless');
+
+},{"./autoescape":10,"./block":11,"./else":12,"./elseif":13,"./extends":14,"./filter":15,"./for":16,"./if":17,"./import":18,"./include":19,"./macro":21,"./parent":22,"./raw":23,"./set":24,"./spaceless":25}],21:[function(require,module,exports){
 /**
  * Create custom, reusable snippets within your templates.
  * Can be imported from one template to another using the <a href="#import"><code data-language="swig">{% import ... %}</code></a> tag.
@@ -3263,7 +3513,7 @@ exports.parse = function (str, line, parser, types) {
 exports.ends = true;
 exports.block = true;
 
-},{}],19:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 /**
  * Inject the content from the parent template's block of the same name into the current block.
  *
@@ -3316,7 +3566,7 @@ exports.parse = function (str, line, parser, types, stack, opts) {
   return true;
 };
 
-},{}],20:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 // Magic tag, hardcoded into parser
 
 /**
@@ -3341,7 +3591,7 @@ exports.parse = function (str, line, parser) {
 };
 exports.ends = true;
 
-},{}],21:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 (function(){/**
  * Set a variable for re-use in the current context. This will over-write any value already set to the context for the given <var>varname</var>.
  *
@@ -3358,6 +3608,19 @@ exports.ends = true;
  * {% set bar += index|default(3) %}
  * // => 3
  *
+ * @example
+ * // foods = {};
+ * // food = 'chili';
+ * {% set foods[food] = "con queso" %}
+ * {{ foods.chili }}
+ * // => con queso
+ *
+ * @example
+ * // foods = { chili: 'chili con queso' }
+ * {% set foods.chili = "guatamalan insanity pepper" %}
+ * {{ foods.chili }}
+ * // => guatamalan insanity pepper
+ *
  * @param {literal} varname   The variable name to assign the value to.
  * @param {literal} assignement   Any valid JavaScript assignement. <code data-language="js">=, +=, *=, /=, -=</code>
  * @param {*}   value     Valid variable output.
@@ -3367,25 +3630,69 @@ exports.compile = function (compiler, args) {
 };
 
 exports.parse = function (str, line, parser, types) {
-  var nameSet;
+  var nameSet = '',
+    propertyName;
+
   parser.on(types.VAR, function (token) {
-    if (!this.out.length) {
-      nameSet = token.match;
-      this.out.push(
-        // Prevent the set from spilling into global scope
-        '_ctx.' + nameSet
-      );
+    if (propertyName) {
+      // Tell the parser where to find the variable
+      propertyName += '_ctx.' + token.match;
+      return;
+    }
+
+    if (!parser.out.length) {
+      nameSet += token.match;
       return;
     }
 
     return true;
   });
 
+  parser.on(types.BRACKETOPEN, function (token) {
+    if (!propertyName && !this.out.length) {
+      propertyName = token.match;
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.STRING, function (token) {
+    if (propertyName && !this.out.length) {
+      propertyName += token.match;
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.BRACKETCLOSE, function (token) {
+    if (propertyName && !this.out.length) {
+      nameSet += propertyName + token.match;
+      propertyName = undefined;
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.DOTKEY, function (token) {
+    if (!propertyName && !nameSet) {
+      return true;
+    }
+    nameSet += '.' + token.match;
+    return;
+  });
+
   parser.on(types.ASSIGNMENT, function (token) {
-    if (this.out.length !== 1 || !nameSet) {
+    if (this.out.length || !nameSet) {
       throw new Error('Unexpected assignment "' + token.match + '" on line ' + line + '.');
     }
 
+    this.out.push(
+      // Prevent the set from spilling into global scope
+      '_ctx.' + nameSet
+    );
     this.out.push(token.match);
   });
 
@@ -3395,7 +3702,7 @@ exports.parse = function (str, line, parser, types) {
 exports.block = true;
 
 })()
-},{}],22:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -3439,7 +3746,7 @@ exports.parse = function (str, line, parser) {
 
 exports.ends = true;
 
-},{"../utils":23}],23:[function(require,module,exports){
+},{"../utils":26}],26:[function(require,module,exports){
 var isArray;
 
 /**
@@ -3621,10 +3928,10 @@ exports.throwError = function (message, line, file) {
   throw new Error(message + '.');
 };
 
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 // nothing to see here... no file methods for the browser
 
-},{}],25:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 (function(process){function filter (xs, fn) {
     var res = [];
     for (var i = 0; i < xs.length; i++) {
@@ -3802,7 +4109,7 @@ exports.relative = function(from, to) {
 };
 
 })(require("__browserify_process"))
-},{"__browserify_process":26}],26:[function(require,module,exports){
+},{"__browserify_process":29}],29:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};

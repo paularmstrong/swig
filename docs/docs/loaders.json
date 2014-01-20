@@ -1,0 +1,1071 @@
+{ "loaders": 
+[
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                4,
+                22
+            ],
+            "filename": "filesystem.js",
+            "lineno": 1,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode137493297",
+                "name": "fs",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "fs",
+        "kind": "member",
+        "longname": "fs",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                26,
+                48
+            ],
+            "filename": "filesystem.js",
+            "lineno": 2,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode11555382",
+                "name": "path",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "path",
+        "kind": "member",
+        "longname": "path",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Loads templates from the file system.\n * @alias swig.loaders.fs\n * @example\n * swig.setDefaults({ loader: swig.loaders.fs() });\n * @example\n * // Load Templates from a specific directory (does not require using relative paths in your templates)\n * swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/templates' )});\n * @param {string}   [basepath='']     Path to the templates as string. Assigning this value allows you to use semi-absolute paths to templates instead of relative paths.\n * @param {string}   [encoding='utf8']   Template encoding\n */",
+        "meta": {
+            "range": [
+                613,
+                2242
+            ],
+            "filename": "filesystem.js",
+            "lineno": 15,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode1098226962",
+                "name": "module.exports",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "basepath",
+                    "encoding"
+                ]
+            },
+            "vars": {
+                "ret": false,
+                "": false
+            }
+        },
+        "description": "Loads templates from the file system.",
+        "alias": "swig.loaders.fs",
+        "examples": [
+            "swig.setDefaults({ loader: swig.loaders.fs() });",
+            "// Load Templates from a specific directory (does not require using relative paths in your templates)\nswig.setDefaults({ loader: swig.loaders.fs(__dirname + '/templates' )});"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "''",
+                "description": "Path to the templates as string. Assigning this value allows you to use semi-absolute paths to templates instead of relative paths.",
+                "name": "basepath"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "'utf8'",
+                "description": "Template encoding",
+                "name": "encoding"
+            }
+        ],
+        "name": "fs",
+        "kind": "function",
+        "memberof": "swig.loaders",
+        "longname": "swig.loaders.fs",
+        "scope": "static"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                668,
+                676
+            ],
+            "filename": "filesystem.js",
+            "lineno": 16,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode6637010",
+                "name": "ret",
+                "type": "OBJECTLIT",
+                "node": "<Object>",
+                "value": "OBJECTLIT"
+            }
+        },
+        "undocumented": true,
+        "name": "ret",
+        "kind": "member",
+        "memberof": "swig.loaders.fs",
+        "longname": "swig.loaders.fs~ret",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                681,
+                710
+            ],
+            "filename": "filesystem.js",
+            "lineno": 18,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode1099677525",
+                "name": "encoding",
+                "type": "OR",
+                "node": "<Object>",
+                "value": "OR"
+            }
+        },
+        "undocumented": true,
+        "name": "encoding",
+        "kind": "member",
+        "longname": "encoding",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                714,
+                769
+            ],
+            "filename": "filesystem.js",
+            "lineno": 19,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode264829771",
+                "name": "basepath",
+                "type": "HOOK",
+                "node": "<Object>",
+                "value": "HOOK"
+            }
+        },
+        "undocumented": true,
+        "name": "basepath",
+        "kind": "member",
+        "longname": "basepath",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n   * Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.\n   * @alias resolve\n   * @param  {string} to        Non-absolute identifier or pathname to a file.\n   * @param  {string} [from]    If given, should attempt to find the <var>to</var> path in relation to this given, known path.\n   * @return {string}\n   */",
+        "meta": {
+            "range": [
+                1191,
+                1375
+            ],
+            "filename": "filesystem.js",
+            "lineno": 28,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode372834295",
+                "name": "ret.resolve",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "funcscope": "swig.loaders.fs",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "to",
+                    "from"
+                ]
+            }
+        },
+        "description": "Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.",
+        "alias": "resolve",
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Non-absolute identifier or pathname to a file.",
+                "name": "to"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "If given, should attempt to find the <var>to</var> path in relation to this given, known path.",
+                "name": "from"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined"
+            }
+        ],
+        "name": "resolve",
+        "kind": "function",
+        "longname": "swig.loaders.fs~resolve",
+        "memberof": "swig.loaders.fs",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1253,
+                1268
+            ],
+            "filename": "filesystem.js",
+            "lineno": 30,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode1285984216",
+                "name": "from",
+                "type": "NAME",
+                "node": "<Object>",
+                "value": "basepath"
+            }
+        },
+        "undocumented": true,
+        "name": "from",
+        "kind": "member",
+        "longname": "from",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1289,
+                1329
+            ],
+            "filename": "filesystem.js",
+            "lineno": 32,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode244757954",
+                "name": "from",
+                "type": "HOOK",
+                "node": "<Object>",
+                "value": "HOOK"
+            }
+        },
+        "undocumented": true,
+        "name": "from",
+        "kind": "member",
+        "longname": "from",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n   * Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.\n   * @alias load\n   * @param  {string}   identifier  Unique identifier of a template (possibly an absolute path).\n   * @param  {function} [cb]        Asynchronous callback function. If not provided, this method should run synchronously.\n   * @return {string}               Template source string.\n   */",
+        "meta": {
+            "range": [
+                1834,
+                2224
+            ],
+            "filename": "filesystem.js",
+            "lineno": 44,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode1076867074",
+                "name": "ret.load",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "funcscope": "swig.loaders.fs",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "identifier",
+                    "cb"
+                ]
+            }
+        },
+        "description": "Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.",
+        "alias": "load",
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Unique identifier of a template (possibly an absolute path).",
+                "name": "identifier"
+            },
+            {
+                "type": {
+                    "names": [
+                        "function"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Asynchronous callback function. If not provided, this method should run synchronously.",
+                "name": "cb"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Template source string."
+            }
+        ],
+        "name": "load",
+        "kind": "function",
+        "longname": "swig.loaders.fs~load",
+        "memberof": "swig.loaders.fs",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                2053,
+                2089
+            ],
+            "filename": "filesystem.js",
+            "lineno": 49,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode1077293160",
+                "name": "identifier",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "identifier",
+        "kind": "member",
+        "longname": "identifier",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * @namespace TemplateLoader\n * @description Swig is able to accept custom template loaders written by you, so that your templates can come from your favorite storage medium without needing to be part of the core library.\n * A template loader consists of two methods: <var>resolve</var> and <var>load</var>. Each method is used internally by Swig to find and load the source of the template before attempting to parse and compile it.\n * @example\n * // A theoretical memcached loader\n * var path = require('path'),\n *   Memcached = require('memcached');\n * function memcachedLoader(locations, options) {\n *   var memcached = new Memcached(locations, options);\n *   return {\n *     resolve: function (to, from) {\n *       return path.resolve(from, to);\n *     },\n *     load: function (identifier, cb) {\n *       memcached.get(identifier, function (err, data) {\n *         // if (!data) { load from filesystem; }\n *         cb(err, data);\n *       });\n *     }\n *   };\n * };\n * // Tell swig about the loader:\n * swig.setDefaults({ loader: memcachedLoader(['192.168.0.2']) });\n */",
+        "meta": {
+            "range": [
+                0,
+                1081
+            ],
+            "filename": "index.js",
+            "lineno": 1,
+            "path": "lib/loaders",
+            "code": {}
+        },
+        "kind": "namespace",
+        "name": "TemplateLoader",
+        "description": "Swig is able to accept custom template loaders written by you, so that your templates can come from your favorite storage medium without needing to be part of the core library.\nA template loader consists of two methods: <var>resolve</var> and <var>load</var>. Each method is used internally by Swig to find and load the source of the template before attempting to parse and compile it.",
+        "examples": [
+            "// A theoretical memcached loader\nvar path = require('path'),\n  Memcached = require('memcached');\nfunction memcachedLoader(locations, options) {\n  var memcached = new Memcached(locations, options);\n  return {\n    resolve: function (to, from) {\n      return path.resolve(from, to);\n    },\n    load: function (identifier, cb) {\n      memcached.get(identifier, function (err, data) {\n        // if (!data) { load from filesystem; }\n        cb(err, data);\n      });\n    }\n  };\n};\n// Tell swig about the loader:\nswig.setDefaults({ loader: memcachedLoader(['192.168.0.2']) });"
+        ],
+        "longname": "TemplateLoader"
+    },
+    {
+        "comment": "/**\n * @function\n * @name resolve\n * @memberof TemplateLoader\n * @description\n * Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.\n * @param  {string} to        Non-absolute identifier or pathname to a file.\n * @param  {string} [from]    If given, should attempt to find the <var>to</var> path in relation to this given, known path.\n * @return {string}\n */",
+        "meta": {
+            "range": [
+                1083,
+                1541
+            ],
+            "filename": "index.js",
+            "lineno": 3,
+            "path": "lib/loaders",
+            "code": {}
+        },
+        "kind": "function",
+        "name": "resolve",
+        "memberof": "TemplateLoader",
+        "description": "Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.",
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Non-absolute identifier or pathname to a file.",
+                "name": "to"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "If given, should attempt to find the <var>to</var> path in relation to this given, known path.",
+                "name": "from"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined"
+            }
+        ],
+        "scope": "static",
+        "longname": "TemplateLoader.resolve"
+    },
+    {
+        "comment": "/**\n * @function\n * @name load\n * @memberof TemplateLoader\n * @description\n * Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.\n * @param  {string}   identifier  Unique identifier of a template (possibly an absolute path).\n * @param  {function} [cb]        Asynchronous callback function. If not provided, this method should run synchronously.\n * @return {string}               Template source string.\n */",
+        "meta": {
+            "range": [
+                1543,
+                2038
+            ],
+            "filename": "index.js",
+            "lineno": 5,
+            "path": "lib/loaders",
+            "code": {}
+        },
+        "kind": "function",
+        "name": "load",
+        "memberof": "TemplateLoader",
+        "description": "Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.",
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Unique identifier of a template (possibly an absolute path).",
+                "name": "identifier"
+            },
+            {
+                "type": {
+                    "names": [
+                        "function"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Asynchronous callback function. If not provided, this method should run synchronously.",
+                "name": "cb"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Template source string."
+            }
+        ],
+        "scope": "static",
+        "longname": "TemplateLoader.load"
+    },
+    {
+        "comment": "/**\n * @private\n */",
+        "meta": {
+            "range": [
+                2060,
+                2096
+            ],
+            "filename": "index.js",
+            "lineno": 52,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode1581033300",
+                "name": "exports.fs",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "access": "private",
+        "name": "fs",
+        "kind": "member",
+        "longname": "fs",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                2098,
+                2134
+            ],
+            "filename": "index.js",
+            "lineno": 53,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode102170028",
+                "name": "exports.memory",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "memory",
+        "kind": "member",
+        "longname": "memory",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                4,
+                26
+            ],
+            "filename": "memory.js",
+            "lineno": 1,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode1727921240",
+                "name": "path",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "path",
+        "kind": "member",
+        "longname": "path",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                30,
+                57
+            ],
+            "filename": "memory.js",
+            "lineno": 2,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode596659725",
+                "name": "utils",
+                "type": "CALL",
+                "node": "<Object>",
+                "value": "CALL"
+            }
+        },
+        "undocumented": true,
+        "name": "utils",
+        "kind": "member",
+        "longname": "utils",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Loads templates from a provided object mapping.\n * @alias swig.loaders.memory\n * @example\n * var templates = {\n *   \"layout\": \"{% block content %}{% endblock %}\",\n *   \"home.html\": \"{% extends 'layout.html' %}{% block content %}...{% endblock %}\"\n * };\n * swig.setDefaults({ loader: swig.loaders.memory(templates) });\n *\n * @param {object} mapping Hash object with template paths as keys and template sources as values.\n * @param {string} [basepath] Path to the templates as string. Assigning this value allows you to use semi-absolute paths to templates instead of relative paths.\n */",
+        "meta": {
+            "range": [
+                653,
+                2191
+            ],
+            "filename": "memory.js",
+            "lineno": 17,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode1075051425",
+                "name": "module.exports",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "mapping",
+                    "basepath"
+                ]
+            },
+            "vars": {
+                "ret": false,
+                "": false
+            }
+        },
+        "description": "Loads templates from a provided object mapping.",
+        "alias": "swig.loaders.memory",
+        "examples": [
+            "var templates = {\n  \"layout\": \"{% block content %}{% endblock %}\",\n  \"home.html\": \"{% extends 'layout.html' %}{% block content %}...{% endblock %}\"\n};\nswig.setDefaults({ loader: swig.loaders.memory(templates) });"
+        ],
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "object"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Hash object with template paths as keys and template sources as values.",
+                "name": "mapping"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Path to the templates as string. Assigning this value allows you to use semi-absolute paths to templates instead of relative paths.",
+                "name": "basepath"
+            }
+        ],
+        "name": "memory",
+        "kind": "function",
+        "memberof": "swig.loaders",
+        "longname": "swig.loaders.memory",
+        "scope": "static"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                707,
+                715
+            ],
+            "filename": "memory.js",
+            "lineno": 18,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode1934329031",
+                "name": "ret",
+                "type": "OBJECTLIT",
+                "node": "<Object>",
+                "value": "OBJECTLIT"
+            }
+        },
+        "undocumented": true,
+        "name": "ret",
+        "kind": "member",
+        "memberof": "swig.loaders.memory",
+        "longname": "swig.loaders.memory~ret",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                720,
+                775
+            ],
+            "filename": "memory.js",
+            "lineno": 20,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode540108943",
+                "name": "basepath",
+                "type": "HOOK",
+                "node": "<Object>",
+                "value": "HOOK"
+            }
+        },
+        "undocumented": true,
+        "name": "basepath",
+        "kind": "member",
+        "longname": "basepath",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n   * Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.\n   * @alias resolve\n   * @param  {string} to        Non-absolute identifier or pathname to a file.\n   * @param  {string} [from]    If given, should attempt to find the <var>to</var> path in relation to this given, known path.\n   * @return {string}\n   */",
+        "meta": {
+            "range": [
+                1197,
+                1381
+            ],
+            "filename": "memory.js",
+            "lineno": 29,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode995824187",
+                "name": "ret.resolve",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "funcscope": "swig.loaders.memory",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "to",
+                    "from"
+                ]
+            }
+        },
+        "description": "Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.",
+        "alias": "resolve",
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Non-absolute identifier or pathname to a file.",
+                "name": "to"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "If given, should attempt to find the <var>to</var> path in relation to this given, known path.",
+                "name": "from"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined"
+            }
+        ],
+        "name": "resolve",
+        "kind": "function",
+        "longname": "swig.loaders.memory~resolve",
+        "memberof": "swig.loaders.memory",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1259,
+                1274
+            ],
+            "filename": "memory.js",
+            "lineno": 31,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode2013151593",
+                "name": "from",
+                "type": "NAME",
+                "node": "<Object>",
+                "value": "basepath"
+            }
+        },
+        "undocumented": true,
+        "name": "from",
+        "kind": "member",
+        "longname": "from",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1295,
+                1335
+            ],
+            "filename": "memory.js",
+            "lineno": 33,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode545256886",
+                "name": "from",
+                "type": "HOOK",
+                "node": "<Object>",
+                "value": "HOOK"
+            }
+        },
+        "undocumented": true,
+        "name": "from",
+        "kind": "member",
+        "longname": "from",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n   * Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.\n   * @alias load\n   * @param  {string}   identifier  Unique identifier of a template (possibly an absolute path).\n   * @param  {function} [cb]        Asynchronous callback function. If not provided, this method should run synchronously.\n   * @return {string}               Template source string.\n   */",
+        "meta": {
+            "range": [
+                1840,
+                2173
+            ],
+            "filename": "memory.js",
+            "lineno": 45,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode53881443",
+                "name": "ret.load",
+                "type": "FUNCTION",
+                "node": "<Object>",
+                "funcscope": "swig.loaders.memory",
+                "value": "FUNCTION",
+                "paramnames": [
+                    "pathname",
+                    "cb"
+                ]
+            },
+            "vars": {
+                "src": false,
+                "paths": false
+            }
+        },
+        "description": "Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.",
+        "alias": "load",
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Unique identifier of a template (possibly an absolute path).",
+                "name": "identifier"
+            },
+            {
+                "type": {
+                    "names": [
+                        "function"
+                    ]
+                },
+                "optional": true,
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Asynchronous callback function. If not provided, this method should run synchronously.",
+                "name": "cb"
+            }
+        ],
+        "returns": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "optional": "undefined",
+                "nullable": "undefined",
+                "variable": "undefined",
+                "defaultvalue": "undefined",
+                "description": "Template source string."
+            }
+        ],
+        "name": "load",
+        "kind": "function",
+        "longname": "swig.loaders.memory~load",
+        "memberof": "swig.loaders.memory",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1885,
+                1888
+            ],
+            "filename": "memory.js",
+            "lineno": 46,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode1791392392",
+                "name": "src",
+                "type": "undefined",
+                "node": "<Object>",
+                "value": "src"
+            }
+        },
+        "undocumented": true,
+        "name": "src",
+        "kind": "member",
+        "memberof": "swig.loaders.memory~load",
+        "longname": "swig.loaders.memory~load~src",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1890,
+                1895
+            ],
+            "filename": "memory.js",
+            "lineno": 46,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode2019012184",
+                "name": "paths",
+                "type": "undefined",
+                "node": "<Object>",
+                "value": "paths"
+            }
+        },
+        "undocumented": true,
+        "name": "paths",
+        "kind": "member",
+        "memberof": "swig.loaders.memory~load",
+        "longname": "swig.loaders.memory~load~paths",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1902,
+                1954
+            ],
+            "filename": "memory.js",
+            "lineno": 48,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode1970237604",
+                "name": "paths",
+                "type": "ARRAYLIT",
+                "node": "<Object>",
+                "funcscope": "swig.loaders.memory~load",
+                "value": "ARRAYLIT"
+            }
+        },
+        "undocumented": true,
+        "name": "paths",
+        "kind": "member",
+        "longname": "swig.loaders.memory~load~paths",
+        "memberof": "swig.loaders.memory~load",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1961,
+                2005
+            ],
+            "filename": "memory.js",
+            "lineno": 50,
+            "path": "lib/loaders",
+            "code": {
+                "id": "astnode1384796854",
+                "name": "src",
+                "type": "OR",
+                "node": "<Object>",
+                "funcscope": "swig.loaders.memory~load",
+                "value": "OR"
+            }
+        },
+        "undocumented": true,
+        "name": "src",
+        "kind": "member",
+        "longname": "swig.loaders.memory~load~src",
+        "memberof": "swig.loaders.memory~load",
+        "scope": "inner"
+    },
+    {
+        "files": [
+            "lib/loaders/filesystem.js",
+            "lib/loaders/index.js",
+            "lib/loaders/memory.js"
+        ],
+        "kind": "package",
+        "name": "undefined",
+        "longname": "package:undefined",
+        "description": "undefined",
+        "version": "undefined",
+        "licenses": "undefined"
+    }
+]
+}

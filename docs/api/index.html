@@ -54,7 +54,7 @@
   <section id="SwigOpts" class="doc">
     <h2>Object Type: SwigOpts</h2>
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L18">lib/swig.js#L18</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L17">lib/swig.js#L17</a></p>
 
 
     
@@ -111,6 +111,12 @@
           <td>Cache control for templates. Defaults to saving in <code data-language="js">'memory'</code>. Send <code data-language="js">false</code> to disable. Send an object with <code data-language="js">get</code> and <code data-language="js">set</code> functions to customize.</td>
         </tr>
       
+        <tr>
+          <td><var data-language="js">loader</var></td>
+          <td><code data-language="js">TemplateLoader</code></td>
+          <td>The method that Swig will use to load templates. Defaults to <var>swig.loaders.fs</var>.</td>
+        </tr>
+      
       </tbody>
     </table>
     
@@ -123,7 +129,7 @@
   <section id="CacheOptions" class="doc">
     <h2>Object Type: CacheOptions</h2>
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L34">lib/swig.js#L34</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L34">lib/swig.js#L34</a></p>
 
 
     
@@ -153,6 +159,43 @@ swig.setDefaults({
     
     
   </section>
+
+
+
+  <section id="TemplateLoader" class="doc">
+    <h2>Object Type: TemplateLoader</h2>
+    
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L53">lib/swig.js#L53</a></p>
+
+
+    
+
+  <p>Configure Swig to use either the <var>swig.loaders.fs</var> or <var>swig.loaders.memory</var> template loader. Or, you can write your own!</p><p>For more information, please see the <a href="../loaders/">Template Loaders documentation</a>.</p>
+
+
+
+    
+
+    
+    <h3>Examples</h3>
+    
+    <pre><code data-language="js">// Default, FileSystem loader
+swig.setDefaults({ loader: swig.loaders.fs() });</code></pre>
+    
+    <pre><code data-language="js">// FileSystem loader allowing a base path
+// With this, you don&#39;t use relative URLs in your template references
+swig.setDefaults({ loader: swig.loaders.fs(__dirname + &#39;/templates&#39;) });</code></pre>
+    
+    <pre><code data-language="js">// Memory Loader
+swig.setDefaults({ loader: swig.loaders.memory({
+  layout: &#39;{% block foo %}{% endblock %}&#39;,
+  page1: &#39;{% extends &quot;layout&quot; %}{% block foo %}Tacos!{% endblock %}&#39;
+})});</code></pre>
+    
+    
+  </section>
+
+
 
 
 
@@ -445,7 +488,7 @@ swig.setDefaults({
   <section id="version" class="doc">
     <h2>swig.version</h2>
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L16">lib/swig.js#L16</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L15">lib/swig.js#L15</a></p>
 
 
     
@@ -457,7 +500,7 @@ swig.setDefaults({
     
     <h3>Examples</h3>
     
-    <pre><code data-language="js">if (swig.version === &quot;1.2.2&quot;) { ... }</code></pre>
+    <pre><code data-language="js">if (swig.version === &quot;1.3.0&quot;) { ... }</code></pre>
     
     
   </section>
@@ -715,6 +758,12 @@ swig.setDefaults({
 
 
 
+
+
+
+
+  
+
   
 
   
@@ -764,7 +813,7 @@ swig.setDefaults({
     </h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L116">lib/swig.js#L116</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L143">lib/swig.js#L143</a></p>
 
 
     
@@ -836,7 +885,7 @@ swig.setDefaults({
     </h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L132">lib/swig.js#L132</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L159">lib/swig.js#L159</a></p>
 
 
     
@@ -893,7 +942,7 @@ swig.setDefaults({
     </h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L150">lib/swig.js#L150</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L177">lib/swig.js#L177</a></p>
 
 
     
@@ -977,7 +1026,7 @@ swig.render(&#39;Tacos are &lt;%= tacos =&gt;!&#39;, { locals: { tacos: &#39;del
     </h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L219">lib/swig.js#L219</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L246">lib/swig.js#L246</a></p>
 
 
     
@@ -1016,7 +1065,7 @@ swig.render(&#39;Tacos are &lt;%= tacos =&gt;!&#39;, { locals: { tacos: &#39;del
     </h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L238">lib/swig.js#L238</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L265">lib/swig.js#L265</a></p>
 
 
     
@@ -1093,7 +1142,7 @@ swig.setFilter(&#39;replaceMs&#39;, replaceMs);
     </h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L263">lib/swig.js#L263</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L290">lib/swig.js#L290</a></p>
 
 
     
@@ -1199,7 +1248,7 @@ swig.setTag(&#39;tacos&#39;, tacotag.parse, tacotag.compile, tacotag.ends, tacot
     </h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L294">lib/swig.js#L294</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L321">lib/swig.js#L321</a></p>
 
 
     
@@ -1342,7 +1391,7 @@ swig.setTag(&#39;trans&#39;, parseTrans, compileTrans, true);</code></pre>
     </h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L454">lib/swig.js#L454</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L478">lib/swig.js#L478</a></p>
 
 
     
@@ -1436,7 +1485,7 @@ In order to render a pre-compiled template, you must have access to filters and 
     </h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L488">lib/swig.js#L488</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L512">lib/swig.js#L512</a></p>
 
 
     
@@ -1507,7 +1556,7 @@ In order to render a pre-compiled template, you must have access to filters and 
     </h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L512">lib/swig.js#L512</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L536">lib/swig.js#L536</a></p>
 
 
     
@@ -1592,7 +1641,7 @@ In order to render a pre-compiled template, you must have access to filters and 
     </h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L547">lib/swig.js#L547</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L571">lib/swig.js#L571</a></p>
 
 
     
@@ -1700,7 +1749,7 @@ When compiling a source string, a file path should be specified in the options o
     </h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L608">lib/swig.js#L608</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L632">lib/swig.js#L632</a></p>
 
 
     
@@ -1809,7 +1858,7 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
     </h2>
 
     
-<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.2.2/lib/swig.js#L674">lib/swig.js#L674</a></p>
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/swig.js#L694">lib/swig.js#L694</a></p>
 
 
     
@@ -1851,7 +1900,7 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
         <tr>
           <td><var data-language="js">filepath</var></td>
           <td><code data-language="js">string</code></td>
-          <td></td>
+          <td>✔</td>
           <td><code data-language="js">undefined</code></td>
           <td>Filename used for caching the template.</td>
         </tr>
@@ -1912,6 +1961,8 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
 
   
 
+  
+
 
 
   </div>
@@ -1937,6 +1988,8 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
 
 
 
+  <li><a href="#TemplateLoader">Object: TemplateLoader</a></li>
+
 
 
 
@@ -1952,6 +2005,8 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
 
 
   <li><a href="#version">swig.version</a></li>
+
+
 
 
 
@@ -2230,6 +2285,8 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
 
 
 
+
+
 </ol>
 
     </li>
@@ -2239,6 +2296,10 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
     </li>
     <li>
       <a href="/swig/docs/tags/">Tags</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/loaders/">Template Loaders</a>
       
     </li>
     <li>
@@ -2262,7 +2323,7 @@ tpl({ tacos: &#39;Tacos!!!!&#39; });
 
 <footer class="content">
   <hr class="small">
-  <p>Swig is copyright &copy;2013 <a href="http://paularmstrongdesigns.com">Paul Armstrong</a>, licensed for use under the permissive MIT Open Source License.</p>
+  <p>Swig is copyright &copy;2014 <a href="http://paularmstrongdesigns.com">Paul Armstrong</a>, licensed for use under the permissive MIT Open Source License.</p>
   <a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
 </footer>
 

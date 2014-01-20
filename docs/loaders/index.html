@@ -1,0 +1,375 @@
+
+  
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <!--[if IE]>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <![endif]-->
+  <title>Swig » Documentation &raquo; Template Loaders</title>
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="/swig/css/swig.css">
+
+
+
+</head>
+<body class="">
+
+  
+
+
+<header class="header">
+  <div class="content row">
+    <hgroup class="span7">
+      <h1><a href="/swig/">Swig</a></h1>
+      <h2>A Node.js and Browser-based JavaScript Template Engine</h2>
+    </hgroup>
+    
+    <nav class="span5">
+      <ul class="mainNav">
+        <li><a href="/swig/docs/">Documentation</a></li>
+        <li><a href="https://github.com/paularmstrong/swig/">Code</a></li>
+      </ul>
+    </nav>
+  
+  </div>
+</header>
+
+
+
+<div class="content row guttered">
+  <div class="span9">
+  
+<h1>Template Loaders</h1>
+
+  
+
+  <section id="builtin" class="doc">
+    <h2>Built-In Loaders</h2>
+    
+    
+      <section id="">
+        <h3>swig.loaders.fs(basepath, encoding)</h3>
+
+        
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/loaders/filesystem.js">lib/loaders/filesystem.js</a></p>
+
+
+        
+
+  <p>Loads templates from the file system.</p>
+
+
+
+        <h4>Arguments</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Optional</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+          
+          <tr>
+            <td><var data-language="js">basepath</var></td>
+            <td><code data-language="js">string</code></td>
+            <td>✔</td>
+            <td><samp data-language="js">&#39;&#39;</samp></td>
+            <td>
+
+  <p>Path to the templates as string. Assigning this value allows you to use semi-absolute paths to templates instead of relative paths.</p>
+
+</td>
+          </tr>
+          
+          <tr>
+            <td><var data-language="js">encoding</var></td>
+            <td><code data-language="js">string</code></td>
+            <td>✔</td>
+            <td><samp data-language="js">&#39;utf8&#39;</samp></td>
+            <td>
+
+  <p>Template encoding</p>
+
+</td>
+          </tr>
+          
+          </tbody>
+        </table>
+
+        
+        <pre><code data-language="js">swig.setDefaults({ loader: swig.loaders.fs() });</code></pre>
+        
+        <pre><code data-language="js">// Load Templates from a specific directory (does not require using relative paths in your templates)
+swig.setDefaults({ loader: swig.loaders.fs(__dirname + &#39;/templates&#39; )});</code></pre>
+        
+
+      </section>
+    
+      <section id="">
+        <h3>swig.loaders.memory(mapping, basepath)</h3>
+
+        
+<p class="source">Source: <a href="https://github.com/paularmstrong/swig/blob/v1.3.0/lib/loaders/memory.js">lib/loaders/memory.js</a></p>
+
+
+        
+
+  <p>Loads templates from a provided object mapping.</p>
+
+
+
+        <h4>Arguments</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Optional</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+          
+          <tr>
+            <td><var data-language="js">mapping</var></td>
+            <td><code data-language="js">object</code></td>
+            <td></td>
+            <td><samp data-language="js"></samp></td>
+            <td>
+
+  <p>Hash object with template paths as keys and template sources as values.</p>
+
+</td>
+          </tr>
+          
+          <tr>
+            <td><var data-language="js">basepath</var></td>
+            <td><code data-language="js">string</code></td>
+            <td>✔</td>
+            <td><samp data-language="js"></samp></td>
+            <td>
+
+  <p>Path to the templates as string. Assigning this value allows you to use semi-absolute paths to templates instead of relative paths.</p>
+
+</td>
+          </tr>
+          
+          </tbody>
+        </table>
+
+        
+        <pre><code data-language="js">var templates = {
+  &quot;layout&quot;: &quot;{% block content %}{% endblock %}&quot;,
+  &quot;home.html&quot;: &quot;{% extends &#39;layout.html&#39; %}{% block content %}...{% endblock %}&quot;
+};
+swig.setDefaults({ loader: swig.loaders.memory(templates) });</code></pre>
+        
+
+      </section>
+    
+  </section>
+
+  <section id="custom" class="doc">
+    
+    <h2>Custom Loaders</h2>
+
+    
+
+  <p>Swig is able to accept custom template loaders written by you, so that your templates can come from your favorite storage medium without needing to be part of the core library.</p><p>A template loader consists of two methods: <var>resolve</var> and <var>load</var>. Each method is used internally by Swig to find and load the source of the template before attempting to parse and compile it.</p>
+
+
+
+    
+    <section id="resolve">
+      <h3>resolve(to, from)</h3>
+      
+
+  <p>Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.</p>
+
+
+
+        <h4>Arguments</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+          
+          <tr>
+            <td><var data-language="js">to</var></td>
+            <td><code data-language="js">string</code></td>
+            <td>
+
+  <p>Non-absolute identifier or pathname to a file.</p>
+
+</td>
+          </tr>
+          
+          <tr>
+            <td><var data-language="js">from</var></td>
+            <td><code data-language="js">string</code></td>
+            <td>
+
+  <p>If given, should attempt to find the <var>to</var> path in relation to this given, known path.</p>
+
+</td>
+          </tr>
+          
+          </tbody>
+        </table>
+    </section>
+    
+    <section id="load">
+      <h3>load(identifier, cb)</h3>
+      
+
+  <p>Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.</p>
+
+
+
+        <h4>Arguments</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+          
+          <tr>
+            <td><var data-language="js">identifier</var></td>
+            <td><code data-language="js">string</code></td>
+            <td>
+
+  <p>Unique identifier of a template (possibly an absolute path).</p>
+
+</td>
+          </tr>
+          
+          <tr>
+            <td><var data-language="js">cb</var></td>
+            <td><code data-language="js">function</code></td>
+            <td>
+
+  <p>Asynchronous callback function. If not provided, this method should run synchronously.</p>
+
+</td>
+          </tr>
+          
+          </tbody>
+        </table>
+    </section>
+    
+
+    <h4>Examples</h4>
+    
+      <pre><code data-language="js">// A theoretical memcached loader
+var path = require(&#39;path&#39;),
+  Memcached = require(&#39;memcached&#39;);
+function memcachedLoader(locations, options) {
+  var memcached = new Memcached(locations, options);
+  return {
+    resolve: function (to, from) {
+      return path.resolve(from, to);
+    },
+    load: function (identifier, cb) {
+      memcached.get(identifier, function (err, data) {
+        // if (!data) { load from filesystem; }
+        cb(err, data);
+      });
+    }
+  };
+};
+// Tell swig about the loader:
+swig.setDefaults({ loader: memcachedLoader([&#39;192.168.0.2&#39;]) });</code></pre>
+    
+
+  </section>
+
+  </div>
+
+  <div class="span3">
+<nav>
+  <ol class="sidenav">
+    <li>
+      <a href="/swig/docs/">Getting Started</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/api/">Swig API</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/filters/">Filters</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/tags/">Tags</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/loaders/">Template Loaders</a>
+      
+<ol>
+  <li><a href="#builtin">Built-Ins</a></li>
+  <li>
+    <a href="#custom">Custom Loaders</a>
+    <ol>
+      <li><a href="#resolve">resolve</a></li>
+      <li><a href="#load">load</a></li>
+    </ol>
+  </li>
+</ol>
+
+    </li>
+    <li>
+      <a href="/swig/docs/cli/">Command-Line</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/browser/">Browser Usage</a>
+      
+    </li>
+    <li>
+      <a href="/swig/docs/extending/">Extending Swig</a>
+      
+    </li>
+    <li><a href="/swig/docs/previous/">Older Versions</a></li>
+  </ol>
+</nav>
+</div>
+</div>
+
+
+<footer class="content">
+  <hr class="small">
+  <p>Swig is copyright &copy;2014 <a href="http://paularmstrongdesigns.com">Paul Armstrong</a>, licensed for use under the permissive MIT Open Source License.</p>
+  <a class="forkme" href="https://github.com/paularmstrong/swig">Fork me on GitHub</a>
+</footer>
+
+
+  
+<script src="/swig/js/lib/rainbow.min.js"></script>
+<script src="/swig/js/master.js"></script>
+
+</body>
+</html>
