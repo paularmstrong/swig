@@ -244,3 +244,23 @@ describe('swig.renderFile', function () {
     });
   });
 });
+
+describe('swig.run', function () {
+  var tpl = swig.precompile('Hello {{ foobar }}').tpl;
+  it('runs compiled templates', function () {
+    expect(swig.run(tpl)).to.equal('Hello ');
+    expect(swig.run(tpl, { foobar: 'Tacos'})).to.equal('Hello Tacos');
+  });
+
+  it('does not cache if no filename given', function () {
+    var nSwig = new Swig();
+    nSwig.run(tpl, { foobar: 'Tacos'});
+    expect(Object.keys(nSwig.cache).length).to.equal(0);
+  });
+
+  it('caches if given a filename', function () {
+    var nSwig = new Swig();
+    nSwig.run(tpl, { foobar: 'Tacos'}, 'foo');
+    expect(Object.keys(nSwig.cache).length).to.equal(1);
+  });
+});
