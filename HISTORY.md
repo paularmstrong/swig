@@ -1,3 +1,18 @@
+[1.3.0](https://github.com/paularmstrong/swig/tree/v1.3.0) / 2014-01-20
+-----------------------------------------------------------------------
+
+* **Changed** Removed official node v0.8.x support
+* **Added** Custom template loader support. gh-377, gh-384, gh-382
+* **Added** Ability to set root path using template loaders. gh-382, gh-293
+* **Added** CLI now accepts custom filter and tag arguments. gh-391
+* **Added** Allow `set` tag to set keys on objects with bracket and dot-notation. gh-388
+* **Added** `groupBy` filter from swig-extras. gh-383
+* **Fixed** `swig.run` `filepath` arg is always optional. gh-402
+* **Fixed** Filters on non-empty functions apply correctly. gh-397
+* **Fixed** Filters applied to functions w/ & w/o dotkeys. gh-365
+* **Fixed** `date` filter `N` option returns correct number. gh-375
+* **Fixed** Ensure getting parent template checks cache if on. gh-378
+
 [1.2.2](https://github.com/paularmstrong/swig/tree/v1.2.2) / 2013-12-02
 -----------------------------------------------------------------------
 
