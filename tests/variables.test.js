@@ -24,6 +24,10 @@ var cases = {
   'return empty string if undefined': [
     { c: '"{{ u }}"', e: '""' }
   ],
+  'return empty string if null': [
+    { c: '"{{ n }}"', e: '""' },
+    { c: '"{{ o3.n }}"', e: '""' }
+  ],
   'can use operators': [
     { c: '{{ a + 3 }}', e: '4' },
     { c: '{{ a * 3 }}', e: '3' },
@@ -88,8 +92,10 @@ describe('Variables', function () {
     g: { '0': { q: { c: { b: { foo: 'hi!' }}}}},
     h: { g: {  i: 'q' } },
     i: 'foo',
+    n: null,
     o: Object.create({ foo: function () { return 'bar'; } }),
-    o2: { a: 'bar', foo: function (b) { return b || this.a; } }
+    o2: { a: 'bar', foo: function (b) { return b || this.a; } },
+    o3: { n: null }
   }};
   _.each(cases, function (cases, description) {
     describe(description, function () {
