@@ -1,4 +1,4 @@
-/*! Swig v1.3.0 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.3.1 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -330,7 +330,7 @@ exports.date = function (input, format, offset, abbr) {
  * @param  {*}  def     Value to return if `input` is `undefined`, `null`, or `false`.
  * @return {*}          `input` or `def` value.
  */
-exports.default = function (input, def) {
+exports["default"] = function (input, def) {
   return (typeof input !== 'undefined' && (input || typeof input === 'number')) ? input : def;
 };
 
@@ -2085,11 +2085,11 @@ exports.compile = function (template, parents, options, blockName) {
 /**
  * Swig version number as a string.
  * @example
- * if (swig.version === "1.3.0") { ... }
+ * if (swig.version === "1.3.1") { ... }
  *
  * @type {String}
  */
-exports.version = "1.3.0";
+exports.version = "1.3.1";
 
 /**
  * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
@@ -3069,10 +3069,10 @@ exports.compile = function (compiler, args, content, parents, options, blockName
 
   return [
     '(function () {\n',
-    '  var __l = ' + last + ';\n',
+    '  var __l = ' + last + ', __len = (_utils.isArray(__l)) ? __l.length : _utils.keys(__l).length;\n',
     '  if (!__l) { return; }\n',
     '  ' + ctxloopcache + ' = { loop: ' + ctxloop + ', ' + val + ': ' + ctx + val + ', ' + key + ': ' + ctx + key + ' };\n',
-    '  ' + ctxloop + ' = { first: false, index: 1, index0: 0, revindex: __l.length, revindex0: __l.length - 1, length: __l.length, last: false };\n',
+    '  ' + ctxloop + ' = { first: false, index: 1, index0: 0, revindex: __len, revindex0: __len - 1, length: __len, last: false };\n',
     '  _utils.each(__l, function (' + val + ', ' + key + ') {\n',
     '    ' + ctx + val + ' = ' + val + ';\n',
     '    ' + ctx + key + ' = ' + key + ';\n',
@@ -3352,7 +3352,7 @@ exports.compile = function (compiler, args) {
   var file = args.shift(),
     onlyIdx = args.indexOf(only),
     onlyCtx = onlyIdx !== -1 ? args.splice(onlyIdx, 1) : false,
-    parentFile = args.pop().replace(/\\/g, '\\\\'),
+    parentFile = (args.pop() || '').replace(/\\/g, '\\\\'),
     ignore = args[args.length - 1] === missing ? (args.pop()) : false,
     w = args.join('');
 
@@ -3422,14 +3422,14 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 },{}],20:[function(require,module,exports){
 exports.autoescape = require('./autoescape');
 exports.block = require('./block');
-exports.else = require('./else');
+exports["else"] = require('./else');
 exports.elseif = require('./elseif');
 exports.elif = exports.elseif;
-exports.extends = require('./extends');
+exports["extends"] = require('./extends');
 exports.filter = require('./filter');
-exports.for = require('./for');
-exports.if = require('./if');
-exports.import = require('./import');
+exports["for"] = require('./for');
+exports["if"] = require('./if');
+exports["import"] = require('./import');
 exports.include = require('./include');
 exports.macro = require('./macro');
 exports.parent = require('./parent');
@@ -3902,6 +3902,10 @@ exports.extend = function () {
  * @return {array}
  */
 exports.keys = function (obj) {
+  if (!obj) {
+    return [];
+  }
+
   if (Object.keys) {
     return Object.keys(obj);
   }
