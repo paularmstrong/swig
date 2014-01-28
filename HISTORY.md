@@ -1,3 +1,10 @@
+[1.3.1](https://github.com/paularmstrong/swig/tree/v1.3.1) / 2014-01-27
+-----------------------------------------------------------------------
+
+* **Fixed** `for` loop variables on objects. gh-409
+* **Fixed** Misc. IE8 fixes. gh-410
+* **Fixed** `include` files when loaders have base paths. gh-407
+
 [1.3.0](https://github.com/paularmstrong/swig/tree/v1.3.0) / 2014-01-20
 -----------------------------------------------------------------------
 
