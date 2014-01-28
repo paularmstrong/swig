@@ -2,6 +2,11 @@ var swig = require('../../lib/swig'),
   expect = require('expect.js');
 
 describe('Tag: include', function () {
+  it('Works with non-relative loader setups', function () {
+    var s = new swig.Swig({ loader: swig.loaders.memory({ '/foo/foobar': 'tacos!' }, '/foo')});
+    expect(s.render('{% include "foobar" %}')).to.equal('tacos!');
+  });
+
   describe('{% include "foo" ignore missing %}', function () {
     it('does not throw if missing', function () {
       expect(swig.render('{% include "foo" ignore missing %}', { filename: '/foo' }))
