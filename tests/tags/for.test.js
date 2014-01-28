@@ -24,8 +24,6 @@ var cases = [
   { input: '{% for a in c %}{{ loop.last }}, {% endfor %}', out: 'false, true, ' },
   { input: '{% for a,b in b %}{{ a }}{{ b }}{% endfor %}', out: '011223' },
   { input: '{% for a, b in c %}{{ b }}{% endfor %}', out: 'applebanana' },
-  { input: '{% for a in c %}{{ loop.index }}{% endfor %}', out: '12' },
-  { input: '{% for a in c %}{{ loop.index }}{% endfor %}', out: '12' },
   { input: '{% for a in d|default(["a"]) %}{{ a }}{% endfor %}', out: 'a' },
 ];
 
