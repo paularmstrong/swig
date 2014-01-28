@@ -155,7 +155,8 @@ docs/docs/extending.json: FORCE
 	docs/docs/api.json \
 	docs/docs/filters.json \
 	docs/docs/tags.json \
-	docs/docs/extending.json
+	docs/docs/extending.json \
+	docs/docs/loaders.json
 
 build-docs: FORCE
 	@echo "Documentation built."
