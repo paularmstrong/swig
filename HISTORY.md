@@ -1,4 +1,4 @@
-[1.3.1](https://github.com/paularmstrong/swig/tree/v1.3.1) / 2014-01-27
+[1.3.2](https://github.com/paularmstrong/swig/tree/v1.3.2) / 2014-01-27
 -----------------------------------------------------------------------
 
 * **Fixed** `for` loop variables on objects. gh-409
