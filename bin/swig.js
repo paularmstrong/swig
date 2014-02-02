@@ -24,6 +24,7 @@ var command,
       m: 'Minify compiled functions with uglify-js',
       'filters': 'Custom filters as a CommonJS-style file',
       'tags': 'Custom tags as a CommonJS-style file',
+      'conf': 'Pre configured swig module. Used only CommonJS-style file.',
       'wrap-start': 'Template wrapper beginning for "compile".',
       'wrap-end': 'Template wrapper end for "compile".',
       'method-name': 'Method name to set template to and run from.'
@@ -114,6 +115,27 @@ if (argv.tags) {
   utils.each(require(path.resolve(argv.tags)), function (tag, name) {
     swig.setTag(name, tag.parse, tag.compile, tag.ends, tag.block);
   });
+}
+
+if (argv.conf) {
+  if (path.extname(argv.conf) === '.js') {
+    var conf = require(argv.conf);
+    if (conf.hasOwnProperty('defaults')) {
+      swig.setDefaults(conf.defaults);
+    }
+    if (conf.hasOwnProperty('filters')) {
+      utils.each(conf.filters, function (filter, name) {
+        swig.setFilter(name, filter);
+      });
+    }
+    if (conf.hasOwnProperty('tags')) {
+      utils.each(conf.tags, function (tag, name) {
+        swig.setTag(name, tag.parse, tag.compile, !!tag.ends, !!tag.block);
+      });
+    }
+  } else {
+    throw new Error('Invalid configure file.');
+  }
 }
 
 switch (command) {

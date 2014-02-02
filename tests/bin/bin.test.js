@@ -7,6 +7,14 @@ var fs = require('fs'),
   bin = __dirname + '/../../bin/swig.js',
   casedir = __dirname + '/../cases/';
 
+var n = new swig.Swig(),
+  oDefaults = n.options;
+
+function resetOptions() {
+  swig.setDefaults(oDefaults);
+  swig.invalidateCache();
+}
+
 function fixPath(p) {
   p = path.normalize(p);
   return (/[A-Z]\:\\/).test(p) ? '"' + p + '"' : p;
@@ -129,6 +137,41 @@ describe('bin/swig compile & run with custom extensions', function () {
       exec('node ' + bin + ' compile ' + p + ' --tags ' + tags + ' -o ' + tmp, function (err, stdout, stderr) {
         exec('node ' + bin + ' run ' + p, function (err, stdout, stdrr) {
           expect(stdout.replace(/\n$/, '')).to.equal('flour tortilla!');
+          done();
+        });
+      });
+    });
+  });
+});
+
+describe('bin/swig configure module', function () {
+  var tmp = fixPath(__dirname + '/../tmp');
+
+  beforeEach(resetOptions);
+  afterEach(resetOptions);
+
+  it('change varControls', function (done) {
+    var conf = fixPath(__dirname + '/bin.swig-conf.js'),
+      template = 'hello <= "world" =>',
+      p = tmp + '/conf.test.html';
+    fs.writeFile(p, template, function () {
+      exec('node ' + bin + ' compile ' + p + ' --conf ' + conf + ' -o ' + tmp, function (err, stdout, stderr) {
+        exec('node ' + bin + ' run ' + p + ' --conf ' + conf, function (err, stdout, stdrr) {
+          expect(stdout.replace(/\n$/, '')).to.equal('hello world');
+          done();
+        });
+      });
+    });
+  });
+
+  it('change tagControls', function (done) {
+    var conf = fixPath(__dirname + '/bin.swig-conf.js'),
+      template = 'hello <% if true %>world<% endif %>',
+      p = tmp + '/conf.test.html';
+    fs.writeFile(p, template, function () {
+      exec('node ' + bin + ' compile ' + p + ' --conf ' + conf + ' -o ' + tmp, function (err, stdout, stderr) {
+        exec('node ' + bin + ' run ' + p + ' --conf ' + conf, function (err, stdout, stdrr) {
+          expect(stdout.replace(/\n$/, '')).to.equal('hello world');
           done();
         });
       });
