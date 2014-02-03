@@ -1,5 +1,3 @@
-module.exports = {
-  varControls: ['<=', '=>'],
-  tagControls: ['<%', '%>'],
-  cmtControls: ['<#', '#>']
-};
+exports.varControls = ['<=', '=>'];
+exports.tagControls = ['<%', '%>'];
+exports.cmtControls = ['<#', '#>'];
