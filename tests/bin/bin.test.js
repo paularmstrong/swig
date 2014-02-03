@@ -144,19 +144,20 @@ describe('bin/swig compile & run with custom extensions', function () {
   });
 });
 
-describe('bin/swig configure module', function () {
-  var tmp = fixPath(__dirname + '/../tmp');
+describe('bin/swig custom options', function () {
+  var tmp = fixPath(__dirname + '/../tmp'),
+    options = fixPath(__dirname + '/options.js'),
+    templateFile = tmp + '/options.test.html';
 
   beforeEach(resetOptions);
   afterEach(resetOptions);
 
   it('change varControls', function (done) {
-    var conf = fixPath(__dirname + '/bin.swig-conf.js'),
-      template = 'hello <= "world" =>',
-      p = tmp + '/conf.test.html';
-    fs.writeFile(p, template, function () {
-      exec('node ' + bin + ' compile ' + p + ' --conf ' + conf + ' -o ' + tmp, function (err, stdout, stderr) {
-        exec('node ' + bin + ' run ' + p + ' --conf ' + conf, function (err, stdout, stdrr) {
+    var template = 'hello <= "world" =>';
+
+    fs.writeFile(templateFile, template, function () {
+      exec('node ' + bin + ' compile ' + templateFile + ' --options ' + options + ' -o ' + tmp, function (err, stdout, stderr) {
+        exec('node ' + bin + ' run ' + templateFile + ' --options ' + options, function (err, stdout, stdrr) {
           expect(stdout.replace(/\n$/, '')).to.equal('hello world');
           done();
         });
@@ -165,12 +166,11 @@ describe('bin/swig configure module', function () {
   });
 
   it('change tagControls', function (done) {
-    var conf = fixPath(__dirname + '/bin.swig-conf.js'),
-      template = 'hello <% if true %>world<% endif %>',
-      p = tmp + '/conf.test.html';
-    fs.writeFile(p, template, function () {
-      exec('node ' + bin + ' compile ' + p + ' --conf ' + conf + ' -o ' + tmp, function (err, stdout, stderr) {
-        exec('node ' + bin + ' run ' + p + ' --conf ' + conf, function (err, stdout, stdrr) {
+    var template = 'hello <% if true %>world<% endif %>';
+
+    fs.writeFile(templateFile, template, function () {
+      exec('node ' + bin + ' compile ' + templateFile + ' --options ' + options + ' -o ' + tmp, function (err, stdout, stderr) {
+        exec('node ' + bin + ' run ' + templateFile + ' --options ' + options, function (err, stdout, stdrr) {
           expect(stdout.replace(/\n$/, '')).to.equal('hello world');
           done();
         });
