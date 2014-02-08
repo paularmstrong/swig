@@ -98,7 +98,7 @@ if (argv.o !== 'stdout') {
 
   out = function (file, str) {
     file = path.basename(file);
-    fs.writeFileSync(argv.o + file, str);
+    fs.writeFileSync(argv.o + file, str, { flags: 'w' });
     console.log('Wrote', argv.o + file);
   };
 }

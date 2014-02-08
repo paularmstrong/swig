@@ -5,10 +5,12 @@ var fs = require('fs'),
   path = require('path'),
   swig = require('../../lib/swig'),
   bin = __dirname + '/../../bin/swig.js',
-  casedir = __dirname + '/../cases/';
+  casedir = __dirname + '/../cases/',
+  bindir = __dirname + '/../bin/';
 
 var n = new swig.Swig(),
-  oDefaults = n.options;
+  oDefaults = n.options,
+  tmp;
 
 function resetOptions() {
   swig.setDefaults(oDefaults);
@@ -21,6 +23,7 @@ function fixPath(p) {
 }
 
 bin = fixPath(bin);
+tmp = fixPath(__dirname + '/../tmp');
 
 function isTest(f) {
   return (/\.test\.html$/).test(f);
@@ -48,7 +51,7 @@ describe('bin/swig -v', function () {
 });
 
 describe('bin/swig render', function () {
-  var locals = fixPath(__dirname + '/bin.locals.json'),
+  var locals = fixPath(bindir + '/bin.locals.json'),
     key = keys[_.random(keys.length - 1)],
     testcase = cases[key],
     test = fixPath(casedir + _.find(testcase, isTest)),
@@ -63,7 +66,7 @@ describe('bin/swig render', function () {
 });
 
 describe('bin/swig compile + run', function () {
-  var locals = fixPath(__dirname + '/bin.locals.json'),
+  var locals = fixPath(bindir + '/bin.locals.json'),
     key = keys[_.random(keys.length - 1)],
     testcase = cases[key],
     test = _.find(testcase, isTest),
@@ -71,10 +74,9 @@ describe('bin/swig compile + run', function () {
     expectation = fs.readFileSync(path.normalize(casedir + _.find(testcase, isExpectation)), 'utf8');
 
   it(key, function (done) {
-    var tmp = fixPath(__dirname + '/../tmp');
     exec('node ' + bin + ' compile ' + p + ' -j ' + locals + ' -o ' + tmp, function (err, stdout, stderr) {
       var p = fixPath(__dirname + '/../tmp/' + test),
-        locals = fixPath(__dirname + '/bin.locals.js');
+        locals = fixPath(bindir + '/bin.locals.js');
       exec('node ' + bin + ' run ' + p + ' -c ' + locals, function (err, stdout, stdrr) {
         expect(stdout.replace(/\n$/, '')).to.equal(expectation);
         done();
@@ -96,85 +98,62 @@ describe('bin/swig compile -m', function () {
 describe('bin/swig compile & run from swig', function () {
   it('can be run', function (done) {
     var expectation = fs.readFileSync(casedir + '/extends_1.expectation.html', 'utf8'),
-      p = fixPath(casedir + '/extends_1.test.html'),
-      tmp = fixPath(__dirname + '/../tmp');
-    exec('node ' + bin + ' compile ' + p + ' -o ' + tmp + ' --wrap-start="var foo = "', function (err, stdout, stderr) {
-      fs.readFile(path.normalize(__dirname + '/../tmp/extends_1.test.html'), 'utf8', function (err, stdout, stderr) {
-        var foo;
-        eval(stdout);
-        expect(swig.run(foo)).to.equal(expectation);
-        done();
-      });
+      p = fixPath(casedir + '/extends_1.test.html');
+    exec('node ' + bin + ' compile ' + p + ' --wrap-start="var foo = "', function (err, stdout, stderr) {
+      var foo;
+      eval(stdout);
+      expect(swig.run(foo)).to.equal(expectation);
+      done();
     });
   });
 });
 
-describe('bin/swig compile & run with custom extensions', function () {
-  var tmp = fixPath(__dirname + '/../tmp');
+describe('bin/swig render with custom extensions', function () {
+  var locals = fixPath(bindir + '/bin.locals.json');
 
   it('works with custom filters', function (done) {
-    var filters = fixPath(__dirname + '/bin.filters.js'),
-      template = 'I want {{ alpha|benice }}',
-      p = tmp + '/filter.test.html';
+    var filters = fixPath(bindir + '/bin.filters.js'),
+      p = fixPath(bindir + '/custom_filter.bin.html');
 
-    fs.writeFile(p, template, function () {
-      exec('node ' + bin + ' compile ' + p + ' --filters ' + filters + ' -o ' + tmp, function (err, stdout, stderr) {
-        var locals = fixPath(__dirname + '/bin.locals.json');
-        exec('node ' + bin + ' run ' + p + ' -j ' + locals + ' --filters ' + filters, function (err, stdout, stdrr) {
-          expect(stdout.replace(/\n$/, '')).to.equal('I want Nachos please!');
-          done();
-        });
-      });
+    exec('node ' + bin + ' render ' + p + ' --filters ' + filters + ' -j ' + locals, function (err, stdout, stderr) {
+      expect(stdout).to.equal('I want Nachos please!\n\n');
+      done();
     });
   });
 
   it('works with custom tags', function (done) {
-    var tags = fixPath(__dirname + '/bin.tags.js'),
-      template = '{% tortilla %}flour{% endtortilla %}',
-      p = tmp + '/tag.test.html';
+    var tags = fixPath(bindir + '/bin.tags.js'),
+      p = fixPath(bindir + '/custom_tag.bin.html');
 
-    fs.writeFile(p, template, function () {
-      exec('node ' + bin + ' compile ' + p + ' --tags ' + tags + ' -o ' + tmp, function (err, stdout, stderr) {
-        exec('node ' + bin + ' run ' + p, function (err, stdout, stdrr) {
-          expect(stdout.replace(/\n$/, '')).to.equal('flour tortilla!');
-          done();
-        });
-      });
+    exec('node ' + bin + ' render ' + p + ' --tags ' + tags + ' -j ' + locals, function (err, stdout, stderr) {
+      expect(stdout).to.equal('flour tortilla!\n\n');
+      done();
     });
   });
 });
 
 describe('bin/swig custom options', function () {
-  var tmp = fixPath(__dirname + '/../tmp'),
-    options = fixPath(__dirname + '/options.js'),
-    templateFile = tmp + '/options.test.html';
+  var options = fixPath(__dirname + '/options.js'),
+    locals = fixPath(bindir + '/bin.locals.json');
 
   beforeEach(resetOptions);
   afterEach(resetOptions);
 
   it('change varControls', function (done) {
-    var template = 'hello <= "world" =>';
+    var template = fixPath(bindir + '/custom_varControls.bin.html');
 
-    fs.writeFile(templateFile, template, function () {
-      exec('node ' + bin + ' compile ' + templateFile + ' --options ' + options + ' -o ' + tmp, function (err, stdout, stderr) {
-        exec('node ' + bin + ' run ' + templateFile + ' --options ' + options, function (err, stdout, stdrr) {
-          expect(stdout.replace(/\n$/, '')).to.equal('hello world');
-          done();
-        });
-      });
+    exec('node ' + bin + ' render ' + template + ' --options ' + options + ' -j ' + locals, function (err, stdout, stderr) {
+      expect(stdout).to.equal('hello world\n\n');
+      done();
     });
   });
 
   it('change tagControls', function (done) {
-    var template = 'hello <% if true %>world<% endif %>';
+    var template = fixPath(bindir + '/custom_tagControls.bin.html');
 
-    fs.writeFile(templateFile, template, function () {
-      exec('node ' + bin + ' compile ' + templateFile + ' --options ' + options + ' -o ' + tmp, function (err, stdout, stderr) {
-        exec('node ' + bin + ' run ' + templateFile + ' --options ' + options, function (err, stdout, stdrr) {
-          expect(stdout.replace(/\n$/, '')).to.equal('hello world');
-          done();
-        });
-      });
+    exec('node ' + bin + ' render ' + template + ' --options ' + options + ' -j ' + locals, function (err, stdout, stderr) {
+      expect(stdout).to.equal('hello world\n\n');
+      done();
     });
   });
 });

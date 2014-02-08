@@ -208,7 +208,7 @@ describe('swig.compileFile', function () {
   it('can use callback with errors', function (done) {
     var errorTest = __dirname + '/cases-error/extends-non-existent.test.html';
     expect(swig.compileFile(errorTest, {}, function (err) {
-      expect(err.errno).to.equal(34);
+      expect(err.code).to.equal('ENOENT');
       done();
     }));
   });
@@ -239,7 +239,7 @@ describe('swig.renderFile', function () {
 
   it('can use callbacks with errors', function (done) {
     swig.renderFile(__dirname + '/cases/not-existing', {}, function (err, out) {
-      expect(err.errno).to.equal(34);
+      expect(err.code).to.equal('ENOENT');
       done();
     });
   });
