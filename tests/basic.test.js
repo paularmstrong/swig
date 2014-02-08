@@ -243,6 +243,16 @@ describe('swig.renderFile', function () {
       done();
     });
   });
+
+  it('can use callback with errors occurred at the time of rendering', function (done) {
+    var errorTest = __dirname + '/cases-error/error-thrown-from-function.test.html',
+      throwError = function () { throw new Error('error occurred on rendring'); };
+
+    swig.renderFile(errorTest, { throwError: throwError }, function (err, out) {
+      expect(err.message).to.equal('error occurred on rendring');
+      done();
+    });
+  });
 });
 
 describe('swig.run', function () {
