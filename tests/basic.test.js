@@ -215,12 +215,23 @@ describe('swig.compileFile', function () {
 });
 
 describe('swig.renderFile', function () {
+  var test, expectation;
+
+  it('can use callback with errors occurred at the time of rendering', function (done) {
+    var s = new swig.Swig({ loader: swig.loaders.memory({ 'error.html': '{{ foo() }}' }) });
+
+    s.renderFile('error.html', { foo: function () { throw new Error('bunk'); } }, function (err, out) {
+      expect(err.message).to.equal('bunk');
+      done();
+    });
+  });
+
   // The following tests should *not* run in the browser
   if (!fs || !fs.readFileSync) {
     return;
   }
-  var test = __dirname + '/cases/extends_1.test.html',
-    expectation = fs.readFileSync(test.replace('test.html', 'expectation.html'), 'utf8');
+  test = __dirname + '/cases/extends_1.test.html';
+  expectation = fs.readFileSync(test.replace('test.html', 'expectation.html'), 'utf8');
 
   beforeEach(resetOptions);
   afterEach(resetOptions);
@@ -244,15 +255,6 @@ describe('swig.renderFile', function () {
     });
   });
 
-  it('can use callback with errors occurred at the time of rendering', function (done) {
-    var errorTest = __dirname + '/cases-error/error-thrown-from-function.test.html',
-      throwError = function () { throw new Error('error occurred on rendring'); };
-
-    swig.renderFile(errorTest, { throwError: throwError }, function (err, out) {
-      expect(err.message).to.equal('error occurred on rendring');
-      done();
-    });
-  });
 });
 
 describe('swig.run', function () {
