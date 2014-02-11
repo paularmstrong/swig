@@ -105,6 +105,13 @@ describe('swig.loaders', function () {
         done();
       });
     });
+
+    it('takes cwd as default base path', function () {
+      var filepath = path.relative(process.cwd(), __dirname + '/cases/macros.html'),
+        s = new swig.Swig();
+
+      expect(s.renderFile(filepath)).to.equal(macroExpectation);
+    });
   });
 
 });
