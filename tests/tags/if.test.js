@@ -12,6 +12,7 @@ var opts = {
 };
 
 var cases = [
+  { code: undefined,            result: false },
   { code: 'foo',                result: true },
   { code: 'true',               result: true },
   { code: 'false',              result: false },
