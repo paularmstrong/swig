@@ -25,7 +25,7 @@ var cases = [
   { input: '{% for a,b in b %}{{ a }}{{ b }}{% endfor %}', out: '011223' },
   { input: '{% for a, b in c %}{{ b }}{% endfor %}', out: 'applebanana' },
   { input: '{% for a in d|default(["a"]) %}{{ a }}{% endfor %}', out: 'a' },
-  { input: '{% for a in q %}hi{% endfor %}', out: '' },
+  { input: '{% for a in q %}hi{% endfor %}', out: '' }
 ];
 
 describe('Tag: for', function () {

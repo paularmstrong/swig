@@ -4,12 +4,12 @@ var options = {
   browser: false,
   cap: false,
   confusion: false,
-  continue: true,
+  'continue': true,
   css: false,
   debug: false,
   devel: false,
   eqeq: false,
-  es5: true,
+  es5: false,
   evil: true,
   forin: false,
   fragment: false,
@@ -24,7 +24,7 @@ var options = {
   plusplus: false,
   predef: [
     // Mocha
-    'describe', 'it', 'after', 'afterEach', 'before', 'beforeEach',
+    'describe', 'it', 'after', 'afterEach', 'before', 'beforeEach'
   ],
   regexp: true,
   rhino: false,

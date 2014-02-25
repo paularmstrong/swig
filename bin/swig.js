@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/*jslint es5: true */
 
 var swig = require('../index'),
   optimist = require('optimist'),

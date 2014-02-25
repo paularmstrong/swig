@@ -111,7 +111,7 @@ var n = new Swig(),
       { c: 'v|default("tacos")', v: '', e: 'tacos' },
       { c: 'v|default("tacos")', v: undefined, e: 'tacos' },
       { c: 'v|default("tacos")', v: null, e: 'tacos' },
-      { c: 'v|default("tacos")', v: false, e: 'tacos' },
+      { c: 'v|default("tacos")', v: false, e: 'tacos' }
     ],
     'escape': [
       { c: 'v|escape', v: '<foo>', e: '&lt;foo&gt;' },

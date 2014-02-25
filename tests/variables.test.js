@@ -29,7 +29,7 @@ var cases = {
     { c: '{{ a * 3 }}', e: '3' },
     { c: '{{ a / 3 }}', e: String(1 / 3) },
     { c: '{{ 3 - a }}', e: '2' },
-    { c: '{{ a % 3 }}', e: '1' },
+    { c: '{{ a % 3 }}', e: '1' }
   ],
   'can include objects': [
     { c: '{{ {0: 1, a: "b"} }}', e: '[object Object]' },
@@ -65,7 +65,7 @@ var cases = {
   'can use both notation types': [
     { c: '{{ food.a }}', e: 'tacos' },
     { c: '{{ food["a"] }}', e: 'tacos' },
-    { c: '{{ g[0][h.g.i]["c"].b[i] }}', e: 'hi!' },
+    { c: '{{ g[0][h.g.i]["c"].b[i] }}', e: 'hi!' }
   ],
   'can do some logical operations': [
     { c: '{{ ap === "apples" }}', e: 'true' },
