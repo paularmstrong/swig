@@ -103,7 +103,12 @@ var n = new Swig(),
       { c: 'v|date("S")', v: makeDate(420, 2011, 8, 13), e: 'th' },
       { c: 'v|date("S")', v: makeDate(420, 2011, 8, 21), e: 'st' },
       { c: 'v|date("S")', v: makeDate(420, 2011, 8, 22), e: 'nd' },
-      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 23), e: 'rd' }
+      { c: 'v|date("S")', v: makeDate(420, 2011, 8, 23), e: 'rd' },
+
+      // Week
+      { c: 'v|date("\\D")', v: d, e: 'D' },
+      { c: 'v|date("\\t\\e\\s\\t")', v: d, e: 'test' },
+      { c: 'v|date("\\\\D")', v: d, e: '\\Tue' }
     ],
     'default': [
       { c: 'v|default("tacos")', v: 'foo', e: 'foo' },
