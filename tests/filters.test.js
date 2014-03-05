@@ -105,7 +105,7 @@ var n = new Swig(),
       { c: 'v|date("S")', v: makeDate(420, 2011, 8, 22), e: 'nd' },
       { c: 'v|date("S")', v: makeDate(420, 2011, 8, 23), e: 'rd' },
 
-      // Week
+      // Escape character
       { c: 'v|date("\\D")', v: d, e: 'D' },
       { c: 'v|date("\\t\\e\\s\\t")', v: d, e: 'test' },
       { c: 'v|date("\\\\D")', v: d, e: '\\Tue' }
