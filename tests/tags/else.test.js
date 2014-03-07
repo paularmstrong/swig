@@ -49,7 +49,7 @@ describe('Tag: elseif, elif', function () {
 
   it('must be within an {% if %}', function () {
     expect(function () {
-      swig.render('{% elseif %}foo');
+      swig.render('{% elseif true %}foo');
     }).to.throwError(/Unexpected tag "elseif" on line 1\./);
   });
 });
