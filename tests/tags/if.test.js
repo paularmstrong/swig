@@ -12,7 +12,6 @@ var opts = {
 };
 
 var cases = [
-  { code: undefined,            result: false },
   { code: 'foo',                result: true },
   { code: 'true',               result: true },
   { code: 'false',              result: false },
@@ -50,6 +49,12 @@ describe('Tag: if', function () {
       expect(swig.render('{% if ' + c.code + '%}pass{% endif %}', opts))
         .to.equal(c.result ? 'pass' : '');
     });
+  });
+
+  it('requires a conditional', function () {
+    expect(function () {
+      swig.render('{% if %}tacos{% endif %}');
+    }).to.throwError(/No conditional statement provided on line 1\./);
   });
 
   it('throws on bad logic', function () {
