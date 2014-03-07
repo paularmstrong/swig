@@ -108,7 +108,8 @@ var n = new Swig(),
       // Escape character
       { c: 'v|date("\\D")', v: d, e: 'D' },
       { c: 'v|date("\\t\\e\\s\\t")', v: d, e: 'test' },
-      { c: 'v|date("\\\\D")', v: d, e: '\\Tue' }
+      { c: 'v|date("\\\\D")', v: d, e: '\\Tue' },
+      { c: 'v|date("jS \\o\\f F")', v: makeDate(420, 2012, 6, 4), e: '4th of July' }
     ],
     'default': [
       { c: 'v|default("tacos")', v: 'foo', e: 'foo' },
