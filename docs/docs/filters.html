@@ -20,9 +20,9 @@
 
 {% for fn in filters %}
   {% if fn.access !== "private" and fn.kind === 'function' and fn.undocumented !== true %}
-  <section id="{{ fn.name }}" class="doc">
+  <section id="{{ fn.name|replace('"', '', 'g') }}" class="doc">
     <h2>
-      {{ fn.name -}}
+      {{ fn.name|replace('"', '', 'g') -}}
       {%- for p in fn.params -%}
       {%- if loop.index === 2 %}({% endif -%}
       {%- if loop.index > 1 -%}
@@ -89,7 +89,7 @@
 {% for fn in filters %}
   {% if fn.access !== "private" and fn.kind === 'function' %}
   <li>
-    <a href="#{{ fn.name }}">{{ fn.name }}</a>
+    <a href="#{{ fn.name|replace('"', '', 'g') }}">{{ fn.name|replace('"', '', 'g') }}</a>
   </li>
   {% endif %}
 {% endfor %}
