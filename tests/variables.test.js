@@ -41,7 +41,8 @@ var cases = {
     { c: '{{ o.foo() }}', e: 'bar'},
     { c: '{{ o2.foo() }}', e: 'bar'},
     { c: '{{ o2.foo("foobar") }}', e: 'foobar'},
-    { c: '{{ o2.bar }}', e: ''}
+    { c: '{{ o2.bar }}', e: ''},
+    { c: '{{ o2.$bar }}', e: 'bar'}
   ],
   'can include arrays': [
     { c: '{{ [0, 1, 3] }}', e: '0,1,3' }
@@ -94,7 +95,7 @@ describe('Variables', function () {
     i: 'foo',
     n: null,
     o: Object.create({ foo: function () { return 'bar'; } }),
-    o2: { a: 'bar', foo: function (b) { return b || this.a; } },
+    o2: { a: 'bar', foo: function (b) { return b || this.a; }, $bar: 'bar' },
     o3: { n: null }
   }};
   _.each(cases, function (cases, description) {
