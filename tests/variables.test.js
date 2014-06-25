@@ -76,6 +76,12 @@ var cases = {
     { c: '{{ ap === "apples" }}', e: 'true' },
     { c: '{{ not a }}', e: 'false' },
     { c: '{{ a <= 4 }}', e: 'true' }
+  ],
+  'can support unicode variable names': [
+    { c: '{{ 君 === "monarch" }}', e: 'true' },
+    { c: '{{ not जावास्क्रिप्ट }}', e: 'false' },
+    { c: '{{ ᾩ <= 4 }}', e: 'true' },
+    { c: '{{ ĦĔĽĻŎ.君 === "subname" }}', e: 'true' }
   ]
 };
 
@@ -96,7 +102,13 @@ describe('Variables', function () {
     n: null,
     o: Object.create({ foo: function () { return 'bar'; } }),
     o2: { a: 'bar', foo: function (b) { return b || this.a; }, $bar: 'bar' },
-    o3: { n: null }
+    o3: { n: null },
+    "君": "monarch",
+    "जावास्क्रिप्ट": true,
+    "ᾩ": 3,
+    "ĦĔĽĻŎ": {
+      "君": 'subname'
+    }
   }};
   _.each(cases, function (cases, description) {
     describe(description, function () {
