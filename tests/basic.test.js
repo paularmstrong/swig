@@ -160,6 +160,13 @@ describe('options', function () {
         .to.throwError();
     });
   });
+
+  describe('null object', function () {
+    it('can skip null object', function () {
+      expect(swig.render('{{ a.property }}', { locals: { a: null }})).to.equal('');
+    });
+  });
+
 });
 
 describe('separate instances', function () {
