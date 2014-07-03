@@ -76,6 +76,9 @@ var cases = {
     { c: '{{ ap === "apples" }}', e: 'true' },
     { c: '{{ not a }}', e: 'false' },
     { c: '{{ a <= 4 }}', e: 'true' }
+  ],
+  'null objects': [
+    { c: '{{ n }}', e: '' }
   ]
 };
 
