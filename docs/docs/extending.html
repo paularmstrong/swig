@@ -55,7 +55,8 @@
 
   <p>All of Swig's tags are written using the same api (with a few exceptions for core modules, like <var>extends</var> and <var>block</var>). View a tag's source to see more examples to write your own custom tags.</p>
 
-  {% for t in ext %}{% if t.undocumented !== true and (t.name === 'parse' or t.name === 'compile') and t.kind === 'typedef' %}
+  {% set isMethod = ['parse', 'compile'] %}
+  {% for t in ext %}{% if t.undocumented !== true and t.kind === 'typedef' and isMethod.indexOf(t.name) !== -1 %}
   <section id="{{ t.name }}" class="doc">
     <h3>{{ t.name }}({% for p in t.params %}{{ p.name }}{% if not loop.last %}, {% endif %}{% endfor %})</h3>
 
