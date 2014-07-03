@@ -13,8 +13,8 @@ function resetOptions() {
 }
 
 describe('version', function () {
-  it('is 1.4.0', function () {
-    expect(swig.version).to.equal('1.4.0');
+  it('is 1.4.1', function () {
+    expect(swig.version).to.equal('1.4.1');
   });
 });
 

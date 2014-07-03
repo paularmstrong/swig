@@ -1,3 +1,9 @@
+[1.4.1](https://github.com/paularmstrong/swig/tree/v1.4.1) / 2014-07-03
+-----------------------------------------------------------------------
+
+* **Fixed** `macro` argument names colliding with context variable names. gh-457
+* **Fixed** filter chaining within tags. gh-441
+
 [1.4.0](https://github.com/paularmstrong/swig/tree/v1.4.0) / 2014-07-03
 -----------------------------------------------------------------------
 
