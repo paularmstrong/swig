@@ -298,4 +298,19 @@ describe('Filters:', function () {
     expect(swig.render("{{ t|replace('L', r('items').length)|replace('N', u) }}", { locals: locals })).to.equal('3 Tacos');
   });
 
+  it("gh-441: Chaining filters on top of functions within tags", function () {
+    var locals = {
+      getFoo: function () {
+        return [1, 3, 0];
+      }
+    };
+
+    expect(swig.render('{{ foo|default("bar")|reverse }}')).to.equal('rab');
+    expect(swig.render("{{ getFoo('foo')|join('*')|reverse }}", { locals: locals })).to.equal('0*3*1');
+    expect(swig.render("{% set foo = getFoo('foo')|join('+')|reverse %}{{ foo }}", { locals: locals })).to.equal('0+3+1');
+    expect(swig.render("{% for a in getFoo('foo')|sort(true)|reverse %}{{ a }}%{% endfor %}", { locals: locals })).to.equal('3%1%0%');
+    expect(swig.render('{% if "0+3+1" === getFoo("f")|join("+")|reverse %}yep{% endif %}', { locals: locals })).to.equal('yep');
+    expect(swig.render('{% if "0+3+1" === getFoo("f")|join("+")|reverse && null|default(true) %}yep{% endif %}', { locals: locals })).to.equal('yep');
+  });
+
 });

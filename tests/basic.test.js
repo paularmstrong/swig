@@ -265,7 +265,12 @@ describe('swig.renderFile', function () {
 });
 
 describe('swig.run', function () {
-  var tpl = swig.precompile('Hello {{ foobar }}').tpl;
+  var tpl;
+
+  beforeEach(function () {
+    tpl = swig.precompile('Hello {{ foobar }}').tpl;
+  });
+
   it('runs compiled templates', function () {
     expect(swig.run(tpl)).to.equal('Hello ');
     expect(swig.run(tpl, { foobar: 'Tacos'})).to.equal('Hello Tacos');
