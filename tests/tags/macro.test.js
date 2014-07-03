@@ -27,4 +27,8 @@ describe('Tag: macro', function () {
       swig.render('{% macro tacos(burrito), asdf) %}{% endmacro %}');
     }).to.throwError(/Unexpected parenthesis close on line 1\./);
   });
+
+  it('gh-457: local context is copied and overwritten within macro context', function () {
+    expect(swig.render('{% set foo = 1 %}{% set baz = 3 %}{% macro bar(foo) %}{{ foo }}{{ baz }}{% endmacro %}{{ bar(2) }}{{ foo }}')).to.equal('231');
+  });
 });
