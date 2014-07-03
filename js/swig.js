@@ -1,4 +1,4 @@
-/*! Swig v1.4.0 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.4.1 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -1523,10 +1523,8 @@ TokenParser.prototype = {
         utils.throwError('Invalid filter "' + match + '"', self.line, self.filename);
       }
       self.escape = self.filters[match].safe ? false : self.escape;
-      temp = self.filterApplyIdx.pop();
-      self.out.splice(temp, 0, '_filters["' + match + '"](');
+      self.out.splice(self.filterApplyIdx[self.filterApplyIdx.length - 1], 0, '_filters["' + match + '"](');
       self.state.push(token.type);
-      self.filterApplyIdx.push(temp);
       break;
 
     case _t.FILTEREMPTY:
@@ -1579,8 +1577,10 @@ TokenParser.prototype = {
       self.out.push(')');
       // Once off the previous entry
       self.filterApplyIdx.pop();
-      // Once for the open paren
-      self.filterApplyIdx.pop();
+      if (temp !== _t.FILTER) {
+        // Once for the open paren
+        self.filterApplyIdx.pop();
+      }
       break;
 
     case _t.COMMA:
@@ -2089,11 +2089,11 @@ var utils = require('./utils'),
 /**
  * Swig version number as a string.
  * @example
- * if (swig.version === "1.4.0") { ... }
+ * if (swig.version === "1.4.1") { ... }
  *
  * @type {String}
  */
-exports.version = "1.4.0";
+exports.version = "1.4.1";
 
 /**
  * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
@@ -2223,12 +2223,6 @@ function validateOptions(options) {
  */
 exports.setDefaults = function (options) {
   validateOptions(options);
-
-  var locals = utils.extend({}, defaultOptions.locals, options.locals || {});
-
-  utils.extend(defaultOptions, options);
-  defaultOptions.locals = locals;
-
   defaultInstance.options = utils.extend(defaultInstance.options, options);
 };
 
@@ -3146,6 +3140,7 @@ exports.parse = function (str, line, parser, types) {
       throw new Error('Unexpected token "' + token.match + '" on line ' + line + '.');
     }
     ready = true;
+    this.filterApplyIdx.push(this.out.length);
   });
 
   return true;
@@ -3214,6 +3209,7 @@ exports.parse = function (str, line, parser, types) {
       throw new Error('Attempted logic "not ' + token.match + '" on line ' + line + '. Use !(foo ' + token.match + ') instead.');
     }
     this.out.push(token.match);
+    this.filterApplyIdx.push(this.out.length);
   });
 
   parser.on(types.NOT, function (token) {
@@ -3478,7 +3474,13 @@ exports.compile = function (compiler, args, content, parents, options, blockName
 
   return '_ctx.' + fnName + ' = function (' + args.join('') + ') {\n' +
     '  var _output = "";\n' +
+    '    __ctx = _utils.extend({}, _ctx),\n' +
+    '    _ctx = _utils.extend({}, __ctx);\n' +
+    '  _utils.each(_ctx, function (v, k) {\n' +
+    '    if (["' + args.join('","') + '"].indexOf(k) !== -1) { delete _ctx[k]; }\n' +
+    '  });\n' +
     compiler(content, parents, options, blockName) + '\n' +
+    ' _ctx = __ctx;\n' +
     '  return _output;\n' +
     '};\n' +
     '_ctx.' + fnName + '.safe = true;\n';
@@ -3711,6 +3713,7 @@ exports.parse = function (str, line, parser, types) {
       '_ctx.' + nameSet
     );
     this.out.push(token.match);
+    this.filterApplyIdx.push(this.out.length);
   });
 
   return true;
