@@ -1,3 +1,17 @@
+[1.4.0](https://github.com/paularmstrong/swig/tree/v1.4.0) / 2014-07-03
+-----------------------------------------------------------------------
+
+* **Changed** Allow variable tokens to start with `$`. gh-455
+* **Changed** `fs` loader should take `cwd` as default base path. gh-419
+* **Changed** handle errors which occur at the time of rendering. gh-417
+* **Changed** default options in bin (`varControls`, `tagControls`, `cmtControls`). gh-415
+* **Changed** `null` should yield empty string when resolving variable. gh-408
+* **Added** Escape character for `date` filter argument. gh-427, gh-432
+* **Added** Make `if` and `elseif` throw a better error message when a tag body is omitted. gh-425
+* **Fixed** don't throw errors on accessing property of `null` object. gh-471
+* **Fixed** `loop` variables work correctly in nested loops. gh-433
+* **Fixed** Some IE8 compatibility (require es5). gh-428
+
 [1.3.2](https://github.com/paularmstrong/swig/tree/v1.3.2) / 2014-01-27
 -----------------------------------------------------------------------
 
