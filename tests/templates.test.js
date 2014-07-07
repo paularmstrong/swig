@@ -53,4 +53,10 @@ describe('Templates', function () {
       swig.compileFile(__dirname + '/cases-error/circular.test.html')();
     }).to.throwError(/Illegal circular extends of ".*/);
   });
+
+  it('throw with filename reporting', function () {
+    expect(function () {
+      swig.compileFile(__dirname + '/cases-error/report-filename.test.html')();
+    }).to.throwError(/in file .*swig\/tests\/cases-error\/report-filename-partial\.html/);
+  });
 });
