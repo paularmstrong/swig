@@ -32,7 +32,7 @@ describe('Tag: macro', function () {
     expect(swig.render('{% set foo = 1 %}{% set baz = 3 %}{% macro bar(foo) %}{{ foo }}{{ baz }}{% endmacro %}{{ bar(2) }}{{ foo }}')).to.equal('231');
   });
 
-  it('a macro can be set to a variable', function () {
+  it('gh-499: a macro can be set to a variable', function () {
     expect(swig.render('{% macro burrito() %}burrito{% endmacro %}{% set foo = burrito() %}{{foo}}')).to.equal('burrito');
   });
 });
