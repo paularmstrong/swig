@@ -31,4 +31,8 @@ describe('Tag: macro', function () {
   it('gh-457: local context is copied and overwritten within macro context', function () {
     expect(swig.render('{% set foo = 1 %}{% set baz = 3 %}{% macro bar(foo) %}{{ foo }}{{ baz }}{% endmacro %}{{ bar(2) }}{{ foo }}')).to.equal('231');
   });
+
+  it('gh-499: a macro can be set to a variable', function () {
+    expect(swig.render('{% macro burrito() %}burrito{% endmacro %}{% set foo = burrito() %}{{foo}}')).to.equal('burrito');
+  });
 });
