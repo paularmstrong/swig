@@ -159,6 +159,12 @@ describe('options', function () {
       expect(function () { swig.setDefaults({ cache: { a: 1, b: 2 } }); })
         .to.throwError();
     });
+
+    it('gh-423: compile method respects local cache setting', function () {
+      var s = new Swig();
+      s.compile('a', { filename: 'a', cache: false });
+      expect(s.cache).to.not.have.property('a');
+    });
   });
 
   describe('null object', function () {
