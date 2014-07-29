@@ -26,7 +26,8 @@ var cases = [
   { input: '{% for a, b in c %}{{ b }}{% endfor %}', out: 'applebanana' },
   { input: '{% for a in d|default(["a"]) %}{{ a }}{% endfor %}', out: 'a' },
   { input: '{% for a in q %}hi{% endfor %}', out: '' },
-  { input: '{% for a in b %}{% for d in c %}{% for a in b %}{% endfor %}{% endfor %}{% if loop.last %}last happens only once{% endif %}{% endfor %}', out: 'last happens only once' }
+  { input: '{% for a in b %}{% for d in c %}{% for a in b %}{% endfor %}{% endfor %}{% if loop.last %}last happens only once{% endif %}{% endfor %}', out: 'last happens only once' },
+  { input: '{% for a in "foobar"|reverse %}{{ a }}{% endfor %}', out: "raboof" }
 ];
 
 describe('Tag: for', function () {
