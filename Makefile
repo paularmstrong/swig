@@ -80,7 +80,7 @@ tests := $(shell find ./tests -name '*.test.js' ! -path "*node_modules/*")
 reporter = dot
 opts =
 test:
-	@${BIN}/mocha --reporter ${reporter} ${opts} ${tests}
+	@${BIN}/mocha --check-leaks --reporter ${reporter} ${opts} ${tests}
 
 test-browser: FORCE clean browser/test/tests.js
 	@${BIN}/mocha-phantomjs browser/test/index.html --reporter ${reporter}

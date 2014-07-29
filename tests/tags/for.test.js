@@ -59,4 +59,5 @@ describe('Tag: for', function () {
       swig.render('{% for a > 32 %}{% endfor %}');
     }).to.throwError(/Unexpected token ">" on line 1\./);
   });
+
 });
