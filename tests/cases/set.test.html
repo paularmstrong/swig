@@ -1,0 +1,8 @@
+{% extends "extends_layouts/extends_bare.html" %}
+
+{% set foo = [4, 2, 1, 3] %}
+{% set foo = foo|sort %}
+
+{% block content %}
+{{ foo }}
+{% endblock %}
