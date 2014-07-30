@@ -63,6 +63,7 @@ var cases = {
   ],
   'escape functions by default': [
     { c: '{{ orangeChicken() }}', e: '&lt;yum&gt;' },
+    { c: '{{ orangeChicken()|safe }}', e: '<yum>' },
     { c: '{% autoescape false %}{{ orangeChicken() }}{% endautoescape %}', e: '<yum>' }
   ],
   'can run multiple filters': [

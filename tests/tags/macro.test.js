@@ -10,11 +10,11 @@ describe('Tag: macro', function () {
   });
 
   it('{% macro tacos(a, b, c) %}', function () {
-    expect(swig.render('{% macro tacos(a, b, c) %}{{ a }}, {{ c }}, {{ b }}{% endmacro %}{{ tacos(1, 3, 2) }}'))
-      .to.equal('1, 2, 3');
   });
 
   it('does not auto-escape', function () {
+    expect(swig.render('{% macro tacos(a, b, c) %}{{ a }}, {{ c }}, {{ b }}{% endmacro %}{{ tacos(1, 3, "<p>") }}'))
+      .to.equal('1, &lt;p&gt;, 3');
     expect(swig.render('{% macro foo %}<h1>{{ "<p>" }}</h1>{% endmacro %}{{ foo() }}'))
       .to.equal('<h1>&lt;p&gt;</h1>');
   });
