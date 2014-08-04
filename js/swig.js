@@ -1,4 +1,4 @@
-/*! Swig v1.4.1 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.4.2 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -1762,13 +1762,14 @@ TokenParser.prototype = {
  * exports.parse('{{ tacos }}', {}, tags, filters);
  * // => [{ compile: [Function], ... }]
  *
+ * @params {object} swig    The current Swig instance
  * @param  {string} source  Swig template source.
  * @param  {object} opts    Swig options object.
  * @param  {object} tags    Keyed object of tags that can be parsed and compiled.
  * @param  {object} filters Keyed object of filters that may be applied to variables.
  * @return {array}          List of tokens ready for compilation.
  */
-exports.parse = function (source, opts, tags, filters) {
+exports.parse = function (swig, source, opts, tags, filters) {
   source = source.replace(/\r\n/g, '\n');
   var escape = opts.autoescape,
     tagOpen = opts.tagControls[0],
@@ -1887,7 +1888,7 @@ exports.parse = function (source, opts, tags, filters) {
      * @callback parse
      *
      * @example
-     * exports.parse = function (str, line, parser, types, options) {
+     * exports.parse = function (str, line, parser, types, options, swig) {
      *   parser.on('start', function () {
      *     // ...
      *   });
@@ -1902,8 +1903,9 @@ exports.parse = function (source, opts, tags, filters) {
      * @param {TYPES} types Lexer token type enum.
      * @param {TagToken[]} stack The current stack of open tags.
      * @param {SwigOpts} options Swig Options Object.
+     * @param {object} swig The Swig instance (gives acces to loaders, parsers, etc)
      */
-    if (!tag.parse(chunks[1], line, parser, _t, stack, opts)) {
+    if (!tag.parse(chunks[1], line, parser, _t, stack, opts, swig)) {
       utils.throwError('Unexpected tag "' + tagName + '"', line, opts.filename);
     }
 
@@ -1974,9 +1976,7 @@ exports.parse = function (source, opts, tags, filters) {
       if (token) {
         if (token.name === 'extends') {
           parent = token.args.join('').replace(/^\'|\'$/g, '').replace(/^\"|\"$/g, '');
-        }
-
-        if (token.block && (!stack.length || token.name === 'block')) {
+        } else if (token.block && !stack.length) {
           blocks[token.args.join('')] = token;
         }
       }
@@ -2089,11 +2089,11 @@ var utils = require('./utils'),
 /**
  * Swig version number as a string.
  * @example
- * if (swig.version === "1.4.1") { ... }
+ * if (swig.version === "1.4.2") { ... }
  *
  * @type {String}
  */
-exports.version = "1.4.1";
+exports.version = "1.4.2";
 
 /**
  * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
@@ -2273,13 +2273,24 @@ exports.Swig = function (opts) {
   }
 
   /**
+   * Determine whether caching is enabled via the options provided and/or defaults
+   * @param  {SwigOpts} [options={}] Swig Options Object
+   * @return {boolean}
+   * @private
+   */
+  function shouldCache(options) {
+    options = options || {};
+    return (options.hasOwnProperty('cache') && !options.cache) || !self.options.cache;
+  }
+
+  /**
    * Get compiled template from the cache.
    * @param  {string} key           Name of template.
    * @return {object|undefined}     Template function and tokens.
    * @private
    */
-  function cacheGet(key) {
-    if (!self.options.cache) {
+  function cacheGet(key, options) {
+    if (shouldCache(options)) {
       return;
     }
 
@@ -2297,8 +2308,8 @@ exports.Swig = function (opts) {
    * @return {undefined}
    * @private
    */
-  function cacheSet(key, val) {
-    if (!self.options.cache) {
+  function cacheSet(key, options, val) {
+    if (shouldCache(options)) {
       return;
     }
 
@@ -2421,7 +2432,7 @@ exports.Swig = function (opts) {
     options = utils.extend({}, self.options, opts);
     options.locals = locals;
 
-    return parser.parse(source, options, tags, filters);
+    return parser.parse(this, source, options, tags, filters);
   };
 
   /**
@@ -2478,7 +2489,9 @@ exports.Swig = function (opts) {
    * @private
    */
   function importNonBlocks(blocks, tokens) {
-    utils.each(blocks, function (block) {
+    var temp = [];
+    utils.each(blocks, function (block) { temp.push(block); });
+    utils.each(temp.reverse(), function (block) {
       if (block.name !== 'block') {
         tokens.unshift(block);
       }
@@ -2508,7 +2521,7 @@ exports.Swig = function (opts) {
 
       parentFile = parentFile || options.filename;
       parentFile = self.options.loader.resolve(parentName, parentFile);
-      parent = cacheGet(parentFile) || self.parseFile(parentFile, utils.extend({}, options, { filename: parentFile }));
+      parent = cacheGet(parentFile, options) || self.parseFile(parentFile, utils.extend({}, options, { filename: parentFile }));
       parentName = parent.parent;
 
       if (parentFiles.indexOf(parentFile) !== -1) {
@@ -2553,7 +2566,8 @@ exports.Swig = function (opts) {
   this.precompile = function (source, options) {
     var tokens = self.parse(source, options),
       parents = getParents(tokens, options),
-      tpl;
+      tpl,
+      err;
 
     if (parents.length) {
       // Remap the templates first-parent's tokens using this template's blocks.
@@ -2561,12 +2575,16 @@ exports.Swig = function (opts) {
       importNonBlocks(tokens.blocks, tokens.tokens);
     }
 
-    tpl = new Function('_swig', '_ctx', '_filters', '_utils', '_fn',
-      '  var _ext = _swig.extensions,\n' +
-      '    _output = "";\n' +
-      parser.compile(tokens, parents, options) + '\n' +
-      '  return _output;\n'
-      );
+    try {
+      tpl = new Function('_swig', '_ctx', '_filters', '_utils', '_fn',
+        '  var _ext = _swig.extensions,\n' +
+        '    _output = "";\n' +
+        parser.compile(tokens, parents, options) + '\n' +
+        '  return _output;\n'
+        );
+    } catch (e) {
+      utils.throwError(e, null, options.filename);
+    }
 
     return { tpl: tpl, tokens: tokens };
   };
@@ -2655,7 +2673,7 @@ exports.Swig = function (opts) {
    */
   this.compile = function (source, options) {
     var key = options ? options.filename : null,
-      cached = key ? cacheGet(key) : null,
+      cached = key ? cacheGet(key, options) : null,
       context,
       contextLength,
       pre;
@@ -2685,7 +2703,7 @@ exports.Swig = function (opts) {
     utils.extend(compiled, pre.tokens);
 
     if (key) {
-      cacheSet(key, compiled);
+      cacheSet(key, options, compiled);
     }
 
     return compiled;
@@ -2725,7 +2743,7 @@ exports.Swig = function (opts) {
     if (!options.filename) {
       options = utils.extend({ filename: pathname }, options);
     }
-    cached = cacheGet(pathname);
+    cached = cacheGet(pathname, options);
 
     if (cached) {
       if (cb) {
@@ -2779,7 +2797,7 @@ exports.Swig = function (opts) {
   this.run = function (tpl, locals, filepath) {
     var context = getLocals({ locals: locals });
     if (filepath) {
-      cacheSet(filepath, tpl);
+      cacheSet(filepath, {}, tpl);
     }
     return tpl(self, context, filters, utils, efn);
   };
@@ -3076,10 +3094,10 @@ exports.compile = function (compiler, args, content, parents, options, blockName
 
   return [
     '(function () {\n',
-    '  var __l = ' + last + ', __len = (_utils.isArray(__l)) ? __l.length : _utils.keys(__l).length;\n',
+    '  var __l = ' + last + ', __len = (_utils.isArray(__l) || typeof __l === "string") ? __l.length : _utils.keys(__l).length;\n',
     '  if (!__l) { return; }\n',
-    '  ' + ctxloopcache + ' = { loop: ' + ctxloop + ', ' + val + ': ' + ctx + val + ', ' + key + ': ' + ctx + key + ' };\n',
-    '  ' + ctxloop + ' = { first: false, index: 1, index0: 0, revindex: __len, revindex0: __len - 1, length: __len, last: false };\n',
+    '    var ' + ctxloopcache + ' = { loop: ' + ctxloop + ', ' + val + ': ' + ctx + val + ', ' + key + ': ' + ctx + key + ' };\n',
+    '    ' + ctxloop + ' = { first: false, index: 1, index0: 0, revindex: __len, revindex0: __len - 1, length: __len, last: false };\n',
     '  _utils.each(__l, function (' + val + ', ' + key + ') {\n',
     '    ' + ctx + val + ' = ' + val + ';\n',
     '    ' + ctx + key + ' = ' + key + ';\n',
@@ -3282,9 +3300,8 @@ exports.compile = function (compiler, args) {
   return out;
 };
 
-exports.parse = function (str, line, parser, types, stack, opts) {
-  var parseFile = require('../swig').parseFile,
-    compiler = require('../parser').compile,
+exports.parse = function (str, line, parser, types, stack, opts, swig) {
+  var compiler = require('../parser').compile,
     parseOpts = { resolveFrom: opts.filename },
     compileOpts = utils.extend({}, opts, parseOpts),
     tokens,
@@ -3293,7 +3310,7 @@ exports.parse = function (str, line, parser, types, stack, opts) {
   parser.on(types.STRING, function (token) {
     var self = this;
     if (!tokens) {
-      tokens = parseFile(token.match.replace(/^("|')|("|')$/g, ''), parseOpts).tokens;
+      tokens = swig.parseFile(token.match.replace(/^("|')|("|')$/g, ''), parseOpts).tokens;
       utils.each(tokens, function (token) {
         var out = '',
           macroName;
@@ -3330,7 +3347,7 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 
 exports.block = true;
 
-},{"../parser":8,"../swig":9,"../utils":26}],19:[function(require,module,exports){
+},{"../parser":8,"../utils":26}],19:[function(require,module,exports){
 var ignore = 'ignore',
   missing = 'missing',
   only = 'only';
@@ -3473,14 +3490,13 @@ exports.compile = function (compiler, args, content, parents, options, blockName
   var fnName = args.shift();
 
   return '_ctx.' + fnName + ' = function (' + args.join('') + ') {\n' +
-    '  var _output = "";\n' +
-    '    __ctx = _utils.extend({}, _ctx),\n' +
-    '    _ctx = _utils.extend({}, __ctx);\n' +
+    '  var _output = "",\n' +
+    '    __ctx = _utils.extend({}, _ctx);\n' +
     '  _utils.each(_ctx, function (v, k) {\n' +
     '    if (["' + args.join('","') + '"].indexOf(k) !== -1) { delete _ctx[k]; }\n' +
     '  });\n' +
     compiler(content, parents, options, blockName) + '\n' +
-    ' _ctx = __ctx;\n' +
+    ' _ctx = _utils.extend(_ctx, __ctx);\n' +
     '  return _output;\n' +
     '};\n' +
     '_ctx.' + fnName + '.safe = true;\n';
