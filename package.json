@@ -35,7 +35,7 @@
     "phantomjs": "~1.9.1",
     "browserify": "~2",
     "file": "~0.2",
-    "jsdoc": "~3.2"
+    "jsdoc": "3.2.0"
   },
   "license": "MIT",
   "main": "index",
