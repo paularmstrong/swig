@@ -10,6 +10,7 @@ var swig = require('../index'),
   uglify = require('uglify-js');
 
 var command,
+  wrapstart = 'var tpl = ',
   argv = optimist
     .usage('\n Usage:\n' +
       '    $0 compile [files] [options]\n' +
@@ -37,7 +38,7 @@ var command,
     .alias('j', 'json')
     .alias('c', 'context')
     .alias('m', 'minify')
-    .default('wrap-start', 'var tpl = ')
+    .default('wrap-start', wrapstart)
     .default('wrap-end', ';')
     .default('method-name', 'tpl')
     .check(function (argv) {
@@ -54,7 +55,7 @@ var command,
         throw new Error('Unrecognized command "' + command + '". Use -h for help.');
       }
 
-      if (argv['method-name'] !== 'tpl' && argv['wrap-start'] !== 'var tpl =') {
+      if (argv['method-name'] !== 'tpl' && argv['wrap-start'] !== wrapstart) {
         throw new Error('Cannot use arguments "--method-name" and "--wrap-start" together.');
       }
 
