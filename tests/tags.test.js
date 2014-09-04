@@ -1,7 +1,5 @@
 var swig = require('../lib/swig'),
-  expect = require('expect.js'),
-  _ = require('lodash'),
-  Swig = swig.Swig;
+  expect = require('expect.js');
 
 describe('Tags', function () {
   it('throws on unknown tags', function () {
@@ -51,6 +49,21 @@ describe('Tags', function () {
       expect(function () {
         swig.setTag('tacos', parse);
       }).to.throwError(/Tag "tacos" compile method is not a valid function\./);
+    });
+  });
+
+  describe('can be created with setSimpleTag()', function () {
+    function noArgHandler() { return 'asada torta'; }
+    function handlerWithQuotes() { return 'I said "hola"'; }
+
+    it('and used in templates', function () {
+      swig.setSimpleTag('tortas', noArgHandler);
+      expect(swig.render('{% tortas %}')).to.equal('asada torta');
+    });
+
+    it('when output has double quotes', function () {
+      swig.setSimpleTag('dquotetest', handlerWithQuotes);
+      expect(swig.render('{% dquotetest %}')).to.equal('I said "hola"');
     });
   });
 });
