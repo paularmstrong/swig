@@ -53,17 +53,25 @@ describe('Tags', function () {
   });
 
   describe('can be created with setSimpleTag()', function () {
-    function noArgHandler() { return 'asada torta'; }
-    function handlerWithQuotes() { return 'I said "hola"'; }
-
     it('and used in templates', function () {
-      swig.setSimpleTag('tortas', noArgHandler);
+      swig.setSimpleTag('tortas', function () { return 'asada torta'; });
       expect(swig.render('{% tortas %}')).to.equal('asada torta');
     });
 
     it('when output has double quotes', function () {
-      swig.setSimpleTag('dquotetest', handlerWithQuotes);
+      swig.setSimpleTag('dquotetest', function () { return 'I said "hola"'; });
       expect(swig.render('{% dquotetest %}')).to.equal('I said "hola"');
+    });
+
+    it('when tags have number arguments', function () {
+      swig.setSimpleTag('simpleargs', function (n1, n2) { return n1 + n2; });
+      expect(swig.render('{% simpleargs 1 3 %}')).to.equal('4');
+    });
+
+    it('when tags have string arguments', function () {
+      swig.setSimpleTag('printAdd', function (s1, s2) { return s1 + ' + ' + s2; });
+      expect(swig.render('{% printAdd "1" "3" %}')).to.equal('1 + 3');
+      expect(swig.render("{% printAdd '1' '3' %}")).to.equal('1 + 3');
     });
   });
 });
