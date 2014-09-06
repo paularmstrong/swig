@@ -73,5 +73,24 @@ describe('Tags', function () {
       expect(swig.render('{% printAdd "1" "3" %}')).to.equal('1 + 3');
       expect(swig.render("{% printAdd '1' '3' %}")).to.equal('1 + 3');
     });
+
+    it('when tags have variable arguments', function () {
+      swig.setSimpleTag('printVars', function (x, y) { return x + ' ' + y; });
+      var output = swig.render('{% printVars x y %}', { locals: { x: 1, y: 'foo' }});
+      expect(output).to.equal('1 foo');
+    });
+
+    it('when tag arguments reference missing variables', function () {
+      swig.setSimpleTag('printVars', function (x, y) { return x + ' ' + y; });
+      var output = swig.render('{% printVars x y %}', { locals: { y: 'foo' }});
+      expect(output).to.equal('undefined foo');
+    });
+
+    it('does not escape html in the output', function () {
+      swig.setSimpleTag('echo', function (x) { return x; });
+      var markup = '<script>alert("hi")</script>',
+        output = swig.render('{% echo x %}', { locals: { x: markup }});
+      expect(output).to.equal(markup);
+    });
   });
 });
