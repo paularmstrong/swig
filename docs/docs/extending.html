@@ -51,9 +51,11 @@
 <section id="tags">
   <h2>Custom Tags</h2>
 
-  <p>Swig can be extended to handle custom tags that will perform operations on full blocks of your templates. Use <a href="{{ baseurl }}/docs/api/#setTag"><code data-language="js">swig.setTag(name, parse, compile, ends, blockLevel)</code></a> to add your custom tag.</p>
+  <p>Swig can be extended to handle custom tags that will perform operations on full blocks of your templates.</p>
 
-  <p>All of Swig's tags are written using the same api (with a few exceptions for core modules, like <var>extends</var> and <var>block</var>). View a tag's source to see more examples to write your own custom tags.</p>
+  <p>For basic tags that don't need to enclose a block of template text, <a href="{{ baseurl }}/docs/api/#setSimpleTag"><code data-language="js">swig.setSimpleTag(name, handler)</code></a> provides a simplified way to implement custom tags.</p>
+
+  <p>For additional features and flexibility, use <a href="{{ baseurl }}/docs/api/#setTag"><code data-language="js">swig.setTag(name, parse, compile, ends, blockLevel)</code></a> to add your custom tag. All of Swig's tags are written using this api (with a few exceptions for core modules, like <var>extends</var> and <var>block</var>). View a tag's source to see more examples to write your own custom tags.</p>
 
   {% set isMethod = ['parse', 'compile'] %}
   {% for t in ext %}{% if t.undocumented !== true and t.kind === 'typedef' and isMethod.indexOf(t.name) !== -1 %}
