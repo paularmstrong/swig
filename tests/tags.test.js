@@ -92,5 +92,11 @@ describe('Tags', function () {
         output = swig.render('{% echo x %}', { locals: { x: markup }});
       expect(output).to.equal(markup);
     });
+
+    it('and plays nice with surrounding template content', function () {
+      swig.setSimpleTag('echo', function (x) { return x; });
+      var output = swig.render('abc{% echo "def" %}ghi');
+      expect(output).to.equal('abcdefghi');
+    });
   });
 });
