@@ -156,7 +156,8 @@ var n = new Swig(),
     length: [
       { v: [1, 2, 3, 4], e: '4' },
       { v: '123', e: '3' },
-      { v: { foo: 'blah', bar: 'nope' }, e: '2'}
+      { v: { foo: 'blah', bar: 'nope' }, e: '2'},
+      { v: 5, e: ''}
     ],
     lower: [
       { v: 'BaR', e: 'bar' },
