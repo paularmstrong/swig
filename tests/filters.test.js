@@ -262,13 +262,17 @@ describe('Filters:', function () {
   _.each(cases, function (cases, filter) {
     describe(filter, function () {
       _.each(cases, function (c) {
-        var code = '{{ ' + (c.c || 'v|' + filter) + ' }}';
+        var code = '{{ ' + (c.c || 'v|' + filter) + ' }}',
+          clone = _.cloneDeep(c.v);
         it(code + ', v=' + JSON.stringify(c.v) + ' should render ' + c.e.replace(/\n/g, '\\n'), function () {
           if ((/\|date\(/).test(code)) {
             code = '{{ ' + c.c.replace(/\"\)$/, '", 420)') + ' }}';
           }
           expect(swig.render(code, { locals: { v: c.v }}))
             .to.equal(c.e);
+        });
+        it(code + ', v=' + JSON.stringify(clone) + ' should should not mutate value', function () {
+          expect(c.v).to.eql(clone);
         });
       });
     });
