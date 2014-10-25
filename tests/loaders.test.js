@@ -85,7 +85,7 @@ describe('swig.loaders', function () {
     return;
   }
   describe('FileSystem', function () {
-    var macroExpectation = '\n\nasfdasdf\n\n\n\n\nHahahahahah!\n\n\n\n\n\n';
+    var macroExpectation = '\n\nasfdasdf\n\n\n\n\nHahahahahah!\n\n\n\n\n\n\n\n\n\n';
     it('is the default', function () {
       var s = new swig.Swig(),
         file = s.options.loader.load(__dirname + '/cases/macros.html');
