@@ -115,9 +115,9 @@ describe('options', function () {
     });
   });
 
-  describe('safeMode', function () {
+  describe('runInVm', function () {
     it('can be set as default', function () {
-      swig.setDefaults({ safeMode: true, locals: { a: 1, b: 2 }});
+      swig.setDefaults({ runInVm: true, locals: { a: 1, b: 2 }});
       var tpl = '{{ a }}{{ b }}{{ c }}';
       expect(swig.compile(tpl)({ c: 3 })).to.equal('123');
       expect(swig.compile(tpl, { locals: { c: 3 }})()).to.equal('123');
