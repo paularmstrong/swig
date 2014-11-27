@@ -36,7 +36,9 @@ describe('Tag: filter', function () {
     s2.setFilter('foo', function () { return 'foo2'; });
 
     expect(s1.render('{% filter foo %}{% endfilter %}')).to.equal('foo1');
+    expect(s1.compile('{% filter foo %}{% endfilter %}')({})).to.equal('foo1');
     expect(s2.render('{% filter foo %}{% endfilter %}')).to.equal('foo2');
+    expect(s2.compile('{% filter foo %}{% endfilter %}')({})).to.equal('foo2');
   });
 
 });

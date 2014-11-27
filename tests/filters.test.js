@@ -332,7 +332,9 @@ describe('Filters:', function () {
 		s2.setFilter('foo', function () { return 'foo2'; });
 
 		expect(s1.render('{{ ""|foo }}')).to.equal('foo1');
+    expect(s1.compile('{{ ""|foo }}')({})).to.equal('foo1');
 		expect(s2.render('{{ ""|foo }}')).to.equal('foo2');
+    expect(s2.compile('{{ ""|foo }}')({})).to.equal('foo2');
 	});
 
 });
