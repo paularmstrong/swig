@@ -47,4 +47,24 @@ describe('Tag: include', function () {
       .equal('');
     });
   });
+
+  describe('{% include [ "file" + "name" ] %}', function () {
+    it('supports string concatenation through + operator using " delimitator', function () {
+      var s = new swig.Swig({loader: swig.loaders.memory({ '/foo/filename': 'bazinga!' }, '/foo')});
+      expect( s.render( '{% include [ "file" + "name" ] %}' ) )
+      .to
+      .equal('bazinga!');
+    });
+  });
+
+  describe('{% include [ "file" + myVar + "" ] %}', function () {
+    it('supports string concatenation through + operators and variable names', function () {
+      var s = new swig.Swig({
+        loader: swig.loaders.memory({ '/foo/filename': 'bazinga!' }, '/foo')
+      });
+      expect( s.render( '{% include [ "file" + myVar + "" ] %}', { locals: { myVar : 'amen' } } ) )
+      .to
+      .equal('bazinga!');
+    });
+  });
 });
