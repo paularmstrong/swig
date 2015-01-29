@@ -24,7 +24,7 @@ describe('Tag: include', function () {
     });
   });
 
-  describe('{% include [ "file", "file2" ] ignore missing %}', function () {
+  describe('{% include [ "file", "file2" ] %}', function () {
     it('does load "file" because it exists', function () {
       var s = new swig.Swig({loader: swig.loaders.memory({ '/foo/file': 'file' }, '/foo')});
       
