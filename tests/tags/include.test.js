@@ -49,7 +49,7 @@ describe('Tag: include', function () {
   });
 
   describe('{% include [ "file" + "name" ] %}', function () {
-    it('supports string concatenation through + operator using " delimitator', function () {
+    it('supports string concatenation through + operator', function () {
       var s = new swig.Swig({loader: swig.loaders.memory({ '/foo/filename': 'bazinga!' }, '/foo')});
       expect( s.render( '{% include [ "file" + "name" ] %}' ) )
       .to
