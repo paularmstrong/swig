@@ -99,7 +99,7 @@ console.log(swig.render('{% if foo %}Hooray!{% endif %}', { locals: { foo: true 
   <p>If a variable is not defined, don't worry, your template won't explode. Instead, an empty-string will be output in its place. However, falsy values like <code data-language="js">null, false, 0</code> will be rendered as they are.</p>
 
   <h3>Filters</h3>
-  <p>Variables can be modified using using special, chainable control structures called <a href="/swig/docs/filters/">Filters</a>:</p>
+  <p>Variables can be modified using special, chainable control structures called <a href="/swig/docs/filters/">Filters</a>:</p>
 
   <pre><code data-language="swig">{{ name|title }} was born on {{ birthday|date('F jS, Y') }}</code>
 // => <samp>Jane was born on July 6th, 1985</samp></pre>
