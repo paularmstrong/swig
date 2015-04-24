@@ -89,7 +89,7 @@ describe('bin/swig compile -m', function () {
   it('minifies output', function (done) {
     var p = fixPath(casedir + '/extends_1.test.html');
     exec('node ' + bin + ' compile ' + p + ' -m', function (err, stdout, stderr) {
-      expect(stdout).to.equal('var tpl=function(n,e,i,r,t){var e=(n.extensions,"");return e+="Hi,\\n\\n",e+="This is the body.",e+="\\n\\nSincerely,\\nMe\\n"};\n');
+      expect(stdout).to.equal('var tpl=function(n,e,i,r,t){var s=(n.extensions,"");return s+="Hi,\\n\\n",s+="This is the body.",s+="\\n\\nSincerely,\\nMe\\n"};\n');
       done();
     });
   });
