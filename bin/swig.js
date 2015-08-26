@@ -93,7 +93,7 @@ if (argv.o !== 'stdout') {
   try {
     fs.mkdirSync(argv.o);
   } catch (e) {
-    if (e.code !== "EEXIST") {
+    if (e.code !== 'EEXIST') {
       throw e;
     }
   }
