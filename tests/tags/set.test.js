@@ -52,5 +52,8 @@ describe('Tag: set', function () {
     expect(function () {
       swig.render('{% set blah = foo /= foo %}');
     }).to.throwError(/Unexpected assignment "\/=" on line 1\./);
+    expect(function () {
+      swig.render('{% set .foo = "bar" %}');
+    }).to.throwError();
   });
 });

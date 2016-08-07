@@ -95,6 +95,16 @@ describe('bin/swig compile -m', function () {
   });
 });
 
+describe('bin/swig compile --method-name="foo"', function () {
+  it('sets the method name to "foo"', function (done) {
+    var p = fixPath(casedir + '/extends_1.test.html');
+    exec('node ' + bin + ' compile ' + p + ' --method-name="foo"', function (err, stdout, stderr) {
+      expect(stdout).to.equal('var foo = function (_swig,_ctx,_filters,_utils,_fn) {\n  var _ext = _swig.extensions,\n    _output = "";\n_output += "Hi,\\n\\n";\n_output += "This is the body.";\n_output += "\\n\\nSincerely,\\nMe\\n";\n\n  return _output;\n\n};\n');
+      done();
+    });
+  });
+});
+
 describe('bin/swig compile & run from swig', function () {
   it('can be run', function (done) {
     var expectation = fs.readFileSync(casedir + '/extends_1.expectation.html', 'utf8'),

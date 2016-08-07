@@ -1,6 +1,6 @@
 {
   "name": "swig",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "A simple, powerful, and extendable templating engine for node.js and browsers, similar to Django, Jinja2, and Twig.",
   "keywords": [
     "template",
@@ -35,7 +35,7 @@
     "phantomjs": "~1.9.1",
     "browserify": "~2",
     "file": "~0.2",
-    "jsdoc": "~3.2"
+    "jsdoc": "3.2.0"
   },
   "license": "MIT",
   "main": "index",
@@ -48,11 +48,13 @@
   "scripts": {
     "prepublish": "npm prune && make build",
     "test": "make lint && make test reporter=spec && make test-browser && make coverage cov-reporter=travis-cov",
-    "blanket": {
-      "pattern": "swig/lib"
-    },
     "travis-cov": {
       "threshold": 95
+    }
+  },
+  "config": {
+    "blanket": {
+      "pattern": "swig/lib"
     }
   },
   "bugs": {

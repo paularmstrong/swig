@@ -1,3 +1,14 @@
+[1.4.2](https://github.com/paularmstrong/swig/tree/v1.4.2) / 2014-08-04
+-----------------------------------------------------------------------
+
+* **Added** Report JS parse errors with template filenames. gh-492
+* **Fixed** Ensure block-level tags (`set`, etc) are parsed in correct order. gh-495
+* **Fixed** Ensure import tag uses current Swig instance's loader. gh-421, gh-503
+* **Fixed** Allow disabling cache on compile/render functions directly. gh-423
+* **Fixed** Ensure compilation does not leak global variables. gh-496
+* **Fixed** Fix for-loops to run on strings. gh-478, gh-479
+* **Fixed** Allow macro output to be assigned using `set` tag. gh-499, gh-502
+
 [1.4.1](https://github.com/paularmstrong/swig/tree/v1.4.1) / 2014-07-03
 -----------------------------------------------------------------------
 
