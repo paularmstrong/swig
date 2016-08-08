@@ -115,6 +115,16 @@ describe('options', function () {
     });
   });
 
+  describe('runInVm', function () {
+    it('can be set as default', function () {
+      swig.setDefaults({ runInVm: true, locals: { a: 1, b: 2 }});
+      var tpl = '{{ a }}{{ b }}{{ c }}';
+      expect(swig.compile(tpl)({ c: 3 })).to.equal('123');
+      expect(swig.compile(tpl, { locals: { c: 3 }})()).to.equal('123');
+      expect(swig.render(tpl, { locals: { c: 3 }})).to.equal('123');
+    });
+  });
+
   describe('cache', function () {
     it('can be falsy', function () {
       var s = new Swig({ cache: false });
