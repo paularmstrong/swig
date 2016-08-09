@@ -26,4 +26,19 @@ describe('Tag: filter', function () {
       swig.render('{% filter foobar %}{% endfilter %}');
     }).to.throwError(/Filter \"foobar\" does not exist on line 1\./);
   });
+
+  it("gh-547: Filters with same name in different instances", function () {
+
+    var s1 = new Swig(),
+      s2 = new Swig();
+
+    s1.setFilter('foo', function () { return 'foo1'; });
+    s2.setFilter('foo', function () { return 'foo2'; });
+
+    expect(s1.render('{% filter foo %}{% endfilter %}')).to.equal('foo1');
+    expect(s1.compile('{% filter foo %}{% endfilter %}')({})).to.equal('foo1');
+    expect(s2.render('{% filter foo %}{% endfilter %}')).to.equal('foo2');
+    expect(s2.compile('{% filter foo %}{% endfilter %}')({})).to.equal('foo2');
+  });
+
 });

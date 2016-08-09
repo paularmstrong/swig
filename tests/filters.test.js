@@ -323,4 +323,18 @@ describe('Filters:', function () {
     expect(swig.render('{% if "0+3+1" === getFoo("f")|join("+")|reverse && null|default(true) %}yep{% endif %}', { locals: locals })).to.equal('yep');
   });
 
+	it("gh-547: Filters with same name in different instances", function () {
+
+		var s1 = new Swig(),
+			s2 = new Swig();
+
+		s1.setFilter('foo', function () { return 'foo1'; });
+		s2.setFilter('foo', function () { return 'foo2'; });
+
+		expect(s1.render('{{ ""|foo }}')).to.equal('foo1');
+    expect(s1.compile('{{ ""|foo }}')({})).to.equal('foo1');
+		expect(s2.render('{{ ""|foo }}')).to.equal('foo2');
+    expect(s2.compile('{{ ""|foo }}')({})).to.equal('foo2');
+	});
+
 });
