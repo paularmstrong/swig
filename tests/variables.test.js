@@ -61,6 +61,11 @@ var cases = {
     { c: '{{ chalupa().bar() }}', e: 'chalupas' },
     { c: '{{ { foo: "bar" }.foo }}', e: 'bar' }
   ],
+  'escape functions by default': [
+    { c: '{{ orangeChicken() }}', e: '&lt;yum&gt;' },
+    { c: '{{ orangeChicken()|safe }}', e: '<yum>' },
+    { c: '{% autoescape false %}{{ orangeChicken() }}{% endautoescape %}', e: '<yum>' }
+  ],
   'can run multiple filters': [
     { c: '{{ a|default("")|default(1) }}', e: '1' }
   ],
@@ -99,7 +104,8 @@ describe('Variables', function () {
     n: null,
     o: Object.create({ foo: function () { return 'bar'; } }),
     o2: { a: 'bar', foo: function (b) { return b || this.a; }, $bar: 'bar' },
-    o3: { n: null }
+    o3: { n: null },
+    orangeChicken: function () { return "<yum>"; }
   }};
   _.each(cases, function (cases, description) {
     describe(description, function () {
