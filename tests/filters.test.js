@@ -22,7 +22,7 @@ var n = new Swig(),
     addslashes: [
       {
         v: "\"Top O' the\\ mornin\"",
-        e: "\\&quot;Top O\\&#39; the\\\\ mornin\\&quot;"
+        e: "\\\"Top O\\\' the\\\\ mornin\\\""
       },
       {
         c: 'v|addslashes|raw',
@@ -121,6 +121,7 @@ var n = new Swig(),
     ],
     'escape': [
       { c: 'v|escape', v: '<foo>', e: '&lt;foo&gt;' },
+      { c: 'v|escape', v: '&amp;', e: '&amp;amp;' },
       { c: 'v|e("js")', v: '"double quotes" and \'single quotes\'', e: '\\u0022double quotes\\u0022 and \\u0027single quotes\\u0027' },
       { c: 'v|escape("js")', v: '<script>and this</script>', e: '\\u003Cscript\\u003Eand this\\u003C/script\\u003E' },
       { c: 'v|e("js")', v: '\\ : backslashes, too', e: '\\u005C : backslashes, too' },
@@ -134,7 +135,7 @@ var n = new Swig(),
       { v: { foo: 'blah' }, e: 'blah' }
     ],
     groupBy: [
-      { c: 'v|groupBy("name")|json', v: [{ name: 'a', a: 1 }, { name: 'a', a: 2 }, { name: 'b', a: 3 }], e: JSON.stringify({a: [{a: 1}, {a: 2}], b: [{a: 3}]}).replace(/"/g, '&quot;') },
+      { c: 'v|groupBy("name")|json', v: [{ name: 'a', a: 1 }, { name: 'a', a: 2 }, { name: 'b', a: 3 }], e: JSON.stringify({a: [{a: 1}, {a: 2}], b: [{a: 3}]}) },
       { c: 'v|groupBy("name")', v: 'foo', e: 'foo' }
     ],
     join: [
@@ -145,8 +146,8 @@ var n = new Swig(),
       { c: 'v|join("-")', v: 'asdf', e: 'asdf' }
     ],
     json: [
-      { v: { foo: 'bar', baz: [1, 2, 3] }, e: '{&quot;foo&quot;:&quot;bar&quot;,&quot;baz&quot;:[1,2,3]}' },
-      { c: 'v|json(2)', v: { foo: 'bar', baz: [1, 2, 3] }, e: '{\n  &quot;foo&quot;: &quot;bar&quot;,\n  &quot;baz&quot;: [\n    1,\n    2,\n    3\n  ]\n}'}
+      { v: { foo: 'bar', baz: [1, 2, 3] }, e: '{"foo":"bar","baz":[1,2,3]}' },
+      { c: 'v|json(2)', v: { foo: 'bar', baz: [1, 2, 3] }, e: '{\n  "foo": "bar",\n  "baz": [\n    1,\n    2,\n    3\n  ]\n}'}
     ],
     last: [
       { v: [1, 2, 3, 4], e: '4' },
@@ -209,7 +210,7 @@ var n = new Swig(),
       { v: ['param=1', 'anotherParam=2'], e: 'param%3D1,anotherParam%3D2' }
     ],
     url_decode: [
-      { v: 'param%3D1%26anotherParam%3D2', e: 'param=1&amp;anotherParam=2' },
+      { v: 'param%3D1%26anotherParam%3D2', e: 'param=1&anotherParam=2' },
       { v: ['param%3D1', 'anotherParam%3D2'], e: 'param=1,anotherParam=2' }
     ]
   };
@@ -268,7 +269,7 @@ describe('Filters:', function () {
           if ((/\|date\(/).test(code)) {
             code = '{{ ' + c.c.replace(/\"\)$/, '", 420)') + ' }}';
           }
-          expect(swig.render(code, { locals: { v: c.v }}))
+          expect(swig.render(code, { autoescape: false, locals: { v: c.v }}))
             .to.equal(c.e);
         });
         it(code + ', v=' + JSON.stringify(clone) + ' should should not mutate value', function () {
