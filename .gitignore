@@ -13,3 +13,4 @@ tests/browser.js
 tmp
 docs/docs/*.json
 docs/coverage.html
+.idea
